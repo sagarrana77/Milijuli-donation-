@@ -48,15 +48,16 @@ export function MainSidebar() {
         <SidebarMenu>
           {menuItems.map(({ href, label, icon: Icon }) => (
             <SidebarMenuItem key={href}>
-              <Link href={href} passHref legacyBehavior>
-                <SidebarMenuButton
-                  isActive={isActive(href)}
-                  tooltip={{ children: label, side: 'right' }}
-                >
+              <SidebarMenuButton
+                asChild
+                isActive={isActive(href)}
+                tooltip={{ children: label, side: 'right' }}
+              >
+                <Link href={href}>
                   <Icon />
                   <span>{label}</span>
-                </SidebarMenuButton>
-              </Link>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -64,20 +65,20 @@ export function MainSidebar() {
       <SidebarFooter className="border-t">
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href="#" passHref legacyBehavior>
-              <SidebarMenuButton tooltip={{ children: 'Help', side: 'right' }}>
+            <SidebarMenuButton asChild tooltip={{ children: 'Help', side: 'right' }}>
+              <Link href="#">
                 <CircleHelp />
                 <span>Help</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <Link href="#" passHref legacyBehavior>
-              <SidebarMenuButton tooltip={{ children: 'Settings', side: 'right' }}>
+            <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }}>
+              <Link href="#">
                 <Settings />
                 <span>Settings</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

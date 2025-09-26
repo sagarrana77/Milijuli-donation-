@@ -62,9 +62,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
           </div>
           <Progress value={percentage} aria-label={`${percentage}% funded`} />
         </div>
-        <Link href={`/projects/${project.id}`} className="w-full">
-          <Button className="w-full">View Project</Button>
-        </Link>
+        <Button asChild className="w-full">
+            <Link href={`/projects/${project.id}`}>View Project</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
