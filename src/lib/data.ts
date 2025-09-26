@@ -279,7 +279,6 @@ export const expenseData = [
   { name: 'Admin', value: 20, fill: 'var(--color-chart-2)' },
   { name: 'Relief', value: 30, fill: 'var(--color-chart-3)' },
   { name: 'Health', value: 10, fill: 'var(--color-chart-4)' },
-  { name: 'Operational', value: 25, fill: 'var(--color-chart-5)' },
 ];
 
 export const teamMembers = [

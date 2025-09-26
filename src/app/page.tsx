@@ -16,7 +16,7 @@ import {
   HandCoins,
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
-import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
+import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import { dashboardStats, expenseData } from '@/lib/data';
 
 export default function DashboardPage() {
@@ -72,7 +72,7 @@ export default function DashboardPage() {
         </Card>
       </div>
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
-        <RealtimeLedger />
+        <OperationalCosts />
         <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Expense Breakdown</CardTitle>
