@@ -31,8 +31,11 @@ import {
   MessageSquare,
   Briefcase,
   MonitorSmartphone,
+  DollarSign,
+  ArrowDown,
+  ArrowRight,
 } from 'lucide-react';
-import { projects } from '@/lib/data';
+import { projects, dashboardStats } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -86,6 +89,47 @@ export default function AdminDashboardPage() {
           </p>
         </div>
       </div>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>Fund Overview</CardTitle>
+          <CardDescription>
+            A real-time overview of your organization's finances.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Total Raised</h3>
+            <p className="text-2xl font-bold">${dashboardStats.totalFunds.toLocaleString()}</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Total Spent</h3>
+            <p className="text-2xl font-bold">${dashboardStats.totalSpent.toLocaleString()}</p>
+             <div className="text-xs text-muted-foreground">
+                <p>Projects: ${dashboardStats.spendingBreakdown.projectExpenses.toLocaleString()}</p>
+                <p>Operational: ${dashboardStats.spendingBreakdown.operationalCosts.toLocaleString()}</p>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Funds in Hand</h3>
+            <p className="text-2xl font-bold text-primary">${dashboardStats.fundsInHand.toLocaleString()}</p>
+          </div>
+           <div className="rounded-lg border bg-accent/20 p-4">
+            <h3 className="text-sm font-medium text-muted-foreground">Actions</h3>
+            <div className="mt-2 flex flex-col gap-2">
+                 <Button size="sm">
+                    <ArrowDown className="mr-2 h-4 w-4" />
+                    Record Expense
+                </Button>
+                <Button size="sm">
+                    <ArrowRight className="mr-2 h-4 w-4" />
+                    Transfer Funds
+                </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
 
       <div className="grid gap-8 lg:grid-cols-2">
         <Card>

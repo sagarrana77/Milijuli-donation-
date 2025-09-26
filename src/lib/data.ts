@@ -132,14 +132,75 @@ export const projects: Project[] = [
   },
 ];
 
+export const salaries = [
+  {
+    id: 'sal-1',
+    employee: 'John Doe',
+    role: 'Project Manager',
+    salary: 3000,
+  },
+  {
+    id: 'sal-2',
+    employee: 'Jane Smith',
+    role: 'Lead Developer',
+    salary: 4000,
+  },
+   {
+    id: 'sal-3',
+    employee: 'Peter Jones',
+    role: 'Marketing Head',
+    salary: 2800,
+  }
+];
+
+export const equipment = [
+  {
+    id: 'eq-1',
+    item: 'MacBook Pro 16"',
+    cost: 2500,
+    purchaseDate: new Date('2023-10-01'),
+    vendor: 'Apple Store',
+  },
+  {
+    id: 'eq-2',
+    item: 'Office Chairs (x5)',
+    cost: 750,
+    purchaseDate: new Date('2023-09-15'),
+    vendor: 'Office Depot',
+  },
+   {
+    id: 'eq-3',
+    item: 'Server Hosting (1yr)',
+    cost: 1200,
+    purchaseDate: new Date('2023-10-20'),
+    vendor: 'Cloud Provider Inc.',
+  },
+];
+
+const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0);
+const totalProjectExpenses = projects.reduce((acc, p) => acc + p.expenses.reduce((sum, e) => sum + e.amount, 0), 0);
+const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0) * 12; // Annualized
+const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
+const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts;
+const totalSpending = totalProjectExpenses + totalOperationalCosts;
+const fundsInHand = totalRaised - totalSpending;
+
+
 export const dashboardStats = {
-  totalFunds: 333600,
+  totalFunds: totalRaised,
   monthlyIncrease: 20123,
   totalDonors: 4950,
   newDonors: 213,
   projectsFunded: 4,
   countries: 1,
+  totalSpent: totalSpending,
+  fundsInHand: fundsInHand,
+  spendingBreakdown: {
+    projectExpenses: totalProjectExpenses,
+    operationalCosts: totalOperationalCosts,
+  }
 };
+
 
 export const recentDonations = [
   {
@@ -184,49 +245,4 @@ export const expenseData = [
   { name: 'Admin', value: 20, fill: 'var(--color-chart-2)' },
   { name: 'Relief', value: 30, fill: 'var(--color-chart-3)' },
   { name: 'Health', value: 10, fill: 'var(--color-chart-4)' },
-];
-
-export const salaries = [
-  {
-    id: 'sal-1',
-    employee: 'John Doe',
-    role: 'Project Manager',
-    salary: 3000,
-  },
-  {
-    id: 'sal-2',
-    employee: 'Jane Smith',
-    role: 'Lead Developer',
-    salary: 4000,
-  },
-   {
-    id: 'sal-3',
-    employee: 'Peter Jones',
-    role: 'Marketing Head',
-    salary: 2800,
-  }
-];
-
-export const equipment = [
-  {
-    id: 'eq-1',
-    item: 'MacBook Pro 16"',
-    cost: 2500,
-    purchaseDate: new Date('2023-10-01'),
-    vendor: 'Apple Store',
-  },
-  {
-    id: 'eq-2',
-    item: 'Office Chairs (x5)',
-    cost: 750,
-    purchaseDate: new Date('2023-09-15'),
-    vendor: 'Office Depot',
-  },
-   {
-    id: 'eq-3',
-    item: 'Server Hosting (1yr)',
-    cost: 1200,
-    purchaseDate: new Date('2023-10-20'),
-    vendor: 'Cloud Provider Inc.',
-  },
 ];

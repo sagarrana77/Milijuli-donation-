@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { DollarSign, Users, HeartHandshake } from 'lucide-react';
+import { DollarSign, Users, HeartHandshake, Briefcase, HandCoins } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import {
@@ -35,31 +35,31 @@ export default function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Donors</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Funds in Hand</CardTitle>
+            <HandCoins className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {dashboardStats.totalDonors.toLocaleString()}
+              ${dashboardStats.fundsInHand.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              +{dashboardStats.newDonors} new donors this month
+              Remaining funds after all expenses
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Projects Funded
+              Total Funds Spent
             </CardTitle>
-            <HeartHandshake className="h-4 w-4 text-muted-foreground" />
+            <Briefcase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {dashboardStats.projectsFunded}
+              ${dashboardStats.totalSpent.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              Across {dashboardStats.countries} countries
+              Includes project and operational costs
             </p>
           </CardContent>
         </Card>
