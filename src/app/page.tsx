@@ -28,6 +28,7 @@ import { dashboardStats, expenseData, operationalCostsFund, projects, jobOpening
 import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
+import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 
 export default function DashboardPage() {
     const opsPercentage = Math.round(
@@ -42,83 +43,91 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Funds Raised
-            </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${dashboardStats.totalFunds.toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              +${dashboardStats.monthlyIncrease.toLocaleString()} from last
-              month
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Funds in Hand</CardTitle>
-            <HandCoins className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${dashboardStats.fundsInHand.toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Remaining funds after all expenses
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Funds Spent
-            </CardTitle>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${dashboardStats.totalSpent.toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Includes project and operational costs
-            </p>
-          </CardContent>
-        </Card>
-         <Card className="flex flex-col">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Operational Costs Fund
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex-1">
-             <div className="w-full">
-                <div className="mb-1 flex justify-between text-xs text-muted-foreground">
-                    <span>
-                    ${operationalCostsFund.raisedAmount.toLocaleString()} raised
-                    </span>
-                    <span>{opsPercentage}%</span>
-                </div>
-                <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button asChild className="w-full">
-                <Link href="/operational-costs">View Details</Link>
-            </Button>
-          </CardFooter>
-        </Card>
+       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <ScrollFadeIn>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Funds Raised
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                ${dashboardStats.totalFunds.toLocaleString()}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                +${dashboardStats.monthlyIncrease.toLocaleString()} from last
+                month
+              </p>
+            </CardContent>
+          </Card>
+        </ScrollFadeIn>
+        <ScrollFadeIn delay={100}>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Funds in Hand</CardTitle>
+              <HandCoins className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                ${dashboardStats.fundsInHand.toLocaleString()}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Remaining funds after all expenses
+              </p>
+            </CardContent>
+          </Card>
+        </ScrollFadeIn>
+        <ScrollFadeIn delay={200}>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Funds Spent
+              </CardTitle>
+              <Briefcase className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                ${dashboardStats.totalSpent.toLocaleString()}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Includes project and operational costs
+              </p>
+            </CardContent>
+          </Card>
+        </ScrollFadeIn>
+        <ScrollFadeIn delay={300}>
+          <Card className="flex flex-col">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">
+                Operational Costs Fund
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex-1">
+              <div className="w-full">
+                  <div className="mb-1 flex justify-between text-xs text-muted-foreground">
+                      <span>
+                      ${operationalCostsFund.raisedAmount.toLocaleString()} raised
+                      </span>
+                      <span>{opsPercentage}%</span>
+                  </div>
+                  <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button asChild className="w-full">
+                  <Link href="/operational-costs">View Details</Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        </ScrollFadeIn>
       </div>
       <div className="grid gap-8 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+        <ScrollFadeIn className="lg:col-span-3">
           <RealtimeLedger />
-        </div>
-        <div className="lg:col-span-2">
+        </ScrollFadeIn>
+        <ScrollFadeIn className="lg:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle>Expense Breakdown</CardTitle>
@@ -138,68 +147,82 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </ScrollFadeIn>
       </div>
       
-      <section>
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <UserPlus className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold">We're Hiring!</h2>
-          </div>
-          <Button asChild variant="outline">
-            <Link href="/careers">
-                View All Openings <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {featuredJobs.map(job => (
-            <Card key={job.id} className="flex flex-col">
-              <CardHeader>
-                <CardTitle>{job.title}</CardTitle>
-                <CardDescription>{job.location}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                 <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
-                    {job.type}
-                </Badge>
-              </CardContent>
-              <CardFooter>
-                <Button asChild variant="secondary" className="w-full">
-                    <Link href="/careers">Learn More</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <ScrollFadeIn asChild>
+        <section>
+            <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+                <UserPlus className="h-6 w-6 text-primary" />
+                <h2 className="text-2xl font-bold">We're Hiring!</h2>
+            </div>
+            <Button asChild variant="outline">
+                <Link href="/careers">
+                    View All Openings <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+            </Button>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {featuredJobs.map((job, index) => (
+                <ScrollFadeIn key={job.id} delay={index * 100}>
+                <Card className="flex flex-col">
+                    <CardHeader>
+                    <CardTitle>{job.title}</CardTitle>
+                    <CardDescription>{job.location}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                    <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
+                        {job.type}
+                    </Badge>
+                    </CardContent>
+                    <CardFooter>
+                    <Button asChild variant="secondary" className="w-full">
+                        <Link href="/careers">Learn More</Link>
+                    </Button>
+                    </CardFooter>
+                </Card>
+                </ScrollFadeIn>
+            ))}
+            </div>
+        </section>
+      </ScrollFadeIn>
 
-      <section>
-        <div className="mb-4 flex items-center gap-3">
-          <TrendingUp className="h-6 w-6 text-primary" />
-          <h2 className="text-2xl font-bold">Active Campaigns</h2>
-        </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {runningProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
-      </section>
+      <ScrollFadeIn asChild>
+        <section>
+            <div className="mb-4 flex items-center gap-3">
+            <TrendingUp className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold">Active Campaigns</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {runningProjects.map((project, index) => (
+                <ScrollFadeIn key={project.id} delay={index * 100}>
+                    <ProjectCard project={project} />
+                </ScrollFadeIn>
+            ))}
+            </div>
+        </section>
+      </ScrollFadeIn>
 
-      <section>
-        <div className="mb-4 flex items-center gap-3">
-            <CheckCircle className="h-6 w-6 text-green-600" />
-            <h2 className="text-2xl font-bold">Successfully Funded</h2>
-        </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {finishedProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
-      </section>
+      <ScrollFadeIn asChild>
+        <section>
+            <div className="mb-4 flex items-center gap-3">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+                <h2 className="text-2xl font-bold">Successfully Funded</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {finishedProjects.map((project, index) => (
+                <ScrollFadeIn key={project.id} delay={index * 100}>
+                    <ProjectCard project={project} />
+                </ScrollFadeIn>
+            ))}
+            </div>
+        </section>
+      </ScrollFadeIn>
 
-      <OperationalCosts />
+      <ScrollFadeIn>
+        <OperationalCosts />
+      </ScrollFadeIn>
     </div>
   );
 }

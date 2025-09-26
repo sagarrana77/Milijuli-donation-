@@ -11,6 +11,7 @@ import { teamMembers, values } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -19,79 +20,89 @@ function getImageUrl(id: string) {
 export default function AboutPage() {
   return (
     <div className="space-y-12">
-      <section className="relative h-[400px] w-full overflow-hidden rounded-lg">
-        <Image
-          src={getImageUrl('team-photo')}
-          alt="Our Team"
-          fill
-          objectFit="cover"
-          className="brightness-75"
-          data-ai-hint="team photo"
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-          <div className="text-center text-white">
-            <h1 className="text-4xl font-bold md:text-5xl">About ClarityChain</h1>
-            <p className="mt-4 max-w-2xl text-lg">
-              Driving transparency and trust in charitable giving through technology.
-            </p>
+      <ScrollFadeIn>
+        <section className="relative h-[400px] w-full overflow-hidden rounded-lg">
+          <Image
+            src={getImageUrl('team-photo')}
+            alt="Our Team"
+            fill
+            objectFit="cover"
+            className="brightness-75"
+            data-ai-hint="team photo"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+            <div className="text-center text-white">
+              <h1 className="text-4xl font-bold md:text-5xl">About ClarityChain</h1>
+              <p className="mt-4 max-w-2xl text-lg">
+                Driving transparency and trust in charitable giving through technology.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </ScrollFadeIn>
 
-      <section>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl">Our Mission</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg text-muted-foreground">
-              Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. ClarityChain provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+      <ScrollFadeIn asChild>
+        <section>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-3xl">Our Mission</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-lg text-muted-foreground">
+                Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. ClarityChain provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+      </ScrollFadeIn>
 
-      <section>
-        <h2 className="mb-6 text-center text-3xl font-bold">Meet Our Team</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {teamMembers.map((member) => (
-            <Card key={member.id} className="text-center transition-shadow hover:shadow-lg">
-               <Link href={`/team/${member.id}`}>
-                <CardContent className="p-6">
-                  <Avatar className="mx-auto mb-4 h-24 w-24 border-4 border-primary/20">
-                    <AvatarImage src={member.avatarUrl} alt={member.name} />
-                    <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <h3 className="text-xl font-semibold">{member.name}</h3>
-                  <p className="text-primary">{member.role}</p>
-                  <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{member.bio}</p>
-                </CardContent>
-              </Link>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <ScrollFadeIn asChild>
+        <section>
+          <h2 className="mb-6 text-center text-3xl font-bold">Meet Our Team</h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {teamMembers.map((member, index) => (
+              <ScrollFadeIn key={member.id} delay={index * 100}>
+                <Card className="text-center transition-shadow hover:shadow-lg">
+                  <Link href={`/team/${member.id}`}>
+                    <CardContent className="p-6">
+                      <Avatar className="mx-auto mb-4 h-24 w-24 border-4 border-primary/20">
+                        <AvatarImage src={member.avatarUrl} alt={member.name} />
+                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <h3 className="text-xl font-semibold">{member.name}</h3>
+                      <p className="text-primary">{member.role}</p>
+                      <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{member.bio}</p>
+                    </CardContent>
+                  </Link>
+                </Card>
+              </ScrollFadeIn>
+            ))}
+          </div>
+        </section>
+      </ScrollFadeIn>
 
-      <section>
-        <h2 className="mb-6 text-center text-3xl font-bold">Our Core Values</h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {values.map((value) => (
-            <Card key={value.title}>
-                <CardHeader className="flex-row items-center gap-4">
+      <ScrollFadeIn asChild>
+        <section>
+          <h2 className="mb-6 text-center text-3xl font-bold">Our Core Values</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {values.map((value, index) => (
+              <ScrollFadeIn key={value.title} delay={index * 100}>
+                <Card>
+                  <CardHeader className="flex-row items-center gap-4">
                     <div className="rounded-full bg-primary/10 p-2 text-primary">
-                        <CheckCircle className="h-6 w-6" />
+                      <CheckCircle className="h-6 w-6" />
                     </div>
                     <CardTitle>{value.title}</CardTitle>
-                </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{value.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{value.description}</p>
+                  </CardContent>
+                </Card>
+              </ScrollFadeIn>
+            ))}
+          </div>
+        </section>
+      </ScrollFadeIn>
     </div>
   );
 }
-
-    
