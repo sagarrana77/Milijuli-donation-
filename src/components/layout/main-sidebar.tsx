@@ -14,7 +14,7 @@ import {
 import { Logo } from '@/components/icons/logo';
 import {
   LayoutDashboard,
-  HeartHand,
+  HeartHandshake,
   FileText,
   Settings,
   CircleHelp,
@@ -22,7 +22,7 @@ import {
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/projects', label: 'Projects', icon: HeartHand },
+  { href: '/projects', label: 'Projects', icon: HeartHandshake },
   { href: '/reports', label: 'Reports', icon: FileText },
 ];
 

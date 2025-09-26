@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DollarSign, Users, HeartHand } from 'lucide-react';
+import { DollarSign, Users, HeartHandshake } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import {
   dashboardStats,
@@ -63,7 +63,7 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium">
               Projects Funded
             </CardTitle>
-            <HeartHand className="h-4 w-4 text-muted-foreground" />
+            <HeartHandshake className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
