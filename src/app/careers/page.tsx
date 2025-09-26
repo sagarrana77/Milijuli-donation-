@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Card,
   CardContent,
@@ -16,8 +18,19 @@ import { jobOpenings } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+
 
 export default function CareersPage() {
+  const { toast } = useToast();
+
+  const handleApply = (jobTitle: string) => {
+    toast({
+        title: "Application Received!",
+        description: `Thank you for your interest in the ${jobTitle} position. We will review your application and be in touch.`
+    });
+  }
+
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8 text-center">
@@ -66,7 +79,7 @@ export default function CareersPage() {
                       ))}
                     </ul>
                   </div>
-                  <Button>Apply Now</Button>
+                  <Button onClick={() => handleApply(job.title)}>Apply Now</Button>
                 </AccordionContent>
               </AccordionItem>
             ))}
