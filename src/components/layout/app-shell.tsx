@@ -3,6 +3,7 @@
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { MainSidebar } from '@/components/layout/main-sidebar';
 import { Header } from '@/components/layout/header';
+import { FloatingContactButton } from '@/components/layout/floating-contact-button';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Header />
           <main className="flex-1 p-4 sm:p-6 md:p-8">{children}</main>
         </SidebarInset>
+        <FloatingContactButton />
       </div>
     </SidebarProvider>
   );

@@ -28,7 +28,7 @@ import {
   QrCode,
   CreditCard,
   KeyRound,
-  Landmark,
+  MessageSquare,
 } from 'lucide-react';
 import { projects } from '@/lib/data';
 import {
@@ -40,6 +40,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { WhatsappIcon } from '@/components/icons/whatsapp-icon';
+import { ViberIcon } from '@/components/icons/viber-icon';
+import { InstagramIcon } from '@/components/icons/instagram-icon';
+import { MessengerIcon } from '@/components/icons/messenger-icon';
+
 
 const initialGateways = [
   { name: 'Esewa', enabled: true },
@@ -138,73 +143,106 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <KeyRound />
-            Gateway Credentials & Bank Information
-          </CardTitle>
-          <CardDescription>
-            Enter and manage your API keys and bank account details. These are stored securely.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="stripe">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="stripe">Stripe</TabsTrigger>
-              <TabsTrigger value="paypal">PayPal</TabsTrigger>
-              <TabsTrigger value="bank">Bank Account</TabsTrigger>
-            </TabsList>
-            <TabsContent value="stripe" className="mt-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="stripe-pk">Publishable Key</Label>
-                  <Input id="stripe-pk" placeholder="pk_live_..." />
+      <div className="grid gap-8 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <KeyRound />
+              Gateway Credentials & Bank Information
+            </CardTitle>
+            <CardDescription>
+              Enter and manage your API keys and bank account details. These are stored securely.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="stripe">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="stripe">Stripe</TabsTrigger>
+                <TabsTrigger value="paypal">PayPal</TabsTrigger>
+                <TabsTrigger value="bank">Bank Account</TabsTrigger>
+              </TabsList>
+              <TabsContent value="stripe" className="mt-4">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="stripe-pk">Publishable Key</Label>
+                    <Input id="stripe-pk" placeholder="pk_live_..." />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="stripe-sk">Secret Key</Label>
+                    <Input id="stripe-sk" type="password" placeholder="sk_live_..." />
+                  </div>
+                  <Button>Save Stripe Credentials</Button>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="stripe-sk">Secret Key</Label>
-                  <Input id="stripe-sk" type="password" placeholder="sk_live_..." />
+              </TabsContent>
+              <TabsContent value="paypal" className="mt-4">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="paypal-client-id">Client ID</Label>
+                    <Input id="paypal-client-id" placeholder="Your PayPal Client ID" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="paypal-secret">Secret</Label>
+                    <Input id="paypal-secret" type="password" placeholder="Your PayPal Secret" />
+                  </div>
+                  <Button>Save PayPal Credentials</Button>
                 </div>
-                 <Button>Save Stripe Credentials</Button>
-              </div>
-            </TabsContent>
-            <TabsContent value="paypal" className="mt-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="paypal-client-id">Client ID</Label>
-                  <Input id="paypal-client-id" placeholder="Your PayPal Client ID" />
+              </TabsContent>
+              <TabsContent value="bank" className="mt-4">
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="bank-name">Bank Name</Label>
+                    <Input id="bank-name" placeholder="e.g., Bank of Example" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="account-holder">Account Holder Name</Label>
+                    <Input id="account-holder" placeholder="e.g., John Doe" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="account-number">Account Number</Label>
+                    <Input id="account-number" placeholder="Your account number" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="routing-number">Routing Number / Swift Code</Label>
+                    <Input id="routing-number" placeholder="Your routing number or SWIFT code" />
+                  </div>
+                  <Button>Save Bank Information</Button>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="paypal-secret">Secret</Label>
-                  <Input id="paypal-secret" type="password" placeholder="Your PayPal Secret" />
-                </div>
-                <Button>Save PayPal Credentials</Button>
-              </div>
-            </TabsContent>
-            <TabsContent value="bank" className="mt-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="bank-name">Bank Name</Label>
-                  <Input id="bank-name" placeholder="e.g., Bank of Example" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="account-holder">Account Holder Name</Label>
-                  <Input id="account-holder" placeholder="e.g., John Doe" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="account-number">Account Number</Label>
-                  <Input id="account-number" placeholder="Your account number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="routing-number">Routing Number / Swift Code</Label>
-                  <Input id="routing-number" placeholder="Your routing number or SWIFT code" />
-                </div>
-                 <Button>Save Bank Information</Button>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare />
+              Social & Contact Links
+            </CardTitle>
+            <CardDescription>
+              Configure the links for the floating contact button.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp" className="flex items-center gap-2"><WhatsappIcon className="h-5 w-5"/> WhatsApp Number</Label>
+              <Input id="whatsapp" placeholder="+1234567890" />
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="viber" className="flex items-center gap-2"><ViberIcon className="h-5 w-5"/> Viber Number</Label>
+              <Input id="viber" placeholder="+1234567890" />
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-5 w-5"/> Instagram URL</Label>
+              <Input id="instagram" placeholder="https://instagram.com/your-profile" />
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="messenger" className="flex items-center gap-2"><MessengerIcon className="h-5 w-5"/> Messenger Username</Label>
+              <Input id="messenger" placeholder="your.username" />
+            </div>
+            <Button>Save Contact Links</Button>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader>
