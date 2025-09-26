@@ -18,22 +18,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { recentDonations, projects, type Donor } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { recentDonations, projects, users, type Donor } from '@/lib/data';
 import { format } from 'date-fns';
 import Link from 'next/link';
 
-function getImageUrl(id: string) {
-  return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
-}
-
-const allDonors: Donor[] = [
-    { id: 'user-jane-doe', name: 'Jane Doe', avatarUrl: getImageUrl('avatar-jane-doe'), profileUrl: '/profile' },
-    { id: 'user-john-smith', name: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile' },
-    { id: 'user-ai-chan', name: 'Ai Chan', avatarUrl: getImageUrl('avatar-ai-chan'), profileUrl: '/profile' },
-    { id: 'user-raj-patel', name: 'Raj Patel', avatarUrl: getImageUrl('avatar-raj-patel'), profileUrl: '/profile' },
-    { id: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile' },
-]
+const allDonors: Donor[] = users.map(({ id, name, avatarUrl, profileUrl, bio }) => ({
+    id, name, avatarUrl, profileUrl, bio
+}));
 
 export function RealtimeLedger() {
   const [donations, setDonations] = useState(recentDonations);
