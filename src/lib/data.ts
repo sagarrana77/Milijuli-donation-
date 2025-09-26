@@ -245,4 +245,44 @@ export const expenseData = [
   { name: 'Admin', value: 20, fill: 'var(--color-chart-2)' },
   { name: 'Relief', value: 30, fill: 'var(--color-chart-3)' },
   { name: 'Health', value: 10, fill: 'var(--color-chart-4)' },
+  { name: 'Operational', value: 25, fill: 'var(--color-chart-5)'},
 ];
+
+export const teamMembers = [
+    {
+        id: 'team-1',
+        name: 'Alex Johnson',
+        role: 'Founder & CEO',
+        avatarUrl: getImageUrl('avatar-alex-johnson'),
+        bio: 'Alex is a passionate social entrepreneur dedicated to leveraging technology for good. He founded ClarityChain to bring trust back to the non-profit sector.'
+    },
+    {
+        id: 'team-2',
+        name: 'Maria Garcia',
+        role: 'Head of Operations',
+        avatarUrl: getImageUrl('avatar-maria-garcia'),
+        bio: 'Maria ensures that all our projects run smoothly and efficiently. She has over 10 years of experience in non-profit management.'
+    },
+    {
+        id: 'team-3',
+        name: 'Sam Chen',
+        role: 'Lead Blockchain Developer',
+        avatarUrl: getImageUrl('avatar-sam-chen'),
+        bio: "Sam is the architect behind our transparent ledger technology. He's a firm believer in the power of decentralization to create a fairer world."
+    }
+]
+
+export const values = [
+    {
+        title: 'Transparency',
+        description: "We are committed to complete openness in how funds are raised, managed, and spent. Every transaction is public."
+    },
+    {
+        title: 'Accountability',
+        description: "We hold ourselves to the highest standards, ensuring that all stakeholders can verify our actions and their impact."
+    },
+    {
+        title: 'Impact',
+        description: "Our ultimate goal is to maximize the positive impact of every donation, creating lasting change in communities."
+    }
+]

@@ -34,6 +34,7 @@ import {
   DollarSign,
   ArrowDown,
   ArrowRight,
+  Edit,
 } from 'lucide-react';
 import { projects, dashboardStats } from '@/lib/data';
 import {
@@ -88,6 +89,11 @@ export default function AdminDashboardPage() {
             Manage your platform settings and content.
           </p>
         </div>
+        <Button asChild>
+            <Link href="/admin/about">
+                <Edit className="mr-2 h-4 w-4" /> Edit About Page
+            </Link>
+        </Button>
       </div>
 
        <Card>

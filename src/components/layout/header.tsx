@@ -17,6 +17,13 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/projects/')) {
     return 'Project Details';
   }
+   if (pathname.startsWith('/admin/')) {
+    const parts = pathname.split('/');
+    const lastPart = parts[parts.length - 1];
+    if (lastPart === 'about') return 'Edit About Page';
+    return 'Admin';
+  }
+
   switch (pathname) {
     case '/':
       return 'Dashboard';
@@ -26,6 +33,8 @@ function getPageTitle(pathname: string): string {
       return 'AI Reports';
     case '/admin':
       return 'Admin Dashboard';
+    case '/about':
+      return 'About Us';
     default:
       return 'ClarityChain';
   }
