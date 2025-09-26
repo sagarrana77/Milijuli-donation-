@@ -5,24 +5,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DollarSign, Users, HeartHandshake } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
+import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import {
   dashboardStats,
-  recentDonations,
   expenseData,
 } from '@/lib/data';
-import { format } from 'date-fns';
 
 export default function DashboardPage() {
   return (
@@ -75,59 +64,13 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="lg:col-span-4">
-          <CardHeader>
-            <CardTitle>Real-time Ledger</CardTitle>
-            <CardDescription>
-              A live feed of all incoming donations.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Donor</TableHead>
-                  <TableHead>Project</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                  <TableHead className="text-right">Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentDonations.map((donation) => (
-                  <TableRow key={donation.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-9 w-9">
-                          <AvatarImage
-                            src={donation.donor.avatarUrl}
-                            alt={donation.donor.name}
-                          />
-                          <AvatarFallback>
-                            {donation.donor.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="font-medium">{donation.donor.name}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{donation.project}</TableCell>
-                    <TableCell className="text-right">
-                      ${donation.amount.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {format(donation.date, 'PP')}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
+        <OperationalCosts />
         <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Expense Breakdown</CardTitle>
             <CardDescription>
-              How funds are being allocated across categories.
+              How project funds are being allocated across categories.
             </CardDescription>
           </CardHeader>
           <CardContent>

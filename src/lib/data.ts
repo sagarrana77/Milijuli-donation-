@@ -185,3 +185,48 @@ export const expenseData = [
   { name: 'Relief', value: 30, fill: 'var(--color-chart-3)' },
   { name: 'Health', value: 10, fill: 'var(--color-chart-4)' },
 ];
+
+export const salaries = [
+  {
+    id: 'sal-1',
+    employee: 'John Doe',
+    role: 'Project Manager',
+    salary: 3000,
+  },
+  {
+    id: 'sal-2',
+    employee: 'Jane Smith',
+    role: 'Lead Developer',
+    salary: 4000,
+  },
+   {
+    id: 'sal-3',
+    employee: 'Peter Jones',
+    role: 'Marketing Head',
+    salary: 2800,
+  }
+];
+
+export const equipment = [
+  {
+    id: 'eq-1',
+    item: 'MacBook Pro 16"',
+    cost: 2500,
+    purchaseDate: new Date('2023-10-01'),
+    vendor: 'Apple Store',
+  },
+  {
+    id: 'eq-2',
+    item: 'Office Chairs (x5)',
+    cost: 750,
+    purchaseDate: new Date('2023-09-15'),
+    vendor: 'Office Depot',
+  },
+   {
+    id: 'eq-3',
+    item: 'Server Hosting (1yr)',
+    cost: 1200,
+    purchaseDate: new Date('2023-10-20'),
+    vendor: 'Cloud Provider Inc.',
+  },
+];

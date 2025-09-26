@@ -32,7 +32,7 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
   return (
     <ChartContainer
       config={chartConfig}
-      className="mx-auto aspect-square h-[250px]"
+      className="mx-auto aspect-square h-[300px]"
     >
       <PieChart>
         <Tooltip
