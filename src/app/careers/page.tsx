@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -14,22 +15,43 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { jobOpenings } from '@/lib/data';
+import { jobOpenings, type JobOpening } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export default function CareersPage() {
   const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<JobOpening | null>(null);
 
-  const handleApply = (jobTitle: string) => {
+  const handleApplyClick = (job: JobOpening) => {
+    setSelectedJob(job);
+    setIsDialogOpen(true);
+  };
+
+  const handleApplicationSubmit = () => {
+    // In a real app, you'd handle file upload and form data submission here.
+    setIsDialogOpen(false);
     toast({
-        title: "Application Received!",
-        description: `Thank you for your interest in the ${jobTitle} position. We will review your application and be in touch.`
+      title: 'Application Submitted!',
+      description: `Thank you for applying for the ${selectedJob?.title} position. We have received your documents and will be in touch.`,
     });
-  }
+    setSelectedJob(null);
+  };
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -37,7 +59,8 @@ export default function CareersPage() {
         <UserPlus className="mx-auto h-12 w-12 text-primary" />
         <h1 className="mt-4 text-4xl font-bold tracking-tight">Join Our Team</h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          Help us build a more transparent and accountable world. We're looking for passionate individuals to join our mission.
+          Help us build a more transparent and accountable world. We're looking
+          for passionate individuals to join our mission.
         </p>
       </div>
 
@@ -57,10 +80,16 @@ export default function CareersPage() {
                     <div className="text-left">
                       <h3 className="text-lg font-semibold">{job.title}</h3>
                       <div className="mt-1 flex items-center gap-4 text-sm text-muted-foreground">
-                        <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>{job.type}</Badge>
-                         <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4" />
-                            <span>{job.location}</span>
+                        <Badge
+                          variant={
+                            job.type === 'Volunteer' ? 'secondary' : 'default'
+                          }
+                        >
+                          {job.type}
+                        </Badge>
+                        <div className="flex items-center gap-1">
+                          <MapPin className="h-4 w-4" />
+                          <span>{job.location}</span>
                         </div>
                       </div>
                     </div>
@@ -69,7 +98,9 @@ export default function CareersPage() {
                 <AccordionContent className="space-y-6 pt-4">
                   <div>
                     <h4 className="font-semibold">About the Role</h4>
-                    <p className="mt-2 text-muted-foreground">{job.description}</p>
+                    <p className="mt-2 text-muted-foreground">
+                      {job.description}
+                    </p>
                   </div>
                   <div>
                     <h4 className="font-semibold">Requirements</h4>
@@ -79,18 +110,57 @@ export default function CareersPage() {
                       ))}
                     </ul>
                   </div>
-                  <Button onClick={() => handleApply(job.title)}>Apply Now</Button>
+                  <Button onClick={() => handleApplyClick(job)}>
+                    Apply Now
+                  </Button>
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-           {jobOpenings.length === 0 && (
-              <p className="py-8 text-center text-muted-foreground">
-                There are no open positions at this time. Please check back later!
-              </p>
-            )}
+          {jobOpenings.length === 0 && (
+            <p className="py-8 text-center text-muted-foreground">
+              There are no open positions at this time. Please check back
+              later!
+            </p>
+          )}
         </CardContent>
       </Card>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Apply for {selectedJob?.title}</DialogTitle>
+            <DialogDescription>
+              Submit your application by filling out the form below.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="cover-letter">Why are you fit for this job?</Label>
+              <Textarea
+                id="cover-letter"
+                placeholder="Tell us about your experience and passion for this role..."
+                rows={5}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="resume">CV / Resume</Label>
+              <Input id="resume" type="file" />
+               <p className="text-xs text-muted-foreground">Please upload your CV in PDF format.</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="button" onClick={handleApplicationSubmit}>
+              Submit Application
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
