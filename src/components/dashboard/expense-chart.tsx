@@ -42,9 +42,11 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
           data={data}
           dataKey="value"
           nameKey="name"
-          innerRadius={80}
+          innerRadius={50}
           outerRadius={120}
           strokeWidth={2}
+          startAngle={90}
+          endAngle={450}
         >
           {data.map((entry) => (
             <Cell key={entry.name} fill={entry.fill} />

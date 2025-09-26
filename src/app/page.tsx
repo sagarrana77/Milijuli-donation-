@@ -83,11 +83,11 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-col items-center">
             <ExpenseChart data={expenseData} />
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <div className="mt-4 flex flex-wrap justify-center gap-4 text-sm">
                 {expenseData.map((entry) => (
                     <div key={entry.name} className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
-                        <span>{entry.name}</span>
+                        <span className="text-foreground">{entry.name}</span>
                     </div>
                 ))}
             </div>
