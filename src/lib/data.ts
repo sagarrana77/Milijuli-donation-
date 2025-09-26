@@ -196,20 +196,26 @@ export const equipment = [
     cost: 2500,
     purchaseDate: new Date('2023-10-01'),
     vendor: 'Apple Store',
+    imageUrl: getImageUrl('equipment-macbook'),
+    imageHint: 'laptop computer',
   },
   {
     id: 'eq-2',
-    item: 'Office Chairs (x5)',
+    item: 'Ergonomic Office Chairs (x5)',
     cost: 750,
     purchaseDate: new Date('2023-09-15'),
     vendor: 'Office Depot',
+    imageUrl: getImageUrl('equipment-chair'),
+    imageHint: 'office chair',
   },
   {
     id: 'eq-3',
-    item: 'Server Hosting (1yr)',
+    item: 'Cloud Server Hosting (1yr)',
     cost: 1200,
     purchaseDate: new Date('2023-10-20'),
     vendor: 'Cloud Provider Inc.',
+    imageUrl: getImageUrl('equipment-server'),
+    imageHint: 'server rack',
   },
 ];
 

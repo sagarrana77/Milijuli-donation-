@@ -81,7 +81,7 @@
     {
       "id": "update-photo-2",
       "description": "A newly built school wall.",
-      "imageUrl": "https://images.unsplash.com/photo-1575281923032-f40d94ef6160?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb25zdHJ1Y3Rpb24lMjBzaXRlfGVufDB8fHx8MTc1ODgwNjUzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1575281923032-f40d94ef6160?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb25zdHJ1Y3Rpb24lMjBzaXRlfGVufDB8fHx8MTc1ODgwNjUzOXww&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "construction site"
     },
     {
@@ -105,8 +105,26 @@
     {
       "id": "avatar-sam-chen",
       "description": "Portrait of Sam Chen.",
-      "imageUrl": "https://images.unsplash.com/photo-1548142813-c348350df52b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhc2lhbiUyMHBlcnNvbnxlbnwwfHx8fDE3NTg4MjQxODV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1548142813-c348350df52b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhc2lhbiUyMHBlcnNvbnxlbnwwfHx8fDE3NTg4MjQxODV8MA&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "asian person"
+    },
+    {
+      "id": "equipment-macbook",
+      "description": "A MacBook Pro on a desk.",
+      "imageUrl": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBjb21wdXRlcnxlbnwwfHx8fDE3NTg5MzU5OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laptop computer"
+    },
+    {
+      "id": "equipment-chair",
+      "description": "A modern ergonomic office chair.",
+      "imageUrl": "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvZmZpY2UlMjBjaGFpcnxlbnwwfHx8fDE3NTg5MzYxNTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "office chair"
+    },
+    {
+      "id": "equipment-server",
+      "description": "A rack of computer servers in a data center.",
+      "imageUrl": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzZXJ2ZXIlMjByYWNrfGVufDB8fHx8MTc1ODkzNjIwNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "server rack"
     }
   ]
 }
