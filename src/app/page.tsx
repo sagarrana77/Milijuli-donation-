@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
   const runningProjects = projects.filter(p => p.raisedAmount < p.targetAmount);
   const finishedProjects = projects.filter(p => p.raisedAmount >= p.targetAmount);
-  const latestJobs = jobOpenings.slice(0, 2);
+  const featuredJobs = jobOpenings.filter(job => job.featured).slice(0, 2);
 
 
   return (
@@ -153,7 +153,7 @@ export default function DashboardPage() {
           </Button>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {latestJobs.map(job => (
+          {featuredJobs.map(job => (
             <Card key={job.id} className="flex flex-col">
               <CardHeader>
                 <CardTitle>{job.title}</CardTitle>

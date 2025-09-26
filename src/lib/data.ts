@@ -500,6 +500,7 @@ export type JobOpening = {
   location: string;
   description: string;
   requirements: string[];
+  featured?: boolean;
 };
 
 export const jobOpenings: JobOpening[] = [
@@ -515,6 +516,7 @@ export const jobOpenings: JobOpening[] = [
         'Proven ability to grow and manage online communities.',
         'A strong passion for social causes and transparency.',
     ],
+    featured: true,
   },
   {
     id: 'job-2',
@@ -528,6 +530,7 @@ export const jobOpenings: JobOpening[] = [
         'Self-motivated and able to work independently.',
         'No prior experience required, just a willingness to learn and contribute.',
     ],
+    featured: true,
   },
     {
     id: 'job-3',
@@ -541,5 +544,6 @@ export const jobOpenings: JobOpening[] = [
         'A strong eye for design and user experience.',
         'Familiarity with web3 concepts is a plus.',
     ],
+    featured: false,
   }
 ];

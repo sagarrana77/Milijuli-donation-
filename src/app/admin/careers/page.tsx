@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -31,7 +32,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { jobOpenings as initialJobOpenings, type JobOpening } from '@/lib/data';
-import { MoreHorizontal, PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, Edit, Trash2, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
@@ -45,7 +46,9 @@ import {
     FormField,
     FormItem,
     FormMessage,
+    FormLabel,
   } from '@/components/ui/form';
+import { Switch } from '@/components/ui/switch';
 
 const jobOpeningSchema = z.object({
     title: z.string().min(1, "Title is required."),
@@ -53,6 +56,7 @@ const jobOpeningSchema = z.object({
     location: z.string().min(1, "Location is required."),
     description: z.string().min(1, "Description is required."),
     requirements: z.string().min(1, "Requirements are required."),
+    featured: z.boolean(),
 });
 
 type JobOpeningFormData = z.infer<typeof jobOpeningSchema>;
@@ -70,6 +74,7 @@ export default function AdminCareersPage() {
             location: '',
             description: '',
             requirements: '',
+            featured: false,
         }
     });
 
@@ -86,7 +91,14 @@ export default function AdminCareersPage() {
         } else {
             setJobOpenings([newJob, ...jobOpenings]);
         }
-        form.reset();
+        form.reset({
+             title: '',
+            type: 'Full-time',
+            location: '',
+            description: '',
+            requirements: '',
+            featured: false,
+        });
     };
 
     const handleEdit = (job: JobOpening) => {
@@ -103,7 +115,18 @@ export default function AdminCareersPage() {
 
     const handleCancelEdit = () => {
         setEditingJob(null);
-        form.reset();
+        form.reset({
+             title: '',
+            type: 'Full-time',
+            location: '',
+            description: '',
+            requirements: '',
+            featured: false,
+        });
+    }
+
+    const handleFeatureToggle = (jobId: string, featured: boolean) => {
+        setJobOpenings(jobOpenings.map(job => job.id === jobId ? {...job, featured} : job));
     }
 
 
@@ -212,6 +235,26 @@ export default function AdminCareersPage() {
                             </FormItem>
                         )}
                     />
+                     <FormField
+                        control={form.control}
+                        name="featured"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                            <div className="space-y-0.5">
+                                <FormLabel>Feature on Homepage</FormLabel>
+                                <CardDescription>
+                                Highlight this job opening on the main dashboard.
+                                </CardDescription>
+                            </div>
+                            <FormControl>
+                                <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
+                            </FormItem>
+                        )}
+                        />
                     <div className="flex gap-2">
                         <Button type="submit">
                             {editingJob ? (
@@ -245,6 +288,7 @@ export default function AdminCareersPage() {
                 <TableHead>Title</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Location</TableHead>
+                <TableHead>Featured</TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -260,6 +304,13 @@ export default function AdminCareersPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>{job.location}</TableCell>
+                  <TableCell>
+                      <Switch
+                        checked={job.featured}
+                        onCheckedChange={(checked) => handleFeatureToggle(job.id, checked)}
+                        aria-label="Feature on homepage"
+                      />
+                  </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
