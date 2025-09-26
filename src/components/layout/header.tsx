@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -17,6 +18,9 @@ import {
 import { Breadcrumbs } from './breadcrumbs';
 
 function getPageTitle(pathname: string): string {
+    if (pathname === '/admin/projects/new') {
+    return 'Create New Project';
+  }
   if (pathname.startsWith('/projects/')) {
     return 'Project Details';
   }
@@ -105,5 +109,7 @@ export function Header() {
     </header>
   );
 }
+
+    
 
     

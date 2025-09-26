@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -51,6 +52,24 @@ export function Breadcrumbs() {
         {pathSegments.map((segment, index) => {
           const isLast = index === pathSegments.length - 1;
           const href = '/' + pathSegments.slice(0, index + 1).join('/');
+
+          // Handle admin/projects/new
+           if (pathSegments[index - 1] === 'projects' && segment === 'new') {
+            return (
+              <React.Fragment key={href}>
+                 <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                   <BreadcrumbLink asChild>
+                        <Link href="/admin">Admin</Link>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>New Project</BreadcrumbPage>
+                </BreadcrumbItem>
+              </React.Fragment>
+            );
+          }
 
           // Handle project routes
           if (pathSegments[index - 1] === 'projects' && !isLast) {
