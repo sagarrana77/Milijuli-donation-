@@ -60,7 +60,7 @@ export function RealtimeLedger() {
   if (!isClient) {
     // Render a placeholder or nothing on the server
     return (
-        <Card className="lg:col-span-4">
+        <Card>
             <CardHeader>
                 <CardTitle>Real-time Ledger</CardTitle>
                 <CardDescription>A live feed of all incoming donations.</CardDescription>
@@ -75,7 +75,7 @@ export function RealtimeLedger() {
   }
 
   return (
-    <Card className="lg:col-span-4">
+    <Card>
       <CardHeader>
         <CardTitle>Real-time Ledger</CardTitle>
         <CardDescription>A live feed of all incoming donations.</CardDescription>

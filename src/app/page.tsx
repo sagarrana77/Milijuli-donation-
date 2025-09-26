@@ -18,6 +18,7 @@ import {
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import { dashboardStats, expenseData } from '@/lib/data';
+import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 
 export default function DashboardPage() {
   return (
@@ -71,9 +72,9 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
-        <OperationalCosts />
-        <Card className="lg:col-span-3">
+      <div className="grid gap-8 lg:grid-cols-2">
+        <RealtimeLedger />
+        <Card>
           <CardHeader>
             <CardTitle>Expense Breakdown</CardTitle>
             <CardDescription>
@@ -85,6 +86,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <OperationalCosts />
     </div>
   );
 }

@@ -21,7 +21,7 @@ import { format } from 'date-fns';
 
 export function OperationalCosts() {
   return (
-    <Card className="lg:col-span-4">
+    <Card>
       <CardHeader>
         <CardTitle>Operational Costs</CardTitle>
         <CardDescription>
