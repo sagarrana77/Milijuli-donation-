@@ -34,7 +34,7 @@ export type Project = {
     receiptHint: string;
   }[];
   discussion: {
-    id: string;
+    id:string;
     author: string;
     avatarUrl: string;
     profileUrl: string;
@@ -297,8 +297,7 @@ export const users: User[] = [
         profileUrl: '/profile/user-ai-chan',
         bio: 'Supports disaster relief and emergency response efforts.'
     },
-    { 
-        id: 'user-raj-patel', 
+    { _id: 'user-raj-patel', 
         name: 'Raj Patel', 
         avatarUrl: getImageUrl('avatar-raj-patel'), 
         profileUrl: '/profile/user-raj-patel',
@@ -380,7 +379,30 @@ export const expenseData = [
   { name: 'Health', value: 10, fill: 'var(--color-chart-4)' },
 ];
 
-export const teamMembers = [
+export type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  avatarUrl: string;
+  bio: string;
+  socials: {
+    twitter: string;
+    linkedin: string;
+  };
+  experience: {
+    role: string;
+    company: string;
+    duration: string;
+  }[];
+  education: {
+    degree: string;
+    institution: string;
+    year: string;
+  }[];
+  skills: string[];
+};
+
+export const teamMembers: TeamMember[] = [
   {
     id: 'alex-johnson',
     name: 'Alex Johnson',
@@ -391,7 +413,17 @@ export const teamMembers = [
     socials: {
         twitter: 'https://twitter.com/alexjohnson',
         linkedin: 'https://linkedin.com/in/alexjohnson'
-    }
+    },
+    experience: [
+        { role: 'Founder & CEO', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Senior Software Engineer', company: 'Tech for Good Inc.', duration: '2018 - 2022' },
+        { role: 'Software Engineer', company: 'Innovate Solutions', duration: '2015 - 2018' },
+    ],
+    education: [
+        { degree: 'M.S. in Computer Science', institution: 'Stanford University', year: '2015' },
+        { degree: 'B.S. in Computer Science', institution: 'University of California, Berkeley', year: '2013' },
+    ],
+    skills: ['Social Entrepreneurship', 'Blockchain', 'Full-Stack Development', 'Strategic Planning', 'Fundraising'],
   },
   {
     id: 'maria-garcia',
@@ -403,7 +435,17 @@ export const teamMembers = [
     socials: {
         twitter: 'https://twitter.com/mariagarcia',
         linkedin: 'https://linkedin.com/in/mariagarcia'
-    }
+    },
+    experience: [
+        { role: 'Head of Operations', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Program Director', company: 'Global Aid Network', duration: '2015 - 2022' },
+        { role: 'Field Coordinator', company: 'Hope International', duration: '2010 - 2015' },
+    ],
+    education: [
+        { degree: 'M.A. in International Development', institution: 'Georgetown University', year: '2010' },
+        { degree: 'B.A. in Sociology', institution: 'University of Texas at Austin', year: '2008' },
+    ],
+    skills: ['Non-Profit Management', 'Project Coordination', 'Community Outreach', 'Logistics', 'Grant Management'],
   },
   {
     id: 'sam-chen',
@@ -415,7 +457,16 @@ export const teamMembers = [
     socials: {
         twitter: 'https://twitter.com/samchen',
         linkedin: 'https://linkedin.com/in/samchen'
-    }
+    },
+    experience: [
+        { role: 'Lead Blockchain Developer', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Senior Solidity Developer', company: 'DeFi Systems', duration: '2019 - 2022' },
+        { role: 'Backend Engineer', company: 'Fintech Innovations', duration: '2017 - 2019' },
+    ],
+    education: [
+        { degree: 'B.S. in Software Engineering', institution: 'Carnegie Mellon University', year: '2017' },
+    ],
+    skills: ['Solidity', 'Smart Contracts', 'Ethereum', 'Distributed Systems', 'Cryptography', 'Node.js'],
   },
 ];
 
@@ -440,5 +491,3 @@ export const values = [
       'Our ultimate goal is to maximize the positive impact of every donation, creating lasting change in communities.',
   },
 ];
-
-    
