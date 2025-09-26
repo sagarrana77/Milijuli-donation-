@@ -34,8 +34,9 @@ export default function DashboardPage() {
     (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
   );
 
-  const runningProjects = projects.filter(p => p.raisedAmount < p.targetAmount);
-  const finishedProjects = projects.filter(p => p.raisedAmount >= p.targetAmount);
+  const sortedProjects = [...projects].sort((a, b) => Number(b.verified) - Number(a.verified));
+  const runningProjects = sortedProjects.filter(p => p.raisedAmount < p.targetAmount);
+  const finishedProjects = sortedProjects.filter(p => p.raisedAmount >= p.targetAmount);
   const featuredJobs = jobOpenings.filter(job => job.featured).slice(0, 2);
 
 
