@@ -297,7 +297,8 @@ export const users: User[] = [
         profileUrl: '/profile/user-ai-chan',
         bio: 'Supports disaster relief and emergency response efforts.'
     },
-    { _id: 'user-raj-patel', 
+    { 
+        id: 'user-raj-patel', 
         name: 'Raj Patel', 
         avatarUrl: getImageUrl('avatar-raj-patel'), 
         profileUrl: '/profile/user-raj-patel',
