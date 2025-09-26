@@ -153,7 +153,7 @@ export default function DashboardPage() {
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {featuredJobs.map(job => (
             <Card key={job.id} className="flex flex-col">
               <CardHeader>
