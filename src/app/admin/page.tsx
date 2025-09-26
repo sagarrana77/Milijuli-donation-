@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
 import {
   Card,
   CardContent,
@@ -14,8 +18,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, PlusCircle } from 'lucide-react';
+import { MoreHorizontal, PlusCircle, QrCode, CreditCard } from 'lucide-react';
 import { projects } from '@/lib/data';
 import {
   DropdownMenu,
@@ -26,31 +33,118 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 
+const initialGateways = [
+  { name: 'Esewa', enabled: true },
+  { name: 'Khalti', enabled: true },
+  { name: 'FonePay', enabled: true },
+  { name: 'PayPal', enabled: false },
+  { name: 'Stripe', enabled: true },
+  { name: 'Crypto', enabled: false },
+];
+
 export default function AdminDashboardPage() {
+  const [qrUrl, setQrUrl] = useState('');
+  const [generatedQr, setGeneratedQr] = useState('');
+  const [gateways, setGateways] = useState(initialGateways);
+
+  const handleGenerateQr = () => {
+    if (qrUrl) {
+      setGeneratedQr(
+        `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+          qrUrl
+        )}`
+      );
+    }
+  };
+  
+  const handleGatewayToggle = (name: string) => {
+    setGateways(gateways.map(g => g.name === name ? {...g, enabled: !g.enabled} : g));
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Manage Projects</h1>
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground">
-            Here you can add, edit, or remove projects.
+            Manage your platform settings and content.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/admin/projects/new">
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Project
-          </Link>
-        </Button>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <QrCode />
+              QR Code Creator
+            </CardTitle>
+            <CardDescription>
+              Generate a QR code for any URL to use in your campaigns.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-2">
+              <Input
+                type="url"
+                placeholder="https://example.com"
+                value={qrUrl}
+                onChange={(e) => setQrUrl(e.target.value)}
+              />
+              <Button onClick={handleGenerateQr}>Generate</Button>
+            </div>
+            {generatedQr && (
+              <div className="flex flex-col items-center gap-4 rounded-lg border bg-muted p-4">
+                <Image
+                  src={generatedQr}
+                  alt="Generated QR Code"
+                  width={200}
+                  height={200}
+                  data-ai-hint="qr code"
+                />
+                <p className="text-center text-sm text-muted-foreground break-all">
+                  QR Code for: {qrUrl}
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard />
+              Payment Gateways
+            </CardTitle>
+            <CardDescription>
+              Enable or disable payment methods for donations.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {gateways.map((gateway) => (
+                <div key={gateway.name} className="flex items-center justify-between rounded-md border p-3">
+                    <Label htmlFor={`gateway-${gateway.name}`} className="font-medium">{gateway.name}</Label>
+                    <Switch id={`gateway-${gateway.name}`} checked={gateway.enabled} onCheckedChange={() => handleGatewayToggle(gateway.name)} />
+                </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Existing Projects</CardTitle>
+          <CardTitle>Manage Projects</CardTitle>
           <CardDescription>
-            A list of all projects in the system.
+            A list of all projects in the system. You can add, edit, or remove them.
           </CardDescription>
         </CardHeader>
         <CardContent>
+            <div className="mb-4 flex justify-end">
+                <Button asChild>
+                    <Link href="/admin/projects/new">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Add Project
+                    </Link>
+                </Button>
+            </div>
           <Table>
             <TableHeader>
               <TableRow>
