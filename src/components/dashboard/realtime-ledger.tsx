@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { recentDonations, projects } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -94,16 +95,18 @@ export function RealtimeLedger() {
             {donations.map((donation) => (
               <TableRow key={donation.id}>
                 <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage
-                        src={donation.donor.avatarUrl}
-                        alt={donation.donor.name}
-                      />
-                      <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="font-medium">{donation.donor.name}</div>
-                  </div>
+                  <Link href="/profile">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage
+                          src={donation.donor.avatarUrl}
+                          alt={donation.donor.name}
+                        />
+                        <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="font-medium">{donation.donor.name}</div>
+                    </div>
+                  </Link>
                 </TableCell>
                 <TableCell>{donation.project}</TableCell>
                 <TableCell className="text-right">${donation.amount.toLocaleString()}</TableCell>
