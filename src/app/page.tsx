@@ -15,17 +15,19 @@ import { Progress } from '@/components/ui/progress';
 import {
   DollarSign,
   Users,
-  HeartHandshake,
   Briefcase,
   HandCoins,
   CheckCircle,
   TrendingUp,
+  UserPlus,
+  ArrowRight,
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { dashboardStats, expenseData, operationalCostsFund, projects } from '@/lib/data';
+import { dashboardStats, expenseData, operationalCostsFund, projects, jobOpenings } from '@/lib/data';
 import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 import { ProjectCard } from '@/components/projects/project-card';
+import { Badge } from '@/components/ui/badge';
 
 export default function DashboardPage() {
     const opsPercentage = Math.round(
@@ -34,6 +36,7 @@ export default function DashboardPage() {
 
   const runningProjects = projects.filter(p => p.raisedAmount < p.targetAmount);
   const finishedProjects = projects.filter(p => p.raisedAmount >= p.targetAmount);
+  const latestJobs = jobOpenings.slice(0, 3);
 
 
   return (
@@ -137,6 +140,40 @@ export default function DashboardPage() {
         </div>
       </div>
       
+      <section>
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <UserPlus className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold">We're Hiring!</h2>
+          </div>
+          <Button asChild variant="outline">
+            <Link href="/careers">
+                View All Openings <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {latestJobs.map(job => (
+            <Card key={job.id} className="flex flex-col">
+              <CardHeader>
+                <CardTitle>{job.title}</CardTitle>
+                <CardDescription>{job.location}</CardDescription>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                 <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
+                    {job.type}
+                </Badge>
+              </CardContent>
+              <CardFooter>
+                <Button asChild variant="secondary" className="w-full">
+                    <Link href="/careers">Learn More</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </section>
+
       <section>
         <div className="mb-4 flex items-center gap-3">
           <TrendingUp className="h-6 w-6 text-primary" />
