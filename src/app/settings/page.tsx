@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Linkedin, Twitter, Instagram } from 'lucide-react';
+
 
 export default function SettingsPage() {
   return (
@@ -31,6 +33,31 @@ export default function SettingsPage() {
           <Button>Save Changes</Button>
         </CardContent>
       </Card>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>Social Links</CardTitle>
+          <CardDescription>
+            Add your social media profiles to be displayed on your profile.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="linkedin" className="flex items-center gap-2"><Linkedin className="h-4 w-4" /> LinkedIn URL</Label>
+            <Input id="linkedin" placeholder="https://linkedin.com/in/your-username" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="twitter" className="flex items-center gap-2"><Twitter className="h-4 w-4" /> Twitter / X URL</Label>
+            <Input id="twitter" placeholder="https://twitter.com/your-username" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="instagram" className="flex items-center gap-2"><Instagram className="h-4 w-4" /> Instagram URL</Label>
+            <Input id="instagram" placeholder="https://instagram.com/your-username" />
+          </div>
+          <Button>Save Social Links</Button>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Change Password</CardTitle>
