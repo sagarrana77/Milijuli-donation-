@@ -1,3 +1,88 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "project-education-nepal",
+      "description": "Children in a classroom in rural Nepal.",
+      "imageUrl": "https://images.unsplash.com/photo-1593442808882-775dfcd90699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxuZXBhbCUyMGNsYXNzcm9vbXxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nepal classroom"
+    },
+    {
+      "id": "project-clean-water",
+      "description": "A clean water well being installed in a village.",
+      "imageUrl": "https://images.unsplash.com/photo-1526599256864-6bedb9d7dfb5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3YXRlciUyMHdlbGx8ZW58MHx8fHwxNzU4ODc0NjA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "water well"
+    },
+    {
+      "id": "project-community-health",
+      "description": "A health worker attending to a patient in a community clinic.",
+      "imageUrl": "https://images.unsplash.com/photo-1527525443983-6e60c75fff46?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjb21tdW5pdHklMjBoZWFsdGh8ZW58MHx8fHwxNzU4ODY0MTk2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "community health"
+    },
+    {
+      "id": "project-disaster-relief",
+      "description": "Volunteers distributing supplies after a natural disaster.",
+      "imageUrl": "https://images.unsplash.com/photo-1695605347127-37830bbd7ffc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkaXNhc3RlciUyMHJlbGllZnxlbnwwfHx8fDE3NTg3OTM0NTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "disaster relief"
+    },
+    {
+      "id": "avatar-jane-doe",
+      "description": "Avatar for Jane Doe.",
+      "imageUrl": "https://images.unsplash.com/photo-1593351799227-75df2026356b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc1ODg2Nzc5Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "avatar-john-smith",
+      "description": "Avatar for John Smith.",
+      "imageUrl": "https://images.unsplash.com/photo-1607031542107-f6f46b5d54e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTg4MzA1NjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "avatar-ai-chan",
+      "description": "Avatar for Ai Chan.",
+      "imageUrl": "https://images.unsplash.com/photo-1581065178047-8ee15951ede6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YXNpYW4lMjB3b21hbnxlbnwwfHx8fDE3NTg4MjQxODV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "asian woman"
+    },
+    {
+      "id": "avatar-raj-patel",
+      "description": "Avatar for Raj Patel.",
+      "imageUrl": "https://images.unsplash.com/photo-1534339480783-6816b68be29c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxpbmRpYW4lMjBtYW58ZW58MHx8fHwxNzU4ODc0NjA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "indian man"
+    },
+    {
+      "id": "avatar-anonymous",
+      "description": "Avatar for an anonymous donor.",
+      "imageUrl": "https://images.unsplash.com/photo-1705975848221-d73d53c0119d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBlcnNvbnxlbnwwfHx8fDE3NTg4Mzc1MTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract person"
+    },
+    {
+      "id": "qr-code-placeholder",
+      "description": "Placeholder QR code.",
+      "imageUrl": "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://example.com",
+      "imageHint": "qr code"
+    },
+    {
+      "id": "receipt-1",
+      "description": "A scanned receipt for school supplies.",
+      "imageUrl": "https://images.unsplash.com/photo-1644457203513-a083e0e3be29?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxyZWNlaXB0JTIwc2NhbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "receipt scan"
+    },
+    {
+      "id": "receipt-2",
+      "description": "A scanned receipt for construction materials.",
+      "imageUrl": "https://images.unsplash.com/photo-1693045181254-08462917f681?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxpbnZvaWNlJTIwZG9jdW1lbnR8ZW58MHx8fHwxNzU4Nzg4MDcyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "invoice document"
+    },
+    {
+      "id": "update-photo-1",
+      "description": "Students with new books.",
+      "imageUrl": "https://images.unsplash.com/photo-1531545514256-b1400bc00f31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxoYXBweSUyMHN0dWRlbnRzfGVufDB8fHx8MTc1ODg1NjUxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy students"
+    },
+    {
+      "id": "update-photo-2",
+      "description": "A newly built school wall.",
+      "imageUrl": "https://images.unsplash.com/photo-1575281923032-f40d94ef6160?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjb25zdHJ1Y3Rpb24lMjBzaXRlfGVufDB8fHx8MTc1ODgwNjUzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "construction site"
+    }
+  ]
 }

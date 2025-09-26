@@ -1,0 +1,19 @@
+'use client';
+
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { MainSidebar } from '@/components/layout/main-sidebar';
+import { Header } from '@/components/layout/header';
+
+export function AppShell({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen bg-background">
+        <MainSidebar />
+        <SidebarInset className="min-w-0 flex-1 flex-col">
+          <Header />
+          <main className="flex-1 p-4 sm:p-6 md:p-8">{children}</main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
+  );
+}
