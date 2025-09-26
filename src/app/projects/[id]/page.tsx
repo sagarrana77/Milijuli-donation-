@@ -22,6 +22,8 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { DiscussionSection } from '@/components/projects/discussion-section';
 import { DonorsList } from '@/components/projects/donors-list';
 import { format } from 'date-fns';
+import { DonationDialog } from '@/components/projects/donation-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 function getProject(id: string): Project | undefined {
   return projects.find((p) => p.id === id);
@@ -41,6 +43,8 @@ export default function ProjectDetailPage({
   const [raisedAmount, setRaisedAmount] = useState(project?.raisedAmount || 0);
   const [donors, setDonors] = useState(project?.donors || 0);
   const [isClient, setIsClient] = useState(false);
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     setIsClient(true);
@@ -63,6 +67,16 @@ export default function ProjectDetailPage({
   if (!project) {
     notFound();
   }
+  
+  const handleDonation = (amount: number) => {
+    setRaisedAmount((prev) => prev + amount);
+    setDonors((prev) => prev + 1);
+    toast({
+      title: 'Thank You for Your Support!',
+      description: `Your generous donation of $${amount} will help us continue our mission.`,
+      variant: 'default',
+    });
+  };
 
   const percentage = Math.round(
     (raisedAmount / project.targetAmount) * 100
@@ -70,6 +84,12 @@ export default function ProjectDetailPage({
 
   return (
     <div className="mx-auto max-w-6xl">
+       <DonationDialog
+        isOpen={isDonationOpen}
+        onOpenChange={setIsDonationOpen}
+        projectName={project.name}
+        onDonate={handleDonation}
+      />
       <header className="mb-8">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
@@ -209,7 +229,7 @@ export default function ProjectDetailPage({
                     </div>
                  </div>
               )}
-              <Button size="lg" className="w-full text-lg">
+              <Button size="lg" className="w-full text-lg" onClick={() => setIsDonationOpen(true)}>
                 Donate Now
               </Button>
             </CardContent>

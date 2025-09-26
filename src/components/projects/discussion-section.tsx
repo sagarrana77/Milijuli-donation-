@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Card, CardContent } from '@/components/ui/card';
 import type { Project } from '@/lib/data';
 import Link from 'next/link';
+import { useForm as useReactHookForm } from 'react-hook-form';
 
 type Comment = Project['discussion'][0];
 
@@ -35,13 +36,20 @@ export function DiscussionSection({
 }: DiscussionSectionProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
 
+  const form = useReactHookForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      comment: '',
+    },
+  });
+
   // In a real app, this would be an API call.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const newComment: Comment = {
       id: `comment-${Date.now()}`,
       author: 'Current User', // This would come from auth
       avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
-      profileUrl: '/profile',
+      profileUrl: '/profile/current-user',
       date: new Date(),
       text: values.comment,
     };

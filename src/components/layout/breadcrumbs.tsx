@@ -75,7 +75,7 @@ export function Breadcrumbs() {
           if (pathSegments[index - 1] === 'projects' && !isLast) {
               return null;
           }
-          if (pathSegments[index - 1] === 'projects' && isLast) {
+          if (pathSegments[index-1] === 'projects' && isLast) {
             return (
               <React.Fragment key={href}>
                  <BreadcrumbSeparator />
@@ -93,7 +93,7 @@ export function Breadcrumbs() {
           }
 
           // Handle team routes
-          if (pathSegments[index-1] === 'about' && segment === 'team') {
+           if (pathSegments[index-1] === 'about' && segment === 'team') {
               return null; // Don't show "Team" in breadcrumb
           }
            if (pathSegments[index-1] === 'team') {
@@ -103,6 +103,24 @@ export function Breadcrumbs() {
                 <BreadcrumbItem>
                    <BreadcrumbLink asChild>
                         <Link href="/about">About</Link>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{formatCrumb(segment)}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </React.Fragment>
+            );
+          }
+
+           // Handle profile routes
+           if (pathSegments[index-1] === 'profile') {
+            return (
+              <React.Fragment key={href}>
+                 <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                   <BreadcrumbLink asChild>
+                        <Link href="/profile/current-user">Profile</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
@@ -133,5 +151,3 @@ export function Breadcrumbs() {
     </Breadcrumb>
   );
 }
-
-    
