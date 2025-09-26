@@ -82,7 +82,7 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground">
@@ -149,12 +149,13 @@ export default function AdminDashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Input
                 type="url"
                 placeholder="https://example.com"
                 value={qrUrl}
                 onChange={(e) => setQrUrl(e.target.value)}
+                className="flex-grow"
               />
               <Button onClick={handleGenerateQr}>Generate</Button>
             </div>
@@ -208,7 +209,7 @@ export default function AdminDashboardPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="stripe">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
                 <TabsTrigger value="stripe">Stripe</TabsTrigger>
                 <TabsTrigger value="paypal">PayPal</TabsTrigger>
                 <TabsTrigger value="bank">Bank Account</TabsTrigger>
@@ -305,7 +306,7 @@ export default function AdminDashboardPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="salaries">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2">
                 <TabsTrigger value="salaries"><Briefcase className="mr-2 h-4 w-4"/> Salaries</TabsTrigger>
                 <TabsTrigger value="equipment"><MonitorSmartphone className="mr-2 h-4 w-4"/> Equipment</TabsTrigger>
               </TabsList>
@@ -319,31 +320,33 @@ export default function AdminDashboardPage() {
                   </div>
                   <Button className="mt-4">Add Salary</Button>
                 </div>
-                 <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Employee</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Salary</TableHead>
-                      <TableHead><span className="sr-only">Actions</span></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>John Doe</TableCell>
-                      <TableCell>Project Manager</TableCell>
-                      <TableCell>$3,000 / mo</TableCell>
-                      <TableCell className="text-right">
-                          <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                 <div className="overflow-x-auto">
+                    <Table>
+                    <TableHeader>
+                        <TableRow>
+                        <TableHead>Employee</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Salary</TableHead>
+                        <TableHead><span className="sr-only">Actions</span></TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                        <TableCell>John Doe</TableCell>
+                        <TableCell>Project Manager</TableCell>
+                        <TableCell>$3,000 / mo</TableCell>
+                        <TableCell className="text-right">
+                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                        </TableCell>
+                        </TableRow>
+                    </TableBody>
+                    </Table>
+                 </div>
               </TabsContent>
               <TabsContent value="equipment" className="mt-4">
                 <div className="mb-4 rounded-md border p-4">
                     <h3 className="font-semibold mb-2">Add New Equipment Cost</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <Input placeholder="Item Name" />
                         <Input type="number" placeholder="Cost ($)" />
                         <Input type="date" placeholder="Purchase Date" />
@@ -351,28 +354,30 @@ export default function AdminDashboardPage() {
                     </div>
                     <Button className="mt-4">Add Cost</Button>
                 </div>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Item</TableHead>
-                      <TableHead>Cost</TableHead>
-                      <TableHead>Purchase Date</TableHead>
-                      <TableHead>Vendor</TableHead>
-                       <TableHead><span className="sr-only">Actions</span></TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>MacBook Pro 16"</TableCell>
-                      <TableCell>$2,500</TableCell>
-                      <TableCell>2023-10-01</TableCell>
-                      <TableCell>Apple Store</TableCell>
-                       <TableCell className="text-right">
-                          <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                <div className="overflow-x-auto">
+                    <Table>
+                    <TableHeader>
+                        <TableRow>
+                        <TableHead>Item</TableHead>
+                        <TableHead>Cost</TableHead>
+                        <TableHead>Purchase Date</TableHead>
+                        <TableHead>Vendor</TableHead>
+                        <TableHead><span className="sr-only">Actions</span></TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                        <TableCell>MacBook Pro 16"</TableCell>
+                        <TableCell>$2,500</TableCell>
+                        <TableCell>2023-10-01</TableCell>
+                        <TableCell>Apple Store</TableCell>
+                        <TableCell className="text-right">
+                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                        </TableCell>
+                        </TableRow>
+                    </TableBody>
+                    </Table>
+                </div>
               </TabsContent>
             </Tabs>
           </CardContent>
@@ -393,56 +398,58 @@ export default function AdminDashboardPage() {
                     </Link>
                 </Button>
             </div>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Project Name</TableHead>
-                <TableHead>Organization</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Raised</TableHead>
-                <TableHead>Donors</TableHead>
-                <TableHead>
-                  <span className="sr-only">Actions</span>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {projects.map((project) => (
-                <TableRow key={project.id}>
-                  <TableCell className="font-medium">{project.name}</TableCell>
-                  <TableCell>{project.organization}</TableCell>
-                  <TableCell>
-                    <Badge variant={project.verified ? 'default' : 'secondary'}>
-                      {project.verified ? 'Verified' : 'Unverified'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    ${project.raisedAmount.toLocaleString()}
-                  </TableCell>
-                  <TableCell>{project.donors.toLocaleString()}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-haspopup="true"
-                          size="icon"
-                          variant="ghost"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Toggle menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+                <TableHeader>
+                <TableRow>
+                    <TableHead>Project Name</TableHead>
+                    <TableHead>Organization</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Raised</TableHead>
+                    <TableHead>Donors</TableHead>
+                    <TableHead>
+                    <span className="sr-only">Actions</span>
+                    </TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                </TableHeader>
+                <TableBody>
+                {projects.map((project) => (
+                    <TableRow key={project.id}>
+                    <TableCell className="font-medium">{project.name}</TableCell>
+                    <TableCell>{project.organization}</TableCell>
+                    <TableCell>
+                        <Badge variant={project.verified ? 'default' : 'secondary'}>
+                        {project.verified ? 'Verified' : 'Unverified'}
+                        </Badge>
+                    </TableCell>
+                    <TableCell>
+                        ${project.raisedAmount.toLocaleString()}
+                    </TableCell>
+                    <TableCell>{project.donors.toLocaleString()}</TableCell>
+                    <TableCell>
+                        <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                            aria-haspopup="true"
+                            size="icon"
+                            variant="ghost"
+                            >
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Toggle menu</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+                    </TableCell>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

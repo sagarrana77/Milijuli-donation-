@@ -72,27 +72,31 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-      <div className="grid gap-8 lg:grid-cols-2">
-        <RealtimeLedger />
-        <Card>
-          <CardHeader>
-            <CardTitle>Expense Breakdown</CardTitle>
-            <CardDescription>
-              How funds are being allocated across categories.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center">
-            <ExpenseChart data={expenseData} />
-            <div className="mt-4 flex flex-wrap justify-center gap-4 text-sm">
-                {expenseData.map((entry) => (
-                    <div key={entry.name} className="flex items-center gap-2">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
-                        <span className="text-foreground">{entry.name}</span>
-                    </div>
-                ))}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid gap-8 lg:grid-cols-5">
+        <div className="lg:col-span-3">
+          <RealtimeLedger />
+        </div>
+        <div className="lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Expense Breakdown</CardTitle>
+              <CardDescription>
+                How funds are being allocated across categories.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center">
+              <ExpenseChart data={expenseData} />
+              <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+                  {expenseData.map((entry) => (
+                      <div key={entry.name} className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1">
+                          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
+                          <span className="text-foreground">{entry.name}</span>
+                      </div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
       <OperationalCosts />
     </div>
