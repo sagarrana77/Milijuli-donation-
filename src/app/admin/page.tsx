@@ -32,7 +32,6 @@ import {
   MessageSquare,
   Briefcase,
   MonitorSmartphone,
-  DollarSign,
   ArrowDown,
   ArrowRight,
   Edit,
@@ -52,6 +51,9 @@ import WhatsAppIcon from '@/components/icons/whatsapp-icon';
 import { ViberIcon } from '@/components/icons/viber-icon';
 import InstagramIcon from '@/components/icons/instagram-icon';
 import MessengerIcon from '@/components/icons/messenger-icon';
+import { RecordExpenseDialog } from '@/components/admin/record-expense-dialog';
+import { TransferFundsDialog } from '@/components/admin/transfer-funds-dialog';
+import { useToast } from '@/hooks/use-toast';
 
 
 const initialGateways = [
@@ -67,6 +69,9 @@ export default function AdminDashboardPage() {
   const [qrUrl, setQrUrl] = useState('');
   const [generatedQr, setGeneratedQr] = useState('');
   const [gateways, setGateways] = useState(initialGateways);
+  const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
+  const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const handleGenerateQr = () => {
     if (qrUrl) {
@@ -82,8 +87,32 @@ export default function AdminDashboardPage() {
     setGateways(gateways.map(g => g.name === name ? {...g, enabled: !g.enabled} : g));
   }
 
+  const handleExpenseRecorded = () => {
+    toast({
+        title: 'Expense Recorded',
+        description: 'The expense has been successfully logged.',
+    });
+  }
+
+  const handleFundsTransferred = () => {
+    toast({
+        title: 'Funds Transferred',
+        description: 'The funds have been successfully transferred.',
+    });
+  }
+
   return (
     <div className="flex flex-col gap-8">
+      <RecordExpenseDialog 
+        isOpen={isExpenseDialogOpen} 
+        onOpenChange={setIsExpenseDialogOpen} 
+        onExpenseRecorded={handleExpenseRecorded}
+      />
+      <TransferFundsDialog
+        isOpen={isTransferDialogOpen}
+        onOpenChange={setIsTransferDialogOpen}
+        onFundsTransferred={handleFundsTransferred}
+      />
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
@@ -132,11 +161,11 @@ export default function AdminDashboardPage() {
            <div className="rounded-lg border bg-accent/20 p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Actions</h3>
             <div className="mt-2 flex flex-col gap-2">
-                 <Button size="sm">
+                 <Button size="sm" onClick={() => setIsExpenseDialogOpen(true)}>
                     <ArrowDown className="mr-2 h-4 w-4" />
                     Record Expense
                 </Button>
-                <Button size="sm">
+                <Button size="sm" onClick={() => setIsTransferDialogOpen(true)}>
                     <ArrowRight className="mr-2 h-4 w-4" />
                     Transfer Funds
                 </Button>
@@ -464,3 +493,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
+    
