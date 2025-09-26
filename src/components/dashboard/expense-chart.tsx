@@ -1,10 +1,8 @@
+
 'use client';
 
-import { Pie, PieChart, Cell, Tooltip, Legend } from 'recharts';
-import {
-  ChartContainer,
-  ChartTooltipContent,
-} from '@/components/ui/chart';
+import { RadialBar, RadialBarChart, Legend, Tooltip } from 'recharts';
+import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 
 interface ExpenseChartProps {
   data: { name: string; value: number; fill: string }[];
@@ -34,40 +32,43 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
       config={chartConfig}
       className="mx-auto aspect-square h-[300px]"
     >
-      <PieChart>
-        <Tooltip
-          cursor={false}
-          content={<ChartTooltipContent hideLabel />}
+      <RadialBarChart
+        data={data}
+        innerRadius="50%"
+        outerRadius="100%"
+        startAngle={90}
+        endAngle={-270}
+      >
+        <Tooltip cursor={false} content={<ChartTooltipContent hideLabel nameKey="name" />} />
+        <RadialBar
+            dataKey="value"
+            background
+            cornerRadius={10}
         />
-        <Pie
-          data={data}
-          dataKey="value"
-          nameKey="name"
-          innerRadius={60}
-          strokeWidth={5}
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.fill} />
-          ))}
-        </Pie>
         <Legend
+          iconType="circle"
+          layout="vertical"
+          verticalAlign="middle"
+          align="right"
           content={({ payload }) => {
             return (
-              <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                {payload?.map((entry, index) => (
+              <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                {payload?.map((entry, index) => {
+                  const matchingData = data.find(d => d.name === entry.value);
+                  return (
                   <li key={`item-${index}`} className="flex items-center gap-2">
                     <span
                       className="h-2 w-2 rounded-full"
                       style={{ backgroundColor: entry.color }}
                     />
-                    {entry.value}
+                    <span>{entry.value} ({matchingData?.value}%)</span>
                   </li>
-                ))}
+                )})}
               </ul>
             );
           }}
         />
-      </PieChart>
+      </RadialBarChart>
     </ChartContainer>
   );
 }
