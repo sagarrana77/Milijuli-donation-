@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -48,9 +49,14 @@ export function MainSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
-        <div className="flex items-center gap-2 p-2">
-          <Logo className="h-8 w-8 text-primary" />
-          <span className="text-lg font-semibold">ClarityChain</span>
+        <div className="flex items-center justify-between p-2">
+          <div className="flex items-center gap-2">
+            <Logo className="h-8 w-8 text-primary" />
+            <span className="text-lg font-semibold">ClarityChain</span>
+          </div>
+          <div className='md:hidden'>
+            <SidebarTrigger />
+          </div>
         </div>
       </SidebarHeader>
       <SidebarContent className="flex-1">
@@ -83,7 +89,7 @@ export function MainSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }}>
-              <Link href="#">
+              <Link href="/settings">
                 <Settings />
                 <span>Settings</span>
               </Link>
