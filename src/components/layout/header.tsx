@@ -24,6 +24,8 @@ function getPageTitle(pathname: string): string {
       return 'Projects';
     case '/reports':
       return 'AI Reports';
+    case '/admin':
+      return 'Admin Dashboard';
     default:
       return 'ClarityChain';
   }

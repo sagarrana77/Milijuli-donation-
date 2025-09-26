@@ -18,12 +18,14 @@ import {
   FileText,
   Settings,
   CircleHelp,
+  Shield,
 } from 'lucide-react';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/projects', label: 'Projects', icon: HeartHandshake },
   { href: '/reports', label: 'Reports', icon: FileText },
+  { href: '/admin', label: 'Admin', icon: Shield },
 ];
 
 export function MainSidebar() {
