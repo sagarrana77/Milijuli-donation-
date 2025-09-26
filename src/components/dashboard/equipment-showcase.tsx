@@ -39,19 +39,19 @@ export function EquipmentShowcase() {
           <CarouselContent>
             {purchasedEquipment.map((item) => (
               <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <Card>
-                    <CardContent className="relative flex aspect-video items-center justify-center p-0">
+                <div className="p-1 h-full">
+                  <Card className="flex flex-col h-full">
+                    <CardContent className="relative p-0">
                        <Image
                         src={item.imageUrl!}
                         alt={item.item}
                         width={400}
                         height={225}
-                        className="rounded-t-lg object-cover"
+                        className="rounded-t-lg object-cover w-full h-auto aspect-[16/9]"
                         data-ai-hint={item.imageHint}
                       />
                     </CardContent>
-                     <div className="p-4">
+                     <div className="p-4 flex flex-col flex-grow">
                         <p className="font-semibold">{item.item}</p>
                         <p className="text-sm text-muted-foreground">Purchased: {format(item.purchaseDate, 'PP')}</p>
                         <p className="text-sm text-muted-foreground">Cost: ${item.cost.toLocaleString()}</p>
