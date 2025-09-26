@@ -1,3 +1,7 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { projects, type Project } from '@/lib/data';
@@ -33,13 +37,33 @@ export default function ProjectDetailPage({
   params: { id: string };
 }) {
   const project = getProject(params.id);
+  
+  const [raisedAmount, setRaisedAmount] = useState(project?.raisedAmount || 0);
+  const [donors, setDonors] = useState(project?.donors || 0);
+
+  useEffect(() => {
+    if (!project || raisedAmount >= project.targetAmount) {
+        return;
+    }
+
+    const interval = setInterval(() => {
+        setRaisedAmount(prev => {
+            const newAmount = prev + Math.floor(Math.random() * 150) + 20;
+            return Math.min(newAmount, project.targetAmount);
+        });
+        setDonors(prev => prev + 1);
+    }, 4000); // Simulate new donation every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [project, raisedAmount]);
+
 
   if (!project) {
     notFound();
   }
 
   const percentage = Math.round(
-    (project.raisedAmount / project.targetAmount) * 100
+    (raisedAmount / project.targetAmount) * 100
   );
 
   return (
@@ -151,7 +175,7 @@ export default function ProjectDetailPage({
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="font-bold">${project.raisedAmount.toLocaleString()}</p>
+                    <p className="font-bold">${raisedAmount.toLocaleString()}</p>
                     <p className="text-muted-foreground">Raised</p>
                   </div>
                 </div>
@@ -165,7 +189,7 @@ export default function ProjectDetailPage({
                  <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="font-bold">{project.donors.toLocaleString()}</p>
+                    <p className="font-bold">{donors.toLocaleString()}</p>
                     <p className="text-muted-foreground">Donors</p>
                   </div>
                 </div>

@@ -1,3 +1,4 @@
+
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -45,7 +46,8 @@ export const projects: Project[] = [
     id: 'education-for-all-nepal',
     name: 'Education for All Nepal',
     organization: 'Hope Foundation',
-    description: 'Providing quality education to underprivileged children in rural Nepal.',
+    description:
+      'Providing quality education to underprivileged children in rural Nepal.',
     longDescription:
       'This project aims to build and equip schools in remote areas of Nepal, providing access to quality education for children who would otherwise be left behind. Funds will be used for school construction, teacher salaries, and learning materials.',
     imageUrl: getImageUrl('project-education-nepal'),
@@ -55,12 +57,38 @@ export const projects: Project[] = [
     donors: 450,
     verified: true,
     updates: [
-        { id: 'update-1', title: "New textbooks arrived!", date: new Date('2023-10-15'), imageUrl: getImageUrl('update-photo-1'), imageHint: 'happy students' },
-        { id: 'update-2', title: "Foundation for the new school building is complete.", date: new Date('2023-09-20'), imageUrl: getImageUrl('update-photo-2'), imageHint: 'construction site' }
+      {
+        id: 'update-1',
+        title: 'New textbooks arrived!',
+        date: new Date('2023-10-15'),
+        imageUrl: getImageUrl('update-photo-1'),
+        imageHint: 'happy students',
+      },
+      {
+        id: 'update-2',
+        title: 'Foundation for the new school building is complete.',
+        date: new Date('2023-09-20'),
+        imageUrl: getImageUrl('update-photo-2'),
+        imageHint: 'construction site',
+      },
     ],
     expenses: [
-        { id: 'exp-1', item: 'School Textbooks Batch 1', amount: 1200, date: new Date('2023-10-12'), receiptUrl: getImageUrl('receipt-1'), receiptHint: 'receipt scan' },
-        { id: 'exp-2', item: 'Cement and Bricks', amount: 3500, date: new Date('2023-09-15'), receiptUrl: getImageUrl('receipt-2'), receiptHint: 'invoice document' }
+      {
+        id: 'exp-1',
+        item: 'School Textbooks Batch 1',
+        amount: 1200,
+        date: new Date('2023-10-12'),
+        receiptUrl: getImageUrl('receipt-1'),
+        receiptHint: 'receipt scan',
+      },
+      {
+        id: 'exp-2',
+        item: 'Cement and Bricks',
+        amount: 3500,
+        date: new Date('2023-09-15'),
+        receiptUrl: getImageUrl('receipt-2'),
+        receiptHint: 'invoice document',
+      },
     ],
     discussion: [
       {
@@ -68,22 +96,25 @@ export const projects: Project[] = [
         author: 'Jane Doe',
         avatarUrl: getImageUrl('avatar-jane-doe'),
         date: new Date('2023-10-18T14:30:00Z'),
-        text: "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work."
+        text:
+          "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work.",
       },
       {
         id: 'comment-2',
         author: 'John Smith',
         avatarUrl: getImageUrl('avatar-john-smith'),
         date: new Date('2023-10-19T09:00:00Z'),
-        text: "I agree with Jane. Transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!"
-      }
-    ]
+        text:
+          'I agree with Jane. Transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
+      },
+    ],
   },
   {
     id: 'clean-water-initiative',
     name: 'Clean Water Initiative',
     organization: 'AquaLife',
-    description: 'Building wells to provide access to clean and safe drinking water.',
+    description:
+      'Building wells to provide access to clean and safe drinking water.',
     longDescription:
       'Access to clean water is a fundamental human right. This project focuses on drilling wells and installing water purification systems in communities that lack safe drinking water, reducing disease and improving overall health.',
     imageUrl: getImageUrl('project-clean-water'),
@@ -94,13 +125,14 @@ export const projects: Project[] = [
     verified: true,
     updates: [],
     expenses: [],
-    discussion: []
+    discussion: [],
   },
   {
     id: 'community-health-posts',
     name: 'Community Health Posts',
     organization: 'Health for All',
-    description: 'Establishing health posts to offer basic medical services in remote villages.',
+    description:
+      'Establishing health posts to offer basic medical services in remote villages.',
     longDescription:
       'We are setting up community health posts staffed by trained professionals to provide essential healthcare services, including maternal care, vaccinations, and treatment for common illnesses, directly within remote communities.',
     imageUrl: getImageUrl('project-community-health'),
@@ -111,13 +143,14 @@ export const projects: Project[] = [
     verified: false,
     updates: [],
     expenses: [],
-    discussion: []
+    discussion: [],
   },
   {
     id: 'disaster-relief-fund',
     name: 'Disaster Relief Fund',
     organization: 'Rapid Response Team',
-    description: 'Providing immediate aid and support to areas affected by natural disasters.',
+    description:
+      'Providing immediate aid and support to areas affected by natural disasters.',
     longDescription:
       'This fund is dedicated to providing swift and effective relief in the aftermath of natural disasters. Donations help us deliver food, shelter, medical supplies, and other critical aid to those in desperate need.',
     imageUrl: getImageUrl('project-disaster-relief'),
@@ -128,7 +161,7 @@ export const projects: Project[] = [
     verified: true,
     updates: [],
     expenses: [],
-    discussion: []
+    discussion: [],
   },
 ];
 
@@ -145,12 +178,12 @@ export const salaries = [
     role: 'Lead Developer',
     salary: 4000,
   },
-   {
+  {
     id: 'sal-3',
     employee: 'Peter Jones',
     role: 'Marketing Head',
     salary: 2800,
-  }
+  },
 ];
 
 export const equipment = [
@@ -168,7 +201,7 @@ export const equipment = [
     purchaseDate: new Date('2023-09-15'),
     vendor: 'Office Depot',
   },
-   {
+  {
     id: 'eq-3',
     item: 'Server Hosting (1yr)',
     cost: 1200,
@@ -178,13 +211,15 @@ export const equipment = [
 ];
 
 const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0);
-const totalProjectExpenses = projects.reduce((acc, p) => acc + p.expenses.reduce((sum, e) => sum + e.amount, 0), 0);
+const totalProjectExpenses = projects.reduce(
+  (acc, p) => acc + p.expenses.reduce((sum, e) => sum + e.amount, 0),
+  0
+);
 const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0) * 12; // Annualized
 const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
 const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts;
 const totalSpending = totalProjectExpenses + totalOperationalCosts;
 const fundsInHand = totalRaised - totalSpending;
-
 
 export const dashboardStats = {
   totalFunds: totalRaised,
@@ -198,9 +233,8 @@ export const dashboardStats = {
   spendingBreakdown: {
     projectExpenses: totalProjectExpenses,
     operationalCosts: totalOperationalCosts,
-  }
+  },
 };
-
 
 export const recentDonations = [
   {
@@ -231,7 +265,7 @@ export const recentDonations = [
     amount: 75,
     date: new Date('2023-10-28T12:45:00Z'),
   },
-   {
+  {
     id: 5,
     donor: { name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous') },
     project: 'Clean Water Initiative',
@@ -245,44 +279,50 @@ export const expenseData = [
   { name: 'Admin', value: 20, fill: 'var(--color-chart-2)' },
   { name: 'Relief', value: 30, fill: 'var(--color-chart-3)' },
   { name: 'Health', value: 10, fill: 'var(--color-chart-4)' },
-  { name: 'Operational', value: 25, fill: 'var(--color-chart-5)'},
+  { name: 'Operational', value: 25, fill: 'var(--color-chart-5)' },
 ];
 
 export const teamMembers = [
-    {
-        id: 'team-1',
-        name: 'Alex Johnson',
-        role: 'Founder & CEO',
-        avatarUrl: getImageUrl('avatar-alex-johnson'),
-        bio: 'Alex is a passionate social entrepreneur dedicated to leveraging technology for good. He founded ClarityChain to bring trust back to the non-profit sector.'
-    },
-    {
-        id: 'team-2',
-        name: 'Maria Garcia',
-        role: 'Head of Operations',
-        avatarUrl: getImageUrl('avatar-maria-garcia'),
-        bio: 'Maria ensures that all our projects run smoothly and efficiently. She has over 10 years of experience in non-profit management.'
-    },
-    {
-        id: 'team-3',
-        name: 'Sam Chen',
-        role: 'Lead Blockchain Developer',
-        avatarUrl: getImageUrl('avatar-sam-chen'),
-        bio: "Sam is the architect behind our transparent ledger technology. He's a firm believer in the power of decentralization to create a fairer world."
-    }
-]
+  {
+    id: 'team-1',
+    name: 'Alex Johnson',
+    role: 'Founder & CEO',
+    avatarUrl: getImageUrl('avatar-alex-johnson'),
+    bio:
+      'Alex is a passionate social entrepreneur dedicated to leveraging technology for good. He founded ClarityChain to bring trust back to the non-profit sector.',
+  },
+  {
+    id: 'team-2',
+    name: 'Maria Garcia',
+    role: 'Head of Operations',
+    avatarUrl: getImageUrl('avatar-maria-garcia'),
+    bio:
+      'Maria ensures that all our projects run smoothly and efficiently. She has over 10 years of experience in non-profit management.',
+  },
+  {
+    id: 'team-3',
+    name: 'Sam Chen',
+    role: 'Lead Blockchain Developer',
+    avatarUrl: getImageUrl('avatar-sam-chen'),
+    bio:
+      "Sam is the architect behind our transparent ledger technology. He's a firm believer in the power of decentralization to create a fairer world.",
+  },
+];
 
 export const values = [
-    {
-        title: 'Transparency',
-        description: "We are committed to complete openness in how funds are raised, managed, and spent. Every transaction is public."
-    },
-    {
-        title: 'Accountability',
-        description: "We hold ourselves to the highest standards, ensuring that all stakeholders can verify our actions and their impact."
-    },
-    {
-        title: 'Impact',
-        description: "Our ultimate goal is to maximize the positive impact of every donation, creating lasting change in communities."
-    }
-]
+  {
+    title: 'Transparency',
+    description:
+      'We are committed to complete openness in how funds are raised, managed, and spent. Every transaction is public.',
+  },
+  {
+    title: 'Accountability',
+    description:
+      'We hold ourselves to the highest standards, ensuring that all stakeholders can verify our actions and their impact.',
+  },
+  {
+    title: 'Impact',
+    description:
+      'Our ultimate goal is to maximize the positive impact of every donation, creating lasting change in communities.',
+  },
+];

@@ -1,3 +1,6 @@
+
+'use client';
+
 import {
   Card,
   CardContent,
@@ -5,13 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { DollarSign, Users, HeartHandshake, Briefcase, HandCoins } from 'lucide-react';
-import { ExpenseChart } from '@/components/dashboard/expense-chart';
-import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import {
-  dashboardStats,
-  expenseData,
-} from '@/lib/data';
+  DollarSign,
+  Users,
+  HeartHandshake,
+  Briefcase,
+  HandCoins,
+} from 'lucide-react';
+import { ExpenseChart } from '@/components/dashboard/expense-chart';
+import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
+import { dashboardStats, expenseData } from '@/lib/data';
 
 export default function DashboardPage() {
   return (
@@ -29,7 +35,8 @@ export default function DashboardPage() {
               ${dashboardStats.totalFunds.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              +${dashboardStats.monthlyIncrease.toLocaleString()} from last month
+              +${dashboardStats.monthlyIncrease.toLocaleString()} from last
+              month
             </p>
           </CardContent>
         </Card>
@@ -65,12 +72,12 @@ export default function DashboardPage() {
         </Card>
       </div>
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
-        <OperationalCosts />
+        <RealtimeLedger />
         <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Expense Breakdown</CardTitle>
             <CardDescription>
-              How project funds are being allocated across categories.
+              How funds are being allocated across categories.
             </CardDescription>
           </CardHeader>
           <CardContent>
