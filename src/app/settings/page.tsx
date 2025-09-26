@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Linkedin, Twitter, Instagram } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 
 export default function SettingsPage() {
   return (
-    <div className="mx-auto max-w-2xl space-y-8">
+    <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Settings</h1>
         <p className="text-muted-foreground">
@@ -29,6 +30,15 @@ export default function SettingsPage() {
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <Input id="email" type="email" defaultValue="donor@example.com" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="bio">About You</Label>
+            <Textarea
+              id="bio"
+              rows={3}
+              placeholder="Tell us a little about yourself"
+              defaultValue="A passionate supporter of community-driven projects and a firm believer in the power of transparent giving."
+            />
           </div>
           <Button>Save Changes</Button>
         </CardContent>
