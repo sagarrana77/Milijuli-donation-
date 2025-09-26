@@ -36,8 +36,10 @@ const allDonors = [
 
 export function RealtimeLedger() {
   const [donations, setDonations] = useState(recentDonations);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const interval = setInterval(() => {
         const randomDonor = allDonors[Math.floor(Math.random() * allDonors.length)];
         const randomProject = projects[Math.floor(Math.random() * projects.length)];
@@ -54,6 +56,23 @@ export function RealtimeLedger() {
 
     return () => clearInterval(interval);
   }, []);
+
+  if (!isClient) {
+    // Render a placeholder or nothing on the server
+    return (
+        <Card className="lg:col-span-4">
+            <CardHeader>
+                <CardTitle>Real-time Ledger</CardTitle>
+                <CardDescription>A live feed of all incoming donations.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="h-64 flex items-center justify-center text-muted-foreground">
+                    Loading live feed...
+                </div>
+            </CardContent>
+        </Card>
+    );
+  }
 
   return (
     <Card className="lg:col-span-4">
