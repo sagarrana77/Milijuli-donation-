@@ -1,4 +1,5 @@
 
+
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -381,30 +382,46 @@ export const expenseData = [
 
 export const teamMembers = [
   {
-    id: 'team-1',
+    id: 'alex-johnson',
     name: 'Alex Johnson',
     role: 'Founder & CEO',
     avatarUrl: getImageUrl('avatar-alex-johnson'),
     bio:
-      'Alex is a passionate social entrepreneur dedicated to leveraging technology for good. He founded ClarityChain to bring trust back to the non-profit sector.',
+      'Alex is a passionate social entrepreneur dedicated to leveraging technology for good. With a background in computer science and a heart for philanthropy, he founded ClarityChain to bring trust, transparency, and efficiency back to the non-profit sector. He believes that by showing donors exactly where their money goes, we can inspire a new wave of giving.',
+    socials: {
+        twitter: 'https://twitter.com/alexjohnson',
+        linkedin: 'https://linkedin.com/in/alexjohnson'
+    }
   },
   {
-    id: 'team-2',
+    id: 'maria-garcia',
     name: 'Maria Garcia',
     role: 'Head of Operations',
     avatarUrl: getImageUrl('avatar-maria-garcia'),
     bio:
-      'Maria ensures that all our projects run smoothly and efficiently. She has over 10 years of experience in non-profit management.',
+      "Maria ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork, she is an expert in logistics, community engagement, and sustainable development. Maria's dedication is the driving force behind our operational excellence.",
+    socials: {
+        twitter: 'https://twitter.com/mariagarcia',
+        linkedin: 'https://linkedin.com/in/mariagarcia'
+    }
   },
   {
-    id: 'team-3',
+    id: 'sam-chen',
     name: 'Sam Chen',
     role: 'Lead Blockchain Developer',
     avatarUrl: getImageUrl('avatar-sam-chen'),
     bio:
-      "Sam is the architect behind our transparent ledger technology. He's a firm believer in the power of decentralization to create a fairer world.",
+      "Sam is the architect behind our transparent ledger technology. He's a firm believer in the power of decentralization to create a fairer and more accountable world. With expertise in smart contracts and distributed systems, Sam built the core of ClarityChain to be secure, auditable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
+    socials: {
+        twitter: 'https://twitter.com/samchen',
+        linkedin: 'https://linkedin.com/in/samchen'
+    }
   },
 ];
+
+export function getTeamMember(id: string) {
+  return teamMembers.find((member) => member.id === id);
+}
 
 export const values = [
   {
@@ -423,3 +440,5 @@ export const values = [
       'Our ultimate goal is to maximize the positive impact of every donation, creating lasting change in communities.',
   },
 ];
+
+    

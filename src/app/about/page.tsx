@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { teamMembers, values } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -22,7 +23,7 @@ export default function AboutPage() {
         <Image
           src={getImageUrl('team-photo')}
           alt="Our Team"
-          layout="fill"
+          fill
           objectFit="cover"
           className="brightness-75"
           data-ai-hint="team photo"
@@ -54,16 +55,18 @@ export default function AboutPage() {
         <h2 className="mb-6 text-center text-3xl font-bold">Meet Our Team</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {teamMembers.map((member) => (
-            <Card key={member.id} className="text-center">
-              <CardContent className="p-6">
-                <Avatar className="mx-auto mb-4 h-24 w-24 border-4 border-primary/20">
-                  <AvatarImage src={member.avatarUrl} alt={member.name} />
-                  <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <h3 className="text-xl font-semibold">{member.name}</h3>
-                <p className="text-primary">{member.role}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{member.bio}</p>
-              </CardContent>
+            <Card key={member.id} className="text-center transition-shadow hover:shadow-lg">
+               <Link href={`/team/${member.id}`}>
+                <CardContent className="p-6">
+                  <Avatar className="mx-auto mb-4 h-24 w-24 border-4 border-primary/20">
+                    <AvatarImage src={member.avatarUrl} alt={member.name} />
+                    <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <h3 className="text-xl font-semibold">{member.name}</h3>
+                  <p className="text-primary">{member.role}</p>
+                  <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{member.bio}</p>
+                </CardContent>
+              </Link>
             </Card>
           ))}
         </div>
@@ -90,3 +93,5 @@ export default function AboutPage() {
     </div>
   );
 }
+
+    

@@ -29,6 +29,9 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/profile/')) {
     return 'User Profile';
   }
+  if (pathname.startsWith('/team/')) {
+    return 'Team Member Profile';
+  }
 
   switch (pathname) {
     case '/':
@@ -96,3 +99,5 @@ export function Header() {
     </header>
   );
 }
+
+    

@@ -52,7 +52,7 @@ export function Breadcrumbs() {
           const isLast = index === pathSegments.length - 1;
           const href = '/' + pathSegments.slice(0, index + 1).join('/');
 
-          // Don't create a link for project IDs, just show the name
+          // Handle project routes
           if (pathSegments[index - 1] === 'projects' && !isLast) {
               return null;
           }
@@ -63,6 +63,27 @@ export function Breadcrumbs() {
                 <BreadcrumbItem>
                    <BreadcrumbLink asChild>
                         <Link href="/projects">Projects</Link>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{formatCrumb(segment)}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </React.Fragment>
+            );
+          }
+
+          // Handle team routes
+          if (pathSegments[index-1] === 'about' && segment === 'team') {
+              return null; // Don't show "Team" in breadcrumb
+          }
+           if (pathSegments[index-1] === 'team') {
+            return (
+              <React.Fragment key={href}>
+                 <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                   <BreadcrumbLink asChild>
+                        <Link href="/about">About</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
@@ -93,3 +114,5 @@ export function Breadcrumbs() {
     </Breadcrumb>
   );
 }
+
+    
