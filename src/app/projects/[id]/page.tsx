@@ -16,6 +16,7 @@ import { DollarSign, Users, Target } from 'lucide-react';
 import { TransparencySealIcon } from '@/components/icons/transparency-seal';
 import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { DiscussionSection } from '@/components/projects/discussion-section';
+import { DonorsList } from '@/components/projects/donors-list';
 import { format } from 'date-fns';
 
 function getProject(id: string): Project | undefined {
@@ -81,6 +82,7 @@ export default function ProjectDetailPage({
             <TabsList>
               <TabsTrigger value="updates">Updates</TabsTrigger>
               <TabsTrigger value="spending">Spending</TabsTrigger>
+              <TabsTrigger value="donors">Donors</TabsTrigger>
               <TabsTrigger value="discussion">Discussion</TabsTrigger>
             </TabsList>
             <TabsContent value="updates" className="mt-4">
@@ -125,6 +127,9 @@ export default function ProjectDetailPage({
                   ) : <p className="text-muted-foreground">No spending recorded yet.</p>}
                 </CardContent>
               </Card>
+            </TabsContent>
+            <TabsContent value="donors" className="mt-4">
+                <DonorsList projectName={project.name} />
             </TabsContent>
             <TabsContent value="discussion" className="mt-4">
               <DiscussionSection
