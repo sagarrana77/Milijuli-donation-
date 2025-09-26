@@ -49,6 +49,8 @@ function getPageTitle(pathname: string): string {
       return 'About Us';
     case '/careers':
       return 'Careers';
+    case '/help':
+      return 'Help & Support';
     case '/profile':
         return 'My Profile';
     case '/settings':

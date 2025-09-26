@@ -12,6 +12,7 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   SidebarTrigger,
+  SidebarClose,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -55,7 +56,9 @@ export function MainSidebar() {
             <span className="text-lg font-semibold">ClarityChain</span>
           </div>
           <div className='md:hidden'>
-            <SidebarTrigger />
+            <SidebarClose asChild>
+                <SidebarTrigger />
+            </SidebarClose>
           </div>
         </div>
       </SidebarHeader>
@@ -81,7 +84,7 @@ export function MainSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip={{ children: 'Help', side: 'right' }}>
-              <Link href="#">
+              <Link href="/help">
                 <CircleHelp />
                 <span>Help</span>
               </Link>
