@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -39,8 +40,9 @@ import {
   CircleHelp,
   Settings,
   List,
+  Archive,
 } from 'lucide-react';
-import { projects, dashboardStats } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -360,9 +362,10 @@ export default function AdminDashboardPage() {
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="salaries">
-                    <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2">
+                    <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
                         <TabsTrigger value="salaries"><Briefcase className="mr-2 h-4 w-4"/> Salaries</TabsTrigger>
                         <TabsTrigger value="equipment"><MonitorSmartphone className="mr-2 h-4 w-4"/> Equipment</TabsTrigger>
+                        <TabsTrigger value="misc"><Archive className="mr-2 h-4 w-4"/> Misc</TabsTrigger>
                     </TabsList>
                     <TabsContent value="salaries" className="mt-4">
                         <div className="mb-4 rounded-md border p-4">
@@ -429,6 +432,44 @@ export default function AdminDashboardPage() {
                                     <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
                                 </TableCell>
                                 </TableRow>
+                            </TableBody>
+                            </Table>
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="misc" className="mt-4">
+                        <div className="mb-4 rounded-md border p-4">
+                            <h3 className="font-semibold mb-2">Add New Miscellaneous Cost</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <Input placeholder="Item Name" />
+                                <Input type="number" placeholder="Cost ($)" />
+                                <Input type="date" placeholder="Purchase Date" />
+                                <Input placeholder="Vendor" />
+                            </div>
+                            <Button className="mt-4">Add Cost</Button>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <Table>
+                            <TableHeader>
+                                <TableRow>
+                                <TableHead>Item</TableHead>
+                                <TableHead>Cost</TableHead>
+                                <TableHead>Purchase Date</TableHead>
+                                <TableHead>Vendor</TableHead>
+                                <TableHead><span className="sr-only">Actions</span></TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {miscExpenses.map((expense) => (
+                                    <TableRow key={expense.id}>
+                                        <TableCell>{expense.item}</TableCell>
+                                        <TableCell>${expense.cost.toLocaleString()}</TableCell>
+                                        <TableCell>{expense.purchaseDate.toLocaleDateString()}</TableCell>
+                                        <TableCell>{expense.vendor}</TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                             </Table>
                         </div>

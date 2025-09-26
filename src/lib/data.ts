@@ -220,9 +220,27 @@ export const equipment = [
   },
 ];
 
+export const miscExpenses = [
+    {
+        id: 'misc-1',
+        item: 'Office Rent (Q4)',
+        cost: 1500,
+        purchaseDate: new Date('2023-10-01'),
+        vendor: 'City Properties',
+    },
+    {
+        id: 'misc-2',
+        item: 'Internet Bill (October)',
+        cost: 100,
+        purchaseDate: new Date('2023-10-05'),
+        vendor: 'FastNet ISP',
+    }
+]
+
 const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0) * 12; // Annualized
 const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
-export const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts;
+const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
+export const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts + totalMiscCosts;
 
 export const operationalCostsFund = {
     name: 'Operational Costs',
