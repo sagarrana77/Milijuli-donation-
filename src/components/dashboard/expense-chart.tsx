@@ -52,7 +52,7 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
           align="right"
           content={({ payload }) => {
             return (
-              <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+              <ul className="flex flex-col gap-2 text-sm text-foreground">
                 {payload?.map((entry, index) => {
                   const matchingData = data.find(d => d.name === entry.value);
                   return (
