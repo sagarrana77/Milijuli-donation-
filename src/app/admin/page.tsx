@@ -29,6 +29,8 @@ import {
   CreditCard,
   KeyRound,
   MessageSquare,
+  Briefcase,
+  MonitorSmartphone,
 } from 'lucide-react';
 import { projects } from '@/lib/data';
 import {
@@ -243,6 +245,88 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
+      
+      <Card>
+          <CardHeader>
+            <CardTitle>Operational Costs</CardTitle>
+            <CardDescription>
+              Manage salaries and equipment costs for full transparency.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="salaries">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="salaries"><Briefcase className="mr-2 h-4 w-4"/> Salaries</TabsTrigger>
+                <TabsTrigger value="equipment"><MonitorSmartphone className="mr-2 h-4 w-4"/> Equipment</TabsTrigger>
+              </TabsList>
+              <TabsContent value="salaries" className="mt-4">
+                <div className="mb-4 rounded-md border p-4">
+                  <h3 className="font-semibold mb-2">Add New Salary</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Input placeholder="Employee Name" />
+                    <Input placeholder="Role / Title" />
+                    <Input type="number" placeholder="Monthly Salary ($)" />
+                  </div>
+                  <Button className="mt-4">Add Salary</Button>
+                </div>
+                 <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Employee</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Salary</TableHead>
+                      <TableHead><span className="sr-only">Actions</span></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>John Doe</TableCell>
+                      <TableCell>Project Manager</TableCell>
+                      <TableCell>$3,000 / mo</TableCell>
+                      <TableCell className="text-right">
+                          <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TabsContent>
+              <TabsContent value="equipment" className="mt-4">
+                <div className="mb-4 rounded-md border p-4">
+                    <h3 className="font-semibold mb-2">Add New Equipment Cost</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <Input placeholder="Item Name" />
+                        <Input type="number" placeholder="Cost ($)" />
+                        <Input type="date" placeholder="Purchase Date" />
+                        <Input placeholder="Vendor" />
+                    </div>
+                    <Button className="mt-4">Add Cost</Button>
+                </div>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Item</TableHead>
+                      <TableHead>Cost</TableHead>
+                      <TableHead>Purchase Date</TableHead>
+                      <TableHead>Vendor</TableHead>
+                       <TableHead><span className="sr-only">Actions</span></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>MacBook Pro 16"</TableCell>
+                      <TableCell>$2,500</TableCell>
+                      <TableCell>2023-10-01</TableCell>
+                      <TableCell>Apple Store</TableCell>
+                       <TableCell className="text-right">
+                          <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
 
       <Card>
         <CardHeader>
