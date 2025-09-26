@@ -350,6 +350,20 @@ export const recentDonations: {
     amount: 1000,
     date: new Date('2023-10-27T18:20:00Z'),
   },
+  {
+    id: 6,
+    donor: users.find(u => u.id === 'user-jane-doe')!,
+    project: 'Operational Costs',
+    amount: 25,
+    date: new Date('2023-10-26T11:00:00Z'),
+  },
+    {
+    id: 7,
+    donor: users.find(u => u.id === 'user-raj-patel')!,
+    project: 'Operational Costs',
+    amount: 50,
+    date: new Date('2023-10-25T14:00:00Z'),
+  },
 ];
 
 export const expenseData = [

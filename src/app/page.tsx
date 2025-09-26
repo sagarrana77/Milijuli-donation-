@@ -18,16 +18,23 @@ import {
   HeartHandshake,
   Briefcase,
   HandCoins,
+  CheckCircle,
+  TrendingUp,
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { dashboardStats, expenseData, operationalCostsFund } from '@/lib/data';
+import { dashboardStats, expenseData, operationalCostsFund, projects } from '@/lib/data';
 import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
+import { ProjectCard } from '@/components/projects/project-card';
 
 export default function DashboardPage() {
     const opsPercentage = Math.round(
     (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
   );
+
+  const runningProjects = projects.filter(p => p.raisedAmount < p.targetAmount);
+  const finishedProjects = projects.filter(p => p.raisedAmount >= p.targetAmount);
+
 
   return (
     <div className="flex flex-col gap-8">
@@ -129,6 +136,31 @@ export default function DashboardPage() {
           </Card>
         </div>
       </div>
+      
+      <section>
+        <div className="mb-4 flex items-center gap-3">
+          <TrendingUp className="h-6 w-6 text-primary" />
+          <h2 className="text-2xl font-bold">Active Campaigns</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {runningProjects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div className="mb-4 flex items-center gap-3">
+            <CheckCircle className="h-6 w-6 text-green-600" />
+            <h2 className="text-2xl font-bold">Successfully Funded</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {finishedProjects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      </section>
+
       <OperationalCosts />
     </div>
   );

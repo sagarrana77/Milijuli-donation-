@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { operationalCostsFund, salaries, equipment } from '@/lib/data';
+import { operationalCostsFund, salaries, equipment, recentDonations } from '@/lib/data';
 import {
   Card,
   CardContent,
@@ -21,6 +21,7 @@ import {
   MonitorSmartphone,
 } from 'lucide-react';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
+import { DonorsList } from '@/components/projects/donors-list';
 
 export default function OperationalCostsPage() {
   const [raisedAmount, setRaisedAmount] = useState(operationalCostsFund.raisedAmount);
@@ -44,7 +45,7 @@ export default function OperationalCostsPage() {
     }, 5000); // Simulate new donation every 5 seconds
 
     return () => clearInterval(interval);
-  }, [raisedAmount]);
+  }, [raisedAmount, operationalCostsFund.targetAmount]);
 
   const percentage = Math.round(
     (raisedAmount / operationalCostsFund.targetAmount) * 100
@@ -62,8 +63,17 @@ export default function OperationalCostsPage() {
       </header>
 
       <div className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-8">
           <OperationalCosts />
+          <Card>
+              <CardHeader>
+                  <CardTitle>Recent Donors</CardTitle>
+                  <CardDescription>Supporters helping to fund our core operations.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <DonorsList projectName={operationalCostsFund.name} />
+              </CardContent>
+          </Card>
         </div>
 
         <aside className="space-y-8 lg:sticky lg:top-24 self-start">
