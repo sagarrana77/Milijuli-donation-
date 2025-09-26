@@ -22,7 +22,14 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal, PlusCircle, QrCode, CreditCard } from 'lucide-react';
+import {
+  MoreHorizontal,
+  PlusCircle,
+  QrCode,
+  CreditCard,
+  KeyRound,
+  Landmark,
+} from 'lucide-react';
 import { projects } from '@/lib/data';
 import {
   DropdownMenu,
@@ -32,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const initialGateways = [
   { name: 'Esewa', enabled: true },
@@ -129,6 +137,74 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <KeyRound />
+            Gateway Credentials & Bank Information
+          </CardTitle>
+          <CardDescription>
+            Enter and manage your API keys and bank account details. These are stored securely.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="stripe">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="stripe">Stripe</TabsTrigger>
+              <TabsTrigger value="paypal">PayPal</TabsTrigger>
+              <TabsTrigger value="bank">Bank Account</TabsTrigger>
+            </TabsList>
+            <TabsContent value="stripe" className="mt-4">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="stripe-pk">Publishable Key</Label>
+                  <Input id="stripe-pk" placeholder="pk_live_..." />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="stripe-sk">Secret Key</Label>
+                  <Input id="stripe-sk" type="password" placeholder="sk_live_..." />
+                </div>
+                 <Button>Save Stripe Credentials</Button>
+              </div>
+            </TabsContent>
+            <TabsContent value="paypal" className="mt-4">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="paypal-client-id">Client ID</Label>
+                  <Input id="paypal-client-id" placeholder="Your PayPal Client ID" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="paypal-secret">Secret</Label>
+                  <Input id="paypal-secret" type="password" placeholder="Your PayPal Secret" />
+                </div>
+                <Button>Save PayPal Credentials</Button>
+              </div>
+            </TabsContent>
+            <TabsContent value="bank" className="mt-4">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bank-name">Bank Name</Label>
+                  <Input id="bank-name" placeholder="e.g., Bank of Example" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="account-holder">Account Holder Name</Label>
+                  <Input id="account-holder" placeholder="e.g., John Doe" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="account-number">Account Number</Label>
+                  <Input id="account-number" placeholder="Your account number" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="routing-number">Routing Number / Swift Code</Label>
+                  <Input id="routing-number" placeholder="Your routing number or SWIFT code" />
+                </div>
+                 <Button>Save Bank Information</Button>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
