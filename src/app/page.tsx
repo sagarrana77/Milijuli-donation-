@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
   const runningProjects = projects.filter(p => p.raisedAmount < p.targetAmount);
   const finishedProjects = projects.filter(p => p.raisedAmount >= p.targetAmount);
-  const latestJobs = jobOpenings.slice(0, 3);
+  const latestJobs = jobOpenings.slice(0, 2);
 
 
   return (
@@ -152,7 +152,7 @@ export default function DashboardPage() {
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {latestJobs.map(job => (
             <Card key={job.id} className="flex flex-col">
               <CardHeader>
