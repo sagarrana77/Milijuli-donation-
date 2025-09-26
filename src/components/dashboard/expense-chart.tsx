@@ -52,16 +52,16 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
           align="right"
           content={({ payload }) => {
             return (
-              <ul className="flex flex-col gap-2 text-sm text-foreground">
+              <ul className="flex flex-col gap-2 text-sm">
                 {payload?.map((entry, index) => {
                   const matchingData = data.find(d => d.name === entry.value);
                   return (
-                  <li key={`item-${index}`} className="flex items-center gap-2">
+                  <li key={`item-${index}`} className="flex items-center gap-2 rounded-md bg-background/80 px-2 py-1">
                     <span
                       className="h-2 w-2 rounded-full"
                       style={{ backgroundColor: entry.color }}
                     />
-                    <span>{entry.value} ({matchingData?.value}%)</span>
+                    <span className="text-foreground">{entry.value} ({matchingData?.value}%)</span>
                   </li>
                 )})}
               </ul>
