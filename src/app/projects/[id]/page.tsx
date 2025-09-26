@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DollarSign, Users, Target } from 'lucide-react';
 import { TransparencySealIcon } from '@/components/icons/transparency-seal';
 import { PaymentGateways } from '@/components/projects/payment-gateways';
+import { DiscussionSection } from '@/components/projects/discussion-section';
 import { format } from 'date-fns';
 
 function getProject(id: string): Project | undefined {
@@ -126,11 +127,10 @@ export default function ProjectDetailPage({
               </Card>
             </TabsContent>
             <TabsContent value="discussion" className="mt-4">
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-muted-foreground">Community discussion coming soon.</p>
-                </CardContent>
-              </Card>
+              <DiscussionSection
+                comments={project.discussion}
+                projectId={project.id}
+              />
             </TabsContent>
           </Tabs>
         </div>

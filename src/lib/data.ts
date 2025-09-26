@@ -31,6 +31,13 @@ export type Project = {
     receiptUrl: string;
     receiptHint: string;
   }[];
+  discussion: {
+    id: string;
+    author: string;
+    avatarUrl: string;
+    date: Date;
+    text: string;
+  }[];
 };
 
 export const projects: Project[] = [
@@ -55,6 +62,22 @@ export const projects: Project[] = [
         { id: 'exp-1', item: 'School Textbooks Batch 1', amount: 1200, date: new Date('2023-10-12'), receiptUrl: getImageUrl('receipt-1'), receiptHint: 'receipt scan' },
         { id: 'exp-2', item: 'Cement and Bricks', amount: 3500, date: new Date('2023-09-15'), receiptUrl: getImageUrl('receipt-2'), receiptHint: 'invoice document' }
     ],
+    discussion: [
+      {
+        id: 'comment-1',
+        author: 'Jane Doe',
+        avatarUrl: getImageUrl('avatar-jane-doe'),
+        date: new Date('2023-10-18T14:30:00Z'),
+        text: "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work."
+      },
+      {
+        id: 'comment-2',
+        author: 'John Smith',
+        avatarUrl: getImageUrl('avatar-john-smith'),
+        date: new Date('2023-10-19T09:00:00Z'),
+        text: "I agree with Jane. Transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!"
+      }
+    ]
   },
   {
     id: 'clean-water-initiative',
@@ -70,7 +93,8 @@ export const projects: Project[] = [
     donors: 1200,
     verified: true,
     updates: [],
-    expenses: []
+    expenses: [],
+    discussion: []
   },
   {
     id: 'community-health-posts',
@@ -86,7 +110,8 @@ export const projects: Project[] = [
     donors: 800,
     verified: false,
     updates: [],
-    expenses: []
+    expenses: [],
+    discussion: []
   },
   {
     id: 'disaster-relief-fund',
@@ -102,7 +127,8 @@ export const projects: Project[] = [
     donors: 2500,
     verified: true,
     updates: [],
-    expenses: []
+    expenses: [],
+    discussion: []
   },
 ];
 
