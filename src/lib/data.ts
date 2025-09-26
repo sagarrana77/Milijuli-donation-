@@ -96,7 +96,7 @@ export const projects: Project[] = [
         id: 'comment-1',
         author: 'Jane Doe',
         avatarUrl: getImageUrl('avatar-jane-doe'),
-        profileUrl: '/profile',
+        profileUrl: '/profile/user-jane-doe',
         date: new Date('2023-10-18T14:30:00Z'),
         text:
           "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work.",
@@ -105,7 +105,7 @@ export const projects: Project[] = [
         id: 'comment-2',
         author: 'John Smith',
         avatarUrl: getImageUrl('avatar-john-smith'),
-        profileUrl: '/profile',
+        profileUrl: '/profile/user-john-smith',
         date: new Date('2023-10-19T09:00:00Z'),
         text:
           'I agree with Jane. Transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
@@ -239,12 +239,62 @@ export const dashboardStats = {
   },
 };
 
-export type Donor = {
+export type User = {
     id: string;
     name: string;
+    email?: string;
     avatarUrl: string;
     profileUrl: string;
+    bio: string;
 }
+
+export const users: User[] = [
+    { 
+        id: 'current-user', 
+        name: 'Current User', 
+        email: 'donor@example.com',
+        avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop', 
+        profileUrl: '/profile/current-user',
+        bio: 'A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.'
+    },
+    { 
+        id: 'user-jane-doe', 
+        name: 'Jane Doe', 
+        avatarUrl: getImageUrl('avatar-jane-doe'), 
+        profileUrl: '/profile/user-jane-doe',
+        bio: 'Loves to contribute to educational projects. Believes in the power of knowledge.'
+    },
+    { 
+        id: 'user-john-smith', 
+        name: 'John Smith', 
+        avatarUrl: getImageUrl('avatar-john-smith'), 
+        profileUrl: '/profile/user-john-smith',
+        bio: 'Focused on environmental causes and clean water initiatives.'
+    },
+    { 
+        id: 'user-ai-chan', 
+        name: 'Ai Chan', 
+        avatarUrl: getImageUrl('avatar-ai-chan'), 
+        profileUrl: '/profile/user-ai-chan',
+        bio: 'Supports disaster relief and emergency response efforts.'
+    },
+    { 
+        id: 'user-raj-patel', 
+        name: 'Raj Patel', 
+        avatarUrl: getImageUrl('avatar-raj-patel'), 
+        profileUrl: '/profile/user-raj-patel',
+        bio: 'Interested in community health and wellness projects.'
+    },
+    { 
+        id: 'user-anonymous', 
+        name: 'Anonymous', 
+        avatarUrl: getImageUrl('avatar-anonymous'), 
+        profileUrl: '/profile/user-anonymous',
+        bio: 'An anonymous donor making a difference.'
+    },
+];
+
+export type Donor = Omit<User, 'email'>;
 
 export const recentDonations: {
   id: number;
@@ -255,35 +305,35 @@ export const recentDonations: {
 }[] = [
   {
     id: 1,
-    donor: { id: 'user-jane-doe', name: 'Jane Doe', avatarUrl: getImageUrl('avatar-jane-doe'), profileUrl: '/profile' },
+    donor: users.find(u => u.id === 'user-jane-doe')!,
     project: 'Education for All Nepal',
     amount: 50,
     date: new Date('2023-10-29T10:00:00Z'),
   },
   {
     id: 2,
-    donor: { id: 'user-john-smith', name: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile' },
+    donor: users.find(u => u.id === 'user-john-smith')!,
     project: 'Clean Water Initiative',
     amount: 100,
     date: new Date('2023-10-29T09:30:00Z'),
   },
   {
     id: 3,
-    donor: { id: 'user-ai-chan', name: 'Ai Chan', avatarUrl: getImageUrl('avatar-ai-chan'), profileUrl: '/profile' },
+    donor: users.find(u => u.id === 'user-ai-chan')!,
     project: 'Disaster Relief Fund',
     amount: 250,
     date: new Date('2023-10-28T15:00:00Z'),
   },
   {
     id: 4,
-    donor: { id: 'user-raj-patel', name: 'Raj Patel', avatarUrl: getImageUrl('avatar-raj-patel'), profileUrl: '/profile' },
+    donor: users.find(u => u.id === 'user-raj-patel')!,
     project: 'Community Health Posts',
     amount: 75,
     date: new Date('2023-10-28T12:45:00Z'),
   },
   {
     id: 5,
-    donor: { id: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile' },
+    donor: users.find(u => u.id === 'user-anonymous')!,
     project: 'Clean Water Initiative',
     amount: 1000,
     date: new Date('2023-10-27T18:20:00Z'),

@@ -1,3 +1,6 @@
+
+'use client';
+import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -11,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { recentDonations } from '@/lib/data';
+import { recentDonations, users, type User } from '@/lib/data';
 import { format } from 'date-fns';
 
 const socialLinks = [
@@ -20,25 +23,35 @@ const socialLinks = [
   { href: '#', icon: Instagram, label: 'Instagram' },
 ];
 
-const userDonations = recentDonations.filter(
-    (donation) => donation.donor.name === 'Current User'
-);
+function getUser(id: string): User | undefined {
+    return users.find(u => u.id === id);
+}
 
-export default function ProfilePage() {
+export default function ProfilePage({ params }: { params: { id: string } }) {
+  const user = getUser(params.id);
+
+  if (!user) {
+    notFound();
+  }
+
+  const userDonations = recentDonations.filter(
+    (donation) => donation.donor.id === user.id
+  );
+
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader className="text-center">
           <Avatar className="mx-auto mb-4 h-24 w-24 border-4 border-primary/20">
-            <AvatarImage src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop" alt="Current User" />
-            <AvatarFallback>CU</AvatarFallback>
+            <AvatarImage src={user.avatarUrl} alt={user.name} />
+            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <CardTitle className="text-3xl">Current User</CardTitle>
-          <p className="text-muted-foreground">donor@example.com</p>
+          <CardTitle className="text-3xl">{user.name}</CardTitle>
+          {user.email && <p className="text-muted-foreground">{user.email}</p>}
         </CardHeader>
         <CardContent>
           <p className="text-center text-muted-foreground">
-            A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.
+            {user.bio}
           </p>
           <div className="mt-4 flex justify-center gap-2">
             {socialLinks.map((link) => (
@@ -56,7 +69,7 @@ export default function ProfilePage() {
       <Card>
         <CardHeader>
           <CardTitle>Donation History</CardTitle>
-          <CardDescription>A record of your recent contributions.</CardDescription>
+          <CardDescription>A record of this user's recent contributions.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -79,7 +92,7 @@ export default function ProfilePage() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={3} className="text-center text-muted-foreground">
-                    You haven't made any donations yet.
+                    This user hasn't made any public donations yet.
                   </TableCell>
                 </TableRow>
               )}

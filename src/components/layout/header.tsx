@@ -25,6 +25,9 @@ function getPageTitle(pathname: string): string {
     if (lastPart === 'about') return 'Edit About Page';
     return 'Admin';
   }
+  if (pathname.startsWith('/profile/')) {
+    return 'User Profile';
+  }
 
   switch (pathname) {
     case '/':
@@ -73,7 +76,7 @@ export function Header() {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/profile">Profile</Link>
+                <Link href="/profile/current-user">Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">Settings</Link>
