@@ -81,8 +81,16 @@ export default function DashboardPage() {
               How funds are being allocated across categories.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col items-center">
             <ExpenseChart data={expenseData} />
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+                {expenseData.map((entry) => (
+                    <div key={entry.name} className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
+                        <span>{entry.name}</span>
+                    </div>
+                ))}
+            </div>
           </CardContent>
         </Card>
       </div>

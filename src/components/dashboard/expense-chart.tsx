@@ -1,11 +1,12 @@
 
 'use client';
 
-import { RadialBar, RadialBarChart, Legend, Tooltip } from 'recharts';
+import { Pie, PieChart, Cell, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import type { expenseData } from '@/lib/data';
 
 interface ExpenseChartProps {
-  data: { name: string; value: number; fill: string }[];
+  data: typeof expenseData;
 }
 
 const chartConfig = {
@@ -32,43 +33,24 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
       config={chartConfig}
       className="mx-auto aspect-square h-[300px]"
     >
-      <RadialBarChart
-        data={data}
-        innerRadius="50%"
-        outerRadius="100%"
-        startAngle={90}
-        endAngle={-270}
-      >
-        <Tooltip cursor={false} content={<ChartTooltipContent hideLabel nameKey="name" />} />
-        <RadialBar
-            dataKey="value"
-            background
-            cornerRadius={10}
+      <PieChart>
+        <Tooltip
+          cursor={false}
+          content={<ChartTooltipContent hideLabel nameKey="name" />}
         />
-        <Legend
-          iconType="circle"
-          layout="vertical"
-          verticalAlign="middle"
-          align="right"
-          content={({ payload }) => {
-            return (
-              <ul className="flex flex-col gap-2 text-sm">
-                {payload?.map((entry, index) => {
-                  const matchingData = data.find(d => d.name === entry.value);
-                  return (
-                  <li key={`item-${index}`} className="flex items-center gap-2 rounded-md bg-background/80 px-2 py-1">
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{ backgroundColor: entry.color }}
-                    />
-                    <span className="text-foreground">{entry.value} ({matchingData?.value}%)</span>
-                  </li>
-                )})}
-              </ul>
-            );
-          }}
-        />
-      </RadialBarChart>
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="name"
+          innerRadius={80}
+          outerRadius={120}
+          strokeWidth={2}
+        >
+          {data.map((entry) => (
+            <Cell key={entry.name} fill={entry.fill} />
+          ))}
+        </Pie>
+      </PieChart>
     </ChartContainer>
   );
 }
