@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MessageSquare, X } from 'lucide-react';
-import { WhatsappIcon } from '@/components/icons/whatsapp-icon';
+import WhatsAppIcon from '@/components/icons/whatsapp-icon';
 import { ViberIcon } from '@/components/icons/viber-icon';
-import { InstagramIcon } from '@/components/icons/instagram-icon';
-import { MessengerIcon } from '@/components/icons/messenger-icon';
+import InstagramIcon from '@/components/icons/instagram-icon';
+import MessengerIcon from '@/components/icons/messenger-icon';
 import Link from 'next/link';
 
 const socialLinks = {
@@ -32,17 +32,17 @@ export function FloatingContactButton() {
                 <div className="flex items-center gap-3 rounded-full bg-background border p-2 shadow-lg">
                     <Link href={socialLinks.whatsapp} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-green-500 hover:bg-green-600 text-white">
-                            <WhatsappIcon className="h-6 w-6" />
+                            <WhatsAppIcon className="h-6 w-6" />
                         </Button>
                     </Link>
                     <Link href={socialLinks.viber} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-purple-600 hover:bg-purple-700 text-white">
-                            <ViberIcon className="h-6 w-6" />
+                            <ViberIcon className="h-6 w-6 fill-white" />
                         </Button>
                     </Link>
                     <Link href={socialLinks.instagram} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-pink-600 hover:bg-pink-700 text-white">
-                            <InstagramIcon className="h-6 w-6" />
+                            <InstagramIcon className="h-6 w-6" color="white" />
                         </Button>
                     </Link>
                     <Link href={socialLinks.messenger} target="_blank" passHref>

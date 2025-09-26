@@ -1,9 +1,7 @@
-
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Linkedin, Twitter, Instagram } from 'lucide-react';
 import Link from 'next/link';
 import {
   Table,
@@ -15,11 +13,14 @@ import {
 } from '@/components/ui/table';
 import { recentDonations, users, type User } from '@/lib/data';
 import { format } from 'date-fns';
+import InstagramIcon from '@/components/icons/instagram-icon';
+import TwitterIcon from '@/components/icons/TwitterIcon';
+import LinkedInIcon from '@/components/icons/LinkedInIcon';
 
 const socialLinks = [
-  { href: '#', icon: Linkedin, label: 'LinkedIn' },
-  { href: '#', icon: Twitter, label: 'Twitter' },
-  { href: '#', icon: Instagram, label: 'Instagram' },
+  { href: '#', icon: LinkedInIcon, label: 'LinkedIn' },
+  { href: '#', icon: TwitterIcon, label: 'Twitter' },
+  { href: '#', icon: InstagramIcon, label: 'Instagram' },
 ];
 
 function getUser(id: string): User | undefined {

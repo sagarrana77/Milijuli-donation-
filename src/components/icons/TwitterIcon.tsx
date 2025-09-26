@@ -1,0 +1,26 @@
+
+import React from "react";
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+  color?: string;
+  title?: string;
+};
+
+const TwitterIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor", title = "Twitter", ...props }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-label={title}
+    role="img"
+    {...props}
+  >
+    <title>{title}</title>
+    <path d="M22 5.92c-.64.28-1.33.47-2.06.55.74-.44 1.31-1.13 1.58-1.96-.69.41-1.45.71-2.26.87C18.57 4.56 17.6 4 16.5 4c-1.6 0-2.9 1.3-2.9 2.9 0 .23.03.45.08.66C10.9 7.4 8.1 5.9 6.18 3.78c-.25.43-.4.92-.4 1.46 0 1.01.51 1.9 1.29 2.43-.5-.02-.98-.15-1.4-.38v.04c0 1.4.99 2.57 2.3 2.84-.24.07-.5.11-.77.11-.19 0-.38-.02-.56-.05.38 1.18 1.48 2.04 2.78 2.06C9 15.2 7.75 15.9 6.38 15.9c-.31 0-.62-.02-.92-.06 1.07.69 2.34 1.1 3.7 1.1 4.44 0 6.87-3.67 6.87-6.86v-.31c.47-.34.88-.77 1.2-1.26-.43.19-.88.31-1.36.37.49-.3.86-.78 1.03-1.35z" fill={color} />
+  </svg>
+);
+
+export default TwitterIcon;

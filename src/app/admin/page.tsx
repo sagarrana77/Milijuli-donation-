@@ -46,10 +46,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { WhatsappIcon } from '@/components/icons/whatsapp-icon';
+import WhatsAppIcon from '@/components/icons/whatsapp-icon';
 import { ViberIcon } from '@/components/icons/viber-icon';
-import { InstagramIcon } from '@/components/icons/instagram-icon';
-import { MessengerIcon } from '@/components/icons/messenger-icon';
+import InstagramIcon from '@/components/icons/instagram-icon';
+import MessengerIcon from '@/components/icons/messenger-icon';
 
 
 const initialGateways = [
@@ -277,7 +277,7 @@ export default function AdminDashboardPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="whatsapp" className="flex items-center gap-2"><WhatsappIcon className="h-5 w-5"/> WhatsApp Number</Label>
+              <Label htmlFor="whatsapp" className="flex items-center gap-2"><WhatsAppIcon className="h-5 w-5"/> WhatsApp Number</Label>
               <Input id="whatsapp" placeholder="+1234567890" />
             </div>
              <div className="space-y-2">

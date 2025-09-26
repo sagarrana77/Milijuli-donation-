@@ -2,8 +2,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Linkedin, Twitter, Instagram } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import InstagramIcon from '@/components/icons/instagram-icon';
+import TwitterIcon from '@/components/icons/TwitterIcon';
+import LinkedInIcon from '@/components/icons/LinkedInIcon';
 
 
 export default function SettingsPage() {
@@ -53,15 +55,15 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="linkedin" className="flex items-center gap-2"><Linkedin className="h-4 w-4" /> LinkedIn URL</Label>
+            <Label htmlFor="linkedin" className="flex items-center gap-2"><LinkedInIcon className="h-4 w-4" /> LinkedIn URL</Label>
             <Input id="linkedin" placeholder="https://linkedin.com/in/your-username" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="twitter" className="flex items-center gap-2"><Twitter className="h-4 w-4" /> Twitter / X URL</Label>
+            <Label htmlFor="twitter" className="flex items-center gap-2"><TwitterIcon className="h-4 w-4" /> Twitter / X URL</Label>
             <Input id="twitter" placeholder="https://twitter.com/your-username" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="instagram" className="flex items-center gap-2"><Instagram className="h-4 w-4" /> Instagram URL</Label>
+            <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-4 w-4" /> Instagram URL</Label>
             <Input id="instagram" placeholder="https://instagram.com/your-username" />
           </div>
           <Button>Save Social Links</Button>

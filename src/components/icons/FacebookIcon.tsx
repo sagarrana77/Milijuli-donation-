@@ -7,7 +7,7 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   title?: string;
 };
 
-const MessengerIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor", title = "Facebook", ...props }) => (
+const FacebookIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor", title = "Facebook", ...props }) => (
   <svg
     width={size}
     height={size}
@@ -23,4 +23,4 @@ const MessengerIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor",
   </svg>
 );
 
-export default MessengerIcon;
+export default FacebookIcon;
