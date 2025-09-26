@@ -213,16 +213,28 @@ export const equipment = [
   },
 ];
 
-const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0);
+const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0) * 12; // Annualized
+const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
+export const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts;
+
+export const operationalCostsFund = {
+    name: 'Operational Costs',
+    description: 'Support the core team and infrastructure that make our work possible.',
+    targetAmount: totalOperationalCosts,
+    raisedAmount: 15750,
+    donors: 88,
+    imageUrl: getImageUrl('team-photo'),
+    imageHint: 'team meeting',
+};
+
+const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0) + operationalCostsFund.raisedAmount;
 const totalProjectExpenses = projects.reduce(
   (acc, p) => acc + p.expenses.reduce((sum, e) => sum + e.amount, 0),
   0
 );
-const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0) * 12; // Annualized
-const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
-const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts;
 const totalSpending = totalProjectExpenses + totalOperationalCosts;
 const fundsInHand = totalRaised - totalSpending;
+
 
 export const dashboardStats = {
   totalFunds: totalRaised,

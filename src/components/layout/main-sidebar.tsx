@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -20,11 +21,13 @@ import {
   CircleHelp,
   Shield,
   Users,
+  Briefcase,
 } from 'lucide-react';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/projects', label: 'Projects', icon: HeartHandshake },
+  { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
   { href: '/reports', label: 'Reports', icon: FileText },
   { href: '/about', label: 'About', icon: Users },
   { href: '/admin', label: 'Admin', icon: Shield },

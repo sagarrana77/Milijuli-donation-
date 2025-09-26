@@ -1,13 +1,17 @@
 
 'use client';
 
+import Link from 'next/link';
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import {
   DollarSign,
   Users,
@@ -17,13 +21,17 @@ import {
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { dashboardStats, expenseData } from '@/lib/data';
+import { dashboardStats, expenseData, operationalCostsFund } from '@/lib/data';
 import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 
 export default function DashboardPage() {
+    const opsPercentage = Math.round(
+    (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
+  );
+
   return (
     <div className="flex flex-col gap-8">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -70,6 +78,29 @@ export default function DashboardPage() {
               Includes project and operational costs
             </p>
           </CardContent>
+        </Card>
+         <Card className="flex flex-col">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">
+              Operational Costs Fund
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1">
+             <div className="w-full">
+                <div className="mb-1 flex justify-between text-xs text-muted-foreground">
+                    <span>
+                    ${operationalCostsFund.raisedAmount.toLocaleString()} raised
+                    </span>
+                    <span>{opsPercentage}%</span>
+                </div>
+                <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button asChild className="w-full">
+                <Link href="/operational-costs">View Details</Link>
+            </Button>
+          </CardFooter>
         </Card>
       </div>
       <div className="grid gap-8 lg:grid-cols-5">
