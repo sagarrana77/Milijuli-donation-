@@ -36,6 +36,7 @@ import {
   ArrowRight,
   Edit,
   UserPlus,
+  CircleHelp,
 } from 'lucide-react';
 import { projects, dashboardStats } from '@/lib/data';
 import {
@@ -120,7 +121,7 @@ export default function AdminDashboardPage() {
             Manage your platform settings and content.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
             <Button asChild>
                 <Link href="/admin/about">
                     <Edit className="mr-2 h-4 w-4" /> Edit About Page
@@ -129,6 +130,11 @@ export default function AdminDashboardPage() {
             <Button asChild variant="outline">
                 <Link href="/admin/careers">
                     <UserPlus className="mr-2 h-4 w-4" /> Manage Careers
+                </Link>
+            </Button>
+            <Button asChild variant="outline">
+                <Link href="/admin/help">
+                    <CircleHelp className="mr-2 h-4 w-4" /> Manage Help Page
                 </Link>
             </Button>
         </div>
