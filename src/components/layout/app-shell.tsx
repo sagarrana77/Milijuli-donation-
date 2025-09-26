@@ -12,7 +12,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <MainSidebar />
         <SidebarInset className="min-w-0 flex-1 flex-col">
           <Header />
-          <main className="flex-1 p-4 sm:p-6 md:p-8">{children}</main>
+          <main className="flex-1 p-4 sm:p-6 md:p-8">
+            <div className="mx-auto w-full max-w-7xl">{children}</div>
+          </main>
         </SidebarInset>
         <FloatingContactButton />
       </div>
