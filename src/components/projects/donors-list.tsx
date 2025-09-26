@@ -1,7 +1,9 @@
+
 import { recentDonations } from '@/lib/data';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 interface DonorsListProps {
   projectName: string;
@@ -19,7 +21,7 @@ export function DonorsList({ projectName }: DonorsListProps) {
           <ul className="space-y-4">
             {projectDonations.map((donation) => (
               <li key={donation.id} className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
+                <Link href={donation.donor.profileUrl} className="flex items-center gap-3">
                     <Avatar className="h-10 w-10 border">
                         <AvatarImage src={donation.donor.avatarUrl} alt={donation.donor.name} />
                         <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
@@ -28,7 +30,7 @@ export function DonorsList({ projectName }: DonorsListProps) {
                         <p className="font-semibold">{donation.donor.name}</p>
                         <p className="text-sm text-muted-foreground">{format(donation.date, 'PPP')}</p>
                     </div>
-                </div>
+                </Link>
                 <p className="font-bold text-lg text-primary">${donation.amount.toLocaleString()}</p>
               </li>
             ))}

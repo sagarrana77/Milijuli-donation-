@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -11,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Card, CardContent } from '@/components/ui/card';
 import type { Project } from '@/lib/data';
+import Link from 'next/link';
 
 type Comment = Project['discussion'][0];
 
@@ -33,19 +35,13 @@ export function DiscussionSection({
 }: DiscussionSectionProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      comment: '',
-    },
-  });
-
   // In a real app, this would be an API call.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const newComment: Comment = {
       id: `comment-${Date.now()}`,
       author: 'Current User', // This would come from auth
       avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
+      profileUrl: '/profile',
       date: new Date(),
       text: values.comment,
     };
@@ -96,13 +92,17 @@ export function DiscussionSection({
           {comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment.id} className="flex items-start gap-4">
-                <Avatar className="h-10 w-10 border">
-                  <AvatarImage src={comment.avatarUrl} alt={comment.author} />
-                  <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
-                </Avatar>
+                 <Link href={comment.profileUrl}>
+                    <Avatar className="h-10 w-10 border">
+                        <AvatarImage src={comment.avatarUrl} alt={comment.author} />
+                        <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                </Link>
                 <div className="flex-1">
                   <div className="flex items-baseline gap-2">
-                    <p className="font-semibold">{comment.author}</p>
+                    <Link href={comment.profileUrl} className="font-semibold hover:underline">
+                        {comment.author}
+                    </Link>
                     <p className="text-xs text-muted-foreground">
                       {formatDistanceToNow(comment.date, { addSuffix: true })}
                     </p>

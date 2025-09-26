@@ -36,6 +36,7 @@ export type Project = {
     id: string;
     author: string;
     avatarUrl: string;
+    profileUrl: string;
     date: Date;
     text: string;
   }[];
@@ -95,6 +96,7 @@ export const projects: Project[] = [
         id: 'comment-1',
         author: 'Jane Doe',
         avatarUrl: getImageUrl('avatar-jane-doe'),
+        profileUrl: '/profile',
         date: new Date('2023-10-18T14:30:00Z'),
         text:
           "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work.",
@@ -103,6 +105,7 @@ export const projects: Project[] = [
         id: 'comment-2',
         author: 'John Smith',
         avatarUrl: getImageUrl('avatar-john-smith'),
+        profileUrl: '/profile',
         date: new Date('2023-10-19T09:00:00Z'),
         text:
           'I agree with Jane. Transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
@@ -236,38 +239,51 @@ export const dashboardStats = {
   },
 };
 
-export const recentDonations = [
+export type Donor = {
+    id: string;
+    name: string;
+    avatarUrl: string;
+    profileUrl: string;
+}
+
+export const recentDonations: {
+  id: number;
+  donor: Donor;
+  project: string;
+  amount: number;
+  date: Date;
+}[] = [
   {
     id: 1,
-    donor: { name: 'Jane Doe', avatarUrl: getImageUrl('avatar-jane-doe') },
+    donor: { id: 'user-jane-doe', name: 'Jane Doe', avatarUrl: getImageUrl('avatar-jane-doe'), profileUrl: '/profile' },
     project: 'Education for All Nepal',
     amount: 50,
     date: new Date('2023-10-29T10:00:00Z'),
   },
   {
     id: 2,
-    donor: { name: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith') },
+    donor: { id: 'user-john-smith', name: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile' },
     project: 'Clean Water Initiative',
     amount: 100,
     date: new Date('2023-10-29T09:30:00Z'),
   },
   {
     id: 3,
-    donor: { name: 'Ai Chan', avatarUrl: getImageUrl('avatar-ai-chan') },
+    donor: { id: 'user-ai-chan', name: 'Ai Chan', avatarUrl: getImageUrl('avatar-ai-chan'), profileUrl: '/profile' },
     project: 'Disaster Relief Fund',
     amount: 250,
     date: new Date('2023-10-28T15:00:00Z'),
   },
   {
     id: 4,
-    donor: { name: 'Raj Patel', avatarUrl: getImageUrl('avatar-raj-patel') },
+    donor: { id: 'user-raj-patel', name: 'Raj Patel', avatarUrl: getImageUrl('avatar-raj-patel'), profileUrl: '/profile' },
     project: 'Community Health Posts',
     amount: 75,
     date: new Date('2023-10-28T12:45:00Z'),
   },
   {
     id: 5,
-    donor: { name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous') },
+    donor: { id: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile' },
     project: 'Clean Water Initiative',
     amount: 1000,
     date: new Date('2023-10-27T18:20:00Z'),

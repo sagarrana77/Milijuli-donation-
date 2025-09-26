@@ -18,7 +18,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { recentDonations, projects } from '@/lib/data';
+import { recentDonations, projects, type Donor } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { format } from 'date-fns';
 import Link from 'next/link';
@@ -27,12 +27,12 @@ function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
 }
 
-const allDonors = [
-    { name: 'Jane Doe', avatarUrl: getImageUrl('avatar-jane-doe') },
-    { name: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith') },
-    { name: 'Ai Chan', avatarUrl: getImageUrl('avatar-ai-chan') },
-    { name: 'Raj Patel', avatarUrl: getImageUrl('avatar-raj-patel') },
-    { name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous') },
+const allDonors: Donor[] = [
+    { id: 'user-jane-doe', name: 'Jane Doe', avatarUrl: getImageUrl('avatar-jane-doe'), profileUrl: '/profile' },
+    { id: 'user-john-smith', name: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile' },
+    { id: 'user-ai-chan', name: 'Ai Chan', avatarUrl: getImageUrl('avatar-ai-chan'), profileUrl: '/profile' },
+    { id: 'user-raj-patel', name: 'Raj Patel', avatarUrl: getImageUrl('avatar-raj-patel'), profileUrl: '/profile' },
+    { id: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile' },
 ]
 
 export function RealtimeLedger() {
@@ -95,7 +95,7 @@ export function RealtimeLedger() {
             {donations.map((donation) => (
               <TableRow key={donation.id}>
                 <TableCell>
-                  <Link href="/profile">
+                  <Link href={donation.donor.profileUrl}>
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9">
                         <AvatarImage
