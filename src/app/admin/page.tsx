@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -35,6 +36,7 @@ import {
   ArrowDown,
   ArrowRight,
   Edit,
+  UserPlus,
 } from 'lucide-react';
 import { projects, dashboardStats } from '@/lib/data';
 import {
@@ -89,11 +91,18 @@ export default function AdminDashboardPage() {
             Manage your platform settings and content.
           </p>
         </div>
-        <Button asChild>
-            <Link href="/admin/about">
-                <Edit className="mr-2 h-4 w-4" /> Edit About Page
-            </Link>
-        </Button>
+        <div className="flex gap-2">
+            <Button asChild>
+                <Link href="/admin/about">
+                    <Edit className="mr-2 h-4 w-4" /> Edit About Page
+                </Link>
+            </Button>
+            <Button asChild variant="outline">
+                <Link href="/admin/careers">
+                    <UserPlus className="mr-2 h-4 w-4" /> Manage Careers
+                </Link>
+            </Button>
+        </div>
       </div>
 
        <Card>

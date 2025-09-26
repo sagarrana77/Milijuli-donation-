@@ -491,3 +491,54 @@ export const values = [
       'Our ultimate goal is to maximize the positive impact of every donation, creating lasting change in communities.',
   },
 ];
+
+export type JobOpening = {
+  id: string;
+  title: string;
+  type: 'Full-time' | 'Part-time' | 'Volunteer';
+  location: string;
+  description: string;
+  requirements: string[];
+};
+
+export const jobOpenings: JobOpening[] = [
+  {
+    id: 'job-1',
+    title: 'Community Manager',
+    type: 'Full-time',
+    location: 'Kathmandu, Nepal',
+    description: 'We are looking for a passionate Community Manager to engage with our users, manage our social media presence, and build a strong, supportive community around ClarityChain. You will be the voice of our organization.',
+    requirements: [
+        '2+ years of experience in community management or social media marketing.',
+        'Excellent written and verbal communication skills in English and Nepali.',
+        'Proven ability to grow and manage online communities.',
+        'A strong passion for social causes and transparency.',
+    ],
+  },
+  {
+    id: 'job-2',
+    title: 'Fundraising Volunteer',
+    type: 'Volunteer',
+    location: 'Remote',
+    description: 'Join our team as a Fundraising Volunteer and help us connect with donors who share our vision. You will assist in online campaigns, outreach, and events to help us grow our impact.',
+    requirements: [
+        'Strong communication and interpersonal skills.',
+        'A passion for fundraising and making a difference.',
+        'Self-motivated and able to work independently.',
+        'No prior experience required, just a willingness to learn and contribute.',
+    ],
+  },
+    {
+    id: 'job-3',
+    title: 'Frontend Developer',
+    type: 'Part-time',
+    location: 'Remote',
+    description: 'We are seeking a talented Frontend Developer to help us improve our platform\'s user experience. You will work on building new features, optimizing performance, and ensuring our UI is intuitive and accessible.',
+    requirements: [
+        'Proficient in React, Next.js, and TypeScript.',
+        'Experience with Tailwind CSS and modern styling practices.',
+        'A strong eye for design and user experience.',
+        'Familiarity with web3 concepts is a plus.',
+    ],
+  }
+];

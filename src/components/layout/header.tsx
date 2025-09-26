@@ -24,6 +24,7 @@ function getPageTitle(pathname: string): string {
     const parts = pathname.split('/');
     const lastPart = parts[parts.length - 1];
     if (lastPart === 'about') return 'Edit About Page';
+    if (lastPart === 'careers') return 'Manage Careers';
     return 'Admin';
   }
   if (pathname.startsWith('/profile/')) {
@@ -46,6 +47,8 @@ function getPageTitle(pathname: string): string {
       return 'Admin Dashboard';
     case '/about':
       return 'About Us';
+    case '/careers':
+      return 'Careers';
     case '/profile':
         return 'My Profile';
     case '/settings':

@@ -22,6 +22,7 @@ import {
   Shield,
   Users,
   Briefcase,
+  UserPlus,
 } from 'lucide-react';
 
 const menuItems = [
@@ -30,6 +31,7 @@ const menuItems = [
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
   { href: '/reports', label: 'Reports', icon: FileText },
   { href: '/about', label: 'About', icon: Users },
+  { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/admin', label: 'Admin', icon: Shield },
 ];
 
