@@ -2,6 +2,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
@@ -14,9 +17,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CreditCard, DollarSign, Landmark } from 'lucide-react';
+import { CreditCard, DollarSign, Landmark, Save } from 'lucide-react';
 import { users } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
 
 interface DonationDialogProps {
   isOpen: boolean;
@@ -30,6 +35,18 @@ const presetAmounts = [10, 25, 50, 100, 250, 500];
 // In a real app, this would come from an auth hook or context
 const currentUser = users.find(u => u.id === 'current-user');
 
+const creditCardSchema = z.object({
+  cardNumber: z.string().regex(/^\d{16}$/, "Card number must be 16 digits."),
+  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, "Invalid expiry date format (MM/YY)."),
+  cvc: z.string().regex(/^\d{3,4}$/, "CVC must be 3 or 4 digits."),
+});
+
+const bankAccountSchema = z.object({
+  accountHolderName: z.string().min(1, "Account holder name is required."),
+  accountNumber: z.string().min(1, "Account number is required."),
+});
+
+
 export function DonationDialog({
   isOpen,
   onOpenChange,
@@ -39,6 +56,17 @@ export function DonationDialog({
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [hasPaymentMethod, setHasPaymentMethod] = useState(currentUser?.hasPaymentMethod || false);
+  const { toast } = useToast();
+
+  const ccForm = useForm<z.infer<typeof creditCardSchema>>({
+    resolver: zodResolver(creditCardSchema),
+    defaultValues: { cardNumber: '', expiryDate: '', cvc: ''}
+  });
+
+  const bankForm = useForm<z.infer<typeof bankAccountSchema>>({
+    resolver: zodResolver(bankAccountSchema),
+    defaultValues: { accountHolderName: '', accountNumber: ''}
+  });
 
   const handleDonateClick = () => {
     const numericAmount = parseFloat(amount);
@@ -54,7 +82,20 @@ export function DonationDialog({
 
   const handleSavePaymentMethod = () => {
     // In a real app, this would save the payment method to the backend
+    toast({ title: "Payment Method Saved", description: "Your payment method has been securely saved." });
     setHasPaymentMethod(true);
+  }
+
+  const onCreditCardSubmit = (data: z.infer<typeof creditCardSchema>) => {
+    console.log("Credit Card data (dialog):", data);
+    handleSavePaymentMethod();
+    ccForm.reset();
+  }
+
+  const onBankSubmit = (data: z.infer<typeof bankAccountSchema>) => {
+    console.log("Bank Account data (dialog):", data);
+    handleSavePaymentMethod();
+    bankForm.reset();
   }
 
   const handlePresetClick = (preset: number) => {
@@ -74,55 +115,72 @@ export function DonationDialog({
                 </DialogDescription>
             </DialogHeader>
             <Tabs defaultValue="credit-card">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="credit-card">
-                <CreditCard className="mr-2 h-4 w-4" /> Credit Card
-              </TabsTrigger>
-              <TabsTrigger value="bank-account">
-                <Landmark className="mr-2 h-4 w-4" /> Bank Account
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="credit-card" className="mt-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="card-number">Card Number</Label>
-                  <Input id="card-number" placeholder="0000 0000 0000 0000" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="expiry-date">Expiry Date</Label>
-                    <Input id="expiry-date" placeholder="MM / YY" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cvc">CVC</Label>
-                    <Input id="cvc" placeholder="123" />
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="bank-account" className="mt-6">
-              <div className="space-y-4">
-                 <div className="space-y-2">
-                  <Label htmlFor="account-holder-name">Account Holder Name</Label>
-                  <Input id="account-holder-name" placeholder="John Doe" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="account-number">Account Number</Label>
-                  <Input id="account-number" placeholder="Your account number" />
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-           <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="secondary">
-                    Cancel
-                    </Button>
-                </DialogClose>
-                <Button type="button" onClick={handleSavePaymentMethod}>
-                    Save and Continue
-                </Button>
-            </DialogFooter>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="credit-card">
+                  <CreditCard className="mr-2 h-4 w-4" /> Credit Card
+                </TabsTrigger>
+                <TabsTrigger value="bank-account">
+                  <Landmark className="mr-2 h-4 w-4" /> Bank Account
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="credit-card" className="mt-6">
+                <Form {...ccForm}>
+                  <form onSubmit={ccForm.handleSubmit(onCreditCardSubmit)} className="space-y-4">
+                    <FormField control={ccForm.control} name="cardNumber" render={({ field }) => (
+                      <FormItem>
+                        <Label>Card Number</Label>
+                        <FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField control={ccForm.control} name="expiryDate" render={({ field }) => (
+                        <FormItem>
+                          <Label>Expiry Date</Label>
+                          <FormControl><Input placeholder="MM/YY" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={ccForm.control} name="cvc" render={({ field }) => (
+                        <FormItem>
+                          <Label>CVC</Label>
+                          <FormControl><Input placeholder="123" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                        <Button type="submit"><Save className="mr-2 h-4 w-4" />Save and Continue</Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </TabsContent>
+              <TabsContent value="bank-account" className="mt-6">
+                <Form {...bankForm}>
+                    <form onSubmit={bankForm.handleSubmit(onBankSubmit)} className="space-y-4">
+                        <FormField control={bankForm.control} name="accountHolderName" render={({ field }) => (
+                            <FormItem>
+                                <Label>Account Holder Name</Label>
+                                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={bankForm.control} name="accountNumber" render={({ field }) => (
+                            <FormItem>
+                                <Label>Account Number</Label>
+                                <FormControl><Input placeholder="Your account number" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                            <Button type="submit"><Save className="mr-2 h-4 w-4" />Save and Continue</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+              </TabsContent>
+            </Tabs>
            </>
         ) : (
             <>

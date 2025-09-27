@@ -1,16 +1,100 @@
+
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import InstagramIcon from '@/components/icons/instagram-icon';
 import TwitterIcon from '@/components/icons/TwitterIcon';
 import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditCard, Landmark } from 'lucide-react';
+import { CreditCard, Landmark, Save } from 'lucide-react';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/hooks/use-toast';
 
+
+const profileSchema = z.object({
+    name: z.string().min(1, "Name is required."),
+    email: z.string().email("Invalid email address."),
+    bio: z.string().max(200, "Bio must not exceed 200 characters.").optional(),
+});
+
+const socialLinksSchema = z.object({
+    linkedin: z.string().url("Invalid URL.").optional().or(z.literal('')),
+    twitter: z.string().url("Invalid URL.").optional().or(z.literal('')),
+    instagram: z.string().url("Invalid URL.").optional().or(z.literal('')),
+});
+
+const creditCardSchema = z.object({
+  cardNumber: z.string().regex(/^\d{16}$/, "Card number must be 16 digits."),
+  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, "Invalid expiry date format (MM/YY)."),
+  cvc: z.string().regex(/^\d{3,4}$/, "CVC must be 3 or 4 digits."),
+  cardName: z.string().min(1, "Name on card is required."),
+});
+
+const bankAccountSchema = z.object({
+    bankName: z.string().min(1, "Bank name is required."),
+    accountHolderName: z.string().min(1, "Account holder name is required."),
+    accountNumber: z.string().min(1, "Account number is required."),
+    routingNumber: z.string().min(1, "Routing number is required."),
+    saveInfo: z.boolean(),
+});
 
 export default function SettingsPage() {
+    const { toast } = useToast();
+
+    const profileForm = useForm<z.infer<typeof profileSchema>>({
+        resolver: zodResolver(profileSchema),
+        defaultValues: {
+            name: "Current User",
+            email: "donor@example.com",
+            bio: "A passionate supporter of community-driven projects and a firm believer in the power of transparent giving."
+        }
+    });
+
+    const socialForm = useForm<z.infer<typeof socialLinksSchema>>({
+        resolver: zodResolver(socialLinksSchema),
+        defaultValues: { linkedin: '', twitter: '', instagram: ''}
+    });
+    
+    const ccForm = useForm<z.infer<typeof creditCardSchema>>({
+        resolver: zodResolver(creditCardSchema),
+        defaultValues: { cardNumber: '', expiryDate: '', cvc: '', cardName: ''}
+    });
+
+    const bankForm = useForm<z.infer<typeof bankAccountSchema>>({
+        resolver: zodResolver(bankAccountSchema),
+        defaultValues: { bankName: '', accountHolderName: '', accountNumber: '', routingNumber: '', saveInfo: true}
+    });
+
+    const onProfileSubmit = (data: z.infer<typeof profileSchema>) => {
+        console.log("Profile data:", data);
+        toast({ title: "Profile Updated", description: "Your account information has been saved." });
+    };
+
+    const onSocialSubmit = (data: z.infer<typeof socialLinksSchema>) => {
+        console.log("Social links data:", data);
+        toast({ title: "Social Links Updated", description: "Your social media links have been saved." });
+    };
+    
+    const onCreditCardSubmit = (data: z.infer<typeof creditCardSchema>) => {
+        console.log("Credit card data:", data);
+        toast({ title: "Payment Method Saved", description: "Your credit card has been securely saved." });
+        ccForm.reset();
+    };
+
+    const onBankSubmit = (data: z.infer<typeof bankAccountSchema>) => {
+        console.log("Bank account data:", data);
+        toast({ title: "Payment Method Saved", description: `Your bank account has been ${data.saveInfo ? 'securely saved' : 'used for a one-time transaction'}.` });
+        bankForm.reset();
+    };
+
+
   return (
     <div className="space-y-8">
       <div>
@@ -26,25 +110,33 @@ export default function SettingsPage() {
             Update your personal details.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input id="name" defaultValue="Current User" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <Input id="email" type="email" defaultValue="donor@example.com" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="bio">About You</Label>
-            <Textarea
-              id="bio"
-              rows={3}
-              placeholder="Tell us a little about yourself"
-              defaultValue="A passionate supporter of community-driven projects and a firm believer in the power of transparent giving."
-            />
-          </div>
-          <Button>Save Changes</Button>
+        <CardContent>
+            <Form {...profileForm}>
+                <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
+                    <FormField control={profileForm.control} name="name" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Full Name</FormLabel>
+                            <FormControl><Input {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                     <FormField control={profileForm.control} name="email" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email Address</FormLabel>
+                            <FormControl><Input type="email" {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                     <FormField control={profileForm.control} name="bio" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>About You</FormLabel>
+                            <FormControl><Textarea rows={3} placeholder="Tell us a little about yourself" {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                    <Button type="submit">Save Changes</Button>
+                </form>
+            </Form>
         </CardContent>
       </Card>
 
@@ -55,20 +147,33 @@ export default function SettingsPage() {
             Add your social media profiles to be displayed on your profile.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="linkedin" className="flex items-center gap-2"><LinkedInIcon className="h-4 w-4" /> LinkedIn URL</Label>
-            <Input id="linkedin" placeholder="https://linkedin.com/in/your-username" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="twitter" className="flex items-center gap-2"><TwitterIcon className="h-4 w-4" /> Twitter / X URL</Label>
-            <Input id="twitter" placeholder="https://twitter.com/your-username" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-4 w-4" /> Instagram URL</Label>
-            <Input id="instagram" placeholder="https://instagram.com/your-username" />
-          </div>
-          <Button>Save Social Links</Button>
+        <CardContent>
+            <Form {...socialForm}>
+                <form onSubmit={socialForm.handleSubmit(onSocialSubmit)} className="space-y-4">
+                    <FormField control={socialForm.control} name="linkedin" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="flex items-center gap-2"><LinkedInIcon className="h-4 w-4" /> LinkedIn URL</FormLabel>
+                            <FormControl><Input placeholder="https://linkedin.com/in/your-username" {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                     <FormField control={socialForm.control} name="twitter" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="flex items-center gap-2"><TwitterIcon className="h-4 w-4" /> Twitter / X URL</FormLabel>
+                            <FormControl><Input placeholder="https://twitter.com/your-username" {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                     <FormField control={socialForm.control} name="instagram" render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className="flex items-center gap-2"><InstagramIcon className="h-4 w-4" /> Instagram URL</FormLabel>
+                            <FormControl><Input placeholder="https://instagram.com/your-username" {...field} /></FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                    <Button type="submit">Save Social Links</Button>
+                </form>
+            </Form>
         </CardContent>
       </Card>
 
@@ -90,48 +195,98 @@ export default function SettingsPage() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="credit-card" className="mt-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="card-number">Card Number</Label>
-                  <Input id="card-number" placeholder="0000 0000 0000 0000" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="expiry-date">Expiry Date</Label>
-                    <Input id="expiry-date" placeholder="MM / YY" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cvc">CVC</Label>
-                    <Input id="cvc" placeholder="123" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="card-name">Name on Card</Label>
-                  <Input id="card-name" placeholder="John Doe" />
-                </div>
-                <Button>Save Card</Button>
-              </div>
+                <Form {...ccForm}>
+                    <form onSubmit={ccForm.handleSubmit(onCreditCardSubmit)} className="space-y-4">
+                        <FormField control={ccForm.control} name="cardNumber" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Card Number</FormLabel>
+                                <FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={ccForm.control} name="expiryDate" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Expiry Date</FormLabel>
+                                    <FormControl><Input placeholder="MM/YY" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                             <FormField control={ccForm.control} name="cvc" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>CVC</FormLabel>
+                                    <FormControl><Input placeholder="123" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+                        </div>
+                        <FormField control={ccForm.control} name="cardName" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Name on Card</FormLabel>
+                                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <Button type="submit"><Save className="mr-2 h-4 w-4" /> Save Card</Button>
+                    </form>
+                </Form>
             </TabsContent>
             <TabsContent value="bank-account" className="mt-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="bank-name">Bank Name</Label>
-                  <Input id="bank-name" placeholder="e.g., Example Bank" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="account-holder-name">Account Holder Name</Label>
-                  <Input id="account-holder-name" placeholder="John Doe" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="account-number">Account Number</Label>
-                  <Input id="account-number" placeholder="Your account number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="routing-number">Routing Number</Label>
-                  <Input id="routing-number" placeholder="Your routing number" />
-                </div>
-                <Button>Save Bank Account</Button>
-              </div>
+                <Form {...bankForm}>
+                    <form onSubmit={bankForm.handleSubmit(onBankSubmit)} className="space-y-4">
+                        <FormField control={bankForm.control} name="bankName" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Bank Name</FormLabel>
+                                <FormControl><Input placeholder="e.g., Example Bank" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={bankForm.control} name="accountHolderName" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Account Holder Name</FormLabel>
+                                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={bankForm.control} name="accountNumber" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Account Number</FormLabel>
+                                <FormControl><Input placeholder="Your account number" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={bankForm.control} name="routingNumber" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Routing Number</FormLabel>
+                                <FormControl><Input placeholder="Your routing number" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField
+                            control={bankForm.control}
+                            name="saveInfo"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                <FormControl>
+                                    <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>
+                                    Save this bank account for future donations.
+                                    </FormLabel>
+                                    <FormDescription>
+                                    If unchecked, this information will only be used for a one-time transaction.
+                                    </FormDescription>
+                                </div>
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit"><Save className="mr-2 h-4 w-4" />Save Bank Account</Button>
+                    </form>
+                </Form>
             </TabsContent>
           </Tabs>
         </CardContent>
