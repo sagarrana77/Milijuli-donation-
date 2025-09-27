@@ -1,8 +1,4 @@
 
-
-
-
-
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -425,10 +421,10 @@ export const recentDonations: {
 ];
 
 export const expenseData = [
-  { name: 'Education', value: 40, fill: 'var(--color-chart-1)' },
-  { name: 'Admin', value: 20, fill: 'var(--color-chart-2)' },
-  { name: 'Relief', value: 30, fill: 'var(--color-chart-3)' },
-  { name: 'Health', value: 10, fill: 'var(--color-chart-4)' },
+  { name: 'Education', value: 40, fill: '#FF5733' }, // Vibrant Orange-Red
+  { name: 'Admin', value: 20, fill: '#4C8BF5' }, // Bright Blue
+  { name: 'Relief', value: 30, fill: '#FFC300' }, // Saffron/Gold
+  { name: 'Health', value: 10, fill: '#2ECC71' }, // Emerald Green
 ];
 
 export type TeamMember = {
@@ -645,3 +641,4 @@ export let socialLinks = {
     instagram: 'https://instagram.com/your-profile',
     messenger: 'your.username'
 }
+
