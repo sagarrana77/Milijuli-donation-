@@ -32,10 +32,10 @@ import { currentUser } from '@/lib/data';
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/projects', label: 'Projects', icon: HeartHandshake },
-  { href: '/about', label: 'About', icon: Users },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
+  { href: '/about', label: 'About', icon: Users },
   { href: '/admin', label: 'Admin', icon: Shield, adminOnly: true },
 ];
 
