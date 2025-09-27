@@ -129,7 +129,7 @@ export default function ProjectDetailPage({
             </Card>
             </ScrollFadeIn>
             
-          <ScrollFadeIn delay={200}>
+          <ScrollFadeIn asChild delay={200}>
             <Tabs defaultValue="updates" className="mt-8">
                 <TabsList>
                 <TabsTrigger value="updates">Updates</TabsTrigger>
@@ -244,7 +244,7 @@ export default function ProjectDetailPage({
             </Card>
           </ScrollFadeIn>
           
-          <ScrollFadeIn delay={200}>
+          <ScrollFadeIn asChild delay={200}>
             <Card>
                 <CardHeader>
                     <CardTitle>Scan to Donate</CardTitle>

@@ -28,7 +28,8 @@ function getUser(id: string): User | undefined {
 }
 
 export default function ProfilePage({ params }: { params: { id: string } }) {
-  const user = getUser(params.id);
+  const { id } = params;
+  const user = getUser(id);
 
   if (!user) {
     notFound();

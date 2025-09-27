@@ -10,7 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Briefcase, GraduationCap, Star } from 'lucide-react';
 
 export default function TeamMemberPage({ params }: { params: { id: string } }) {
-  const member = getTeamMember(params.id);
+  const { id } = params;
+  const member = getTeamMember(id);
 
   if (!member) {
     notFound();
