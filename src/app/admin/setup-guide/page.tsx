@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Card,
   CardContent,
@@ -6,6 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { BookOpen, Edit, UserPlus, CircleHelp, Settings, List, Briefcase, Server, Cloud } from 'lucide-react';
 import Link from 'next/link';
 
@@ -97,27 +105,35 @@ export default function AdminSetupGuidePage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
-          <div>
-            <h3 className="font-semibold text-foreground">1. Install Dependencies</h3>
-            <p>Install all the required npm packages using the following command. This will download and install all the libraries listed in `package.json`.</p>
-            <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm install</code></pre>
-          </div>
-          <div>
-            <h3 className="font-semibold text-foreground">2. Set Up Environment Variables</h3>
-            <p>The AI features in this application are powered by Google's Gemini model through Genkit. To use them, you need a Gemini API key. Create a new file named `.env` in the root directory and add your key.</p>
-             <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>GEMINI_API_KEY=YOUR_API_KEY_HERE</code></pre>
-             <p className="mt-1">You can get a key from <Link href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google AI Studio</Link>.</p>
-          </div>
-           <div>
-            <h3 className="font-semibold text-foreground">3. Run the Application</h3>
-            <p>This application requires two separate development servers. Open two terminal windows for the following commands.</p>
-            <h4 className="mt-2 font-medium text-foreground">Terminal 1: Run the Next.js App</h4>
-            <p>This command starts the main web application on `http://localhost:3000`.</p>
-             <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm run dev</code></pre>
-            <h4 className="mt-2 font-medium text-foreground">Terminal 2: Run the Genkit AI Flows</h4>
-             <p>This command starts the Genkit server, which handles AI-powered features.</p>
-             <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm run genkit:dev</code></pre>
-          </div>
+           <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-base font-semibold text-foreground">1. Install Dependencies</AccordionTrigger>
+                <AccordionContent className="pt-2 text-muted-foreground">
+                  <p>Install all the required npm packages. This command downloads and installs all the libraries listed in `package.json`.</p>
+                  <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm install</code></pre>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="text-base font-semibold text-foreground">2. Set Up Environment Variables</AccordionTrigger>
+                <AccordionContent className="pt-2 text-muted-foreground">
+                  <p>The AI features are powered by Google's Gemini model. To use them, you need a Gemini API key. Create a new file named `.env` in the root directory and add your key.</p>
+                  <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>GEMINI_API_KEY=YOUR_API_KEY_HERE</code></pre>
+                  <p className="mt-1">You can get a key from <Link href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google AI Studio</Link>.</p>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger className="text-base font-semibold text-foreground">3. Run the Application</AccordionTrigger>
+                <AccordionContent className="pt-2 text-muted-foreground">
+                  <p>This application requires two separate development servers. Open two terminal windows for the following commands.</p>
+                  <h4 className="mt-2 font-medium text-foreground">Terminal 1: Run the Next.js App</h4>
+                  <p>This command starts the main web application on `http://localhost:3000`.</p>
+                  <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm run dev</code></pre>
+                  <h4 className="mt-2 font-medium text-foreground">Terminal 2: Run the Genkit AI Flows</h4>
+                  <p>This command starts the Genkit server, which handles AI-powered features.</p>
+                  <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm run genkit:dev</code></pre>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
         </CardContent>
       </Card>
       
@@ -127,34 +143,44 @@ export default function AdminSetupGuidePage() {
           <div>
             <CardTitle>Deploying Live (Free Options)</CardTitle>
             <CardDescription>
-                To deploy your app live for free, use a service like Vercel (recommended) or Netlify. They offer seamless integration with Next.js.
+                To deploy your app live for free, use a service like Vercel. They offer seamless integration with Next.js.
             </CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
-            <div>
-                <h3 className="font-semibold text-foreground">1. Push to a Git Repository</h3>
-                <p>Make sure your project is in a GitHub, GitLab, or Bitbucket repository. If you haven't done this yet, you can create a new repository on your preferred platform and follow their instructions to upload your code.</p>
-            </div>
-            <div>
-                <h3 className="font-semibold text-foreground">2. Connect Your Repository to Vercel</h3>
-                <p>Sign up for a free Vercel account and connect it to your Git provider. Select your project repository to import it.</p>
-            </div>
-            <div>
-                <h3 className="font-semibold text-foreground">3. Configure Environment Variables</h3>
-                <p>In the Vercel project settings, find the "Environment Variables" section. You must add your `GEMINI_API_KEY` here, just like you did for your local `.env` file. This keeps your key secure and allows the live application to use the AI features.</p>
-                <ul className="mt-2 list-disc pl-5">
-                    <li>**Name:** `GEMINI_API_KEY`</li>
-                    <li>**Value:** Paste your actual API key here.</li>
-                </ul>
-            </div>
-            <div>
-                <h3 className="font-semibold text-foreground">4. Deploy</h3>
-                <p>Vercel will automatically detect that you're using Next.js and configure the build settings. Simply click "Deploy". Your app will be live in minutes, and Vercel will automatically redeploy whenever you push new changes to your repository.</p>
-                 <Link href="https://vercel.com/docs/frameworks/nextjs" className="mt-2 inline-block text-primary hover:underline" target="_blank" rel="noopener noreferrer">
-                    View Vercel's Next.js Deployment Docs &rarr;
-                 </Link>
-            </div>
+           <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-base font-semibold text-foreground">1. Push to a Git Repository</AccordionTrigger>
+                <AccordionContent className="pt-2 text-muted-foreground">
+                    <p>Make sure your project is in a GitHub, GitLab, or Bitbucket repository. If you initialized the project locally, create a new repository on your preferred platform and push your code.</p>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="text-base font-semibold text-foreground">2. Connect Your Repository to Vercel</AccordionTrigger>
+                <AccordionContent className="pt-2 text-muted-foreground">
+                    <p>Sign up for a free Vercel account and connect it to your Git provider. Select your project repository to import it.</p>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger className="text-base font-semibold text-foreground">3. Configure Environment Variables</AccordionTrigger>
+                <AccordionContent className="pt-2 text-muted-foreground">
+                    <p>In the Vercel project settings, find the "Environment Variables" section. You must add your `GEMINI_API_KEY` here. This keeps your key secure and allows the live application to use the AI features.</p>
+                    <ul className="mt-2 list-disc pl-5">
+                        <li>**Name:** `GEMINI_API_KEY`</li>
+                        <li>**Value:** Paste your actual API key here.</li>
+                    </ul>
+                </AccordionContent>
+              </AccordionItem>
+               <AccordionItem value="item-4">
+                <AccordionTrigger className="text-base font-semibold text-foreground">4. Deploy</AccordionTrigger>
+                <AccordionContent className="pt-2 text-muted-foreground">
+                    <p>Vercel will automatically detect that you're using Next.js and configure the build settings. Simply click "Deploy". Your app will be live in minutes, and Vercel will automatically redeploy whenever you push new changes to your repository.</p>
+                    <Link href="https://vercel.com/docs/frameworks/nextjs" className="mt-2 inline-block text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                        View Vercel's Next.js Deployment Docs &rarr;
+                    </Link>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
         </CardContent>
       </Card>
     </div>
