@@ -13,6 +13,8 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Home } from 'lucide-react';
+import { teamMembers, users } from '@/lib/data';
+
 
 // Helper function to capitalize the first letter of a string
 const capitalize = (s: string) => {
@@ -28,6 +30,19 @@ const formatCrumb = (crumb: string) => {
     .map(capitalize)
     .join(' ');
 };
+
+const getNameForId = (id: string, type: 'team' | 'profile') => {
+    if (type === 'team') {
+        const member = teamMembers.find(m => m.id === id);
+        return member ? member.name : formatCrumb(id);
+    }
+    if (type === 'profile') {
+        const user = users.find(u => u.id === id);
+        return user ? user.name : formatCrumb(id);
+    }
+    return formatCrumb(id);
+}
+
 
 export function Breadcrumbs() {
   const pathname = usePathname();
@@ -53,82 +68,35 @@ export function Breadcrumbs() {
           const isLast = index === pathSegments.length - 1;
           const href = '/' + pathSegments.slice(0, index + 1).join('/');
 
-          // Handle admin/projects/new
-           if (pathSegments[index - 1] === 'projects' && segment === 'new') {
-            return (
-              <React.Fragment key={href}>
-                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                   <BreadcrumbLink asChild>
-                        <Link href="/admin">Admin</Link>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>New Project</BreadcrumbPage>
-                </BreadcrumbItem>
-              </React.Fragment>
-            );
-          }
-
-          // Handle project routes
-          if (pathSegments[index - 1] === 'projects' && !isLast) {
-              return null;
-          }
-          if (pathSegments[index-1] === 'projects' && isLast) {
-            return (
-              <React.Fragment key={href}>
-                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                   <BreadcrumbLink asChild>
-                        <Link href="/projects">Projects</Link>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{formatCrumb(segment)}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </React.Fragment>
-            );
-          }
-
-          // Handle team routes
-           if (pathSegments[index-1] === 'about' && segment === 'team') {
-              return null; // Don't show "Team" in breadcrumb
-          }
-           if (pathSegments[index-1] === 'team') {
-            return (
-              <React.Fragment key={href}>
-                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                   <BreadcrumbLink asChild>
+          if (isLast) {
+              // Handle team member page
+              if (pathSegments[index - 1] === 'team') {
+                return (
+                  <React.Fragment key={href}>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbLink asChild>
                         <Link href="/about">About</Link>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{formatCrumb(segment)}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </React.Fragment>
-            );
-          }
-
-           // Handle profile routes
-           if (pathSegments[index-1] === 'profile') {
-            return (
-              <React.Fragment key={href}>
-                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                   <BreadcrumbLink asChild>
-                        <Link href="/profile/current-user">Profile</Link>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{formatCrumb(segment)}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </React.Fragment>
-            );
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{getNameForId(segment, 'team')}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </React.Fragment>
+                );
+              }
+               // Handle user profile page
+              if (pathSegments[index - 1] === 'profile') {
+                return (
+                  <React.Fragment key={href}>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{getNameForId(segment, 'profile')}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </React.Fragment>
+                );
+              }
           }
 
 

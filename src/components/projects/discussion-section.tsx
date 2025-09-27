@@ -13,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Card, CardContent } from '@/components/ui/card';
 import type { Project } from '@/lib/data';
 import Link from 'next/link';
-import { useForm as useReactHookForm } from 'react-hook-form';
 
 type Comment = Project['discussion'][0];
 
@@ -36,7 +35,7 @@ export function DiscussionSection({
 }: DiscussionSectionProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
 
-  const form = useReactHookForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       comment: '',

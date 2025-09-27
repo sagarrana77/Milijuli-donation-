@@ -1,13 +1,17 @@
+
 'use client';
 
 import React, { useRef, useEffect, useState, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+import { Slot } from '@radix-ui/react-slot';
+
 
 interface ScrollFadeInProps {
   children: ReactNode;
   className?: string;
   delay?: number;
   threshold?: number;
+  asChild?: boolean;
 }
 
 export const ScrollFadeIn: React.FC<ScrollFadeInProps> = ({
@@ -15,6 +19,7 @@ export const ScrollFadeIn: React.FC<ScrollFadeInProps> = ({
   className,
   delay = 0,
   threshold = 0.1,
+  asChild = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -43,9 +48,11 @@ export const ScrollFadeIn: React.FC<ScrollFadeInProps> = ({
       }
     };
   }, [threshold]);
+  
+  const Comp = asChild ? Slot : 'div';
 
   return (
-    <div
+    <Comp
       ref={ref}
       className={cn(
         'fade-in-on-scroll',
@@ -55,6 +62,6 @@ export const ScrollFadeIn: React.FC<ScrollFadeInProps> = ({
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
-    </div>
+    </Comp>
   );
 };

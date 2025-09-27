@@ -77,6 +77,17 @@ export default function AdminCareersPage() {
             featured: false,
         }
     });
+    
+    const resetForm = () => {
+        form.reset({
+             title: '',
+            type: 'Full-time',
+            location: '',
+            description: '',
+            requirements: '',
+            featured: false,
+        });
+    }
 
     const onSubmit = (data: JobOpeningFormData) => {
         const newJob: JobOpening = {
@@ -91,14 +102,7 @@ export default function AdminCareersPage() {
         } else {
             setJobOpenings([newJob, ...jobOpenings]);
         }
-        form.reset({
-             title: '',
-            type: 'Full-time',
-            location: '',
-            description: '',
-            requirements: '',
-            featured: false,
-        });
+        resetForm();
     };
 
     const handleEdit = (job: JobOpening) => {
@@ -115,14 +119,7 @@ export default function AdminCareersPage() {
 
     const handleCancelEdit = () => {
         setEditingJob(null);
-        form.reset({
-             title: '',
-            type: 'Full-time',
-            location: '',
-            description: '',
-            requirements: '',
-            featured: false,
-        });
+        resetForm();
     }
 
     const handleFeatureToggle = (jobId: string, featured: boolean) => {
@@ -169,7 +166,7 @@ export default function AdminCareersPage() {
                             render={({ field }) => (
                                 <FormItem>
                                     <Label htmlFor="job-type">Position Type</Label>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
                                             <SelectTrigger id="job-type">
                                                 <SelectValue placeholder="Select a type" />
