@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState } from 'react';
@@ -85,6 +83,12 @@ export default function AdminDashboardPage() {
   const [newSalary, setNewSalary] = useState({ employee: '', role: '', salary: '' });
   const [newEquipment, setNewEquipment] = useState({ item: '', cost: '', purchaseDate: '', vendor: '', imageUrl: '', imageHint: '' });
   const [newMiscExpense, setNewMiscExpense] = useState({ item: '', cost: '', purchaseDate: '', vendor: '' });
+  const [socialLinks, setSocialLinks] = useState({
+    whatsapp: '+1234567890',
+    viber: '+1234567890',
+    instagram: 'https://instagram.com/your-profile',
+    messenger: 'your.username'
+  });
 
 
   const handleAddSalary = () => {
@@ -153,6 +157,13 @@ export default function AdminDashboardPage() {
     toast({
         title: 'Funds Transferred',
         description: 'The funds have been successfully transferred.',
+    });
+  }
+  
+  const handleSaveSocialLinks = () => {
+    toast({
+        title: 'Social Links Saved!',
+        description: 'Your contact links have been updated. (This is a demo and not persisted).',
     });
   }
 
@@ -382,21 +393,21 @@ export default function AdminDashboardPage() {
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                             <Label htmlFor="whatsapp" className="flex items-center gap-2"><WhatsAppIcon className="h-5 w-5"/> WhatsApp Number</Label>
-                            <Input id="whatsapp" placeholder="+1234567890" />
+                            <Input id="whatsapp" value={socialLinks.whatsapp} onChange={e => setSocialLinks({...socialLinks, whatsapp: e.target.value})} />
                             </div>
                             <div className="space-y-2">
                             <Label htmlFor="viber" className="flex items-center gap-2"><ViberIcon className="h-5 w-5"/> Viber Number</Label>
-                            <Input id="viber" placeholder="+1234567890" />
+                            <Input id="viber" value={socialLinks.viber} onChange={e => setSocialLinks({...socialLinks, viber: e.target.value})} />
                             </div>
                             <div className="space-y-2">
                             <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-5 w-5"/> Instagram URL</Label>
-                            <Input id="instagram" placeholder="https://instagram.com/your-profile" />
+                            <Input id="instagram" value={socialLinks.instagram} onChange={e => setSocialLinks({...socialLinks, instagram: e.target.value})} />
                             </div>
                             <div className="space-y-2">
                             <Label htmlFor="messenger" className="flex items-center gap-2"><MessengerIcon className="h-5 w-5"/> Messenger Username</Label>
-                            <Input id="messenger" placeholder="your.username" />
+                            <Input id="messenger" value={socialLinks.messenger} onChange={e => setSocialLinks({...socialLinks, messenger: e.target.value})} />
                             </div>
-                            <Button>Save Contact Links</Button>
+                            <Button onClick={handleSaveSocialLinks}>Save Contact Links</Button>
                         </CardContent>
                     </Card>
                 </div>
@@ -609,8 +620,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
-    
-
-    
-

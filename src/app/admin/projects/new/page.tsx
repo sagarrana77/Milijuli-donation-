@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -63,7 +62,7 @@ export default function NewProjectPage() {
     console.log('New project data:', data);
     toast({
       title: 'Project Created!',
-      description: `The project "${data.name}" has been successfully added.`,
+      description: `The project "${data.name}" has been successfully added. (This is a demo and not persisted).`,
     });
     form.reset();
   }
@@ -255,5 +254,3 @@ export default function NewProjectPage() {
     </div>
   );
 }
-
-    

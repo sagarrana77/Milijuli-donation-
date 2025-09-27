@@ -10,15 +10,22 @@ import InstagramIcon from '@/components/icons/instagram-icon';
 import MessengerIcon from '@/components/icons/messenger-icon';
 import Link from 'next/link';
 
-const socialLinks = {
-    whatsapp: 'https://wa.me/1234567890',
-    viber: 'viber://chat?number=%2B1234567890',
+// In a real app, these would come from a global state or fetched from a backend
+const initialSocialLinks = {
+    whatsapp: '1234567890',
+    viber: '+1234567890',
     instagram: 'https://instagram.com/your-profile',
-    messenger: 'https://m.me/your.username'
+    messenger: 'your.username'
 }
 
 export function FloatingContactButton() {
   const [isOpen, setIsOpen] = useState(false);
+  // This state would be updated from a global store that the admin page modifies
+  const [socialLinks, setSocialLinks] = useState(initialSocialLinks);
+
+  const whatsappLink = `https://wa.me/${socialLinks.whatsapp}`;
+  const viberLink = `viber://chat?number=%2B${socialLinks.viber.replace('+', '')}`;
+  const messengerLink = `https://m.me/${socialLinks.messenger}`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -30,12 +37,12 @@ export function FloatingContactButton() {
             </PopoverTrigger>
             <PopoverContent side="top" align="end" className="w-auto rounded-full p-2 border-none bg-transparent shadow-none">
                 <div className="flex items-center gap-3 rounded-full bg-background border p-2 shadow-lg">
-                    <Link href={socialLinks.whatsapp} target="_blank" passHref>
+                    <Link href={whatsappLink} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-green-500 hover:bg-green-600 text-white">
                             <WhatsAppIcon className="h-6 w-6" color="white"/>
                         </Button>
                     </Link>
-                    <Link href={socialLinks.viber} target="_blank" passHref>
+                    <Link href={viberLink} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-purple-600 hover:bg-purple-700 text-white">
                             <ViberIcon className="h-6 w-6 fill-white" />
                         </Button>
@@ -45,7 +52,7 @@ export function FloatingContactButton() {
                             <InstagramIcon className="h-6 w-6" color="white" />
                         </Button>
                     </Link>
-                    <Link href={socialLinks.messenger} target="_blank" passHref>
+                    <Link href={messengerLink} target="_blank" passHref>
                          <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-blue-600 hover:bg-blue-700 text-white">
                             <MessengerIcon className="h-6 w-6" color="white" />
                         </Button>
