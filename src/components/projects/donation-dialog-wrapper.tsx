@@ -5,6 +5,8 @@ import { useState, useEffect, ReactNode, createContext, useContext } from 'react
 import type { Project } from '@/lib/data';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { sendThankYouEmail } from '@/ai/flows/send-thank-you-email';
+import { users } from '@/lib/data';
 
 interface DonationContextType {
   raisedAmount: number;
@@ -60,7 +62,7 @@ export function DonationDialogWrapper({
     return () => clearInterval(interval);
   }, [project.targetAmount, raisedAmount]);
 
-  const handleDonation = (amount: number) => {
+  const handleDonation = async (amount: number) => {
     setRaisedAmount((prev) => prev + amount);
     setDonors((prev) => prev + 1);
     toast({
@@ -68,6 +70,29 @@ export function DonationDialogWrapper({
       description: `Your generous donation of $${amount} will help us continue our mission.`,
       variant: 'default',
     });
+
+    const currentUser = users.find(u => u.id === 'current-user');
+    if (currentUser?.email) {
+      try {
+        await sendThankYouEmail({
+          donorName: currentUser.name,
+          amount: amount,
+          projectName: project.name,
+          donorEmail: currentUser.email,
+        });
+        toast({
+          title: 'Confirmation Email Sent',
+          description: 'A thank-you note has been sent to your email.',
+        });
+      } catch (error) {
+        console.error("Failed to send thank you email:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Email Failed',
+            description: 'There was an issue sending the thank-you email.',
+        });
+      }
+    }
   };
 
   const percentage = Math.round(
