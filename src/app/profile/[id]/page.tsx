@@ -27,8 +27,8 @@ function getUser(id: string): User | undefined {
     return users.find(u => u.id === id);
 }
 
-export default function ProfilePage({ params: { id } }: { params: { id: string } }) {
-  const user = getUser(id);
+export default function ProfilePage({ params }: { params: { id: string } }) {
+  const user = getUser(params.id);
 
   if (!user) {
     notFound();

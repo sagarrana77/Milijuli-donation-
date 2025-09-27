@@ -9,8 +9,8 @@ import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, GraduationCap, Star } from 'lucide-react';
 
-export default function TeamMemberPage({ params: { id } }: { params: { id: string } }) {
-  const member = getTeamMember(id);
+export default function TeamMemberPage({ params }: { params: { id: string } }) {
+  const member = getTeamMember(params.id);
 
   if (!member) {
     notFound();
@@ -79,7 +79,7 @@ export default function TeamMemberPage({ params: { id } }: { params: { id: strin
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><GraduationCap className="h-5 w-5 text-primary" /> Education</CardTitle>
-                </CardHeader>
+                </Header>
                 <CardContent className="space-y-4">
                      {member.education.map((edu, index) => (
                         <div key={index} className="flex gap-4">
