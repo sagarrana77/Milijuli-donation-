@@ -91,6 +91,7 @@ export default function AdminDashboardPage() {
     if (newSalary.employee && newSalary.role && newSalary.salary) {
       setSalaries([...salaries, { id: `sal-${Date.now()}`, ...newSalary, salary: parseFloat(newSalary.salary) }]);
       setNewSalary({ employee: '', role: '', salary: '' });
+      toast({ title: "Salary Added", description: "This is for demonstration. Data is not persisted." });
     }
   };
 
@@ -107,6 +108,7 @@ export default function AdminDashboardPage() {
         };
       setEquipment([...equipment, newEquip]);
       setNewEquipment({ item: '', cost: '', purchaseDate: '', vendor: '', imageUrl: '', imageHint: '' });
+      toast({ title: "Equipment Added", description: "This is for demonstration. Data is not persisted." });
     }
   };
   
@@ -121,6 +123,7 @@ export default function AdminDashboardPage() {
           };
         setMiscExpenses([...miscExpenses, newMisc]);
         setNewMiscExpense({ item: '', cost: '', purchaseDate: '', vendor: '' });
+        toast({ title: "Misc. Expense Added", description: "This is for demonstration. Data is not persisted." });
       }
     };
 
@@ -610,3 +613,4 @@ export default function AdminDashboardPage() {
     
 
     
+
