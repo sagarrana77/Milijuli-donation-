@@ -1,33 +1,42 @@
 
 'use client';
 
-import { useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, ReactNode, createContext, useContext } from 'react';
 import type { Project } from '@/lib/data';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 
+interface DonationContextType {
+  raisedAmount: number;
+  donors: number;
+  percentage: number;
+  isClient: boolean;
+  isDonationOpen: boolean;
+  setIsDonationOpen: (open: boolean) => void;
+  project: Project;
+}
+
+const DonationContext = createContext<DonationContextType | null>(null);
+
+export function useDonationContext() {
+    const context = useContext(DonationContext);
+    if (!context) {
+        throw new Error('useDonationContext must be used within a DonationDialogWrapper');
+    }
+    return context;
+}
+
 interface DonationDialogWrapperProps {
   project: Project;
-  initialRaised: number;
-  initialDonors: number;
-  children: (props: {
-    raisedAmount: number;
-    donors: number;
-    percentage: number;
-    isClient: boolean;
-    isDonationOpen: boolean;
-    setIsDonationOpen: (open: boolean) => void;
-  }) => ReactNode;
+  children: ReactNode;
 }
 
 export function DonationDialogWrapper({
   project,
-  initialRaised,
-  initialDonors,
   children,
 }: DonationDialogWrapperProps) {
-  const [raisedAmount, setRaisedAmount] = useState(initialRaised);
-  const [donors, setDonors] = useState(initialDonors);
+  const [raisedAmount, setRaisedAmount] = useState(project.raisedAmount);
+  const [donors, setDonors] = useState(project.donors);
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
@@ -43,11 +52,13 @@ export function DonationDialogWrapper({
         const newAmount = prev + Math.floor(Math.random() * 150) + 20;
         return Math.min(newAmount, project.targetAmount);
       });
-      setDonors((prev) => prev + 1);
+       if (Math.random() > 0.5) {
+        setDonors((prev) => prev + 1);
+      }
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [project, raisedAmount]);
+  }, [project.targetAmount, raisedAmount]);
 
   const handleDonation = (amount: number) => {
     setRaisedAmount((prev) => prev + amount);
@@ -63,22 +74,25 @@ export function DonationDialogWrapper({
     (raisedAmount / project.targetAmount) * 100
   );
 
+  const contextValue = {
+    raisedAmount,
+    donors,
+    percentage,
+    isClient,
+    isDonationOpen,
+    setIsDonationOpen,
+    project,
+  };
+
   return (
-    <>
+    <DonationContext.Provider value={contextValue}>
       <DonationDialog
         isOpen={isDonationOpen}
         onOpenChange={setIsDonationOpen}
         projectName={project.name}
         onDonate={handleDonation}
       />
-      {children({
-        raisedAmount,
-        donors,
-        percentage,
-        isClient,
-        isDonationOpen,
-        setIsDonationOpen,
-      })}
-    </>
+      {children}
+    </DonationContext.Provider>
   );
 }
