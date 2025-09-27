@@ -26,6 +26,8 @@ import {
   Briefcase,
   UserPlus,
 } from 'lucide-react';
+import { Button } from '../ui/button';
+import { X } from 'lucide-react';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -56,8 +58,10 @@ export function MainSidebar() {
             <span className="text-lg font-semibold">ClarityChain</span>
           </div>
           <div className='md:hidden'>
-            <SidebarClose asChild>
-                <SidebarTrigger />
+             <SidebarClose asChild>
+              <Button variant="ghost" size="icon">
+                <X className="h-5 w-5" />
+              </Button>
             </SidebarClose>
           </div>
         </div>
