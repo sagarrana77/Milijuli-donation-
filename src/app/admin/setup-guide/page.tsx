@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { BookOpen, Edit, UserPlus, CircleHelp, Settings, List, Briefcase, CreditCard } from 'lucide-react';
+import { BookOpen, Edit, UserPlus, CircleHelp, Settings, List, Briefcase, CreditCard, Server, Cloud } from 'lucide-react';
 import Link from 'next/link';
 
 const guideSections = [
@@ -52,6 +52,20 @@ const guideSections = [
         linkText: 'Go to Platform Settings Tab',
         description: 'In the "Platform Settings" tab, you can configure payment gateways, manage API credentials for services like Stripe and PayPal, and update the social media links for the floating contact button.'
     },
+    {
+        icon: Server,
+        title: 'Running Your App Locally',
+        link: 'https://docs.google.com/document/d/1q3X-g4-yY-4-g4-yY-4-g4-yY-4-g4-yY-4-g4/edit?usp=sharing', // Placeholder link
+        linkText: 'Learn more about local setup',
+        description: 'To run this project on your local machine, first download the code. Then, run `npm install` to install dependencies. Create a `.env` file in the root directory and add your `GEMINI_API_KEY=YOUR_API_KEY` for AI features to work. Finally, run `npm run dev` in one terminal for the Next.js app and `npm run genkit:dev` in another for the AI flows.'
+    },
+    {
+        icon: Cloud,
+        title: 'Deploying Live (Free Options)',
+        link: 'https://vercel.com/new',
+        linkText: 'Deploy with Vercel',
+        description: 'To deploy your app live, you can use free services like Vercel or Netlify. Vercel is highly recommended as it is made by the creators of Next.js. Connect your Git repository (GitHub, GitLab) to Vercel, configure the environment variables (like your GEMINI_API_KEY), and it will automatically deploy your application.'
+    },
 ];
 
 export default function AdminSetupGuidePage() {
@@ -78,7 +92,7 @@ export default function AdminSetupGuidePage() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Link href={section.link} className="text-sm font-medium text-primary hover:underline">
+                    <Link href={section.link} className="text-sm font-medium text-primary hover:underline" target="_blank" rel="noopener noreferrer">
                         {section.linkText} &rarr;
                     </Link>
                 </CardContent>
