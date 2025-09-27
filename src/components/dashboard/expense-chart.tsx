@@ -1,8 +1,12 @@
 
 'use client';
 
-import { Pie, PieChart, Cell, Tooltip } from 'recharts';
-import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
+import { Bar, BarChart, XAxis, YAxis } from 'recharts';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
 import type { expenseData } from '@/lib/data';
 
 interface ExpenseChartProps {
@@ -15,15 +19,19 @@ const chartConfig = {
   },
   education: {
     label: 'Education',
+    color: 'hsl(var(--chart-1))',
   },
   admin: {
     label: 'Admin',
+    color: 'hsl(var(--chart-2))',
   },
   relief: {
     label: 'Relief',
+    color: 'hsl(var(--chart-3))',
   },
   health: {
     label: 'Health',
+    color: 'hsl(var(--chart-4))',
   },
 };
 
@@ -31,28 +39,32 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
   return (
     <ChartContainer
       config={chartConfig}
-      className="mx-auto aspect-square h-[300px]"
+      className="mx-auto aspect-square h-[300px] w-full"
     >
-      <PieChart>
-        <Tooltip
-          cursor={false}
-          content={<ChartTooltipContent hideLabel nameKey="name" />}
+      <BarChart
+        accessibilityLayer
+        data={data}
+        layout="vertical"
+        margin={{ left: 10, right: 10, top: 10, bottom: 10 }}
+      >
+        <YAxis
+          dataKey="name"
+          type="category"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={10}
+          tickFormatter={(value) =>
+            chartConfig[value.toLowerCase() as keyof typeof chartConfig]
+              ?.label
+          }
         />
-        <Pie
-          data={data}
-          dataKey="value"
-          nameKey="name"
-          innerRadius={50}
-          outerRadius={120}
-          strokeWidth={2}
-          startAngle={90}
-          endAngle={450}
-        >
-          {data.map((entry) => (
-            <Cell key={entry.name} fill={entry.fill} />
-          ))}
-        </Pie>
-      </PieChart>
+        <XAxis dataKey="value" type="number" hide />
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent hideLabel />}
+        />
+        <Bar dataKey="value" radius={5} />
+      </BarChart>
     </ChartContainer>
   );
 }
