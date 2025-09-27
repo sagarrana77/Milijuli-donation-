@@ -4,14 +4,22 @@ This is a Next.js starter project built in Firebase Studio. It demonstrates a tr
 
 ## Features
 
-- **Real-time Dashboard**: A homepage with live stats on funds raised, spent, and on hand.
-- **Project Management**: Create, manage, and display fundraising projects with progress tracking.
-- **Operational Cost Transparency**: Publicly log and display salaries, equipment, and miscellaneous costs.
-- **Admin Panel**: A secure, role-based admin section to manage all site content.
+- **Real-time Dashboard**: A homepage with live stats on funds raised, spent, and on hand, including a real-time ledger of donations and an expense breakdown chart.
+- **Project Management**: Create, manage, and display fundraising projects with progress tracking, updates, and discussion forums.
+- **Operational Cost Transparency**: Publicly log and display salaries, equipment, and miscellaneous costs to ensure full accountability.
+- **Comprehensive Admin Panel**: A secure, role-based admin section to manage all site content, including:
+    - Fund and expense management.
+    - Project creation and editing.
+    - Public-facing content management for the "About," "Careers," and "Help" pages.
+    - Platform settings for payment gateways and social media links.
 - **AI-Powered Features**:
   - Automatically generate donor-friendly reports from financial data.
   - Send personalized thank-you emails to donors after a successful contribution.
-- **Fully Functional UI**: Built with Next.js, React, ShadCN UI, and Tailwind CSS.
+- **User and Team Profiles**: Public profiles for donors and team members to foster a sense of community.
+- **Careers and Job Openings**: A dedicated section to post and manage job and volunteer opportunities.
+- **Help & Support Center**: A fully manageable FAQ section and contact information page.
+- **Fully Functional UI**: Built with Next.js, React, ShadCN UI, and Tailwind CSS, featuring a responsive design that works on all devices.
+- **Detailed Setup Guide**: An in-app guide for administrators covering local setup, deployment, and platform management.
 
 ## Prerequisites
 
