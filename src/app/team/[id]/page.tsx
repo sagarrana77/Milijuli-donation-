@@ -1,3 +1,4 @@
+
 import { notFound } from 'next/navigation';
 import { getTeamMember } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -107,7 +108,6 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
                 </CardContent>
             </Card>
         </div>
-
       </div>
     </div>
   );

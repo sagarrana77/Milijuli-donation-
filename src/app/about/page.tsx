@@ -12,13 +12,31 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { teamMembers, values, aboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
 }
+
+const features: { title: string; description: string; icon: LucideIcon }[] = [
+    {
+        title: 'Real-Time Financial Ledger',
+        description: 'Every donation and expense is recorded on a public ledger for anyone to see, ensuring a complete and unalterable record of all financial activities.',
+        icon: Eye,
+    },
+    {
+        title: 'Detailed Project Breakdowns',
+        description: 'Each project page provides granular details on funds raised, expenses with receipts, progress updates, and community discussions.',
+        icon: ListChecks,
+    },
+    {
+        title: 'Transparent Operational Costs',
+        description: 'We go beyond project spending by openly sharing our operational costs, including salaries, equipment, and administrative expenses.',
+        icon: LineChart,
+    },
+];
 
 export default function AboutPage() {
   return (
@@ -56,6 +74,29 @@ export default function AboutPage() {
               </p>
             </CardContent>
           </Card>
+        </section>
+      </ScrollFadeIn>
+      
+      <ScrollFadeIn asChild>
+        <section>
+          <h2 className="mb-6 text-center text-3xl font-bold">How We Practice Transparency</h2>
+           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {features.map((feature, index) => (
+              <ScrollFadeIn key={feature.title} delay={index * 100}>
+                <Card className="h-full">
+                  <CardHeader className="flex-row items-start gap-4">
+                    <div className="rounded-full bg-primary/10 p-3 text-primary">
+                      <feature.icon className="h-6 w-6" />
+                    </div>
+                     <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </ScrollFadeIn>
+            ))}
+          </div>
         </section>
       </ScrollFadeIn>
 
