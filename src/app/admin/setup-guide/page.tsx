@@ -52,20 +52,6 @@ const guideSections = [
         linkText: 'Go to Platform Settings Tab',
         description: 'In the "Platform Settings" tab, you can configure payment gateways, manage API credentials for services like Stripe and PayPal, and update the social media links for the floating contact button.'
     },
-    {
-        icon: Server,
-        title: 'Running Your App Locally',
-        link: 'https://github.com/FirebaseExtended/clarity-chain#readme', 
-        linkText: 'View README for full instructions',
-        description: 'To run this project locally, first, get the code. Then, run `npm install` to install dependencies. Create a `.env` file and add your `GEMINI_API_KEY=YOUR_API_KEY`. Finally, run `npm run dev` for the Next.js app and `npm run genkit:dev` for the AI flows in separate terminals.'
-    },
-    {
-        icon: Cloud,
-        title: 'Deploying Live (Free Options)',
-        link: 'https://vercel.com/docs/frameworks/nextjs',
-        linkText: 'View Vercel Deployment Docs',
-        description: 'To deploy your app live for free, use services like Vercel (recommended) or Netlify. Connect your Git repository, configure the environment variables (like your GEMINI_API_KEY), and the service will automatically build and deploy your application.'
-    },
 ];
 
 export default function AdminSetupGuidePage() {
@@ -92,13 +78,81 @@ export default function AdminSetupGuidePage() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <Link href={section.link} className="text-sm font-medium text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                    <Link href={section.link} className="text-sm font-medium text-primary hover:underline">
                         {section.linkText} &rarr;
                     </Link>
                 </CardContent>
             </Card>
         ))}
       </div>
+
+       <Card className="col-span-1 md:col-span-2 lg:col-span-3">
+        <CardHeader className="flex flex-row items-start gap-4">
+          <Server className="h-8 w-8 text-primary mt-1" />
+          <div>
+            <CardTitle>Running Your App Locally</CardTitle>
+            <CardDescription>
+              Follow these steps to get your development environment set up and running on your local machine.
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4 text-sm text-muted-foreground">
+          <div>
+            <h3 className="font-semibold text-foreground">1. Install Dependencies</h3>
+            <p>Install all the required npm packages using the following command. This will download and install all the libraries listed in `package.json`.</p>
+            <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm install</code></pre>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground">2. Set Up Environment Variables</h3>
+            <p>The AI features in this application are powered by Google's Gemini model through Genkit. To use them, you need a Gemini API key. Create a new file named `.env` in the root directory and add your key.</p>
+             <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>GEMINI_API_KEY=YOUR_API_KEY_HERE</code></pre>
+             <p className="mt-1">You can get a key from <Link href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google AI Studio</Link>.</p>
+          </div>
+           <div>
+            <h3 className="font-semibold text-foreground">3. Run the Application</h3>
+            <p>This application requires two separate development servers. Open two terminal windows for the following commands.</p>
+            <h4 className="mt-2 font-medium text-foreground">Terminal 1: Run the Next.js App</h4>
+            <p>This command starts the main web application on `http://localhost:3000`.</p>
+             <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm run dev</code></pre>
+            <h4 className="mt-2 font-medium text-foreground">Terminal 2: Run the Genkit AI Flows</h4>
+             <p>This command starts the Genkit server, which handles AI-powered features.</p>
+             <pre className="mt-2 rounded-md bg-muted p-2 text-xs"><code>npm run genkit:dev</code></pre>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card className="col-span-1 md:col-span-2 lg:col-span-3">
+        <CardHeader className="flex flex-row items-start gap-4">
+          <Cloud className="h-8 w-8 text-primary mt-1" />
+          <div>
+            <CardTitle>Deploying Live (Free Options)</CardTitle>
+            <CardDescription>
+                To deploy your app live for free, use a service like Vercel (recommended) or Netlify. They offer seamless integration with Next.js.
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4 text-sm text-muted-foreground">
+            <div>
+                <h3 className="font-semibold text-foreground">1. Push to a Git Repository</h3>
+                <p>Make sure your project is in a GitHub, GitLab, or Bitbucket repository.</p>
+            </div>
+            <div>
+                <h3 className="font-semibold text-foreground">2. Connect Your Repository to Vercel</h3>
+                <p>Sign up for a free Vercel account and connect it to your Git provider. Select your project repository to import it.</p>
+            </div>
+            <div>
+                <h3 className="font-semibold text-foreground">3. Configure Environment Variables</h3>
+                <p>In the Vercel project settings, find the "Environment Variables" section. Add your `GEMINI_API_KEY` here just like you did for your local `.env` file. This keeps your key secure.</p>
+            </div>
+            <div>
+                <h3 className="font-semibold text-foreground">4. Deploy</h3>
+                <p>Vercel will automatically detect that you're using Next.js and configure the build settings. Simply click "Deploy". Your app will be live in minutes, and Vercel will automatically redeploy whenever you push new changes to your repository.</p>
+                 <Link href="https://vercel.com/docs/frameworks/nextjs" className="mt-2 inline-block text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                    View Vercel's Next.js Deployment Docs &rarr;
+                 </Link>
+            </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
