@@ -127,7 +127,16 @@ export let projects: Project[] = [
     donors: 1200,
     verified: true,
     updates: [],
-    expenses: [],
+    expenses: [
+        {
+            id: 'exp-cw-1',
+            item: 'Well Drilling Equipment',
+            amount: 15000,
+            date: new Date('2023-11-01'),
+            receiptUrl: getImageUrl('receipt-1'),
+            receiptHint: 'receipt scan',
+        }
+    ],
     discussion: [],
   },
   {
@@ -145,7 +154,16 @@ export let projects: Project[] = [
     donors: 800,
     verified: false,
     updates: [],
-    expenses: [],
+    expenses: [
+         {
+            id: 'exp-chp-1',
+            item: 'Medical Supplies',
+            amount: 8000,
+            date: new Date('2023-11-05'),
+            receiptUrl: getImageUrl('receipt-2'),
+            receiptHint: 'invoice document',
+        }
+    ],
     discussion: [],
   },
   {
@@ -163,7 +181,16 @@ export let projects: Project[] = [
     donors: 2500,
     verified: true,
     updates: [],
-    expenses: [],
+    expenses: [
+        {
+            id: 'exp-drf-1',
+            item: 'Emergency Food Supplies',
+            amount: 25000,
+            date: new Date('2023-10-20'),
+            receiptUrl: getImageUrl('receipt-1'),
+            receiptHint: 'receipt scan',
+        }
+    ],
     discussion: [],
   },
 ];
@@ -255,27 +282,44 @@ export let miscExpenses: {
     }
 ]
 
-const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0) * 12; // Annualized
+// Calculate operational costs
+const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0); // Monthly
 const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
 const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
-export const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts + totalMiscCosts;
+export const totalOperationalCosts = totalSalaryCosts * 12 + totalEquipmentCosts + totalMiscCosts; // Annualized for target
 
 export let operationalCostsFund = {
     name: 'Operational Costs',
     description: 'Support the core team and infrastructure that make our work possible.',
-    targetAmount: totalOperationalCosts,
+    targetAmount: 150000, // Static target for now
     raisedAmount: 15750,
     donors: 88,
     imageUrl: getImageUrl('team-photo'),
     imageHint: 'team meeting',
 };
 
+// Calculate project expenses by category
+const educationExpenses = projects
+  .filter(p => p.id === 'education-for-all-nepal')
+  .reduce((sum, p) => sum + p.expenses.reduce((acc, exp) => acc + exp.amount, 0), 0);
+
+const healthExpenses = projects
+  .filter(p => ['clean-water-initiative', 'community-health-posts'].includes(p.id))
+  .reduce((sum, p) => sum + p.expenses.reduce((acc, exp) => acc + exp.amount, 0), 0);
+
+const reliefExpenses = projects
+  .filter(p => p.id === 'disaster-relief-fund')
+  .reduce((sum, p) => sum + p.expenses.reduce((acc, exp) => acc + exp.amount, 0), 0);
+  
+const currentOperationalExpenses = (totalSalaryCosts + totalEquipmentCosts + totalMiscCosts);
+
+// Calculate totals for dashboard stats
 const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0) + operationalCostsFund.raisedAmount;
 const totalProjectExpenses = projects.reduce(
   (acc, p) => acc + p.expenses.reduce((sum, e) => sum + e.amount, 0),
   0
 );
-const totalSpending = totalProjectExpenses + totalOperationalCosts;
+const totalSpending = totalProjectExpenses + currentOperationalExpenses;
 const fundsInHand = totalRaised - totalSpending;
 
 
@@ -289,11 +333,10 @@ export let dashboardStats = {
   totalSpent: totalSpending,
   fundsInHand: fundsInHand,
   spendingBreakdown: [
-    { name: 'Education', value: 4000, fill: '#FF5733' },
-    { name: 'Admin', value: 2000, fill: '#4C8BF5' },
-    { name: 'Relief', value: 3000, fill: '#FFC300' },
-    { name: 'Health', value: 1000, fill: '#2ECC71' },
-    { name: 'Operational', value: 5000, fill: '#9B59B6' },
+    { name: 'Education', value: educationExpenses, fill: 'hsl(var(--chart-1))' },
+    { name: 'Health', value: healthExpenses, fill: 'hsl(var(--chart-2))' },
+    { name: 'Relief', value: reliefExpenses, fill: 'hsl(var(--chart-3))' },
+    { name: 'Operational', value: currentOperationalExpenses, fill: 'hsl(var(--chart-4))' },
   ],
 };
 
@@ -677,3 +720,5 @@ export let socialLinks = {
     instagram: 'https://instagram.com/your-profile',
     messenger: 'your.username'
 }
+
+    

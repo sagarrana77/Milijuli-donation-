@@ -146,6 +146,7 @@ export default function DashboardPage() {
                       <div key={entry.name} className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1">
                           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
                           <span className="text-foreground">{entry.name}</span>
+                          <span className="font-mono text-xs text-muted-foreground">${entry.value.toLocaleString()}</span>
                       </div>
                   ))}
               </div>
@@ -230,3 +231,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    

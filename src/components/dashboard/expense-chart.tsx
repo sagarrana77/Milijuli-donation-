@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
@@ -17,22 +17,24 @@ const chartConfig = {
   value: {
     label: 'Expenses',
   },
-  education: {
+  Education: {
     label: 'Education',
+    color: 'hsl(var(--chart-1))',
   },
-  admin: {
-    label: 'Admin',
-  },
-  relief: {
-    label: 'Relief',
-  },
-  health: {
+  Health: {
     label: 'Health',
+    color: 'hsl(var(--chart-2))',
   },
-  operational: {
+  Relief: {
+    label: 'Relief',
+    color: 'hsl(var(--chart-3))',
+  },
+  Operational: {
     label: 'Operational',
+    color: 'hsl(var(--chart-4))',
   },
 };
+
 
 export function ExpenseChart({ data }: ExpenseChartProps) {
   return (
@@ -53,17 +55,22 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
           axisLine={false}
           tickMargin={10}
           tickFormatter={(value) =>
-            chartConfig[value.toLowerCase() as keyof typeof chartConfig]
+            chartConfig[value as keyof typeof chartConfig]
               ?.label
           }
         />
         <XAxis dataKey="value" type="number" hide />
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent hideLabel />}
+          content={<ChartTooltipContent
+            formatter={(value) => `$${Number(value).toLocaleString()}`}
+            hideLabel
+            />}
         />
         <Bar dataKey="value" radius={5} />
       </BarChart>
     </ChartContainer>
   );
 }
+
+    
