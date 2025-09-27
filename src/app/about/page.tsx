@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { teamMembers, values, aboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon } from 'lucide-react';
+import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 
@@ -36,6 +36,11 @@ const features: { title: string; description: string; icon: LucideIcon }[] = [
         description: 'We go beyond project spending by openly sharing our operational costs, including salaries, equipment, and administrative expenses.',
         icon: LineChart,
     },
+    {
+        title: 'AI-Generated Reports',
+        description: 'Generate simple, donor-friendly summaries of project financials with a single click, making complex data easy to understand and share.',
+        icon: Wand2,
+    }
 ];
 
 export default function AboutPage() {
@@ -80,7 +85,7 @@ export default function AboutPage() {
       <ScrollFadeIn asChild>
         <section>
           <h2 className="mb-6 text-center text-3xl font-bold">How We Practice Transparency</h2>
-           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {features.map((feature, index) => (
               <ScrollFadeIn key={feature.title} delay={index * 100}>
                 <Card className="h-full">
