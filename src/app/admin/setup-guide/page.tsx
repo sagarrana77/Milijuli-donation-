@@ -134,7 +134,7 @@ export default function AdminSetupGuidePage() {
         <CardContent className="space-y-4 text-sm text-muted-foreground">
             <div>
                 <h3 className="font-semibold text-foreground">1. Push to a Git Repository</h3>
-                <p>Make sure your project is in a GitHub, GitLab, or Bitbucket repository.</p>
+                <p>Make sure your project is in a GitHub, GitLab, or Bitbucket repository. If you haven't done this yet, you can create a new repository on your preferred platform and follow their instructions to upload your code.</p>
             </div>
             <div>
                 <h3 className="font-semibold text-foreground">2. Connect Your Repository to Vercel</h3>
@@ -142,7 +142,11 @@ export default function AdminSetupGuidePage() {
             </div>
             <div>
                 <h3 className="font-semibold text-foreground">3. Configure Environment Variables</h3>
-                <p>In the Vercel project settings, find the "Environment Variables" section. Add your `GEMINI_API_KEY` here just like you did for your local `.env` file. This keeps your key secure.</p>
+                <p>In the Vercel project settings, find the "Environment Variables" section. You must add your `GEMINI_API_KEY` here, just like you did for your local `.env` file. This keeps your key secure and allows the live application to use the AI features.</p>
+                <ul className="mt-2 list-disc pl-5">
+                    <li>**Name:** `GEMINI_API_KEY`</li>
+                    <li>**Value:** Paste your actual API key here.</li>
+                </ul>
             </div>
             <div>
                 <h3 className="font-semibold text-foreground">4. Deploy</h3>

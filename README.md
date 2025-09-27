@@ -18,6 +18,7 @@ This is a Next.js starter project built in Firebase Studio. It demonstrates a tr
 Before you begin, ensure you have the following installed on your local machine:
 - [Node.js](https://nodejs.org/) (v18 or later recommended)
 - [npm](https://www.npmjs.com/) (usually comes with Node.js)
+- [Git](https://git-scm.com/)
 
 ## Installation Instructions
 
@@ -72,6 +73,37 @@ npm run genkit:dev
 ```
 
 Once both servers are running, you can open your browser and navigate to `http://localhost:3000` to see the application in action.
+
+## Deployment Instructions
+
+To deploy your app live for free, we recommend using a service like [Vercel](https://vercel.com), which is built by the creators of Next.js.
+
+### 1. Push to a Git Repository
+
+Make sure your project is in a GitHub, GitLab, or Bitbucket repository. If you initialized the project locally, create a new repository on your preferred platform and push your code.
+
+```bash
+git remote add origin <your-repository-url>
+git branch -M main
+git push -u origin main
+```
+
+### 2. Connect Your Repository to Vercel
+
+1.  Sign up for a free Vercel account and connect it to your Git provider (GitHub, GitLab, etc.).
+2.  Click "Add New... > Project" from your Vercel dashboard.
+3.  Select your project repository to import it.
+
+### 3. Configure Environment Variables
+
+In the Vercel project settings, find the "Environment Variables" section. You must add your `GEMINI_API_KEY` here. This keeps your key secure and allows the live application to use its AI features.
+
+-   **Name:** `GEMINI_API_KEY`
+-   **Value:** Paste your actual Gemini API key here.
+
+### 4. Deploy
+
+Vercel will automatically detect that you're using Next.js and configure the build settings. Simply click "Deploy". Your app will be live in minutes, and Vercel will automatically redeploy whenever you push new changes to your repository.
 
 ## Available Scripts
 
