@@ -9,8 +9,7 @@ import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, GraduationCap, Star } from 'lucide-react';
 
-export default function TeamMemberPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function TeamMemberPage({ params: { id } }: { params: { id: string } }) {
   const member = getTeamMember(id);
 
   if (!member) {

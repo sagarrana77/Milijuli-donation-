@@ -35,11 +35,10 @@ function getQrCodeUrl() {
 }
 
 export default function ProjectDetailPage({
-  params,
+  params: { id },
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
   const project = getProject(id);
   
   const [raisedAmount, setRaisedAmount] = useState(project?.raisedAmount || 0);
