@@ -1,4 +1,5 @@
 
+
 import {
   Card,
   CardContent,
@@ -13,11 +14,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { equipment } from '@/lib/data';
+import type { equipment as EquipmentType } from '@/lib/data';
 import Image from 'next/image';
 import { format } from 'date-fns';
 
-export function EquipmentShowcase() {
+interface EquipmentShowcaseProps {
+    equipment: typeof EquipmentType
+}
+
+export function EquipmentShowcase({ equipment }: EquipmentShowcaseProps) {
   const purchasedEquipment = equipment.filter(e => e.imageUrl);
 
   return (
@@ -53,7 +58,7 @@ export function EquipmentShowcase() {
                     </CardContent>
                      <div className="p-4 flex flex-col flex-grow">
                         <p className="font-semibold">{item.item}</p>
-                        <p className="text-sm text-muted-foreground">Purchased: {format(item.purchaseDate, 'PP')}</p>
+                        <p className="text-sm text-muted-foreground">Purchased: {format(new Date(item.purchaseDate), 'PP')}</p>
                         <p className="text-sm text-muted-foreground">Cost: ${item.cost.toLocaleString()}</p>
                      </div>
                   </Card>

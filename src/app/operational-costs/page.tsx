@@ -1,11 +1,13 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
-  operationalCostsFund,
+  operationalCostsFund as initialOperationalCostsFund,
   teamMembers,
+  equipment,
 } from '@/lib/data';
 import {
   Card,
@@ -26,6 +28,7 @@ import { useToast } from '@/hooks/use-toast';
 
 
 export default function OperationalCostsPage() {
+  const [operationalCostsFund, setOperationalCostsFund] = useState(initialOperationalCostsFund);
   const [raisedAmount, setRaisedAmount] = useState(
     operationalCostsFund.raisedAmount
   );
@@ -97,7 +100,7 @@ export default function OperationalCostsPage() {
                 </CardContent>
             </Card>
 
-            <EquipmentShowcase />
+            <EquipmentShowcase equipment={equipment} />
             
             <Card>
                 <CardHeader>

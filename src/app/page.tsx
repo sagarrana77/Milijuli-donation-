@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -24,7 +25,7 @@ import {
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { dashboardStats, expenseData, operationalCostsFund, projects, jobOpenings } from '@/lib/data';
+import { dashboardStats, expenseData, operationalCostsFund, projects, jobOpenings, salaries, equipment, miscExpenses } from '@/lib/data';
 import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
@@ -221,7 +222,7 @@ export default function DashboardPage() {
       </ScrollFadeIn>
 
       <ScrollFadeIn>
-        <OperationalCosts />
+        <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} />
       </ScrollFadeIn>
     </div>
   );

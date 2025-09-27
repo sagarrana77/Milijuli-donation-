@@ -1,5 +1,6 @@
 
 
+
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -169,7 +170,12 @@ export const projects: Project[] = [
   },
 ];
 
-export const salaries = [
+export const salaries: {
+    id: string;
+    employee: string;
+    role: string;
+    salary: number;
+}[] = [
   {
     id: 'sal-1',
     employee: 'John Doe',
@@ -190,7 +196,15 @@ export const salaries = [
   },
 ];
 
-export const equipment = [
+export const equipment: {
+    id: string;
+    item: string;
+    cost: number;
+    purchaseDate: Date;
+    vendor: string;
+    imageUrl?: string;
+    imageHint?: string;
+}[] = [
   {
     id: 'eq-1',
     item: 'MacBook Pro 16"',
@@ -220,7 +234,13 @@ export const equipment = [
   },
 ];
 
-export const miscExpenses = [
+export const miscExpenses: {
+    id: string;
+    item: string;
+    cost: number;
+    purchaseDate: Date;
+    vendor: string;
+}[] = [
     {
         id: 'misc-1',
         item: 'Office Rent (Q4)',

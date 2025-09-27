@@ -1,5 +1,6 @@
 
 
+
 import {
   Card,
   CardContent,
@@ -16,11 +17,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { salaries, equipment, miscExpenses } from '@/lib/data';
+import type { salaries as SalariesType, equipment as EquipmentType, miscExpenses as MiscExpensesType } from '@/lib/data';
 import { Briefcase, MonitorSmartphone, Archive } from 'lucide-react';
 import { format } from 'date-fns';
 
-export function OperationalCosts() {
+interface OperationalCostsProps {
+    salaries: typeof SalariesType;
+    equipment: typeof EquipmentType;
+    miscExpenses: typeof MiscExpensesType;
+}
+
+export function OperationalCosts({ salaries, equipment, miscExpenses }: OperationalCostsProps) {
   return (
     <Card>
       <CardHeader>
@@ -81,7 +88,7 @@ export function OperationalCosts() {
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.item}</TableCell>
                     <TableCell>{item.vendor}</TableCell>
-                    <TableCell>{format(item.purchaseDate, 'PP')}</TableCell>
+                    <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
                     <TableCell className="text-right">
                       ${item.cost.toLocaleString()}
                     </TableCell>
@@ -105,7 +112,7 @@ export function OperationalCosts() {
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.item}</TableCell>
                     <TableCell>{item.vendor}</TableCell>
-                    <TableCell>{format(item.purchaseDate, 'PP')}</TableCell>
+                    <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
                     <TableCell className="text-right">
                       ${item.cost.toLocaleString()}
                     </TableCell>

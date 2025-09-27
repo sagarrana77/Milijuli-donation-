@@ -42,7 +42,7 @@ import {
   List,
   Archive,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses as initialMiscExpenses, salaries as initialSalaries, equipment as initialEquipment } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -77,6 +77,53 @@ export default function AdminDashboardPage() {
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const [salaries, setSalaries] = useState(initialSalaries);
+  const [equipment, setEquipment] = useState(initialEquipment);
+  const [miscExpenses, setMiscExpenses] = useState(initialMiscExpenses);
+
+  const [newSalary, setNewSalary] = useState({ employee: '', role: '', salary: '' });
+  const [newEquipment, setNewEquipment] = useState({ item: '', cost: '', purchaseDate: '', vendor: '', imageUrl: '', imageHint: '' });
+  const [newMiscExpense, setNewMiscExpense] = useState({ item: '', cost: '', purchaseDate: '', vendor: '' });
+
+
+  const handleAddSalary = () => {
+    if (newSalary.employee && newSalary.role && newSalary.salary) {
+      setSalaries([...salaries, { id: `sal-${Date.now()}`, ...newSalary, salary: parseFloat(newSalary.salary) }]);
+      setNewSalary({ employee: '', role: '', salary: '' });
+    }
+  };
+
+  const handleAddEquipment = () => {
+    if (newEquipment.item && newEquipment.cost && newEquipment.purchaseDate && newEquipment.vendor) {
+        const newEquip = { 
+            id: `eq-${Date.now()}`, 
+            item: newEquipment.item,
+            cost: parseFloat(newEquipment.cost),
+            purchaseDate: new Date(newEquipment.purchaseDate),
+            vendor: newEquipment.vendor,
+            imageUrl: newEquipment.imageUrl,
+            imageHint: newEquipment.imageHint,
+        };
+      setEquipment([...equipment, newEquip]);
+      setNewEquipment({ item: '', cost: '', purchaseDate: '', vendor: '', imageUrl: '', imageHint: '' });
+    }
+  };
+  
+  const handleAddMiscExpense = () => {
+      if (newMiscExpense.item && newMiscExpense.cost && newMiscExpense.purchaseDate && newMiscExpense.vendor) {
+          const newMisc = { 
+              id: `misc-${Date.now()}`, 
+              item: newMiscExpense.item,
+              cost: parseFloat(newMiscExpense.cost),
+              purchaseDate: new Date(newMiscExpense.purchaseDate),
+              vendor: newMiscExpense.vendor
+          };
+        setMiscExpenses([...miscExpenses, newMisc]);
+        setNewMiscExpense({ item: '', cost: '', purchaseDate: '', vendor: '' });
+      }
+    };
+
 
   const handleGenerateQr = () => {
     if (qrUrl) {
@@ -371,11 +418,11 @@ export default function AdminDashboardPage() {
                         <div className="mb-4 rounded-md border p-4">
                         <h3 className="font-semibold mb-2">Add New Salary</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <Input placeholder="Employee Name" />
-                            <Input placeholder="Role / Title" />
-                            <Input type="number" placeholder="Monthly Salary ($)" />
+                            <Input placeholder="Employee Name" value={newSalary.employee} onChange={(e) => setNewSalary({...newSalary, employee: e.target.value})} />
+                            <Input placeholder="Role / Title" value={newSalary.role} onChange={(e) => setNewSalary({...newSalary, role: e.target.value})} />
+                            <Input type="number" placeholder="Monthly Salary ($)" value={newSalary.salary} onChange={(e) => setNewSalary({...newSalary, salary: e.target.value})} />
                         </div>
-                        <Button className="mt-4">Add Salary</Button>
+                        <Button className="mt-4" onClick={handleAddSalary}>Add Salary</Button>
                         </div>
                         <div className="overflow-x-auto">
                             <Table>
@@ -388,14 +435,16 @@ export default function AdminDashboardPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
-                                <TableCell>John Doe</TableCell>
-                                <TableCell>Project Manager</TableCell>
-                                <TableCell>$3,000 / mo</TableCell>
+                                {salaries.map((salary) => (
+                                <TableRow key={salary.id}>
+                                <TableCell>{salary.employee}</TableCell>
+                                <TableCell>{salary.role}</TableCell>
+                                <TableCell>${salary.salary.toLocaleString()} / mo</TableCell>
                                 <TableCell className="text-right">
                                     <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
                                 </TableCell>
                                 </TableRow>
+                                ))}
                             </TableBody>
                             </Table>
                         </div>
@@ -403,13 +452,15 @@ export default function AdminDashboardPage() {
                     <TabsContent value="equipment" className="mt-4">
                         <div className="mb-4 rounded-md border p-4">
                             <h3 className="font-semibold mb-2">Add New Equipment Cost</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <Input placeholder="Item Name" />
-                                <Input type="number" placeholder="Cost ($)" />
-                                <Input type="date" placeholder="Purchase Date" />
-                                <Input placeholder="Vendor" />
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <Input placeholder="Item Name" value={newEquipment.item} onChange={(e) => setNewEquipment({...newEquipment, item: e.target.value})} />
+                                <Input type="number" placeholder="Cost ($)" value={newEquipment.cost} onChange={(e) => setNewEquipment({...newEquipment, cost: e.target.value})} />
+                                <Input type="date" placeholder="Purchase Date" value={newEquipment.purchaseDate} onChange={(e) => setNewEquipment({...newEquipment, purchaseDate: e.target.value})} />
+                                <Input placeholder="Vendor" value={newEquipment.vendor} onChange={(e) => setNewEquipment({...newEquipment, vendor: e.target.value})} />
+                                <Input placeholder="Image URL" value={newEquipment.imageUrl} onChange={(e) => setNewEquipment({...newEquipment, imageUrl: e.target.value})} />
+                                <Input placeholder="Image Hint" value={newEquipment.imageHint} onChange={(e) => setNewEquipment({...newEquipment, imageHint: e.target.value})} />
                             </div>
-                            <Button className="mt-4">Add Cost</Button>
+                            <Button className="mt-4" onClick={handleAddEquipment}>Add Cost</Button>
                         </div>
                         <div className="overflow-x-auto">
                             <Table>
@@ -423,15 +474,17 @@ export default function AdminDashboardPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow>
-                                <TableCell>MacBook Pro 16"</TableCell>
-                                <TableCell>$2,500</TableCell>
-                                <TableCell>2023-10-01</TableCell>
-                                <TableCell>Apple Store</TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                                </TableCell>
-                                </TableRow>
+                                {equipment.map((equip) => (
+                                    <TableRow key={equip.id}>
+                                    <TableCell>{equip.item}</TableCell>
+                                    <TableCell>${equip.cost.toLocaleString()}</TableCell>
+                                    <TableCell>{new Date(equip.purchaseDate).toLocaleDateString()}</TableCell>
+                                    <TableCell>{equip.vendor}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                    </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                             </Table>
                         </div>
@@ -440,12 +493,12 @@ export default function AdminDashboardPage() {
                         <div className="mb-4 rounded-md border p-4">
                             <h3 className="font-semibold mb-2">Add New Miscellaneous Cost</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <Input placeholder="Item Name" />
-                                <Input type="number" placeholder="Cost ($)" />
-                                <Input type="date" placeholder="Purchase Date" />
-                                <Input placeholder="Vendor" />
+                                <Input placeholder="Item Name" value={newMiscExpense.item} onChange={(e) => setNewMiscExpense({...newMiscExpense, item: e.target.value})} />
+                                <Input type="number" placeholder="Cost ($)" value={newMiscExpense.cost} onChange={(e) => setNewMiscExpense({...newMiscExpense, cost: e.target.value})} />
+                                <Input type="date" placeholder="Purchase Date" value={newMiscExpense.purchaseDate} onChange={(e) => setNewMiscExpense({...newMiscExpense, purchaseDate: e.target.value})} />
+                                <Input placeholder="Vendor" value={newMiscExpense.vendor} onChange={(e) => setNewMiscExpense({...newMiscExpense, vendor: e.target.value})} />
                             </div>
-                            <Button className="mt-4">Add Cost</Button>
+                            <Button className="mt-4" onClick={handleAddMiscExpense}>Add Cost</Button>
                         </div>
                         <div className="overflow-x-auto">
                             <Table>
@@ -463,7 +516,7 @@ export default function AdminDashboardPage() {
                                     <TableRow key={expense.id}>
                                         <TableCell>{expense.item}</TableCell>
                                         <TableCell>${expense.cost.toLocaleString()}</TableCell>
-                                        <TableCell>{expense.purchaseDate.toLocaleDateString()}</TableCell>
+                                        <TableCell>{new Date(expense.purchaseDate).toLocaleDateString()}</TableCell>
                                         <TableCell>{expense.vendor}</TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
