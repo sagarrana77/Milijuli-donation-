@@ -2,6 +2,7 @@
 
 
 
+
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -305,6 +306,7 @@ export type User = {
     profileUrl: string;
     bio: string;
     hasPaymentMethod?: boolean;
+    isAdmin?: boolean;
 }
 
 export let users: User[] = [
@@ -316,6 +318,7 @@ export let users: User[] = [
         profileUrl: '/profile/current-user',
         bio: 'A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.',
         hasPaymentMethod: false,
+        isAdmin: true,
     },
     { 
         id: 'user-jane-doe', 
@@ -359,7 +362,9 @@ export let users: User[] = [
     },
 ];
 
-export type Donor = Omit<User, 'email' | 'hasPaymentMethod'>;
+export const currentUser = users.find(u => u.id === 'current-user');
+
+export type Donor = Omit<User, 'email' | 'hasPaymentMethod' | 'isAdmin'>;
 
 export const recentDonations: {
   id: number;

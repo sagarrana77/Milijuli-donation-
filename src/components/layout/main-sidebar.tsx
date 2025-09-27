@@ -11,7 +11,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarTrigger,
   SidebarClose,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
@@ -28,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { X } from 'lucide-react';
+import { currentUser } from '@/lib/data';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -36,7 +36,7 @@ const menuItems = [
   { href: '/reports', label: 'Reports', icon: FileText },
   { href: '/about', label: 'About', icon: Users },
   { href: '/careers', label: 'Careers', icon: UserPlus },
-  { href: '/admin', label: 'Admin', icon: Shield },
+  { href: '/admin', label: 'Admin', icon: Shield, adminOnly: true },
 ];
 
 export function MainSidebar() {
@@ -68,20 +68,25 @@ export function MainSidebar() {
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarMenu>
-          {menuItems.map(({ href, label, icon: Icon }) => (
-            <SidebarMenuItem key={href}>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive(href)}
-                tooltip={{ children: label, side: 'right' }}
-              >
-                <Link href={href}>
-                  <Icon />
-                  <span>{label}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {menuItems.map(({ href, label, icon: Icon, adminOnly }) => {
+            if (adminOnly && !currentUser?.isAdmin) {
+                return null;
+            }
+            return (
+                <SidebarMenuItem key={href}>
+                <SidebarMenuButton
+                    asChild
+                    isActive={isActive(href)}
+                    tooltip={{ children: label, side: 'right' }}
+                >
+                    <Link href={href}>
+                    <Icon />
+                    <span>{label}</span>
+                    </Link>
+                </SidebarMenuButton>
+                </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="border-t">

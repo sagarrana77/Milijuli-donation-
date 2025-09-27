@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CreditCard, DollarSign, Landmark, Save } from 'lucide-react';
-import { users } from '@/lib/data';
+import { currentUser } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
@@ -31,9 +31,6 @@ interface DonationDialogProps {
 }
 
 const presetAmounts = [10, 25, 50, 100, 250, 500];
-
-// In a real app, this would come from an auth hook or context
-const currentUser = users.find(u => u.id === 'current-user');
 
 const creditCardSchema = z.object({
   cardNumber: z.string().regex(/^\d{16}$/, "Card number must be 16 digits."),
@@ -82,6 +79,9 @@ export function DonationDialog({
 
   const handleSavePaymentMethod = () => {
     // In a real app, this would save the payment method to the backend
+    if (currentUser) {
+        currentUser.hasPaymentMethod = true;
+    }
     toast({ title: "Payment Method Saved", description: "Your payment method has been securely saved." });
     setHasPaymentMethod(true);
   }

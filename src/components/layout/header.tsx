@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -16,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Breadcrumbs } from './breadcrumbs';
+import { currentUser } from '@/lib/data';
 
 function getPageTitle(pathname: string): string {
     if (pathname === '/admin/projects/new') {
@@ -30,6 +30,7 @@ function getPageTitle(pathname: string): string {
     if (lastPart === 'about') return 'Edit About Page';
     if (lastPart === 'careers') return 'Manage Careers';
     if (lastPart === 'help') return 'Manage Help Page';
+    if (lastPart === 'setup-guide') return 'Admin Setup Guide';
     return 'Admin';
   }
   if (pathname.startsWith('/profile/')) {
@@ -109,7 +110,3 @@ export function Header() {
     </header>
   );
 }
-
-    
-
-    

@@ -40,6 +40,7 @@ import {
   Settings,
   List,
   Archive,
+  BookOpen,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks } from '@/lib/data';
 import {
@@ -184,6 +185,11 @@ export default function AdminDashboardPage() {
         </div>
         <div className="flex flex-wrap gap-2">
             <Button asChild>
+                <Link href="/admin/setup-guide">
+                    <BookOpen className="mr-2 h-4 w-4" /> View Setup Guide
+                </Link>
+            </Button>
+            <Button asChild variant="outline">
                 <Link href="/admin/about">
                     <Edit className="mr-2 h-4 w-4" /> Edit About Page
                 </Link>

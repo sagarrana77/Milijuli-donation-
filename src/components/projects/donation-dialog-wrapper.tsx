@@ -6,7 +6,7 @@ import type { Project } from '@/lib/data';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { sendThankYouEmail } from '@/ai/flows/send-thank-you-email';
-import { users } from '@/lib/data';
+import { currentUser } from '@/lib/data';
 
 interface DonationContextType {
   raisedAmount: number;
@@ -71,7 +71,6 @@ export function DonationDialogWrapper({
       variant: 'default',
     });
 
-    const currentUser = users.find(u => u.id === 'current-user');
     if (currentUser?.email) {
       try {
         await sendThankYouEmail({
