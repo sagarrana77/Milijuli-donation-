@@ -39,7 +39,8 @@ export default function ProjectDetailPage({
 }: {
   params: { id: string };
 }) {
-  const project = getProject(params.id);
+  const { id } = params;
+  const project = getProject(id);
   
   const [raisedAmount, setRaisedAmount] = useState(project?.raisedAmount || 0);
   const [donors, setDonors] = useState(project?.donors || 0);
