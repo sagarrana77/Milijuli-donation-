@@ -423,6 +423,46 @@ export const recentDonations: {
   },
 ];
 
+export type Notification = {
+  id: string;
+  title: string;
+  description: string;
+  date: Date;
+  read: boolean;
+};
+
+export const notifications: Notification[] = [
+  {
+    id: 'notif-1',
+    title: 'New Donation!',
+    description: 'You received a $50 donation for "Education for All Nepal".',
+    date: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
+    read: false,
+  },
+  {
+    id: 'notif-2',
+    title: 'Project Update',
+    description: '"Clean Water Initiative" has been successfully funded!',
+    date: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+    read: false,
+  },
+  {
+    id: 'notif-3',
+    title: 'New Team Member',
+    description: 'Sam Chen has joined the team as Lead Blockchain Developer.',
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
+    read: true,
+  },
+  {
+    id: 'notif-4',
+    title: 'Weekly Summary',
+    description: 'Your projects raised a total of $1,250 this week.',
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
+    read: true,
+  },
+];
+
+
 export type TeamMember = {
   id: string;
   name: string;

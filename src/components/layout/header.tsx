@@ -14,8 +14,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Breadcrumbs } from './breadcrumbs';
-import { currentUser } from '@/lib/data';
+import { currentUser, notifications } from '@/lib/data';
+import { NotificationList } from './notification-list';
 
 function getPageTitle(pathname: string): string {
     if (pathname === '/admin/projects/new') {
@@ -69,6 +75,7 @@ function getPageTitle(pathname: string): string {
 export function Header() {
   const pathname = usePathname();
   const title = getPageTitle(pathname);
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <header className="sticky top-0 z-10 flex h-auto flex-col items-start gap-2 border-b bg-background/80 px-4 py-3 backdrop-blur-sm sm:px-6">
@@ -78,10 +85,23 @@ export function Header() {
         </div>
         <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Bell className="h-5 w-5" />
-            <span className="sr-only">Toggle notifications</span>
-          </Button>
+          <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full relative">
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-0 right-0 flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    </span>
+                  )}
+                  <span className="sr-only">Toggle notifications</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-80 p-0 md:w-96">
+                <NotificationList notifications={notifications} />
+              </PopoverContent>
+            </Popover>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
