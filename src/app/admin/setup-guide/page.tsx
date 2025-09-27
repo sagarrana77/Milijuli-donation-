@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { BookOpen, Edit, UserPlus, CircleHelp, Settings, List, Briefcase, CreditCard, Server, Cloud } from 'lucide-react';
+import { BookOpen, Edit, UserPlus, CircleHelp, Settings, List, Briefcase, Server, Cloud } from 'lucide-react';
 import Link from 'next/link';
 
 const guideSections = [
@@ -55,16 +55,16 @@ const guideSections = [
     {
         icon: Server,
         title: 'Running Your App Locally',
-        link: 'https://docs.google.com/document/d/1q3X-g4-yY-4-g4-yY-4-g4-yY-4-g4-yY-4-g4/edit?usp=sharing', // Placeholder link
-        linkText: 'Learn more about local setup',
-        description: 'To run this project on your local machine, first download the code. Then, run `npm install` to install dependencies. Create a `.env` file in the root directory and add your `GEMINI_API_KEY=YOUR_API_KEY` for AI features to work. Finally, run `npm run dev` in one terminal for the Next.js app and `npm run genkit:dev` in another for the AI flows.'
+        link: 'https://github.com/FirebaseExtended/clarity-chain#readme', 
+        linkText: 'View README for full instructions',
+        description: 'To run this project locally, first, get the code. Then, run `npm install` to install dependencies. Create a `.env` file and add your `GEMINI_API_KEY=YOUR_API_KEY`. Finally, run `npm run dev` for the Next.js app and `npm run genkit:dev` for the AI flows in separate terminals.'
     },
     {
         icon: Cloud,
         title: 'Deploying Live (Free Options)',
         link: 'https://vercel.com/new',
         linkText: 'Deploy with Vercel',
-        description: 'To deploy your app live, you can use free services like Vercel or Netlify. Vercel is highly recommended as it is made by the creators of Next.js. Connect your Git repository (GitHub, GitLab) to Vercel, configure the environment variables (like your GEMINI_API_KEY), and it will automatically deploy your application.'
+        description: 'To deploy your app live for free, use services like Vercel (recommended) or Netlify. Connect your Git repository, configure the environment variables (like your GEMINI_API_KEY), and the service will automatically build and deploy your application.'
     },
 ];
 
