@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { notifications as initialNotifications, type Notification } from '@/lib/data';
@@ -10,6 +10,11 @@ import { formatDistanceToNow } from 'date-fns';
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState(initialNotifications);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleMarkAllRead = () => {
     setNotifications(notifications.map(n => ({ ...n, read: true })));
@@ -54,7 +59,7 @@ export default function NotificationsPage() {
                       {notification.description}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(notification.date, { addSuffix: true })}
+                      {isClient ? formatDistanceToNow(notification.date, { addSuffix: true }) : ''}
                     </p>
                   </div>
                   {!notification.read && (
