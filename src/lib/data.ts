@@ -260,7 +260,7 @@ const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
 const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
 export const totalOperationalCosts = totalSalaryCosts + totalEquipmentCosts + totalMiscCosts;
 
-export const operationalCostsFund = {
+export let operationalCostsFund = {
     name: 'Operational Costs',
     description: 'Support the core team and infrastructure that make our work possible.',
     targetAmount: totalOperationalCosts,
@@ -279,7 +279,7 @@ const totalSpending = totalProjectExpenses + totalOperationalCosts;
 const fundsInHand = totalRaised - totalSpending;
 
 
-export const dashboardStats = {
+export let dashboardStats = {
   totalFunds: totalRaised,
   monthlyIncrease: 20123,
   totalDonors: 4950,
@@ -288,10 +288,13 @@ export const dashboardStats = {
   countries: 1,
   totalSpent: totalSpending,
   fundsInHand: fundsInHand,
-  spendingBreakdown: {
-    projectExpenses: totalProjectExpenses,
-    operationalCosts: totalOperationalCosts,
-  },
+  spendingBreakdown: [
+    { name: 'Education', value: 4000, fill: '#FF5733' },
+    { name: 'Admin', value: 2000, fill: '#4C8BF5' },
+    { name: 'Relief', value: 3000, fill: '#FFC300' },
+    { name: 'Health', value: 1000, fill: '#2ECC71' },
+    { name: 'Operational', value: 5000, fill: '#9B59B6' },
+  ],
 };
 
 export type User = {
@@ -418,13 +421,6 @@ export const recentDonations: {
     amount: 50,
     date: new Date('2023-10-25T14:00:00Z'),
   },
-];
-
-export const expenseData = [
-  { name: 'Education', value: 40, fill: '#FF5733' }, // Vibrant Orange-Red
-  { name: 'Admin', value: 20, fill: '#4C8BF5' }, // Bright Blue
-  { name: 'Relief', value: 30, fill: '#FFC300' }, // Saffron/Gold
-  { name: 'Health', value: 10, fill: '#2ECC71' }, // Emerald Green
 ];
 
 export type TeamMember = {
@@ -641,4 +637,3 @@ export let socialLinks = {
     instagram: 'https://instagram.com/your-profile',
     messenger: 'your.username'
 }
-

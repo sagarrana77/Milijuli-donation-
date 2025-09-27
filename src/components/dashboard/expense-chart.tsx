@@ -1,16 +1,16 @@
 
 'use client';
 
-import { Bar, BarChart, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import type { expenseData } from '@/lib/data';
+import type { dashboardStats } from '@/lib/data';
 
 interface ExpenseChartProps {
-  data: typeof expenseData;
+  data: typeof dashboardStats.spendingBreakdown;
 }
 
 const chartConfig = {
@@ -19,19 +19,18 @@ const chartConfig = {
   },
   education: {
     label: 'Education',
-    color: 'hsl(var(--chart-1))',
   },
   admin: {
     label: 'Admin',
-    color: 'hsl(var(--chart-2))',
   },
   relief: {
     label: 'Relief',
-    color: 'hsl(var(--chart-3))',
   },
   health: {
     label: 'Health',
-    color: 'hsl(var(--chart-4))',
+  },
+  operational: {
+    label: 'Operational',
   },
 };
 

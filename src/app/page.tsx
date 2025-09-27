@@ -2,6 +2,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import {
   Card,
@@ -25,13 +26,15 @@ import {
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { dashboardStats, expenseData, operationalCostsFund, projects, jobOpenings, salaries, equipment, miscExpenses } from '@/lib/data';
+import { dashboardStats, operationalCostsFund, projects, jobOpenings, salaries, equipment, miscExpenses } from '@/lib/data';
 import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 
 export default function DashboardPage() {
+    const [currentDashboardStats, setCurrentDashboardStats] = useState(dashboardStats);
+    
     const opsPercentage = Math.round(
     (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
   );
@@ -55,10 +58,10 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${dashboardStats.totalFunds.toLocaleString()}
+                ${currentDashboardStats.totalFunds.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
-                +${dashboardStats.monthlyIncrease.toLocaleString()} from last
+                +${currentDashboardStats.monthlyIncrease.toLocaleString()} from last
                 month
               </p>
             </CardContent>
@@ -72,7 +75,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${dashboardStats.fundsInHand.toLocaleString()}
+                ${currentDashboardStats.fundsInHand.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
                 Remaining funds after all expenses
@@ -90,7 +93,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${dashboardStats.totalSpent.toLocaleString()}
+                ${currentDashboardStats.totalSpent.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
                 Includes project and operational costs
@@ -137,9 +140,9 @@ export default function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center">
-              <ExpenseChart data={expenseData} />
+              <ExpenseChart data={currentDashboardStats.spendingBreakdown} />
               <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
-                  {expenseData.map((entry) => (
+                  {currentDashboardStats.spendingBreakdown.map((entry) => (
                       <div key={entry.name} className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1">
                           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
                           <span className="text-foreground">{entry.name}</span>

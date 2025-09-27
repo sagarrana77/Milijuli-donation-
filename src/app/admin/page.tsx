@@ -142,11 +142,35 @@ export default function AdminDashboardPage() {
     setGateways(gateways.map(g => g.name === name ? {...g, enabled: !g.enabled} : g));
   }
 
-  const handleExpenseRecorded = () => {
+  const handleExpenseRecorded = (data: { project: string; amount: number }) => {
+    const categoryMap: { [key: string]: string } = {
+        'Education for All Nepal': 'Education',
+        'Clean Water Initiative': 'Health', // Or a new 'Water' category
+        'Community Health Posts': 'Health',
+        'Disaster Relief Fund': 'Relief',
+        'Operational Costs': 'Operational'
+    };
+
+    const categoryName = categoryMap[data.project] || 'Misc';
+    
+    const spendingCategory = dashboardStats.spendingBreakdown.find(c => c.name === categoryName);
+    
+    if (spendingCategory) {
+        spendingCategory.value += data.amount;
+    } else {
+        // If the category doesn't exist, you might want to add it.
+        // For this example, we assume it exists from the initial data.
+        console.warn(`Category "${categoryName}" not found in spending breakdown.`);
+    }
+
+    dashboardStats.totalSpent += data.amount;
+    dashboardStats.fundsInHand -= data.amount;
+
     toast({
         title: 'Expense Recorded',
-        description: 'The expense has been successfully logged.',
+        description: 'The expense has been successfully logged and the dashboard updated.',
     });
+    setForceRender(c => c + 1);
   }
 
   const handleFundsTransferred = () => {
@@ -222,10 +246,6 @@ export default function AdminDashboardPage() {
           <div className="rounded-lg border bg-card p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Total Spent</h3>
             <p className="text-2xl font-bold">${dashboardStats.totalSpent.toLocaleString()}</p>
-             <div className="text-xs text-muted-foreground">
-                <p>Projects: ${dashboardStats.spendingBreakdown.projectExpenses.toLocaleString()}</p>
-                <p>Operational: ${dashboardStats.spendingBreakdown.operationalCosts.toLocaleString()}</p>
-            </div>
           </div>
           <div className="rounded-lg border bg-card p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Funds in Hand</h3>

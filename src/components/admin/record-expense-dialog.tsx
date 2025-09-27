@@ -43,7 +43,7 @@ type ExpenseFormData = z.infer<typeof expenseSchema>;
 interface RecordExpenseDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onExpenseRecorded: () => void;
+  onExpenseRecorded: (data: ExpenseFormData) => void;
 }
 
 export function RecordExpenseDialog({
@@ -63,9 +63,7 @@ export function RecordExpenseDialog({
   const allCategories = [operationalCostsFund, ...projects];
 
   const onSubmit = (data: ExpenseFormData) => {
-    // In a real app, you would submit this to your backend
-    console.log('Recording expense:', data);
-    onExpenseRecorded();
+    onExpenseRecorded(data);
     form.reset();
     onOpenChange(false);
   };
@@ -143,5 +141,3 @@ export function RecordExpenseDialog({
     </Dialog>
   );
 }
-
-    
