@@ -4,25 +4,17 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { notifications as initialNotifications, type Notification } from '@/lib/data';
 import { BellRing, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { useNotifications } from '@/context/notification-provider';
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const { notifications, markAllAsRead, markAsRead } = useNotifications();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  const handleMarkAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, read: true })));
-  };
-
-  const handleMarkAsRead = (id: string) => {
-    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
-  };
   
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -33,7 +25,7 @@ export default function NotificationsPage() {
         <CardHeader className="flex flex-row items-center justify-between border-b p-4">
           <CardTitle className="text-2xl">All Notifications</CardTitle>
           {unreadCount > 0 && (
-            <Button variant="outline" size="sm" onClick={handleMarkAllRead}>
+            <Button variant="outline" size="sm" onClick={markAllAsRead}>
               <Check className="mr-2 h-4 w-4" />
               Mark all as read
             </Button>
@@ -46,7 +38,7 @@ export default function NotificationsPage() {
                 <div
                   key={notification.id}
                   className="flex items-start gap-4 p-4 hover:bg-muted/50 cursor-pointer"
-                  onClick={() => handleMarkAsRead(notification.id)}
+                  onClick={() => markAsRead(notification.id)}
                 >
                   <div className="mt-1">
                     <BellRing className="h-5 w-5 text-muted-foreground" />
@@ -59,7 +51,7 @@ export default function NotificationsPage() {
                       {notification.description}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {isClient ? formatDistanceToNow(notification.date, { addSuffix: true }) : ''}
+                      {isClient ? formatDistanceToNow(new Date(notification.date), { addSuffix: true }) : ''}
                     </p>
                   </div>
                   {!notification.read && (

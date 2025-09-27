@@ -20,8 +20,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Breadcrumbs } from './breadcrumbs';
-import { currentUser, notifications } from '@/lib/data';
+import { currentUser } from '@/lib/data';
 import { NotificationList } from './notification-list';
+import { useNotifications } from '@/context/notification-provider';
 
 function getPageTitle(pathname: string): string {
     if (pathname === '/admin/projects/new') {
@@ -74,6 +75,7 @@ function getPageTitle(pathname: string): string {
 
 export function Header() {
   const pathname = usePathname();
+  const { notifications } = useNotifications();
   const title = getPageTitle(pathname);
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -99,7 +101,7 @@ export function Header() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent align="end" className="w-80 p-0 md:w-96">
-                <NotificationList notifications={notifications} />
+                <NotificationList />
               </PopoverContent>
             </Popover>
           <DropdownMenu>
