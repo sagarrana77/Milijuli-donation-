@@ -1,3 +1,6 @@
+
+'use client';
+
 import Image from 'next/image';
 import {
   Card,
@@ -7,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { teamMembers, values } from '@/lib/data';
+import { teamMembers, values, aboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -34,7 +37,7 @@ export default function AboutPage() {
             <div className="text-center text-white">
               <h1 className="text-4xl font-bold md:text-5xl">About ClarityChain</h1>
               <p className="mt-4 max-w-2xl text-lg">
-                Driving transparency and trust in charitable giving through technology.
+                {aboutContent.tagline}
               </p>
             </div>
           </div>
@@ -49,7 +52,7 @@ export default function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className="text-lg text-muted-foreground">
-                Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. ClarityChain provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.
+                {aboutContent.mission}
               </p>
             </CardContent>
           </Card>

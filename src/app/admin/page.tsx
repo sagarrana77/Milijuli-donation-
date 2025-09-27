@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -40,7 +41,7 @@ import {
   List,
   Archive,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses as initialMiscExpenses, salaries as initialSalaries, equipment as initialEquipment } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -75,27 +76,19 @@ export default function AdminDashboardPage() {
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
   const { toast } = useToast();
-
-  const [salaries, setSalaries] = useState(initialSalaries);
-  const [equipment, setEquipment] = useState(initialEquipment);
-  const [miscExpenses, setMiscExpenses] = useState(initialMiscExpenses);
+  const [_, setForceRender] = useState(0);
 
   const [newSalary, setNewSalary] = useState({ employee: '', role: '', salary: '' });
   const [newEquipment, setNewEquipment] = useState({ item: '', cost: '', purchaseDate: '', vendor: '', imageUrl: '', imageHint: '' });
   const [newMiscExpense, setNewMiscExpense] = useState({ item: '', cost: '', purchaseDate: '', vendor: '' });
-  const [socialLinks, setSocialLinks] = useState({
-    whatsapp: '+1234567890',
-    viber: '+1234567890',
-    instagram: 'https://instagram.com/your-profile',
-    messenger: 'your.username'
-  });
 
 
   const handleAddSalary = () => {
     if (newSalary.employee && newSalary.role && newSalary.salary) {
-      setSalaries([...salaries, { id: `sal-${Date.now()}`, ...newSalary, salary: parseFloat(newSalary.salary) }]);
+      salaries.push({ id: `sal-${Date.now()}`, ...newSalary, salary: parseFloat(newSalary.salary) });
       setNewSalary({ employee: '', role: '', salary: '' });
-      toast({ title: "Salary Added", description: "This is for demonstration. Data is not persisted." });
+      toast({ title: "Salary Added", description: "The new salary has been recorded." });
+      setForceRender(c => c + 1);
     }
   };
 
@@ -110,9 +103,10 @@ export default function AdminDashboardPage() {
             imageUrl: newEquipment.imageUrl,
             imageHint: newEquipment.imageHint,
         };
-      setEquipment([...equipment, newEquip]);
+      equipment.push(newEquip);
       setNewEquipment({ item: '', cost: '', purchaseDate: '', vendor: '', imageUrl: '', imageHint: '' });
-      toast({ title: "Equipment Added", description: "This is for demonstration. Data is not persisted." });
+      toast({ title: "Equipment Added", description: "The new equipment cost has been recorded." });
+      setForceRender(c => c + 1);
     }
   };
   
@@ -125,9 +119,10 @@ export default function AdminDashboardPage() {
               purchaseDate: new Date(newMiscExpense.purchaseDate),
               vendor: newMiscExpense.vendor
           };
-        setMiscExpenses([...miscExpenses, newMisc]);
+        miscExpenses.push(newMisc);
         setNewMiscExpense({ item: '', cost: '', purchaseDate: '', vendor: '' });
-        toast({ title: "Misc. Expense Added", description: "This is for demonstration. Data is not persisted." });
+        toast({ title: "Misc. Expense Added", description: "The new expense has been recorded." });
+        setForceRender(c => c + 1);
       }
     };
 
@@ -163,8 +158,9 @@ export default function AdminDashboardPage() {
   const handleSaveSocialLinks = () => {
     toast({
         title: 'Social Links Saved!',
-        description: 'Your contact links have been updated. (This is a demo and not persisted).',
+        description: 'Your contact links have been updated.',
     });
+    setForceRender(c => c + 1);
   }
 
   return (
@@ -393,19 +389,19 @@ export default function AdminDashboardPage() {
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                             <Label htmlFor="whatsapp" className="flex items-center gap-2"><WhatsAppIcon className="h-5 w-5"/> WhatsApp Number</Label>
-                            <Input id="whatsapp" value={socialLinks.whatsapp} onChange={e => setSocialLinks({...socialLinks, whatsapp: e.target.value})} />
+                            <Input id="whatsapp" defaultValue={socialLinks.whatsapp} onChange={e => socialLinks.whatsapp = e.target.value} />
                             </div>
                             <div className="space-y-2">
                             <Label htmlFor="viber" className="flex items-center gap-2"><ViberIcon className="h-5 w-5"/> Viber Number</Label>
-                            <Input id="viber" value={socialLinks.viber} onChange={e => setSocialLinks({...socialLinks, viber: e.target.value})} />
+                            <Input id="viber" defaultValue={socialLinks.viber} onChange={e => socialLinks.viber = e.target.value} />
                             </div>
                             <div className="space-y-2">
                             <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-5 w-5"/> Instagram URL</Label>
-                            <Input id="instagram" value={socialLinks.instagram} onChange={e => setSocialLinks({...socialLinks, instagram: e.target.value})} />
+                            <Input id="instagram" defaultValue={socialLinks.instagram} onChange={e => socialLinks.instagram = e.target.value} />
                             </div>
                             <div className="space-y-2">
                             <Label htmlFor="messenger" className="flex items-center gap-2"><MessengerIcon className="h-5 w-5"/> Messenger Username</Label>
-                            <Input id="messenger" value={socialLinks.messenger} onChange={e => setSocialLinks({...socialLinks, messenger: e.target.value})} />
+                            <Input id="messenger" defaultValue={socialLinks.messenger} onChange={e => socialLinks.messenger = e.target.value} />
                             </div>
                             <Button onClick={handleSaveSocialLinks}>Save Contact Links</Button>
                         </CardContent>

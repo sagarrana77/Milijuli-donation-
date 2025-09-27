@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -21,36 +22,44 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  teamMembers as initialTeamMembers,
-  values as initialValues,
+  teamMembers,
+  values,
+  aboutContent
 } from '@/lib/data';
 import { MoreHorizontal, PlusCircle, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminAboutPage() {
   const { toast } = useToast();
-  const [mission, setMission] =
-    useState(`Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. ClarityChain provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.`);
-  const [tagline, setTagline] = useState(
-    'Driving transparency and trust in charitable giving through technology.'
-  );
-  const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
-  const [values, setValues] = useState(initialValues);
+  // We use a state to re-render the component when the underlying data changes.
+  const [_, setForceRender] = useState(0);
 
   const handleSaveChanges = () => {
     toast({
       title: 'Content Saved!',
       description:
-        'Your changes to the main sections have been saved. (This is a demo and data is not persisted).',
+        'Your changes to the main sections have been saved.',
     });
+    setForceRender(c => c + 1);
   };
-
+  
   const handleSaveValues = () => {
      toast({
       title: 'Values Saved!',
       description:
-        'Your changes to the core values have been saved. (This is a demo and data is not persisted).',
+        'Your changes to the core values have been saved.',
     });
+    setForceRender(c => c + 1);
+  }
+
+  const handleAddValue = () => {
+      values.push({ title: 'New Value', description: 'New description' });
+      setForceRender(c => c + 1);
+  }
+
+  const handleDeleteValue = (index: number) => {
+      values.splice(index, 1);
+      setForceRender(c => c + 1);
   }
 
   return (
@@ -75,8 +84,8 @@ export default function AdminAboutPage() {
             <Textarea
               id="mission"
               rows={5}
-              value={mission}
-              onChange={(e) => setMission(e.target.value)}
+              value={aboutContent.mission}
+              onChange={(e) => aboutContent.mission = e.target.value}
             />
           </div>
           <div className="space-y-2">
@@ -84,8 +93,8 @@ export default function AdminAboutPage() {
             <Textarea
               id="hero-tagline"
               rows={2}
-              value={tagline}
-              onChange={(e) => setTagline(e.target.value)}
+              value={aboutContent.tagline}
+              onChange={(e) => aboutContent.tagline = e.target.value}
             />
           </div>
           <Button onClick={handleSaveChanges}>Save All Changes</Button>
@@ -141,7 +150,7 @@ export default function AdminAboutPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="mb-4 flex justify-end">
-            <Button>
+            <Button onClick={handleAddValue}>
               <PlusCircle className="mr-2 h-4 w-4" /> Add Value
             </Button>
           </div>
@@ -149,21 +158,17 @@ export default function AdminAboutPage() {
              <div key={index} className="space-y-4 rounded-md border p-4">
                 <div className="space-y-2">
                     <Label htmlFor={`value-title-${index}`}>Value Title</Label>
-                    <Input id={`value-title-${index}`} value={value.title} onChange={(e) => {
-                        const newValues = [...values];
-                        newValues[index].title = e.target.value;
-                        setValues(newValues);
+                    <Input id={`value-title-${index}`} defaultValue={value.title} onChange={(e) => {
+                        value.title = e.target.value;
                     }}/>
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor={`value-desc-${index}`}>Value Description</Label>
-                    <Textarea id={`value-desc-${index}`} value={value.description} onChange={(e) => {
-                         const newValues = [...values];
-                        newValues[index].description = e.target.value;
-                        setValues(newValues);
+                    <Textarea id={`value-desc-${index}`} defaultValue={value.description} onChange={(e) => {
+                        value.description = e.target.value;
                     }}/>
                 </div>
-                <Button size="sm" variant="destructive" onClick={() => setValues(values.filter((_, i) => i !== index))}>
+                <Button size="sm" variant="destructive" onClick={() => handleDeleteValue(index)}>
                     <Trash2 className="mr-2 h-4 w-4" /> Delete Value
                 </Button>
             </div>

@@ -31,8 +31,8 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import { jobOpenings as initialJobOpenings, type JobOpening } from '@/lib/data';
-import { MoreHorizontal, PlusCircle, Edit, Trash2, Star } from 'lucide-react';
+import { jobOpenings, type JobOpening } from '@/lib/data';
+import { MoreHorizontal, PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
@@ -49,6 +49,7 @@ import {
     FormLabel,
   } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 
 const jobOpeningSchema = z.object({
     title: z.string().min(1, "Title is required."),
@@ -63,7 +64,8 @@ type JobOpeningFormData = z.infer<typeof jobOpeningSchema>;
 
 
 export default function AdminCareersPage() {
-    const [jobOpenings, setJobOpenings] = useState<JobOpening[]>(initialJobOpenings);
+    const { toast } = useToast();
+    const [_, setForceRender] = useState(0);
     const [editingJob, setEditingJob] = useState<JobOpening | null>(null);
 
     const form = useForm<JobOpeningFormData>({
@@ -97,11 +99,17 @@ export default function AdminCareersPage() {
         };
 
         if (editingJob) {
-            setJobOpenings(jobOpenings.map(job => job.id === editingJob.id ? newJob : job));
+            const index = jobOpenings.findIndex(job => job.id === editingJob.id);
+            if (index !== -1) {
+                jobOpenings[index] = newJob;
+            }
             setEditingJob(null);
+            toast({ title: 'Job Updated!', description: 'The job opening has been updated.' });
         } else {
-            setJobOpenings([newJob, ...jobOpenings]);
+            jobOpenings.unshift(newJob);
+            toast({ title: 'Job Added!', description: 'The new job opening has been posted.' });
         }
+        setForceRender(c => c + 1);
         resetForm();
     };
 
@@ -114,7 +122,12 @@ export default function AdminCareersPage() {
     };
 
     const handleDelete = (id: string) => {
-        setJobOpenings(jobOpenings.filter(job => job.id !== id));
+        const index = jobOpenings.findIndex(job => job.id === id);
+        if (index !== -1) {
+            jobOpenings.splice(index, 1);
+            setForceRender(c => c + 1);
+            toast({ title: 'Job Deleted!', description: 'The job opening has been removed.' });
+        }
     };
 
     const handleCancelEdit = () => {
@@ -123,7 +136,11 @@ export default function AdminCareersPage() {
     }
 
     const handleFeatureToggle = (jobId: string, featured: boolean) => {
-        setJobOpenings(jobOpenings.map(job => job.id === jobId ? {...job, featured} : job));
+        const job = jobOpenings.find(job => job.id === jobId);
+        if (job) {
+            job.featured = featured;
+            setForceRender(c => c + 1);
+        }
     }
 
 

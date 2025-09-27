@@ -38,6 +38,9 @@ export default function CareersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<JobOpening | null>(null);
 
+  const featuredJobs = jobOpenings.filter(job => job.featured);
+  const otherJobs = jobOpenings.filter(job => !job.featured);
+
   const handleApplyClick = (job: JobOpening) => {
     setSelectedJob(job);
     setIsDialogOpen(true);
@@ -53,27 +56,14 @@ export default function CareersPage() {
     setSelectedJob(null);
   };
 
-  return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-8 text-center">
-        <UserPlus className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">Join Our Team</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
-          Help us build a more transparent and accountable world. We're looking
-          for passionate individuals to join our mission.
-        </p>
-      </div>
-
+  const renderJobList = (jobs: JobOpening[], title: string) => (
       <Card>
         <CardHeader>
-          <CardTitle>Open Positions</CardTitle>
-          <CardDescription>
-            Browse our current openings for employees and volunteers.
-          </CardDescription>
+          <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
-            {jobOpenings.map((job) => (
+            {jobs.map((job) => (
               <AccordionItem key={job.id} value={job.id}>
                 <AccordionTrigger className="hover:no-underline">
                   <div className="flex w-full items-center justify-between pr-4">
@@ -117,14 +107,40 @@ export default function CareersPage() {
               </AccordionItem>
             ))}
           </Accordion>
-          {jobOpenings.length === 0 && (
+          {jobs.length === 0 && (
             <p className="py-8 text-center text-muted-foreground">
-              There are no open positions at this time. Please check back
-              later!
+              There are no open positions in this category.
             </p>
           )}
         </CardContent>
       </Card>
+  )
+
+  return (
+    <div className="mx-auto max-w-4xl space-y-8">
+      <div className="mb-8 text-center">
+        <UserPlus className="mx-auto h-12 w-12 text-primary" />
+        <h1 className="mt-4 text-4xl font-bold tracking-tight">Join Our Team</h1>
+        <p className="mt-2 text-lg text-muted-foreground">
+          Help us build a more transparent and accountable world. We're looking
+          for passionate individuals to join our mission.
+        </p>
+      </div>
+
+      {featuredJobs.length > 0 && renderJobList(featuredJobs, "Featured Positions")}
+
+      {renderJobList(otherJobs, "All Open Positions")}
+
+      {jobOpenings.length === 0 && (
+          <Card>
+              <CardContent>
+                 <p className="py-8 text-center text-muted-foreground">
+                    There are no open positions at this time. Please check back
+                    later!
+                </p>
+              </CardContent>
+          </Card>
+      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-lg">

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -20,41 +21,11 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-
-const initialFaqs = [
-  {
-    id: 'faq-1',
-    question: 'How do I know my donation is secure?',
-    answer:
-      'We use industry-standard encryption and partner with trusted payment gateways to ensure every transaction is secure. Additionally, all verified projects use our blockchain ledger to track funds, providing an immutable record of where your money goes.',
-  },
-  {
-    id: 'faq-2',
-    question: 'What does a "Verified Transparent" project mean?',
-    answer:
-      'A "Verified Transparent" badge means the project has committed to our highest standards of transparency. All their expenses are logged on our public ledger with corresponding receipts, and they provide regular, detailed updates on their progress.',
-  },
-  {
-    id: 'faq-3',
-    question: 'Can I get a refund for my donation?',
-    answer:
-      'Donations are generally non-refundable. However, in exceptional circumstances, such as a project failing to start, we will work to reallocate the funds to a similar project or offer credits. Please contact support for any specific issues.',
-  },
-];
-
-type FAQ = {
-  id: string;
-  question: string;
-  answer: string;
-};
+import { faqs, contactInfo } from '@/lib/data';
+import type { FAQ } from '@/lib/data';
 
 export default function AdminHelpPage() {
-  const [faqs, setFaqs] = useState<FAQ[]>(initialFaqs);
-  const [contactInfo, setContactInfo] = useState({
-    email: 'support@claritychain.com',
-    phone: '+1234567890',
-    address: '123 Transparency Lane\nKathmandu, Nepal',
-  });
+  const [_, setForceRender] = useState(0);
   const { toast } = useToast();
 
   const handleAddFaq = () => {
@@ -63,19 +34,26 @@ export default function AdminHelpPage() {
         question: 'New Question',
         answer: 'New answer. Please edit me.'
     }
-    setFaqs([...faqs, newFaq]);
+    faqs.push(newFaq);
+    setForceRender(c => c + 1);
   }
 
   const handleDeleteFaq = (id: string) => {
-    setFaqs(faqs.filter(faq => faq.id !== id));
+    const index = faqs.findIndex(faq => faq.id === id);
+    if (index !== -1) {
+        faqs.splice(index, 1);
+        setForceRender(c => c + 1);
+    }
   }
 
   const handleSaveFaqs = () => {
-      toast({ title: "FAQs Saved!", description: "Your changes have been saved. (Demo only)"});
+      toast({ title: "FAQs Saved!", description: "Your changes have been saved."});
+      setForceRender(c => c + 1);
   }
   
   const handleSaveContact = () => {
-      toast({ title: "Contact Info Saved!", description: "Your changes have been saved. (Demo only)"});
+      toast({ title: "Contact Info Saved!", description: "Your changes have been saved."});
+      setForceRender(c => c + 1);
   }
 
   return (
@@ -104,11 +82,9 @@ export default function AdminHelpPage() {
                     <Label htmlFor={`faq-q-${index}`}>Question</Label>
                     <Input
                       id={`faq-q-${index}`}
-                      value={faq.question}
+                      defaultValue={faq.question}
                       onChange={(e) => {
-                        const newFaqs = [...faqs];
-                        newFaqs[index].question = e.target.value;
-                        setFaqs(newFaqs);
+                        faq.question = e.target.value;
                       }}
                     />
                   </div>
@@ -116,12 +92,10 @@ export default function AdminHelpPage() {
                     <Label htmlFor={`faq-a-${index}`}>Answer</Label>
                     <Textarea
                       id={`faq-a-${index}`}
-                      value={faq.answer}
+                      defaultValue={faq.answer}
                       rows={4}
                        onChange={(e) => {
-                        const newFaqs = [...faqs];
-                        newFaqs[index].answer = e.target.value;
-                        setFaqs(newFaqs);
+                        faq.answer = e.target.value;
                       }}
                     />
                   </div>
@@ -156,8 +130,8 @@ export default function AdminHelpPage() {
             <Input
               id="contact-email"
               type="email"
-              value={contactInfo.email}
-              onChange={(e) => setContactInfo({...contactInfo, email: e.target.value})}
+              defaultValue={contactInfo.email}
+              onChange={(e) => contactInfo.email = e.target.value}
             />
           </div>
           <div className="space-y-2">
@@ -165,16 +139,16 @@ export default function AdminHelpPage() {
             <Input
               id="contact-phone"
               type="tel"
-              value={contactInfo.phone}
-              onChange={(e) => setContactInfo({...contactInfo, phone: e.target.value})}
+              defaultValue={contactInfo.phone}
+              onChange={(e) => contactInfo.phone = e.target.value}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="contact-address">Office Address</Label>
             <Textarea
               id="contact-address"
-              value={contactInfo.address}
-              onChange={(e) => setContactInfo({...contactInfo, address: e.target.value})}
+              defaultValue={contactInfo.address}
+              onChange={(e) => contactInfo.address = e.target.value}
             />
           </div>
           <Button onClick={handleSaveContact}>Save Contact Information</Button>

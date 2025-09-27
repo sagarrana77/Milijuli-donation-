@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -9,22 +10,14 @@ import { ViberIcon } from '@/components/icons/viber-icon';
 import InstagramIcon from '@/components/icons/instagram-icon';
 import MessengerIcon from '@/components/icons/messenger-icon';
 import Link from 'next/link';
+import { socialLinks } from '@/lib/data';
 
-// In a real app, these would come from a global state or fetched from a backend
-const initialSocialLinks = {
-    whatsapp: '1234567890',
-    viber: '+1234567890',
-    instagram: 'https://instagram.com/your-profile',
-    messenger: 'your.username'
-}
 
 export function FloatingContactButton() {
   const [isOpen, setIsOpen] = useState(false);
-  // This state would be updated from a global store that the admin page modifies
-  const [socialLinks, setSocialLinks] = useState(initialSocialLinks);
 
-  const whatsappLink = `https://wa.me/${socialLinks.whatsapp}`;
-  const viberLink = `viber://chat?number=%2B${socialLinks.viber.replace('+', '')}`;
+  const whatsappLink = `https://wa.me/${socialLinks.whatsapp.replace(/\D/g, '')}`;
+  const viberLink = `viber://chat?number=%2B${socialLinks.viber.replace(/\D/g, '')}`;
   const messengerLink = `https://m.me/${socialLinks.messenger}`;
 
   return (

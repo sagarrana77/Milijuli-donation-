@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Accordion,
   AccordionContent,
@@ -11,34 +13,7 @@ import Link from 'next/link';
 import { InfoIcon } from '@/components/icons/InfoIcon';
 import { MailIcon } from '@/components/icons/MailIcon';
 import { PhoneIcon } from '@/components/icons/PhoneIcon';
-
-const faqs = [
-  {
-    question: 'How do I know my donation is secure?',
-    answer:
-      'We use industry-standard encryption and partner with trusted payment gateways to ensure every transaction is secure. Additionally, all verified projects use our blockchain ledger to track funds, providing an immutable record of where your money goes.',
-  },
-  {
-    question: 'What does a "Verified Transparent" project mean?',
-    answer:
-      'A "Verified Transparent" badge means the project has committed to our highest standards of transparency. All their expenses are logged on our public ledger with corresponding receipts, and they provide regular, detailed updates on their progress.',
-  },
-  {
-    question: 'Can I get a refund for my donation?',
-    answer:
-      'Donations are generally non-refundable. However, in exceptional circumstances, such as a project failing to start, we will work to reallocate the funds to a similar project or offer credits. Please contact support for any specific issues.',
-  },
-  {
-    question: 'How are operational costs managed?',
-    answer:
-      'Operational costs, such as salaries and equipment, are funded through a dedicated "Operational Costs" fund. This ensures that donations to specific projects are used directly for those projects, maintaining transparency and trust.',
-  },
-  {
-    question: 'How do I create a project on ClarityChain?',
-    answer:
-      'Currently, project creation is handled internally by our team to ensure all projects meet our standards. If you have a project you\'d like to feature, please reach out to our partnerships team through our contact page.',
-  },
-];
+import { faqs, contactInfo } from '@/lib/data';
 
 export default function HelpPage() {
   return (
@@ -60,7 +35,7 @@ export default function HelpPage() {
             <CardContent>
               <Accordion type="single" collapsible className="w-full">
                 {faqs.map((faq, index) => (
-                  <AccordionItem key={index} value={`item-${index}`}>
+                  <AccordionItem key={faq.id} value={faq.id}>
                     <AccordionTrigger>{faq.question}</AccordionTrigger>
                     <AccordionContent className="text-muted-foreground">
                       {faq.answer}
@@ -82,20 +57,19 @@ export default function HelpPage() {
                 Can't find the answer you're looking for? Our team is here to help.
               </p>
               <Button asChild className="w-full">
-                <Link href="mailto:support@claritychain.com" className="flex items-center gap-2">
+                <Link href={`mailto:${contactInfo.email}`} className="flex items-center gap-2">
                   <MailIcon className="h-4 w-4" /> Email Us
                 </Link>
               </Button>
               <Button asChild variant="outline" className="w-full">
-                <Link href="tel:+1234567890" className="flex items-center gap-2">
+                <Link href={`tel:${contactInfo.phone}`} className="flex items-center gap-2">
                   <PhoneIcon className="h-4 w-4" /> Call Us
                 </Link>
               </Button>
               <div className="pt-4 text-sm">
                 <h4 className="font-semibold">Our Office</h4>
-                <p className="text-muted-foreground">
-                  123 Transparency Lane <br />
-                  Kathmandu, Nepal
+                <p className="whitespace-pre-wrap text-muted-foreground">
+                  {contactInfo.address}
                 </p>
                  <p className="text-muted-foreground mt-2">
                   Mon-Fri, 9am - 5pm NPT

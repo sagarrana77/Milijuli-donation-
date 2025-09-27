@@ -1,5 +1,7 @@
+
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -26,6 +28,7 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle } from 'lucide-react';
 import Link from 'next/link';
+import { projects } from '@/lib/data';
 
 const projectSchema = z.object({
   name: z.string().min(5, 'Project name must be at least 5 characters.'),
@@ -42,6 +45,7 @@ type ProjectFormData = z.infer<typeof projectSchema>;
 
 export default function NewProjectPage() {
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -58,13 +62,21 @@ export default function NewProjectPage() {
   });
 
   function onSubmit(data: ProjectFormData) {
-    // In a real app, this would send the data to the backend to create a new project.
-    console.log('New project data:', data);
+    const newProject = {
+      ...data,
+      id: data.name.toLowerCase().replace(/\s+/g, '-'),
+      raisedAmount: 0,
+      donors: 0,
+      updates: [],
+      expenses: [],
+      discussion: [],
+    };
+    projects.unshift(newProject);
     toast({
       title: 'Project Created!',
-      description: `The project "${data.name}" has been successfully added. (This is a demo and not persisted).`,
+      description: `The project "${data.name}" has been successfully added.`,
     });
-    form.reset();
+    router.push('/admin');
   }
 
   return (

@@ -1,6 +1,7 @@
 
 
 
+
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -44,7 +45,7 @@ export type Project = {
   }[];
 };
 
-export const projects: Project[] = [
+export let projects: Project[] = [
   {
     id: 'education-for-all-nepal',
     name: 'Education for All Nepal',
@@ -170,7 +171,7 @@ export const projects: Project[] = [
   },
 ];
 
-export const salaries: {
+export let salaries: {
     id: string;
     employee: string;
     role: string;
@@ -196,7 +197,7 @@ export const salaries: {
   },
 ];
 
-export const equipment: {
+export let equipment: {
     id: string;
     item: string;
     cost: number;
@@ -234,7 +235,7 @@ export const equipment: {
   },
 ];
 
-export const miscExpenses: {
+export let miscExpenses: {
     id: string;
     item: string;
     cost: number;
@@ -306,7 +307,7 @@ export type User = {
     hasPaymentMethod?: boolean;
 }
 
-export const users: User[] = [
+export let users: User[] = [
     { 
         id: 'current-user', 
         name: 'Current User', 
@@ -448,7 +449,7 @@ export type TeamMember = {
   skills: string[];
 };
 
-export const teamMembers: TeamMember[] = [
+export let teamMembers: TeamMember[] = [
   {
     id: 'alex-johnson',
     name: 'Alex Johnson',
@@ -520,7 +521,7 @@ export function getTeamMember(id: string) {
   return teamMembers.find((member) => member.id === id);
 }
 
-export const values = [
+export let values = [
   {
     title: 'Transparency',
     description:
@@ -538,6 +539,11 @@ export const values = [
   },
 ];
 
+export let aboutContent = {
+    mission: `Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. ClarityChain provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.`,
+    tagline: 'Driving transparency and trust in charitable giving through technology.',
+}
+
 export type JobOpening = {
   id: string;
   title: string;
@@ -548,7 +554,7 @@ export type JobOpening = {
   featured?: boolean;
 };
 
-export const jobOpenings: JobOpening[] = [
+export let jobOpenings: JobOpening[] = [
   {
     id: 'job-1',
     title: 'Community Manager',
@@ -592,3 +598,45 @@ export const jobOpenings: JobOpening[] = [
     featured: false,
   }
 ];
+
+export type FAQ = {
+  id: string;
+  question: string;
+  answer: string;
+};
+
+export let faqs: FAQ[] = [
+  {
+    id: 'faq-1',
+    question: 'How do I know my donation is secure?',
+    answer:
+      'We use industry-standard encryption and partner with trusted payment gateways to ensure every transaction is secure. Additionally, all verified projects use our blockchain ledger to track funds, providing an immutable record of where your money goes.',
+  },
+  {
+    id: 'faq-2',
+    question: 'What does a "Verified Transparent" project mean?',
+    answer:
+      'A "Verified Transparent" badge means the project has committed to our highest standards of transparency. All their expenses are logged on our public ledger with corresponding receipts, and they provide regular, detailed updates on their progress.',
+  },
+  {
+    id: 'faq-3',
+    question: 'Can I get a refund for my donation?',
+    answer:
+      'Donations are generally non-refundable. However, in exceptional circumstances, such as a project failing to start, we will work to reallocate the funds to a similar project or offer credits. Please contact support for any specific issues.',
+  },
+];
+
+
+export let contactInfo = {
+    email: 'support@claritychain.com',
+    phone: '+1234567890',
+    address: '123 Transparency Lane\nKathmandu, Nepal',
+};
+
+
+export let socialLinks = {
+    whatsapp: '+1234567890',
+    viber: '+1234567890',
+    instagram: 'https://instagram.com/your-profile',
+    messenger: 'your.username'
+}
