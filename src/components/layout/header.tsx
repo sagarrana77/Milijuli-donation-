@@ -55,8 +55,6 @@ function getPageTitle(pathname: string): string {
       return 'Operational Costs';
     case '/reports':
       return 'AI Reports';
-    case '/admin':
-      return 'Admin Dashboard';
     case '/about':
       return 'About Us';
     case '/careers':
@@ -67,6 +65,8 @@ function getPageTitle(pathname: string): string {
         return 'My Profile';
     case '/settings':
         return 'Settings';
+    case '/notifications':
+        return 'Notifications';
     default:
       return 'ClarityChain';
   }

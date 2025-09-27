@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -77,7 +78,9 @@ export function NotificationList({ notifications: initialNotifications }: Notifi
         </ScrollArea>
       </CardContent>
       <CardFooter className="border-t p-2">
-        <Button variant="link" className="w-full text-sm">View all notifications</Button>
+        <Button variant="link" className="w-full text-sm" asChild>
+            <Link href="/notifications">View all notifications</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
