@@ -10,16 +10,16 @@ export default function ReportsPage() {
         <div>
             <h1 className="text-3xl font-bold">AI Summary Reports</h1>
             <p className="text-muted-foreground">
-            Auto-generate simple, donor-friendly updates from raw financial data.
+              Automatically generate simple, donor-friendly updates from your project data.
             </p>
         </div>
       </div>
       
       <Card>
         <CardHeader>
-            <CardTitle>Generate a Donor-Friendly Report</CardTitle>
+            <CardTitle>Generate a Project Report</CardTitle>
             <CardDescription>
-                Enter your fund allocation data below. For example: "Education: $5000, Admin: $1200, Health Supplies: $3800". The AI will create a concise summary.
+                Select a project from the dropdown below. The AI will analyze its current financial status and generate a concise, shareable summary for your donors.
             </CardDescription>
         </CardHeader>
         <CardContent>

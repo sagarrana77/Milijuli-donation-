@@ -9,15 +9,22 @@ import {
   GenerateDonorFriendlyReportOutput,
 } from '@/ai/flows/generate-donor-friendly-reports';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2 } from 'lucide-react';
+import { projects } from '@/lib/data';
 
 const formSchema = z.object({
-  fundAllocationData: z.string().min(10, {
-    message: 'Please provide more detailed allocation data.',
+  projectId: z.string().min(1, {
+    message: 'Please select a project.',
   }),
 });
 
@@ -29,7 +36,7 @@ export function ReportGenerator() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fundAllocationData: '',
+      projectId: '',
     },
   });
 
@@ -55,23 +62,28 @@ export function ReportGenerator() {
     <div className="space-y-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="fundAllocationData"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fund Allocation Data</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="e.g., Student Scholarships: $8,000, Administrative Costs: $1,500, Medical Supplies: $3,500"
-                    rows={5}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="projectId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select Project</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose a project to summarize..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {projects.map(project => (
+                        <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           <Button type="submit" disabled={isLoading}>
             {isLoading ? (
               <>
@@ -97,7 +109,10 @@ export function ReportGenerator() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-foreground/90">{report.summary}</p>
+            <div
+                className="prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: report.report.replace(/\n/g, '<br />') }}
+            />
           </CardContent>
         </Card>
       )}
