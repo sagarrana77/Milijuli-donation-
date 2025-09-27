@@ -1,6 +1,4 @@
 
-'use server';
-
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/data';
 
