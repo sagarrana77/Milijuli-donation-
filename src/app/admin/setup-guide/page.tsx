@@ -62,8 +62,8 @@ const guideSections = [
     {
         icon: Cloud,
         title: 'Deploying Live (Free Options)',
-        link: 'https://vercel.com/new',
-        linkText: 'Deploy with Vercel',
+        link: 'https://vercel.com/docs/frameworks/nextjs',
+        linkText: 'View Vercel Deployment Docs',
         description: 'To deploy your app live for free, use services like Vercel (recommended) or Netlify. Connect your Git repository, configure the environment variables (like your GEMINI_API_KEY), and the service will automatically build and deploy your application.'
     },
 ];
