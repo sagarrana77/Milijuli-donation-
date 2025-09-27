@@ -283,6 +283,7 @@ export type User = {
     avatarUrl: string;
     profileUrl: string;
     bio: string;
+    hasPaymentMethod?: boolean;
 }
 
 export const users: User[] = [
@@ -292,46 +293,52 @@ export const users: User[] = [
         email: 'donor@example.com',
         avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop', 
         profileUrl: '/profile/current-user',
-        bio: 'A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.'
+        bio: 'A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.',
+        hasPaymentMethod: false,
     },
     { 
         id: 'user-jane-doe', 
         name: 'Jane Doe', 
         avatarUrl: getImageUrl('avatar-jane-doe'), 
         profileUrl: '/profile/user-jane-doe',
-        bio: 'Loves to contribute to educational projects. Believes in the power of knowledge.'
+        bio: 'Loves to contribute to educational projects. Believes in the power of knowledge.',
+        hasPaymentMethod: true,
     },
     { 
         id: 'user-john-smith', 
         name: 'John Smith', 
         avatarUrl: getImageUrl('avatar-john-smith'), 
         profileUrl: '/profile/user-john-smith',
-        bio: 'Focused on environmental causes and clean water initiatives.'
+        bio: 'Focused on environmental causes and clean water initiatives.',
+        hasPaymentMethod: true,
     },
     { 
         id: 'user-ai-chan', 
         name: 'Ai Chan', 
         avatarUrl: getImageUrl('avatar-ai-chan'), 
         profileUrl: '/profile/user-ai-chan',
-        bio: 'Supports disaster relief and emergency response efforts.'
+        bio: 'Supports disaster relief and emergency response efforts.',
+        hasPaymentMethod: true,
     },
     { 
         id: 'user-raj-patel', 
         name: 'Raj Patel', 
         avatarUrl: getImageUrl('avatar-raj-patel'), 
         profileUrl: '/profile/user-raj-patel',
-        bio: 'Interested in community health and wellness projects.'
+        bio: 'Interested in community health and wellness projects.',
+        hasPaymentMethod: false,
     },
     { 
         id: 'user-anonymous', 
         name: 'Anonymous', 
         avatarUrl: getImageUrl('avatar-anonymous'), 
         profileUrl: '/profile/user-anonymous',
-        bio: 'An anonymous donor making a difference.'
+        bio: 'An anonymous donor making a difference.',
+        hasPaymentMethod: true,
     },
 ];
 
-export type Donor = Omit<User, 'email'>;
+export type Donor = Omit<User, 'email' | 'hasPaymentMethod'>;
 
 export const recentDonations: {
   id: number;
