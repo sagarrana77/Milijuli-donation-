@@ -80,7 +80,7 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2"><GraduationCap className="h-5 w-5 text-primary" /> Education</CardTitle>
-                </Header>
+                </CardHeader>
                 <CardContent className="space-y-4">
                      {member.education.map((edu, index) => (
                         <div key={index} className="flex gap-4">
