@@ -45,12 +45,14 @@ import {
   HandCoins,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations } from '@/lib/data';
+import type { PhysicalDonation } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -190,6 +192,18 @@ export default function AdminDashboardPage() {
     });
     setForceRender(c => c + 1);
   }
+
+  const handleStatusChange = (donationId: string, status: PhysicalDonation['status']) => {
+    const donation = physicalDonations.find(d => d.id === donationId);
+    if (donation) {
+        donation.status = status;
+        setForceRender(c => c + 1);
+        toast({
+            title: 'Status Updated!',
+            description: `Donation status changed to ${status}.`
+        });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -484,7 +498,24 @@ export default function AdminDashboardPage() {
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Pending')}>
+                                                    Mark as Pending
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Completed')}>
+                                                    Mark as Completed
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Cancelled')} className="text-destructive">
+                                                    Mark as Cancelled
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -700,5 +731,6 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 
 

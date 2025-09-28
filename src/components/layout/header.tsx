@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -56,6 +55,8 @@ function getPageTitle(pathname: string): string {
       return 'Dashboard';
     case '/projects':
       return 'Projects';
+    case '/in-kind-donations':
+        return 'In-Kind Donations';
     case '/operational-costs':
       return 'Operational Costs';
     case '/reports':

@@ -24,6 +24,7 @@ import {
   Users,
   Briefcase,
   UserPlus,
+  Package,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { X } from 'lucide-react';
@@ -32,6 +33,7 @@ import { currentUser } from '@/lib/data';
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/projects', label: 'Projects', icon: HeartHandshake },
+  { href: '/in-kind-donations', label: 'In-Kind Donations', icon: Package },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
