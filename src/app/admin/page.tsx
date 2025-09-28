@@ -196,12 +196,34 @@ export default function AdminDashboardPage() {
   const handleStatusChange = (donationId: string, status: PhysicalDonation['status']) => {
     const donation = physicalDonations.find(d => d.id === donationId);
     if (donation) {
-        donation.status = status;
-        setForceRender(c => c + 1);
-        toast({
-            title: 'Status Updated!',
-            description: `Donation status changed to ${status}.`
-        });
+      const wasCompleted = donation.status === 'Completed';
+      donation.status = status;
+  
+      // If the status is changed to 'Completed', update the project's wishlist
+      if (status === 'Completed' && !wasCompleted) {
+        const project = projects.find(p => p.name === donation.projectName);
+        if (project && project.wishlist) {
+          const wishlistItem = project.wishlist.find(item => item.name === donation.itemName);
+          if (wishlistItem) {
+            wishlistItem.quantityDonated += donation.quantity;
+          }
+        }
+      } else if (wasCompleted && status !== 'Completed') {
+        // If the status is changed from 'Completed' to something else, revert the count
+         const project = projects.find(p => p.name === donation.projectName);
+        if (project && project.wishlist) {
+          const wishlistItem = project.wishlist.find(item => item.name === donation.itemName);
+          if (wishlistItem) {
+            wishlistItem.quantityDonated -= donation.quantity;
+          }
+        }
+      }
+  
+      setForceRender(c => c + 1);
+      toast({
+        title: 'Status Updated!',
+        description: `Donation status changed to ${status}.`,
+      });
     }
   };
 
@@ -731,6 +753,7 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 
 
 
