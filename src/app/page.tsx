@@ -31,6 +31,7 @@ import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
+import { InKindPledges } from '@/components/dashboard/in-kind-pledges';
 
 export default function DashboardPage() {
     const [currentDashboardStats, setCurrentDashboardStats] = useState(dashboardStats);
@@ -127,11 +128,16 @@ export default function DashboardPage() {
           </Card>
         </ScrollFadeIn>
       </div>
-      <div className="grid gap-8 lg:grid-cols-5">
-        <ScrollFadeIn className="lg:col-span-3">
+      <div className="grid gap-8 lg:grid-cols-2">
+        <ScrollFadeIn>
           <RealtimeLedger />
         </ScrollFadeIn>
-        <ScrollFadeIn className="lg:col-span-2">
+        <ScrollFadeIn>
+          <InKindPledges />
+        </ScrollFadeIn>
+      </div>
+
+       <ScrollFadeIn>
           <Card>
             <CardHeader>
               <CardTitle>Expense Breakdown</CardTitle>
@@ -141,7 +147,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className="flex flex-col items-center">
               <ExpenseChart data={currentDashboardStats.spendingBreakdown} />
-              <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+               <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
                   {currentDashboardStats.spendingBreakdown.map((entry) => (
                       <div key={entry.name} className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1">
                           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
@@ -153,7 +159,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </ScrollFadeIn>
-      </div>
       
       <ScrollFadeIn asChild>
         <section>
@@ -231,5 +236,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
