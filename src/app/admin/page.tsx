@@ -44,7 +44,7 @@ import {
   BookOpen,
   HandCoins,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways } from '@/lib/data';
 import type { PhysicalDonation } from '@/lib/data';
 import {
   DropdownMenu,
@@ -66,17 +66,7 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 
 
-const initialGateways = [
-  { name: 'Esewa', enabled: true, qrValue: '', generatedQr: '' },
-  { name: 'Khalti', enabled: true, qrValue: '', generatedQr: '' },
-  { name: 'FonePay', enabled: true, qrValue: '', generatedQr: '' },
-  { name: 'PayPal', enabled: false, qrValue: '', generatedQr: '' },
-  { name: 'Stripe', enabled: true, qrValue: '', generatedQr: '' },
-  { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
-];
-
 export default function AdminDashboardPage() {
-  const [gateways, setGateways] = useState(initialGateways);
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -132,19 +122,19 @@ export default function AdminDashboardPage() {
 
 
   const handleGenerateQr = (name: string) => {
-    setGateways(gateways.map(g => {
-        if (g.name === name && g.qrValue) {
-            return {
-                ...g,
-                generatedQr: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(g.qrValue)}`
-            }
-        }
-        return g;
-    }));
+    const gateway = paymentGateways.find(g => g.name === name);
+    if (gateway && gateway.qrValue) {
+      gateway.generatedQr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(gateway.qrValue)}`;
+      setForceRender(c => c + 1);
+    }
   };
   
   const handleGatewayToggle = (name: string) => {
-    setGateways(gateways.map(g => g.name === name ? {...g, enabled: !g.enabled} : g));
+    const gateway = paymentGateways.find(g => g.name === name);
+    if (gateway) {
+        gateway.enabled = !gateway.enabled;
+        setForceRender(c => c + 1);
+    }
   }
 
   const handleExpenseRecorded = (data: { project: string; amount: number }) => {
@@ -320,14 +310,14 @@ export default function AdminDashboardPage() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                             <CreditCard />
-                            Payment Gateways & QR Codes
+                            Payment Gateways
                             </CardTitle>
                             <CardDescription>
                             Enable gateways and generate QR codes for donations.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            {gateways.map((gateway, index) => (
+                            {paymentGateways.map((gateway, index) => (
                                 <div key={gateway.name} className="space-y-4 rounded-md border p-4">
                                     <div className="flex items-center justify-between">
                                         <Label htmlFor={`gateway-switch-${gateway.name}`} className="text-lg font-medium">{gateway.name}</Label>
@@ -341,9 +331,8 @@ export default function AdminDashboardPage() {
                                                 placeholder={`Enter ${gateway.name} URL, username, or address`}
                                                 value={gateway.qrValue}
                                                 onChange={(e) => {
-                                                    const newGateways = [...gateways];
-                                                    newGateways[index].qrValue = e.target.value;
-                                                    setGateways(newGateways);
+                                                    gateway.qrValue = e.target.value;
+                                                    setForceRender(c => c + 1);
                                                 }}
                                             />
                                             <Button onClick={() => handleGenerateQr(gateway.name)}>Generate QR</Button>
@@ -748,6 +737,7 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 
 
 

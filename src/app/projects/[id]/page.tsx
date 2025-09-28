@@ -28,10 +28,6 @@ function getProject(id: string): Project | undefined {
   return projects.find((p) => p.id === id);
 }
 
-function getQrCodeUrl() {
-  return PlaceHolderImages.find((img) => img.id === 'qr-code-placeholder')?.imageUrl || '';
-}
-
 export default function ProjectDetailPage({
   params,
 }: {
@@ -160,10 +156,9 @@ export default function ProjectDetailPage({
               <ScrollFadeIn asChild delay={200}>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Scan to Donate</CardTitle>
+                        <CardTitle>Donate via QR</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center gap-4">
-                        <Image src={getQrCodeUrl()} alt="QR Code for donation" width={200} height={200} data-ai-hint="qr code" />
                         <PaymentGateways />
                     </CardContent>
                 </Card>

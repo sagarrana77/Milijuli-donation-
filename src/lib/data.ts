@@ -1,4 +1,5 @@
 
+
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -373,10 +374,10 @@ export let dashboardStats = {
   totalSpent: totalSpending,
   fundsInHand: fundsInHand,
   spendingBreakdown: [
-    { name: 'Education', value: educationExpenses, label: 'Education' },
-    { name: 'Health', value: healthExpenses, label: 'Health' },
-    { name: 'Relief', value: reliefExpenses, label: 'Relief' },
-    { name: 'Operational', value: currentOperationalExpenses, label: 'Operational' },
+    { name: 'Education', value: educationExpenses, key: 'education' },
+    { name: 'Health', value: healthExpenses, key: 'health' },
+    { name: 'Relief', value: reliefExpenses, key: 'relief' },
+    { name: 'Operational', value: currentOperationalExpenses, key: 'operational' },
   ],
 };
 
@@ -800,4 +801,20 @@ export let socialLinks = {
     messenger: 'your.username'
 }
 
+export type Gateway = {
+    name: string;
+    enabled: boolean;
+    qrValue: string;
+    generatedQr: string;
+};
+  
+export let paymentGateways: Gateway[] = [
+    { name: 'Esewa', enabled: true, qrValue: '', generatedQr: '' },
+    { name: 'Khalti', enabled: true, qrValue: '', generatedQr: '' },
+    { name: 'FonePay', enabled: true, qrValue: '', generatedQr: '' },
+    { name: 'PayPal', enabled: false, qrValue: '', generatedQr: '' },
+    { name: 'Stripe', enabled: true, qrValue: '', generatedQr: '' },
+    { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
+];
     
+

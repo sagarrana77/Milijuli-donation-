@@ -1,30 +1,76 @@
-import Image from 'next/image';
 
-const gateways = [
-  { name: 'Esewa', logo: '/payment-logos/esewa.svg' },
-  { name: 'Khalti', logo: '/payment-logos/khalti.svg' },
-  { name: 'FonePay', logo: '/payment-logos/fonepay.svg' },
-  { name: 'PayPal', logo: '/payment-logos/paypal.svg' },
-  { name: 'Stripe', logo: '/payment-logos/stripe.svg' },
-  { name: 'Crypto', logo: '/payment-logos/crypto.svg' },
-];
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { paymentGateways } from '@/lib/data';
+import type { Gateway } from '@/lib/data';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const PlaceholderLogo = ({ name }: { name: string }) => (
-    <div className="flex h-10 w-20 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground" title={name}>
-      {name}
-    </div>
-  );
+  <div
+    className="flex h-10 w-20 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground"
+    title={name}
+  >
+    {name}
+  </div>
+);
 
 export function PaymentGateways() {
+  const [selectedGateway, setSelectedGateway] = useState<Gateway | null>(null);
+  const enabledGateways = paymentGateways.filter((g) => g.enabled);
+
+  const handleGatewayClick = (gateway: Gateway) => {
+    if (selectedGateway?.name === gateway.name) {
+      setSelectedGateway(null); // Deselect if clicked again
+    } else {
+      setSelectedGateway(gateway);
+    }
+  };
+
   return (
     <div className="w-full">
-        <p className="mb-2 text-center text-sm text-muted-foreground">We accept</p>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-        {gateways.map((gateway) => (
-            // In a real app, these would be Image components with actual logo files in /public
-            <PlaceholderLogo key={gateway.name} name={gateway.name} />
+      <p className="mb-2 text-center text-sm text-muted-foreground">
+        We accept
+      </p>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        {enabledGateways.map((gateway) => (
+          <Button
+            key={gateway.name}
+            variant={
+              selectedGateway?.name === gateway.name ? 'default' : 'outline'
+            }
+            onClick={() => handleGatewayClick(gateway)}
+            className="flex h-10 w-20 items-center justify-center rounded-md text-xs"
+          >
+            {gateway.name}
+          </Button>
         ))}
-        </div>
+      </div>
+      <AnimatePresence>
+        {selectedGateway && selectedGateway.generatedQr && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: 'auto', marginTop: '1rem' }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="flex flex-col items-center gap-2 overflow-hidden"
+          >
+            <Image
+              src={selectedGateway.generatedQr}
+              alt={`${selectedGateway.name} QR Code`}
+              width={200}
+              height={200}
+              data-ai-hint="qr code"
+              className="rounded-lg"
+            />
+             <p className="text-center text-xs text-muted-foreground break-all sm:text-left">
+                Scan for {selectedGateway.name}: {selectedGateway.qrValue}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
