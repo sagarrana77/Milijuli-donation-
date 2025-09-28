@@ -67,17 +67,15 @@ import { format } from 'date-fns';
 
 
 const initialGateways = [
-  { name: 'Esewa', enabled: true },
-  { name: 'Khalti', enabled: true },
-  { name: 'FonePay', enabled: true },
-  { name: 'PayPal', enabled: false },
-  { name: 'Stripe', enabled: true },
-  { name: 'Crypto', enabled: false },
+  { name: 'Esewa', enabled: true, qrValue: '', generatedQr: '' },
+  { name: 'Khalti', enabled: true, qrValue: '', generatedQr: '' },
+  { name: 'FonePay', enabled: true, qrValue: '', generatedQr: '' },
+  { name: 'PayPal', enabled: false, qrValue: '', generatedQr: '' },
+  { name: 'Stripe', enabled: true, qrValue: '', generatedQr: '' },
+  { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
 
 export default function AdminDashboardPage() {
-  const [qrUrl, setQrUrl] = useState('');
-  const [generatedQr, setGeneratedQr] = useState('');
   const [gateways, setGateways] = useState(initialGateways);
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
@@ -133,14 +131,16 @@ export default function AdminDashboardPage() {
     };
 
 
-  const handleGenerateQr = () => {
-    if (qrUrl) {
-      setGeneratedQr(
-        `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-          qrUrl
-        )}`
-      );
-    }
+  const handleGenerateQr = (name: string) => {
+    setGateways(gateways.map(g => {
+        if (g.name === name && g.qrValue) {
+            return {
+                ...g,
+                generatedQr: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(g.qrValue)}`
+            }
+        }
+        return g;
+    }));
   };
   
   const handleGatewayToggle = (name: string) => {
@@ -316,61 +316,56 @@ export default function AdminDashboardPage() {
         <TabsContent value="settings" className="mt-6">
             <div className="space-y-8">
                 <div className="grid gap-8 lg:grid-cols-2">
-                    <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                        <QrCode />
-                        QR Code Creator
-                        </CardTitle>
-                        <CardDescription>
-                        Generate a QR code for any URL to use in your campaigns.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex flex-col gap-2 sm:flex-row">
-                        <Input
-                            type="url"
-                            placeholder="https://example.com"
-                            value={qrUrl}
-                            onChange={(e) => setQrUrl(e.target.value)}
-                            className="flex-grow"
-                        />
-                        <Button onClick={handleGenerateQr}>Generate</Button>
-                        </div>
-                        {generatedQr && (
-                        <div className="flex flex-col items-center gap-4 rounded-lg border bg-muted p-4">
-                            <Image
-                            src={generatedQr}
-                            alt="Generated QR Code"
-                            width={200}
-                            height={200}
-                            data-ai-hint="qr code"
-                            />
-                            <p className="text-center text-sm text-muted-foreground break-all">
-                            QR Code for: {qrUrl}
-                            </p>
-                        </div>
-                        )}
-                    </CardContent>
-                    </Card>
-                    <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                        <CreditCard />
-                        Payment Gateways
-                        </CardTitle>
-                        <CardDescription>
-                        Enable or disable payment methods for donations.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {gateways.map((gateway) => (
-                            <div key={gateway.name} className="flex items-center justify-between rounded-md border p-3">
-                                <Label htmlFor={`gateway-${gateway.name}`} className="font-medium">{gateway.name}</Label>
-                                <Switch id={`gateway-${gateway.name}`} checked={gateway.enabled} onCheckedChange={() => handleGatewayToggle(gateway.name)} />
-                            </div>
-                        ))}
-                    </CardContent>
+                    <Card className="lg:col-span-2">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                            <CreditCard />
+                            Payment Gateways & QR Codes
+                            </CardTitle>
+                            <CardDescription>
+                            Enable gateways and generate QR codes for donations.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {gateways.map((gateway, index) => (
+                                <div key={gateway.name} className="space-y-4 rounded-md border p-4">
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor={`gateway-switch-${gateway.name}`} className="text-lg font-medium">{gateway.name}</Label>
+                                        <Switch id={`gateway-switch-${gateway.name}`} checked={gateway.enabled} onCheckedChange={() => handleGatewayToggle(gateway.name)} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor={`gateway-qr-input-${gateway.name}`} className="text-sm font-normal">Payment URL or ID</Label>
+                                        <div className="flex gap-2">
+                                            <Input 
+                                                id={`gateway-qr-input-${gateway.name}`}
+                                                placeholder={`Enter ${gateway.name} URL, username, or address`}
+                                                value={gateway.qrValue}
+                                                onChange={(e) => {
+                                                    const newGateways = [...gateways];
+                                                    newGateways[index].qrValue = e.target.value;
+                                                    setGateways(newGateways);
+                                                }}
+                                            />
+                                            <Button onClick={() => handleGenerateQr(gateway.name)}>Generate QR</Button>
+                                        </div>
+                                    </div>
+                                    {gateway.generatedQr && (
+                                        <div className="flex flex-col items-center gap-2 rounded-lg bg-muted p-3 sm:flex-row">
+                                            <Image
+                                                src={gateway.generatedQr}
+                                                alt={`${gateway.name} QR Code`}
+                                                width={150}
+                                                height={150}
+                                                data-ai-hint="qr code"
+                                            />
+                                            <p className="text-center text-xs text-muted-foreground break-all sm:text-left">
+                                                QR Code for: {gateway.qrValue}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </CardContent>
                     </Card>
                 </div>
                  <div className="grid gap-8 lg:grid-cols-2">
@@ -753,6 +748,7 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 
 
 
