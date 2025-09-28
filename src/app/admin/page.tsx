@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -625,7 +626,7 @@ export default function AdminDashboardPage() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                                    <DropdownMenuItem asChild><Link href={`/admin/projects/${project.id}/edit`}>Edit</Link></DropdownMenuItem>
                                     <DropdownMenuItem>Delete</DropdownMenuItem>
                                 </DropdownMenuContent>
                                 </DropdownMenu>
@@ -642,3 +643,4 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+

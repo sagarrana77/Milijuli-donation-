@@ -5,6 +5,17 @@ function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
 }
 
+export type WishlistItem = {
+  id: string;
+  name: string;
+  description: string;
+  quantityNeeded: number;
+  quantityDonated: number;
+  costPerItem: number;
+  imageUrl?: string;
+  imageHint?: string;
+}
+
 export type Project = {
   id: string;
   name: string;
@@ -25,7 +36,7 @@ export type Project = {
     imageHint: string;
   }[];
   expenses: {
-    id: string;
+    id: 'string';
     item: string;
     amount: number;
     date: Date;
@@ -40,6 +51,7 @@ export type Project = {
     date: Date;
     text: string;
   }[];
+  wishlist: WishlistItem[];
 };
 
 export let projects: Project[] = [
@@ -108,7 +120,29 @@ export let projects: Project[] = [
         profileUrl: '/profile/user-john-smith',
         date: new Date('2023-10-19T09:00:00Z'),
         text:
-          'I agree with Jane. Transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
+          'I agree with Jane. The transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
+      },
+    ],
+    wishlist: [
+      {
+        id: 'wish-edu-1',
+        name: 'Set of Textbooks for a Child',
+        description: 'Provides a full set of required textbooks for one primary school student for a year.',
+        quantityNeeded: 200,
+        quantityDonated: 50,
+        costPerItem: 25,
+        imageUrl: getImageUrl('update-photo-1'),
+        imageHint: 'school books',
+      },
+      {
+        id: 'wish-edu-2',
+        name: 'School Desk and Chair',
+        description: 'A sturdy desk and chair for a student to learn comfortably.',
+        quantityNeeded: 100,
+        quantityDonated: 20,
+        costPerItem: 40,
+        imageUrl: 'https://picsum.photos/seed/wishlist-desk/400/300',
+        imageHint: 'student desk'
       },
     ],
   },
@@ -138,6 +172,7 @@ export let projects: Project[] = [
         }
     ],
     discussion: [],
+    wishlist: [],
   },
   {
     id: 'community-health-posts',
@@ -165,6 +200,7 @@ export let projects: Project[] = [
         }
     ],
     discussion: [],
+    wishlist: [],
   },
   {
     id: 'disaster-relief-fund',
@@ -192,6 +228,7 @@ export let projects: Project[] = [
         }
     ],
     discussion: [],
+    wishlist: [],
   },
 ];
 
@@ -333,10 +370,10 @@ export let dashboardStats = {
   totalSpent: totalSpending,
   fundsInHand: fundsInHand,
   spendingBreakdown: [
-    { name: 'Education', value: educationExpenses, fill: 'hsl(var(--chart-1))' },
-    { name: 'Health', value: healthExpenses, fill: 'hsl(var(--chart-2))' },
-    { name: 'Relief', value: reliefExpenses, fill: 'hsl(var(--chart-3))' },
-    { name: 'Operational', value: currentOperationalExpenses, fill: 'hsl(var(--chart-4))' },
+    { name: 'Education', value: educationExpenses },
+    { name: 'Health', value: healthExpenses },
+    { name: 'Relief', value: reliefExpenses },
+    { name: 'Operational', value: currentOperationalExpenses },
   ],
 };
 

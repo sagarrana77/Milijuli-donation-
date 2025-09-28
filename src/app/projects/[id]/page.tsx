@@ -1,4 +1,5 @@
 
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { projects, type Project } from '@/lib/data';
@@ -20,6 +21,7 @@ import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wra
 import { DonorsList } from '@/components/projects/donors-list';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { FundraisingProgress } from '@/components/projects/fundraising-progress';
+import { WishlistTab } from '@/components/projects/wishlist-tab';
 
 
 function getProject(id: string): Project | undefined {
@@ -86,6 +88,7 @@ export default function ProjectDetailPage({
                 <Tabs defaultValue="updates" className="mt-8">
                     <TabsList>
                     <TabsTrigger value="updates">Updates</TabsTrigger>
+                    <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                     <TabsTrigger value="spending">Spending</TabsTrigger>
                     <TabsTrigger value="donors">Donors</TabsTrigger>
                     <TabsTrigger value="discussion">Discussion</TabsTrigger>
@@ -108,6 +111,9 @@ export default function ProjectDetailPage({
                         ) : <p className="text-muted-foreground">No updates posted yet.</p>}
                         </CardContent>
                     </Card>
+                    </TabsContent>
+                    <TabsContent value="wishlist" className="mt-4">
+                        <WishlistTab />
                     </TabsContent>
                     <TabsContent value="spending" className="mt-4">
                     <Card>

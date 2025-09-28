@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -25,8 +26,11 @@ import { NotificationList } from './notification-list';
 import { useNotifications } from '@/context/notification-provider';
 
 function getPageTitle(pathname: string): string {
-    if (pathname === '/admin/projects/new') {
+    if (pathname.startsWith('/admin/projects/new')) {
     return 'Create New Project';
+  }
+    if (pathname.startsWith('/admin/projects/')) {
+    return 'Edit Project';
   }
   if (pathname.startsWith('/projects/')) {
     return 'Project Details';
