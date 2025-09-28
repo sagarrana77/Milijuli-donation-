@@ -14,6 +14,7 @@ export type WishlistItem = {
   costPerItem: number;
   imageUrl?: string;
   imageHint?: string;
+  allowInKind?: boolean;
 }
 
 export type Project = {
@@ -133,6 +134,7 @@ export let projects: Project[] = [
         costPerItem: 25,
         imageUrl: getImageUrl('update-photo-1'),
         imageHint: 'school books',
+        allowInKind: true,
       },
       {
         id: 'wish-edu-2',
@@ -142,7 +144,8 @@ export let projects: Project[] = [
         quantityDonated: 20,
         costPerItem: 40,
         imageUrl: 'https://picsum.photos/seed/wishlist-desk/400/300',
-        imageHint: 'student desk'
+        imageHint: 'student desk',
+        allowInKind: false,
       },
     ],
   },
@@ -370,10 +373,10 @@ export let dashboardStats = {
   totalSpent: totalSpending,
   fundsInHand: fundsInHand,
   spendingBreakdown: [
-    { name: 'Education', value: educationExpenses },
-    { name: 'Health', value: healthExpenses },
-    { name: 'Relief', value: reliefExpenses },
-    { name: 'Operational', value: currentOperationalExpenses },
+    { name: 'Education', value: educationExpenses, label: 'Education' },
+    { name: 'Health', value: healthExpenses, label: 'Health' },
+    { name: 'Relief', value: reliefExpenses, label: 'Relief' },
+    { name: 'Operational', value: currentOperationalExpenses, label: 'Operational' },
   ],
 };
 
@@ -501,6 +504,45 @@ export const recentDonations: {
     amount: 50,
     date: new Date('2023-10-25T14:00:00Z'),
   },
+];
+
+export type PhysicalDonation = {
+    id: string;
+    donorName: string;
+    donorEmail: string;
+    projectName: string;
+    itemName: string;
+    quantity: number;
+    donationType: 'drop-off' | 'pickup';
+    address?: string;
+    status: 'Pending' | 'Completed' | 'Cancelled';
+    date: Date;
+};
+  
+export let physicalDonations: PhysicalDonation[] = [
+    {
+        id: 'pd-1',
+        donorName: 'Jane Doe',
+        donorEmail: 'jane.doe@example.com',
+        projectName: 'Education for All Nepal',
+        itemName: 'Set of Textbooks for a Child',
+        quantity: 5,
+        donationType: 'drop-off',
+        status: 'Completed',
+        date: new Date('2023-11-10'),
+    },
+    {
+        id: 'pd-2',
+        donorName: 'Raj Patel',
+        donorEmail: 'raj.patel@example.com',
+        projectName: 'Education for All Nepal',
+        itemName: 'Set of Textbooks for a Child',
+        quantity: 10,
+        donationType: 'pickup',
+        address: '456 Oak Avenue, Springfield',
+        status: 'Pending',
+        date: new Date('2023-11-12'),
+    }
 ];
 
 export type Notification = {

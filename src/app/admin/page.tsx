@@ -42,8 +42,9 @@ import {
   List,
   Archive,
   BookOpen,
+  HandCoins,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,6 +61,7 @@ import MessengerIcon from '@/components/icons/messenger-icon';
 import { RecordExpenseDialog } from '@/components/admin/record-expense-dialog';
 import { TransferFundsDialog } from '@/components/admin/transfer-funds-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
 
 
 const initialGateways = [
@@ -269,8 +271,9 @@ export default function AdminDashboardPage() {
       </Card>
       
       <Tabs defaultValue="settings">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
+          <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> Donations</TabsTrigger>
           <TabsTrigger value="operational-costs"><Briefcase className="mr-2 h-4 w-4"/> Operational Costs</TabsTrigger>
           <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
         </TabsList>
@@ -435,6 +438,60 @@ export default function AdminDashboardPage() {
                     </Card>
                 </div>
             </div>
+        </TabsContent>
+         <TabsContent value="donations" className="mt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>In-Kind Donation Pledges</CardTitle>
+                    <CardDescription>
+                        Manage and track physical item donations from your supporters.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Donor</TableHead>
+                                <TableHead>Item</TableHead>
+                                <TableHead>Project</TableHead>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead><span className="sr-only">Actions</span></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {physicalDonations.map(donation => (
+                                <TableRow key={donation.id}>
+                                    <TableCell>{format(donation.date, 'PPP')}</TableCell>
+                                    <TableCell>
+                                        <div className="font-medium">{donation.donorName}</div>
+                                        <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
+                                    </TableCell>
+                                    <TableCell>{donation.itemName} (x{donation.quantity})</TableCell>
+                                    <TableCell>{donation.projectName}</TableCell>
+                                    <TableCell>
+                                        <Badge variant={donation.donationType === 'pickup' ? 'default' : 'secondary'}>
+                                            {donation.donationType}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant={
+                                            donation.status === 'Completed' ? 'default' : 
+                                            donation.status === 'Cancelled' ? 'destructive' : 'secondary'
+                                        }>
+                                            {donation.status}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
         </TabsContent>
         <TabsContent value="operational-costs" className="mt-6">
             <Card>
@@ -643,4 +700,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useRouter, useParams } from 'next/navigation';
@@ -40,6 +41,7 @@ const wishlistItemSchema = z.object({
   costPerItem: z.coerce.number().positive(),
   imageUrl: z.string().url().optional().or(z.literal('')),
   imageHint: z.string().optional(),
+  allowInKind: z.boolean().optional(),
 });
 
 const projectSchema = z.object({
@@ -66,7 +68,10 @@ export default function EditProjectPage() {
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
-    defaultValues: project || {
+    defaultValues: project ? {
+      ...project,
+      wishlist: project.wishlist.map(item => ({...item, allowInKind: item.allowInKind || false}))
+    } : {
       name: '',
       organization: '',
       description: '',
@@ -359,6 +364,26 @@ export default function EditProjectPage() {
                                             )}
                                         />
                                     </div>
+                                     <FormField
+                                        control={form.control}
+                                        name={`wishlist.${index}.allowInKind`}
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <FormLabel>Allow In-Kind Donations</FormLabel>
+                                                <FormDescription>
+                                                Permit users to donate this item physically.
+                                                </FormDescription>
+                                            </div>
+                                            <FormControl>
+                                                <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                                />
+                                            </FormControl>
+                                            </FormItem>
+                                        )}
+                                        />
                                     <Button size="sm" variant="destructive" onClick={() => remove(index)} className="absolute top-2 right-2">
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -367,7 +392,7 @@ export default function EditProjectPage() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => append({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '' })}
+                                onClick={() => append({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add Wishlist Item
                             </Button>
