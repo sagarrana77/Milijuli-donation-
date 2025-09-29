@@ -68,15 +68,16 @@ const projectSchema = z.object({
 
 type ProjectFormData = z.infer<typeof projectSchema>;
 
-export default function EditProjectPage() {
+export default function EditUserCampaignPage() {
   const { toast } = useToast();
   const router = useRouter();
   const params = useParams();
   const projectId = params.id as string;
 
   const project = projects.find(p => p.id === projectId);
-
-  if (!project || !currentUser?.isAdmin) {
+  
+  // Authorization check
+  if (!project || (project.ownerId !== currentUser?.id && !currentUser?.isAdmin)) {
     notFound();
   }
 
@@ -106,16 +107,16 @@ export default function EditProjectPage() {
     }
     
     toast({
-      title: 'Project Updated!',
-      description: `The project "${data.name}" has been successfully updated.`,
+      title: 'Campaign Updated!',
+      description: `Your campaign "${data.name}" has been successfully updated.`,
     });
-    router.push('/admin');
+    router.push('/my-campaigns');
   }
 
   return (
     <div className="mx-auto max-w-4xl">
         <div className="mb-8">
-            <h1 className="text-3xl font-bold">Edit Project</h1>
+            <h1 className="text-3xl font-bold">Edit Campaign</h1>
             <p className="text-muted-foreground">
             Update the details for "{project.name}".
             </p>
@@ -125,16 +126,16 @@ export default function EditProjectPage() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Tabs defaultValue="details">
                 <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="details">Project Details</TabsTrigger>
+                    <TabsTrigger value="details">Campaign Details</TabsTrigger>
                     <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                     <TabsTrigger value="updates">Updates</TabsTrigger>
                 </TabsList>
                 <TabsContent value="details" className="space-y-8 mt-6">
                     <Card>
                         <CardHeader>
-                        <CardTitle>Project Details</CardTitle>
+                        <CardTitle>Campaign Details</CardTitle>
                         <CardDescription>
-                            Basic information about your project.
+                            Basic information about your campaign.
                         </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -143,7 +144,7 @@ export default function EditProjectPage() {
                             name="name"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Project Name</FormLabel>
+                                <FormLabel>Campaign Name</FormLabel>
                                 <FormControl>
                                 <Input {...field} />
                                 </FormControl>
@@ -156,7 +157,7 @@ export default function EditProjectPage() {
                             name="organization"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Organization Name</FormLabel>
+                                <FormLabel>Your Name or Organization Name</FormLabel>
                                 <FormControl>
                                 <Input {...field} />
                                 </FormControl>
@@ -174,7 +175,7 @@ export default function EditProjectPage() {
                                 <Textarea {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    This will be shown on project cards.
+                                    This will be shown on campaign cards.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -185,7 +186,7 @@ export default function EditProjectPage() {
                             name="longDescription"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Full Project Description</FormLabel>
+                                <FormLabel>Full Campaign Story</FormLabel>
                                 <FormControl>
                                 <Textarea
                                     rows={6}
@@ -193,7 +194,7 @@ export default function EditProjectPage() {
                                 />
                                 </FormControl>
                                 <FormDescription>
-                                    This will be shown on the main project page.
+                                    This will be shown on the main campaign page.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -206,7 +207,7 @@ export default function EditProjectPage() {
                         <CardHeader>
                         <CardTitle>Media & Goals</CardTitle>
                         <CardDescription>
-                            Visuals and financial targets for the project.
+                            Visuals and financial targets for the campaign.
                         </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -252,40 +253,42 @@ export default function EditProjectPage() {
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Verification Status</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <FormField
-                                control={form.control}
-                                name="verified"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                    <div className="space-y-0.5">
-                                        <FormLabel>Verified Transparent Project</FormLabel>
-                                        <FormDescription>
-                                        Enable this if the project meets all transparency requirements.
-                                        </FormDescription>
-                                    </div>
-                                    <FormControl>
-                                        <Switch
-                                        checked={field.value}
-                                        onCheckedChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                    </FormItem>
-                                )}
-                                />
-                        </CardContent>
-                    </Card>
+                    {currentUser?.isAdmin && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Admin Settings</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <FormField
+                                    control={form.control}
+                                    name="verified"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel>Verified Transparent Project</FormLabel>
+                                            <FormDescription>
+                                            Enable this if the project meets all transparency requirements.
+                                            </FormDescription>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                        </FormItem>
+                                    )}
+                                    />
+                            </CardContent>
+                        </Card>
+                    )}
                 </TabsContent>
 
                 <TabsContent value="wishlist" className="mt-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Project Wishlist</CardTitle>
-                            <CardDescription>Manage specific items donors can fund for this project.</CardDescription>
+                            <CardTitle>Campaign Wishlist</CardTitle>
+                            <CardDescription>Manage specific items donors can fund for this campaign.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {wishlistFields.map((item, index) => (
@@ -409,8 +412,8 @@ export default function EditProjectPage() {
                 <TabsContent value="updates" className="mt-6">
                      <Card>
                         <CardHeader>
-                            <CardTitle>Project Updates</CardTitle>
-                            <CardDescription>Post updates for your project donors.</CardDescription>
+                            <CardTitle>Campaign Updates</CardTitle>
+                            <CardDescription>Post updates for your campaign donors.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {updateFields.map((item, index) => (
@@ -481,7 +484,7 @@ export default function EditProjectPage() {
                     <Save className="mr-2 h-4 w-4" /> Save Changes
                 </Button>
                 <Button variant="outline" asChild>
-                    <Link href="/admin">Cancel</Link>
+                    <Link href="/my-campaigns">Cancel</Link>
                 </Button>
             </div>
             </form>

@@ -26,8 +26,10 @@ import {
   UserPlus,
   Package,
   Mail,
+  PlusSquare,
 } from 'lucide-react';
 import { currentUser } from '@/lib/data';
+import { Button } from '../ui/button';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -48,6 +50,10 @@ export function MainSidebar() {
     if (href === '/') {
       return pathname === '/';
     }
+    // For nested routes, we want to match the base path
+    if (href === '/my-campaigns') {
+      return pathname.startsWith('/my-campaigns');
+    }
     return pathname.startsWith(href);
   };
   
@@ -57,8 +63,8 @@ export function MainSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="border-b">
-        <div className="flex items-center justify-between p-2">
+      <SidebarHeader className="border-b p-2">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Logo className="h-8 w-8 text-primary" />
             <span className="text-lg font-semibold">ClarityChain</span>
@@ -67,6 +73,31 @@ export function MainSidebar() {
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <Button asChild className="w-full justify-start text-base" size="lg">
+              <Link href="/create-campaign" onClick={handleLinkClick}>
+                <PlusSquare className="mr-2 h-5 w-5" />
+                <span>Create Campaign</span>
+              </Link>
+            </Button>
+          </SidebarMenuItem>
+          {currentUser && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                  asChild
+                  isActive={isActive('/my-campaigns')}
+                  tooltip={{ children: 'My Campaigns', side: 'right' }}
+              >
+                  <Link href="/my-campaigns" onClick={handleLinkClick}>
+                  <HeartHandshake />
+                  <span>My Campaigns</span>
+                  </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
+          <SidebarMenuItem className="my-2">
+            <hr className="border-sidebar-border"/>
+          </SidebarMenuItem>
           {menuItems.map(({ href, label, icon: Icon, adminOnly }) => {
             if (adminOnly && !currentUser?.isAdmin) {
                 return null;

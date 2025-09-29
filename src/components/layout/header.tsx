@@ -1,11 +1,12 @@
 
+
 'use client';
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '../ui/button';
-import { Bell, User } from 'lucide-react';
+import { Bell, User, HeartHandshake } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,6 +50,13 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/team/')) {
     return 'Team Member Profile';
   }
+  if (pathname.startsWith('/my-campaigns')) {
+    return 'My Campaigns';
+  }
+  if (pathname.startsWith('/create-campaign')) {
+    return 'Create New Campaign';
+  }
+
 
   switch (pathname) {
     case '/':
@@ -121,6 +129,9 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href="/profile/current-user">Profile</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/my-campaigns">My Campaigns</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">Settings</Link>

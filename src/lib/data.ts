@@ -39,6 +39,7 @@ export type Project = {
   raisedAmount: number;
   donors: number;
   verified: boolean;
+  ownerId?: string; // New field to link project to a user
   updates: {
     id: string;
     title: string;
@@ -64,6 +65,7 @@ export let projects: Project[] = [
     id: 'education-for-all-nepal',
     name: 'Education for All Nepal',
     organization: 'Hope Foundation',
+    ownerId: 'clarity-chain-admin',
     description:
       'Providing quality education to underprivileged children in rural Nepal.',
     longDescription:
@@ -159,6 +161,7 @@ export let projects: Project[] = [
     id: 'clean-water-initiative',
     name: 'Clean Water Initiative',
     organization: 'AquaLife',
+    ownerId: 'clarity-chain-admin',
     description:
       'Building wells to provide access to clean and safe drinking water.',
     longDescription:
@@ -187,6 +190,7 @@ export let projects: Project[] = [
     id: 'community-health-posts',
     name: 'Community Health Posts',
     organization: 'Health for All',
+    ownerId: 'clarity-chain-admin',
     description:
       'Establishing health posts to offer basic medical services in remote villages.',
     longDescription:
@@ -215,6 +219,7 @@ export let projects: Project[] = [
     id: 'disaster-relief-fund',
     name: 'Disaster Relief Fund',
     organization: 'Rapid Response Team',
+    ownerId: 'clarity-chain-admin',
     description:
       'Providing immediate aid and support to areas affected by natural disasters.',
     longDescription:
@@ -447,6 +452,15 @@ export let users: User[] = [
         profileUrl: '/profile/user-anonymous',
         bio: 'An anonymous donor making a difference.',
         hasPaymentMethod: true,
+    },
+     { 
+        id: 'clarity-chain-admin', 
+        name: 'ClarityChain', 
+        avatarUrl: getImageUrl('logo-clarity-chain'), 
+        profileUrl: '/profile/clarity-chain-admin',
+        bio: 'The official account for the ClarityChain organization.',
+        hasPaymentMethod: true,
+        isAdmin: true,
     },
 ];
 
@@ -856,4 +870,5 @@ export let paymentGateways: Gateway[] = [
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
+
 

@@ -1,0 +1,247 @@
+
+
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+import { PlusCircle } from 'lucide-react';
+import Link from 'next/link';
+import { projects, currentUser } from '@/lib/data';
+
+const projectSchema = z.object({
+  name: z.string().min(5, 'Project name must be at least 5 characters.'),
+  organization: z.string().min(3, 'Organization name is required.'),
+  description: z.string().min(20, 'Short description must be at least 20 characters.'),
+  longDescription: z.string().min(100, 'Long description must be at least 100 characters.'),
+  imageUrl: z.string().url('Please enter a valid image URL.'),
+  imageHint: z.string().min(2, 'Image hint is required.'),
+  targetAmount: z.coerce.number().positive('Target amount must be a positive number.'),
+});
+
+type ProjectFormData = z.infer<typeof projectSchema>;
+
+export default function CreateCampaignPage() {
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const form = useForm<ProjectFormData>({
+    resolver: zodResolver(projectSchema),
+    defaultValues: {
+      name: '',
+      organization: '',
+      description: '',
+      longDescription: '',
+      imageUrl: '',
+      imageHint: '',
+      targetAmount: 0,
+    },
+  });
+
+  function onSubmit(data: ProjectFormData) {
+    if (!currentUser) {
+        toast({
+            variant: "destructive",
+            title: "Authentication Error",
+            description: "You must be logged in to create a campaign."
+        });
+        return;
+    }
+
+    const newProject = {
+      ...data,
+      id: data.name.toLowerCase().replace(/\s+/g, '-'),
+      raisedAmount: 0,
+      donors: 0,
+      verified: false, // User-created projects are unverified by default
+      ownerId: currentUser.id,
+      updates: [],
+      expenses: [],
+      discussion: [],
+      wishlist: [],
+    };
+    projects.unshift(newProject);
+    toast({
+      title: 'Campaign Created!',
+      description: `Your campaign "${data.name}" has been created and is pending review.`,
+    });
+    router.push('/my-campaigns');
+  }
+
+  return (
+    <div className="mx-auto max-w-4xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">Create New Campaign</h1>
+        <p className="text-muted-foreground">
+          Fill out the details below to launch your fundraising campaign.
+        </p>
+      </div>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Campaign Details</CardTitle>
+              <CardDescription>
+                Basic information about your new campaign.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Campaign Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Help Rebuild the Local Library" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="organization"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Your Name or Organization Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Friends of the Library" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Short Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="A brief, one-sentence summary of your campaign."
+                        {...field}
+                      />
+                    </FormControl>
+                     <FormDescription>
+                        This will be shown on campaign cards.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="longDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Campaign Story</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        rows={6}
+                        placeholder="Tell your story. Describe the campaign's goals, why it's important, and the impact it will have."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                        This will be shown on the main campaign page. Use markdown for formatting if needed.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+           <Card>
+            <CardHeader>
+              <CardTitle>Media & Goals</CardTitle>
+               <CardDescription>
+                Set the main image and financial target for your campaign.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+               <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Header Image URL</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://images.unsplash.com/..." {...field} />
+                    </FormControl>
+                     <FormDescription>
+                        Please provide a high-quality image URL (e.g., from Unsplash).
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="imageHint"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image AI Hint</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., children reading" {...field} />
+                    </FormControl>
+                     <FormDescription>
+                        Provide 1-2 keywords for AI to find replacement images.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="targetAmount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fundraising Target ($)</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="5000" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+          </Card>
+
+          <div className="flex gap-4">
+            <Button type="submit">
+                <PlusCircle className="mr-2 h-4 w-4" /> Launch Campaign
+            </Button>
+            <Button variant="outline" asChild>
+                <Link href="/my-campaigns">Cancel</Link>
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+}
