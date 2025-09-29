@@ -113,7 +113,7 @@ export default function DashboardPage() {
               <div className="w-full">
                   <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                       <span>
-                      Rs.{operationalCostsFund.raisedAmount.toLocaleString()} raised
+                      Rs.{operationalCostsFund.raisedAmount.toLocaleString()} Available
                       </span>
                       <span>{opsPercentage}%</span>
                   </div>
