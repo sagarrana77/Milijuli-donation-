@@ -34,9 +34,11 @@ import InstagramIcon from '@/components/icons/instagram-icon';
 import TwitterIcon from '@/components/icons/TwitterIcon';
 import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { ProfileInKindDonations } from '@/components/profile/in-kind-donations';
-import { Calendar, List, UserPlus } from 'lucide-react';
+import { Calendar, List, UserPlus, CheckCircle, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const socialLinks = [
   { href: '#', icon: LinkedInIcon, label: 'LinkedIn', color: 'text-blue-700' },
@@ -79,6 +81,8 @@ export default function ProfilePage() {
   
   const userFriends = user.friends?.map(friendId => getUser(friendId)).filter(Boolean) as User[] || [];
 
+  const isDonor = userDonations.length > 0 || userInKindDonations.length > 0;
+
 
   return (
     <div className="space-y-8">
@@ -88,7 +92,33 @@ export default function ProfilePage() {
             <AvatarImage src={user.avatarUrl} alt={user.name} />
             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <CardTitle className="text-3xl">{user.name}</CardTitle>
+          <div className="flex items-center justify-center gap-2">
+            <CardTitle className="text-3xl">{user.name}</CardTitle>
+            <TooltipProvider>
+                <div className="flex items-center gap-1">
+                    {isDonor && (
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <CheckCircle className="h-6 w-6 text-green-600" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Verified Donor</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
+                    {user.isProMember && (
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Sparkles className="h-6 w-6 text-primary" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Pro Member</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
+                </div>
+            </TooltipProvider>
+          </div>
           {user.email && <p className="text-muted-foreground">{user.email}</p>}
           <div className="mt-4 flex justify-center gap-2">
             {socialLinks.map((link) => (

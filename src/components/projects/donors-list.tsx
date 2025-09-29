@@ -5,6 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { Sparkles } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface DonorsListProps {
   projectName: string;
@@ -27,7 +29,21 @@ export function DonorsList({ projectName }: DonorsListProps) {
                         <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
-                        <p className="font-semibold">{donation.donor.name}</p>
+                        <div className="flex items-center gap-1.5">
+                           <p className="font-semibold">{donation.donor.name}</p>
+                           {donation.donor.isProMember && (
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <Sparkles className="h-4 w-4 text-primary" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Pro Member</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                           )}
+                        </div>
                         <p className="text-sm text-muted-foreground">{format(donation.date, 'PPP')}</p>
                     </div>
                 </Link>
