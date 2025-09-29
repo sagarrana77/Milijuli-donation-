@@ -616,63 +616,47 @@ export const currentUser = users.find(u => u.id === 'current-user');
 
 export type Donor = Omit<User, 'email' | 'hasPaymentMethod' | 'isAdmin' | 'friends'>;
 
-export const recentDonations: {
+export type Donation = {
   id: number;
   donor: Donor;
   project: string;
   amount: number;
   date: Date;
-}[] = [
-  {
-    id: 1,
-    donor: users.find(u => u.id === 'user-sita-rai')!,
-    project: 'Education for All Nepal',
-    amount: 5000,
-    date: new Date('2023-10-29T10:00:00Z'),
-  },
-  {
-    id: 2,
-    donor: users.find(u => u.id === 'user-hari-thapa')!,
-    project: 'Clean Water Initiative',
-    amount: 10000,
-    date: new Date('2023-10-29T09:30:00Z'),
-  },
-  {
-    id: 3,
-    donor: users.find(u => u.id === 'user-maya-gurung')!,
-    project: 'Disaster Relief Fund',
-    amount: 25000,
-    date: new Date('2023-10-28T15:00:00Z'),
-  },
-  {
-    id: 4,
-    donor: users.find(u => u.id === 'user-bikram-shah')!,
-    project: 'Community Health Posts',
-    amount: 7500,
-    date: new Date('2023-10-28T12:45:00Z'),
-  },
-  {
-    id: 5,
-    donor: users.find(u => u.id === 'user-anonymous')!,
-    project: 'Clean Water Initiative',
-    amount: 100000,
-    date: new Date('2023-10-27T18:20:00Z'),
-  },
-  {
-    id: 6,
-    donor: users.find(u => u.id === 'user-sita-rai')!,
-    project: 'Operational Costs',
-    amount: 2500,
-    date: new Date('2023-10-26T11:00:00Z'),
-  },
-    {
-    id: 7,
-    donor: users.find(u => u.id === 'user-bikram-shah')!,
-    project: 'Operational Costs',
-    amount: 5000,
-    date: new Date('2023-10-25T14:00:00Z'),
-  },
+};
+
+// This represents a larger, more complete list of donations for the whole platform
+export const allDonations: Donation[] = [
+    ...projects.flatMap((project, projectIndex) => 
+        Array.from({ length: project.donors }).map((_, i) => {
+            const donorUser = users[i % (users.length -1)]; // Cycle through users, skip admin
+            return {
+                id: projectIndex * 10000 + i,
+                donor: donorUser,
+                project: project.name,
+                amount: Math.floor(Math.random() * (project.targetAmount / project.donors * 2)) + 100, // Random-ish amount
+                date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000), // Random date in last 30 days
+            };
+        })
+    ),
+    // Add operational cost donations
+    ...Array.from({ length: operationalCostsFund.donors }).map((_, i) => {
+         const donorUser = users[i % (users.length -1)];
+         return {
+            id: 900000 + i,
+            donor: donorUser,
+            project: 'Operational Costs',
+            amount: Math.floor(Math.random() * 20000) + 1000,
+            date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000),
+        }
+    })
 ];
+
+
+// This represents a small, "live" feed of the most recent donations
+export let recentDonations: Donation[] = allDonations
+    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .slice(0, 7);
+
 
 export type PhysicalDonation = {
     id: string;

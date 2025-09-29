@@ -1,5 +1,6 @@
 
-import { recentDonations } from '@/lib/data';
+
+import { allDonations } from '@/lib/data';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
@@ -10,7 +11,7 @@ interface DonorsListProps {
 }
 
 export function DonorsList({ projectName }: DonorsListProps) {
-  const projectDonations = recentDonations.filter(
+  const projectDonations = allDonations.filter(
     (donation) => donation.project === projectName
   );
 

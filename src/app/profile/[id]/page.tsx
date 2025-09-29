@@ -22,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  recentDonations,
+  allDonations,
   users,
   type User,
   physicalDonations,
@@ -69,7 +69,7 @@ export default function ProfilePage() {
     });
   }
 
-  const userDonations = recentDonations.filter(
+  const userDonations = allDonations.filter(
     (donation) => donation.donor.id === user.id
   );
 
@@ -157,7 +157,7 @@ export default function ProfilePage() {
                                 <span>{donation.project}</span>
                             )}
                             </TableCell>
-                            <TableCell>{format(donation.date, 'PPP')}</TableCell>
+                            <TableCell>{format(new Date(donation.date), 'PPP')}</TableCell>
                             <TableCell className="text-right font-semibold">
                             Rs.{donation.amount.toLocaleString()}
                             </TableCell>

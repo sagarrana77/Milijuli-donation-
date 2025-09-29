@@ -103,7 +103,7 @@ export function RealtimeLedger() {
                 </TableCell>
                 <TableCell>{donation.project}</TableCell>
                 <TableCell className="text-right">Rs.{donation.amount.toLocaleString()}</TableCell>
-                <TableCell className="text-right">{isClient ? formatDistanceToNow(donation.date, { addSuffix: true }) : ''}</TableCell>
+                <TableCell className="text-right">{isClient ? formatDistanceToNow(new Date(donation.date), { addSuffix: true }) : ''}</TableCell>
               </TableRow>
             ))}
           </TableBody>
