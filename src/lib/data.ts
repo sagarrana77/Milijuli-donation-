@@ -272,7 +272,10 @@ export let projects: Project[] = [
     gateways: [
         { name: 'Esewa', enabled: true, qrValue: 'my-esewa-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=my-esewa-id' },
         { name: 'Khalti', enabled: false, qrValue: '', generatedQr: '' },
+        { name: 'FonePay', enabled: false, qrValue: '', generatedQr: '' },
         { name: 'PayPal', enabled: true, qrValue: 'paypal.me/my-campaign', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=paypal.me%2Fmy-campaign' },
+        { name: 'Stripe', enabled: false, qrValue: '', generatedQr: '' },
+        { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
     ]
   },
   {
