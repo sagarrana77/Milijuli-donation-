@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, ReactNode, createContext, useContext, useMemo } from 'react';
@@ -43,7 +42,7 @@ export function DonationDialogWrapper({
   const [raisedAmount, setRaisedAmount] = useState(project.raisedAmount);
   const [donors, setDonors] = useState(project.donors);
   const [allUpdates, setAllUpdates] = useState<Update[]>(() => [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-  const [allDonations, setAllDonations] = useState<Donation[]>(() => initialDonations.filter(d => d.project === project.name));
+  const [allDonations, setAllDonations] = useState<Donation[]>(() => initialDonations.filter(d => d.project === project.name) || []);
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
@@ -53,9 +52,13 @@ export function DonationDialogWrapper({
     // This effect re-syncs state when the underlying mutable mock data changes (e.g., from an admin action)
     setRaisedAmount(project.raisedAmount);
     setDonors(project.donors);
-    setAllDonations(initialDonations.filter(d => d.project === project.name))
+    setAllDonations(initialDonations.filter(d => d.project === project.name) || [])
 
-    const initialCombinedUpdates = [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const initialCombinedUpdates = [...project.updates].sort((a, b) => {
+        if (a.isInKindDonation && !b.isInKindDonation) return -1;
+        if (!a.isInKindDonation && b.isInKindDonation) return 1;
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
     setAllUpdates(initialCombinedUpdates);
     
     // The real-time simulation is now client-only
@@ -64,10 +67,9 @@ export function DonationDialogWrapper({
       const isDonation = Math.random() > 0.7; // 30% chance of donation
       if (isDonation && raisedAmount < project.targetAmount) {
         const newAmount = Math.floor(Math.random() * 150) + 20;
-        const newDonorsCount = donors + 1;
         
         setRaisedAmount((prev) => Math.min(prev + newAmount, project.targetAmount));
-        setDonors(newDonorsCount);
+        setDonors((prev) => prev + 1);
         
         const donor = users.find(u => u.id === 'user-anonymous')!;
         
@@ -113,10 +115,9 @@ export function DonationDialogWrapper({
         });
         return;
     }
-    const newRaisedAmount = raisedAmount + amount;
-    const newDonorsCount = donors + 1;
-    setRaisedAmount(newRaisedAmount);
-    setDonors(newDonorsCount);
+
+    setRaisedAmount((prev) => prev + amount);
+    setDonors((prev) => prev + 1);
 
     const donor = isAnonymous ? users.find(u => u.id === 'user-anonymous')! : currentUser;
 
@@ -137,8 +138,8 @@ export function DonationDialogWrapper({
     setAllUpdates(prev => [newDonationUpdate, ...prev]);
 
     // This would be a database update in a real app
-    project.raisedAmount = newRaisedAmount;
-    project.donors = newDonorsCount;
+    project.raisedAmount += amount;
+    project.donors += 1;
     project.updates.unshift(newDonationUpdate);
     
     const newDonationEntry: Donation = {
