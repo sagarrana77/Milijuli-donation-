@@ -16,6 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarMenuBadge,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -35,7 +36,7 @@ import {
   Edit,
   ChevronDown,
 } from 'lucide-react';
-import { currentUser, platformSettings } from '@/lib/data';
+import { currentUser, platformSettings, projects, physicalDonations } from '@/lib/data';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { useState } from 'react';
@@ -64,6 +65,11 @@ export function MainSidebar() {
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/admin'));
 
   const canCreateCampaigns = currentUser?.isAdmin || (platformSettings.campaignCreationEnabled && currentUser?.canCreateCampaigns);
+
+  // Calculate number of pending admin tasks
+  const pendingCampaigns = projects.filter(p => !p.verified && p.ownerId !== 'clarity-chain-admin').length;
+  const pendingDonations = physicalDonations.filter(d => d.status === 'Pending').length;
+  const adminNotificationCount = pendingCampaigns + pendingDonations;
 
 
   const isActive = (href: string) => {
@@ -155,6 +161,7 @@ export function MainSidebar() {
                             >
                                 <Shield />
                                 <span>Admin</span>
+                                {adminNotificationCount > 0 && <SidebarMenuBadge>{adminNotificationCount}</SidebarMenuBadge>}
                                 <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform ui-open:rotate-180" />
                             </SidebarMenuButton>
                         </CollapsibleTrigger>
