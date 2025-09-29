@@ -85,7 +85,7 @@ export function TransferFundsDialog({
             Move funds between different projects or operational costs. This action will be posted as an update on both project pages.
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="flex-grow pr-6">
+        <ScrollArea className="flex-grow pr-6 -mr-6">
             <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
