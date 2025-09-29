@@ -34,7 +34,7 @@ import {
   Edit,
   ChevronDown,
 } from 'lucide-react';
-import { currentUser } from '@/lib/data';
+import { currentUser, platformSettings } from '@/lib/data';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { useState } from 'react';
@@ -62,6 +62,9 @@ export function MainSidebar() {
   const { setOpenMobile } = useSidebar();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/admin'));
 
+  const canCreateCampaigns = currentUser?.isAdmin || (platformSettings.campaignCreationEnabled && currentUser?.canCreateCampaigns);
+
+
   const isActive = (href: string) => {
     if (href === '/') {
       return pathname === '/';
@@ -85,14 +88,16 @@ export function MainSidebar() {
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <Button asChild className="w-full justify-start text-base" size="lg">
-              <Link href="/create-campaign" onClick={handleLinkClick}>
-                <PlusSquare className="mr-2 h-5 w-5" />
-                <span>Create Campaign</span>
-              </Link>
-            </Button>
-          </SidebarMenuItem>
+          {canCreateCampaigns && (
+            <SidebarMenuItem>
+                <Button asChild className="w-full justify-start text-base" size="lg">
+                <Link href="/create-campaign" onClick={handleLinkClick}>
+                    <PlusSquare className="mr-2 h-5 w-5" />
+                    <span>Create Campaign</span>
+                </Link>
+                </Button>
+            </SidebarMenuItem>
+          )}
           {currentUser && (
             <SidebarMenuItem>
               <SidebarMenuButton

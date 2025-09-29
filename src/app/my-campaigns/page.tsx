@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
-import { projects, currentUser } from '@/lib/data';
+import { projects, currentUser, platformSettings } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 
@@ -40,6 +40,7 @@ export default function MyCampaignsPage() {
   }
 
   const userProjects = projects.filter(p => p.ownerId === currentUser.id);
+  const canCreateCampaigns = currentUser?.isAdmin || (platformSettings.campaignCreationEnabled && currentUser?.canCreateCampaigns);
 
   return (
     <div className="flex flex-col gap-8">
@@ -50,11 +51,13 @@ export default function MyCampaignsPage() {
             Manage all the fundraising campaigns you've created.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/create-campaign">
-            <PlusCircle className="mr-2 h-4 w-4" /> Create New Campaign
-          </Link>
-        </Button>
+        {canCreateCampaigns && (
+            <Button asChild>
+            <Link href="/create-campaign">
+                <PlusCircle className="mr-2 h-4 w-4" /> Create New Campaign
+            </Link>
+            </Button>
+        )}
       </div>
 
       <Card>
@@ -126,9 +129,11 @@ export default function MyCampaignsPage() {
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground mb-4">You haven't created any campaigns yet.</p>
-              <Button asChild>
-                <Link href="/create-campaign">Start a Campaign</Link>
-              </Button>
+              {canCreateCampaigns && (
+                 <Button asChild>
+                    <Link href="/create-campaign">Start a Campaign</Link>
+                </Button>
+              )}
             </div>
           )}
         </CardContent>

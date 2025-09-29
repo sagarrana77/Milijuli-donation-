@@ -499,6 +499,7 @@ export type User = {
     bio: string;
     hasPaymentMethod?: boolean;
     isAdmin?: boolean;
+    canCreateCampaigns?: boolean;
 }
 
 export let users: User[] = [
@@ -515,14 +516,17 @@ export let users: User[] = [
     { 
         id: 'user-jane-doe', 
         name: 'Jane Doe', 
+        email: 'jane.doe@example.com',
         avatarUrl: getImageUrl('avatar-jane-doe'), 
         profileUrl: '/profile/user-jane-doe',
         bio: 'Loves to contribute to educational projects. Believes in the power of knowledge.',
         hasPaymentMethod: true,
+        canCreateCampaigns: true,
     },
     { 
         id: 'user-john-smith', 
         name: 'John Smith', 
+        email: 'john.smith@example.com',
         avatarUrl: getImageUrl('avatar-john-smith'), 
         profileUrl: '/profile/user-john-smith',
         bio: 'Focused on environmental causes and clean water initiatives.',
@@ -531,6 +535,7 @@ export let users: User[] = [
     { 
         id: 'user-ai-chan', 
         name: 'Ai Chan', 
+        email: 'ai.chan@example.com',
         avatarUrl: getImageUrl('avatar-ai-chan'), 
         profileUrl: '/profile/user-ai-chan',
         bio: 'Supports disaster relief and emergency response efforts.',
@@ -539,6 +544,7 @@ export let users: User[] = [
     { 
         id: 'user-raj-patel', 
         name: 'Raj Patel',
+        email: 'raj.patel@example.com',
         avatarUrl: getImageUrl('avatar-raj-patel'), 
         profileUrl: '/profile/user-raj-patel',
         bio: 'Interested in community health and wellness projects.',
@@ -555,6 +561,7 @@ export let users: User[] = [
      { 
         id: 'clarity-chain-admin', 
         name: 'ClarityChain', 
+        email: 'admin@claritychain.com',
         avatarUrl: getImageUrl('logo-clarity-chain'), 
         profileUrl: '/profile/clarity-chain-admin',
         bio: 'The official account for the ClarityChain organization.',
@@ -564,6 +571,7 @@ export let users: User[] = [
     {
         id: 'sunita-sharma',
         name: 'Sunita Sharma',
+        email: 'sunita.sharma@example.com',
         avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
         profileUrl: '/team/sunita-sharma',
         bio: 'Sunita is a community engagement specialist from Kathmandu, passionate about connecting people and causes.'
@@ -1007,5 +1015,6 @@ export let paymentGateways: Gateway[] = [
 
 export let platformSettings = {
     userQrPaymentsEnabled: true,
+    campaignCreationEnabled: true,
 }
     

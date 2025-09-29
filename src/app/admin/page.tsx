@@ -39,9 +39,10 @@ import {
   Archive,
   HandCoins,
   Package,
+  Users,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users } from '@/lib/data';
-import type { PhysicalDonation, Project } from '@/lib/data';
+import type { PhysicalDonation, Project, User } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,6 +62,7 @@ import { TransferFundsDialog } from '@/components/admin/transfer-funds-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 export default function AdminDashboardPage() {
@@ -310,6 +312,28 @@ export default function AdminDashboardPage() {
         description: `User campaign QR codes have been ${enabled ? 'enabled' : 'disabled'}.`
     });
   }
+  
+  const handleCampaignCreationToggle = (enabled: boolean) => {
+    platformSettings.campaignCreationEnabled = enabled;
+    setForceRender(c => c + 1);
+    toast({
+        title: 'Setting Updated!',
+        description: `Campaign creation for users has been ${enabled ? 'enabled' : 'disabled'}.`
+    });
+  }
+
+  const handleUserPermissionToggle = (userId: string, canCreate: boolean) => {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        user.canCreateCampaigns = canCreate;
+        setForceRender(c => c + 1);
+        toast({
+            title: 'Permission Updated!',
+            description: `${user.name}'s ability to create campaigns has been ${canCreate ? 'enabled' : 'disabled'}.`
+        });
+    }
+  }
+
 
   return (
     <div className="flex flex-col gap-8">
@@ -369,10 +393,11 @@ export default function AdminDashboardPage() {
       </Card>
       
       <Tabs defaultValue="projects">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
           <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> In-Kind Donations</TabsTrigger>
           <TabsTrigger value="operational-costs"><Briefcase className="mr-2 h-4 w-4"/> Operational Costs</TabsTrigger>
+          <TabsTrigger value="user-management"><Users className="mr-2 h-4 w-4"/> User Management</TabsTrigger>
           <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
         </TabsList>
         <TabsContent value="projects" className="mt-6">
@@ -695,6 +720,58 @@ export default function AdminDashboardPage() {
                 </CardContent>
             </Card>
         </TabsContent>
+         <TabsContent value="user-management" className="mt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>User Management</CardTitle>
+                    <CardDescription>
+                        Manage user roles and permissions across the platform.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>User</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Role</TableHead>
+                                <TableHead className="text-right">Can Create Campaigns</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {users.filter(u => u.id !== 'clarity-chain-admin').map(user => (
+                                <TableRow key={user.id}>
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="h-9 w-9">
+                                                <AvatarImage src={user.avatarUrl} alt={user.name} />
+                                                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                            </Avatar>
+                                            <span className="font-medium">{user.name}</span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell>
+                                        <Badge variant={user.isAdmin ? 'default' : 'secondary'}>
+                                            {user.isAdmin ? 'Admin' : 'User'}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        {!user.isAdmin && (
+                                            <Switch
+                                                checked={user.canCreateCampaigns || false}
+                                                onCheckedChange={(checked) => handleUserPermissionToggle(user.id, checked)}
+                                                aria-label={`Toggle campaign creation for ${user.name}`}
+                                            />
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </CardContent>
+            </Card>
+        </TabsContent>
         <TabsContent value="settings" className="mt-6">
             <div className="space-y-8">
                 <div className="grid gap-8 lg:grid-cols-2">
@@ -705,14 +782,23 @@ export default function AdminDashboardPage() {
                             Platform Payment Gateways
                             </CardTitle>
                             <CardDescription>
-                            Enable gateways and generate QR codes for platform-wide donations. These are the defaults.
+                            Enable gateways, QR codes, and user permissions for donations.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <div className="rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <Label htmlFor="user-qr-switch" className="text-lg font-medium">Enable User Campaign QR Codes</Label>
+                                        <Label htmlFor="campaign-creation-switch" className="text-base font-medium">Enable Campaign Creation for Users</Label>
+                                        <p className="text-sm text-muted-foreground">Allow non-admin users to create their own campaigns.</p>
+                                    </div>
+                                    <Switch id="campaign-creation-switch" checked={platformSettings.campaignCreationEnabled} onCheckedChange={handleCampaignCreationToggle} />
+                                </div>
+                            </div>
+                            <div className="rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <Label htmlFor="user-qr-switch" className="text-base font-medium">Enable User Campaign QR Codes</Label>
                                         <p className="text-sm text-muted-foreground">Allow users to configure their own QR codes on their campaigns.</p>
                                     </div>
                                     <Switch id="user-qr-switch" checked={platformSettings.userQrPaymentsEnabled} onCheckedChange={handleUserQrToggle} />
