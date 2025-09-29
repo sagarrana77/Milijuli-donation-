@@ -18,10 +18,19 @@ interface DonorsListProps {
 
 const ITEMS_PER_PAGE = 5;
 
+// A small helper hook to safely use the context.
+const useSafeDonationContext = () => {
+    try {
+        return useDonationContext();
+    } catch (e) {
+        return null;
+    }
+}
+
 export function DonorsList({ donations: donationsProp }: DonorsListProps) {
-  const context = useDonationContext();
+  const context = useSafeDonationContext();
   // Use donations from props if provided, otherwise fall back to context
-  const donations = donationsProp || context.donations;
+  const donations = donationsProp || context?.donations || [];
 
   const [currentPage, setCurrentPage] = useState(1);
 
