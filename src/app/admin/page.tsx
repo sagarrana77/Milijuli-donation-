@@ -67,6 +67,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { generateWish, GenerateWishOutput } from '@/ai/flows/generate-wishes';
 import { Textarea } from '@/components/ui/textarea';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 export default function AdminDashboardPage() {
@@ -1045,3 +1046,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
+    
