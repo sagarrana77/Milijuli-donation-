@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { teamMembers, values, aboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Wand2 } from 'lucide-react';
+import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
@@ -21,7 +21,7 @@ function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
 }
 
-const features: { title: string; description: string; icon: LucideIcon }[] = [
+const features: { title: string; description: string; icon: LucideIcon, link?: string }[] = [
     {
         title: 'Real-Time Financial Ledger',
         description: 'Every donation and expense is recorded on a public ledger for anyone to see, ensuring a complete and unalterable record of all financial activities.',
@@ -41,6 +41,12 @@ const features: { title: string; description: string; icon: LucideIcon }[] = [
         title: 'AI-Generated Reports',
         description: 'Generate simple, donor-friendly summaries of project financials with a single click, making complex data easy to understand and share.',
         icon: Wand2,
+    },
+    {
+        title: 'Flexible Fund Relocation',
+        description: 'To maximize impact, surplus funds from over-funded or cancelled campaigns may be relocated to other projects in need. This is always done with donor consent and full transparency.',
+        icon: Repeat,
+        link: '/fund-relocation-policy'
     }
 ];
 
@@ -104,6 +110,11 @@ export default function AboutPage() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-muted-foreground">{feature.description}</p>
+                            {feature.link && (
+                                <Link href={feature.link} className="text-sm font-medium text-primary hover:underline mt-2 inline-block">
+                                    Learn More &rarr;
+                                </Link>
+                            )}
                         </CardContent>
                         </Card>
                     </ScrollFadeIn>
