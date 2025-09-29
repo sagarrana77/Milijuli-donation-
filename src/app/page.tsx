@@ -133,14 +133,29 @@ export default function DashboardPage() {
         <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} />
       </ScrollFadeIn>
       
-      <div className="grid gap-8 lg:grid-cols-2">
-        <ScrollFadeIn>
-          <RealtimeLedger />
-        </ScrollFadeIn>
-        <ScrollFadeIn>
-          <InKindDonationsSlider />
-        </ScrollFadeIn>
-      </div>
+      <ScrollFadeIn>
+        <RealtimeLedger />
+      </ScrollFadeIn>
+      
+      <ScrollFadeIn>
+        <InKindDonationsSlider />
+      </ScrollFadeIn>
+
+      <ScrollFadeIn asChild>
+        <section>
+            <div className="mb-4 flex items-center gap-3">
+            <TrendingUp className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold">Active Campaigns</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {runningProjects.map((project, index) => (
+                <ScrollFadeIn key={project.id} delay={index * 100}>
+                    <ProjectCard project={project} />
+                </ScrollFadeIn>
+            ))}
+            </div>
+        </section>
+      </ScrollFadeIn>
 
        <ScrollFadeIn>
           <Card>
@@ -197,22 +212,6 @@ export default function DashboardPage() {
                     </Button>
                     </CardFooter>
                 </Card>
-                </ScrollFadeIn>
-            ))}
-            </div>
-        </section>
-      </ScrollFadeIn>
-
-      <ScrollFadeIn asChild>
-        <section>
-            <div className="mb-4 flex items-center gap-3">
-            <TrendingUp className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold">Active Campaigns</h2>
-            </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {runningProjects.map((project, index) => (
-                <ScrollFadeIn key={project.id} delay={index * 100}>
-                    <ProjectCard project={project} />
                 </ScrollFadeIn>
             ))}
             </div>
