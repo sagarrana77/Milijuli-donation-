@@ -1,76 +1,123 @@
 
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { physicalDonations, projects } from '@/lib/data';
-import { format } from 'date-fns';
-import { CheckCircle, Package } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { physicalDonations, projects, users } from '@/lib/data';
+import { Package } from 'lucide-react';
 
 export default function InKindDonationsPage() {
-    const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
+  const completedDonations = physicalDonations.filter(
+    (d) => d.status === 'Completed'
+  );
 
-    return (
-        <div className="max-w-6xl mx-auto space-y-8">
-             <div className="text-center">
-                <Package className="mx-auto h-12 w-12 text-primary" />
-                <h1 className="mt-4 text-4xl font-bold tracking-tight">Completed In-Kind Donations</h1>
-                <p className="mt-2 text-lg text-muted-foreground">
-                    A heartfelt thank you to our donors for these generous physical contributions.
-                </p>
-            </div>
-            
-            <Card>
-                <CardHeader>
-                    <CardTitle>Donation Hall of Fame</CardTitle>
-                    <CardDescription>A log of all successfully completed in-kind donations.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Donor</TableHead>
-                                <TableHead>Item Donated</TableHead>
-                                <TableHead>Project</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {completedDonations.length > 0 ? (
-                                completedDonations.map(donation => {
-                                    const project = projects.find(p => p.name === donation.projectName);
-                                    return (
-                                        <TableRow key={donation.id}>
-                                            <TableCell>{format(donation.date, 'PPP')}</TableCell>
-                                            <TableCell>
-                                                <div className="font-medium">{donation.donorName}</div>
-                                                <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
-                                            </TableCell>
-                                            <TableCell>{donation.quantity}x {donation.itemName}</TableCell>
-                                            <TableCell>
-                                                {project ? (
-                                                     <Link href={`/projects/${project.id}`} className="hover:underline text-primary">
-                                                        {donation.projectName}
-                                                    </Link>
-                                                ) : (
-                                                    <span>{donation.projectName}</span>
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={4} className="h-24 text-center">
-                                        No completed in-kind donations to display yet.
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
-        </div>
-    )
+  const projectsWithDonations = projects.filter((project) =>
+    completedDonations.some((donation) => donation.projectName === project.name)
+  );
+
+  return (
+    <div className="mx-auto max-w-6xl space-y-8">
+      <div className="text-center">
+        <Package className="mx-auto h-12 w-12 text-primary" />
+        <h1 className="mt-4 text-4xl font-bold tracking-tight">
+          Donation Hall of Fame
+        </h1>
+        <p className="mt-2 text-lg text-muted-foreground">
+          A heartfelt thank you to our donors for these generous physical
+          contributions.
+        </p>
+      </div>
+
+      {projectsWithDonations.length > 0 ? (
+        <Tabs defaultValue={projectsWithDonations[0].id} className="w-full">
+          <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
+            {projectsWithDonations.map((project) => (
+              <TabsTrigger key={project.id} value={project.id}>
+                {project.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {projectsWithDonations.map((project) => {
+            const projectDonations = completedDonations.filter(
+              (d) => d.projectName === project.name
+            );
+            return (
+              <TabsContent key={project.id} value={project.id}>
+                <Card>
+                  <CardContent className="p-4 md:p-6">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {projectDonations.map((donation) => {
+                        const wishlistItem = project.wishlist.find(
+                          (w) => w.name === donation.itemName
+                        );
+                        const donor = users.find(
+                          (u) => u.name === donation.donorName
+                        );
+
+                        if (!wishlistItem || !donor) return null;
+
+                        return (
+                          <Card
+                            key={donation.id}
+                            className="overflow-hidden transition-shadow hover:shadow-lg"
+                          >
+                            <Image
+                              src={
+                                wishlistItem.imageUrl ||
+                                'https://picsum.photos/seed/placeholder/400/300'
+                              }
+                              alt={wishlistItem.name}
+                              width={400}
+                              height={300}
+                              className="aspect-video w-full object-cover"
+                              data-ai-hint={wishlistItem.imageHint}
+                            />
+                            <CardContent className="p-4">
+                              <p className="font-semibold">
+                                {donation.quantity}x {donation.itemName}
+                              </p>
+                            </CardContent>
+                            <CardFooter className="p-4 pt-0">
+                              <Link
+                                href={donor.profileUrl}
+                                className="flex w-full items-center gap-3"
+                              >
+                                <Avatar className="h-9 w-9 border">
+                                  <AvatarImage
+                                    src={donor.avatarUrl}
+                                    alt={donor.name}
+                                  />
+                                  <AvatarFallback>
+                                    {donor.name.charAt(0)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="text-sm font-medium">
+                                    Donated by {donor.name}
+                                  </div>
+                                </div>
+                              </Link>
+                            </CardFooter>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            );
+          })}
+        </Tabs>
+      ) : (
+        <Card>
+          <CardContent className="py-24 text-center text-muted-foreground">
+            <p>No completed in-kind donations to display yet.</p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
 }
