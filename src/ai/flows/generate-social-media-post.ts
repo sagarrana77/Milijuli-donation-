@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { projects } from '@/lib/data';
+import { getProject } from '@/services/projects-service';
 
 // Tool to get project details for the social media post
 const getProjectDetailsForSocialPost = ai.defineTool(
@@ -29,7 +29,7 @@ const getProjectDetailsForSocialPost = ai.defineTool(
     }),
   },
   async ({ projectId }) => {
-    const project = projects.find(p => p.id === projectId);
+    const project = await getProject(projectId);
     if (!project) {
       throw new Error('Project not found');
     }

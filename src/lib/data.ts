@@ -516,6 +516,7 @@ export let dashboardStats = {
 
 export type User = {
     id: string;
+    uid: string;
     name: string;
     email?: string;
     avatarUrl: string;
@@ -532,6 +533,7 @@ export type User = {
 export let users: User[] = [
     { 
         id: 'current-user', 
+        uid: 'current-user',
         name: 'Aayush KC', 
         email: 'aayush.kc@example.com',
         avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop', 
@@ -545,6 +547,7 @@ export let users: User[] = [
     },
     { 
         id: 'user-sita-rai', 
+        uid: 'user-sita-rai',
         name: 'Sita Rai', 
         email: 'sita.rai@example.com',
         avatarUrl: getImageUrl('avatar-jane-doe'), 
@@ -558,6 +561,7 @@ export let users: User[] = [
     },
     { 
         id: 'user-hari-thapa', 
+        uid: 'user-hari-thapa',
         name: 'Hari Thapa', 
         email: 'hari.thapa@example.com',
         avatarUrl: getImageUrl('avatar-john-smith'), 
@@ -570,6 +574,7 @@ export let users: User[] = [
     },
     { 
         id: 'user-maya-gurung', 
+        uid: 'user-maya-gurung',
         name: 'Maya Gurung', 
         email: 'maya.gurung@example.com',
         avatarUrl: getImageUrl('avatar-ai-chan'), 
@@ -582,6 +587,7 @@ export let users: User[] = [
     },
     { 
         id: 'user-bikram-shah', 
+        uid: 'user-bikram-shah',
         name: 'Bikram Shah',
         email: 'bikram.shah@example.com',
         avatarUrl: getImageUrl('avatar-raj-patel'), 
@@ -594,6 +600,7 @@ export let users: User[] = [
     },
     { 
         id: 'user-anonymous', 
+        uid: 'user-anonymous',
         name: 'Anonymous', 
         avatarUrl: getImageUrl('avatar-anonymous'), 
         profileUrl: '/profile/user-anonymous',
@@ -604,7 +611,8 @@ export let users: User[] = [
         isProMember: false,
     },
      { 
-        id: 'clarity-chain-admin', 
+        id: 'clarity-chain-admin',
+        uid: 'clarity-chain-admin',
         name: 'ClarityChain Admin', 
         email: 'admin@claritychain.com',
         avatarUrl: getImageUrl('logo-clarity-chain'), 
@@ -618,6 +626,7 @@ export let users: User[] = [
     },
     {
         id: 'sunita-sharma',
+        uid: 'sunita-sharma',
         name: 'Sunita Sharma',
         email: 'sunita.sharma@example.com',
         avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
@@ -629,8 +638,8 @@ export let users: User[] = [
     },
     {
         id: 'rohan-maharjan',
+        uid: 'rohan-maharjan',
         name: 'Rohan Maharjan',
-        role: 'Lead Full-Stack Developer',
         avatarUrl: getImageUrl('avatar-sam-chen'),
         profileUrl: '/team/rohan-maharjan',
         bio:
@@ -641,12 +650,12 @@ export let users: User[] = [
     },
     {
         id: 'priya-adhikari',
+        uid: 'priya-adhikari',
         name: 'Priya Adhikari',
-        role: 'Head of Operations (Nepal)',
         avatarUrl: getImageUrl('avatar-maria-garcia'),
         profileUrl: '/team/priya-adhikari',
         bio:
-        "Priya ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Priya's dedication is the driving force behind our operational excellence.",
+      "Priya ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Priya's dedication is the driving force behind our operational excellence.",
         friends: [],
         aiCredits: 10,
         isProMember: false,
