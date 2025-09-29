@@ -1,5 +1,5 @@
 
-import React from "react";
+import React from 'react';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -7,7 +7,12 @@ type IconProps = React.SVGProps<SVGSVGElement> & {
   title?: string;
 };
 
-const MessengerIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor", title = "Facebook", ...props }) => (
+const MessengerIcon: React.FC<IconProps> = ({
+  size = 24,
+  color = 'currentColor',
+  title = 'Messenger',
+  ...props
+}) => (
   <svg
     width={size}
     height={size}
@@ -19,7 +24,10 @@ const MessengerIcon: React.FC<IconProps> = ({ size = 24, color = "currentColor",
     {...props}
   >
     <title>{title}</title>
-    <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07C1.86 17.09 5.87 21.17 10.68 21.95v-6.94H8.2v-2.99h2.48V9.77c0-2.45 1.46-3.8 3.7-3.8 1.07 0 2.19.19 2.19.19v2.41h-1.24c-1.22 0-1.6.76-1.6 1.54v1.86h2.72l-.43 2.99h-2.29v6.94C18.13 21.17 22 17.09 22 12.07z" fill={color} />
+    <path
+      d="M12 2C6.48 2 2 6.48 2 12C2 16.12 4.47 19.58 8.19 21.05C8.63 21.22 9.11 20.94 9.11 20.47V17.07C9.11 16.59 9.49 16.21 9.97 16.21H12.5C17.75 16.21 22 12.43 22 7.71C22 4.56 17.52 2 12 2ZM11.25 12.33H8.75V9.83H11.25V12.33ZM15.25 12.33H12.75V9.83H15.25V12.33Z"
+      fill={color}
+    />
   </svg>
 );
 

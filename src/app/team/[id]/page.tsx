@@ -18,7 +18,7 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
+    <div className="mx-auto max-w-6xl space-y-8">
       <Card>
         <CardHeader className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
           <Avatar className="h-32 w-32 border-4 border-primary">

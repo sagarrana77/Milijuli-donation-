@@ -67,8 +67,8 @@ export default function AboutPage() {
         </section>
       </ScrollFadeIn>
       
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-        <div className="md:col-span-2 space-y-12">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-12">
             <ScrollFadeIn asChild>
                 <section>
                 <Card>
@@ -132,7 +132,7 @@ export default function AboutPage() {
                 </section>
             </ScrollFadeIn>
         </div>
-        <div className="md:col-span-1">
+        <div className="lg:col-span-1">
              <ScrollFadeIn asChild>
                 <aside className="sticky top-24 space-y-8">
                      <Card>
