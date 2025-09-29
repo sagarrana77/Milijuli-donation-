@@ -51,11 +51,6 @@ export default function ProjectDetailPage({
                 <ScrollFadeIn>
                     <Card className="overflow-hidden">
                          <ProjectPageClientContent project={project} />
-                        <CardContent className="p-6">
-                        <p className="text-base text-foreground/90">
-                            {project.longDescription}
-                        </p>
-                        </CardContent>
                     </Card>
                 </ScrollFadeIn>
             </div>

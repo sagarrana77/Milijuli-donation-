@@ -19,7 +19,11 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
-import { ArrowRight, Gift, ShoppingCart } from 'lucide-react';
+import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { summarizeProject, SummarizeProjectOutput } from '@/ai/flows/summarize-project';
+import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '../ui/skeleton';
 
 interface ProjectPageClientContentProps {
     project: Project;
@@ -27,6 +31,29 @@ interface ProjectPageClientContentProps {
 
 export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
     const { openPhoto } = usePhotoDialog();
+    const { toast } = useToast();
+    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+    const [summary, setSummary] = useState<SummarizeProjectOutput | null>(null);
+
+    const handleGenerateSummary = async () => {
+        setIsGeneratingSummary(true);
+        setSummary(null);
+        try {
+            const result = await summarizeProject({ projectId: project.id });
+            setSummary(result);
+        } catch (error) {
+            console.error("Error generating summary:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Error Generating Summary',
+                description: 'Could not generate summary. Please try again.'
+            });
+        } finally {
+            setIsGeneratingSummary(false);
+        }
+    }
+
+
     return (
         <>
             <Image
@@ -40,8 +67,41 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 priority
             />
             
+            <CardContent className="p-6 space-y-4">
+                 <Button onClick={handleGenerateSummary} disabled={isGeneratingSummary} variant="outline" className="w-full md:w-auto">
+                    {isGeneratingSummary ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                    Generate AI Summary
+                 </Button>
+
+                 {(isGeneratingSummary || summary) && (
+                     <Card className="bg-primary/5 border-dashed border-primary/20">
+                         <CardHeader>
+                             <CardTitle className="flex items-center gap-2 text-primary">
+                                 <Wand2 className="h-5 w-5" />
+                                 AI-Powered Summary
+                             </CardTitle>
+                         </CardHeader>
+                         <CardContent>
+                             {isGeneratingSummary ? (
+                                 <div className="space-y-2">
+                                     <Skeleton className="h-4 w-full" />
+                                     <Skeleton className="h-4 w-full" />
+                                     <Skeleton className="h-4 w-3/4" />
+                                 </div>
+                             ) : (
+                                <p className="text-foreground/90">{summary?.summary}</p>
+                             )}
+                         </CardContent>
+                     </Card>
+                 )}
+
+                <p className="text-base text-foreground/90">
+                    {project.longDescription}
+                </p>
+            </CardContent>
+            
             <ScrollFadeIn asChild delay={200}>
-            <Tabs defaultValue="updates" className="mt-8">
+            <Tabs defaultValue="updates" className="mt-8 px-6 pb-6">
                 <TabsList>
                 <TabsTrigger value="updates">Updates</TabsTrigger>
                 <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
