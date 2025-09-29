@@ -85,6 +85,7 @@ export default function EditUserCampaignPage() {
     resolver: zodResolver(projectSchema),
     defaultValues: project ? {
       ...project,
+      verified: project.verified, // Ensure verified is part of the form
       wishlist: project.wishlist.map(item => ({...item, allowInKind: item.allowInKind || false})),
       updates: project.updates.map(update => ({...update, date: new Date(update.date)}))
     } : undefined,
@@ -267,7 +268,7 @@ export default function EditUserCampaignPage() {
                                         <div className="space-y-0.5">
                                             <FormLabel>Verified Transparent Project</FormLabel>
                                             <FormDescription>
-                                            Enable this if the project meets all transparency requirements.
+                                            Enable this to approve and publish the campaign on the homepage.
                                             </FormDescription>
                                         </div>
                                         <FormControl>
@@ -492,3 +493,5 @@ export default function EditUserCampaignPage() {
     </div>
   );
 }
+
+    
