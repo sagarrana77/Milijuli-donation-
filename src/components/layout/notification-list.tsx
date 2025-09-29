@@ -8,6 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { BellRing, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications } from '@/context/notification-provider';
+import { cn } from '@/lib/utils';
 
 
 export function NotificationList() {
@@ -31,16 +32,17 @@ export function NotificationList() {
           {notifications.length > 0 ? (
             <div className="p-4 space-y-4">
               {notifications.map((notification) => (
-                <div
+                <Link
                   key={notification.id}
-                  className="flex items-start gap-4 cursor-pointer"
+                  href={notification.href}
+                  className="flex items-start gap-4 cursor-pointer p-2 -m-2 rounded-md hover:bg-muted"
                   onClick={() => markAsRead(notification.id)}
                 >
                   <div className="mt-1">
                      <BellRing className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">
+                    <p className={cn("text-sm font-medium leading-none", !notification.read && "font-bold")}>
                       {notification.title}
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -53,7 +55,7 @@ export function NotificationList() {
                    {!notification.read && (
                     <div className="mt-1 h-2 w-2 rounded-full bg-primary" title="Unread" />
                   )}
-                </div>
+                </Link>
               ))}
             </div>
           ) : (

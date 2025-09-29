@@ -2,12 +2,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BellRing, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications } from '@/context/notification-provider';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 export default function NotificationsPage() {
   const { notifications, markAllAsRead, markAsRead } = useNotifications();
@@ -36,8 +38,9 @@ export default function NotificationsPage() {
           <div className="divide-y">
             {notifications.length > 0 ? (
               notifications.map((notification) => (
-                <div
+                <Link
                   key={notification.id}
+                  href={notification.href}
                   className="flex items-start gap-4 p-4 hover:bg-muted/50 cursor-pointer"
                   onClick={() => markAsRead(notification.id)}
                 >
@@ -45,7 +48,7 @@ export default function NotificationsPage() {
                     <BellRing className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">
+                    <p className={cn("text-sm font-medium leading-none", !notification.read && "font-bold")}>
                       {notification.title}
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -62,7 +65,7 @@ export default function NotificationsPage() {
                   {!notification.read && (
                     <div className="mt-1 h-2.5 w-2.5 rounded-full bg-primary" title="Unread" />
                   )}
-                </div>
+                </Link>
               ))
             ) : (
               <div className="flex h-48 items-center justify-center p-4">

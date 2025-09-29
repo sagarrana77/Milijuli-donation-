@@ -705,6 +705,7 @@ export type Notification = {
   description: string;
   date: Date;
   read: boolean;
+  href: string;
 };
 
 export const notifications: Notification[] = [
@@ -714,6 +715,7 @@ export const notifications: Notification[] = [
     description: 'You received a NPR 5,000 donation for "Education for All Nepal".',
     date: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
     read: false,
+    href: '/projects/education-for-all-nepal?tab=donors',
   },
   {
     id: 'notif-2',
@@ -721,6 +723,7 @@ export const notifications: Notification[] = [
     description: '"Clean Water Initiative" has been successfully funded!',
     date: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
     read: false,
+    href: '/projects/clean-water-initiative',
   },
   {
     id: 'notif-5',
@@ -728,6 +731,7 @@ export const notifications: Notification[] = [
     description: 'Current User mentioned you in a comment on "Education for All Nepal".',
     date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
     read: false,
+    href: '/projects/education-for-all-nepal?tab=discussion',
   },
   {
     id: 'notif-6',
@@ -735,6 +739,7 @@ export const notifications: Notification[] = [
     description: 'Current User replied to your comment on "Education for All Nepal".',
     date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
     read: true,
+    href: '/projects/education-for-all-nepal?tab=discussion',
   },
   {
     id: 'notif-3',
@@ -742,6 +747,7 @@ export const notifications: Notification[] = [
     description: 'Sam Chen has joined the team as Lead Full-Stack Developer.',
     date: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
     read: true,
+    href: '/team/sam-chen',
   },
   {
     id: 'notif-4',
@@ -749,6 +755,7 @@ export const notifications: Notification[] = [
     description: 'Your projects raised a total of NPR 125,000 this week.',
     date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
     read: true,
+    href: '/my-campaigns',
   },
 ];
 
