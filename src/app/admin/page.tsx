@@ -92,7 +92,7 @@ export default function AdminDashboardPage() {
 
   const handleAddSalary = () => {
     if (newSalary.employee && newSalary.role && newSalary.salary) {
-      salaries.push({ id: `sal-${Date.now()}`, ...newSalary, salary: parseFloat(newSalary.salary) });
+      salaries.push({ id: `sal-${Date.now()}`, ...newSalary, salary: parseFloat(newSalary.salary), currency: 'NPR' });
       setNewSalary({ employee: '', role: '', salary: '' });
       toast({ title: "Salary Added", description: "The new salary has been recorded." });
       setForceRender(c => c + 1);
@@ -246,7 +246,7 @@ export default function AdminDashboardPage() {
     const fromUpdate = {
         id: `update-transfer-from-${Date.now()}`,
         title: 'Fund Transfer',
-        description: `An amount of $${data.amount.toLocaleString()} was transferred from this project to "${data.to}". Reason: ${data.reason}`,
+        description: `An amount of Rs.${data.amount.toLocaleString()} was transferred from this project to "${data.to}". Reason: ${data.reason}`,
         date: new Date(),
         isTransfer: true,
         transferDetails: { amount: data.amount, toProject: data.to }
@@ -254,7 +254,7 @@ export default function AdminDashboardPage() {
      const toUpdate = {
         id: `update-transfer-to-${Date.now()}`,
         title: 'Funds Received',
-        description: `An amount of $${data.amount.toLocaleString()} was received from "${data.from}". Reason: ${data.reason}`,
+        description: `An amount of Rs.${data.amount.toLocaleString()} was received from "${data.from}". Reason: ${data.reason}`,
         date: new Date(),
         isTransfer: true,
         transferDetails: { amount: data.amount, fromProject: data.from }
@@ -407,15 +407,15 @@ export default function AdminDashboardPage() {
         <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-lg border bg-card p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Total Raised</h3>
-            <p className="text-2xl font-bold">${dashboardStats.totalFunds.toLocaleString()}</p>
+            <p className="text-2xl font-bold">Rs.{dashboardStats.totalFunds.toLocaleString()}</p>
           </div>
           <div className="rounded-lg border bg-card p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Total Spent</h3>
-            <p className="text-2xl font-bold">${dashboardStats.totalSpent.toLocaleString()}</p>
+            <p className="text-2xl font-bold">Rs.{dashboardStats.totalSpent.toLocaleString()}</p>
           </div>
           <div className="rounded-lg border bg-card p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Funds in Hand</h3>
-            <p className="text-2xl font-bold text-primary">${dashboardStats.fundsInHand.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-primary">Rs.{dashboardStats.fundsInHand.toLocaleString()}</p>
           </div>
            <div className="rounded-lg border bg-accent/20 p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Actions</h3>
@@ -483,7 +483,7 @@ export default function AdminDashboardPage() {
                                 </Badge>
                             </TableCell>
                             <TableCell>
-                                ${project.raisedAmount.toLocaleString()}
+                                Rs.{project.raisedAmount.toLocaleString()}
                             </TableCell>
                             <TableCell>{project.donors.toLocaleString()}</TableCell>
                             <TableCell>
@@ -651,7 +651,7 @@ export default function AdminDashboardPage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <Input placeholder="Employee Name" value={newSalary.employee} onChange={(e) => setNewSalary({...newSalary, employee: e.target.value})} />
                             <Input placeholder="Role / Title" value={newSalary.role} onChange={(e) => setNewSalary({...newSalary, role: e.target.value})} />
-                            <Input type="number" placeholder="Monthly Salary ($)" value={newSalary.salary} onChange={(e) => setNewSalary({...newSalary, salary: e.target.value})} />
+                            <Input type="number" placeholder="Monthly Salary (NPR)" value={newSalary.salary} onChange={(e) => setNewSalary({...newSalary, salary: e.target.value})} />
                         </div>
                         <Button className="mt-4" onClick={handleAddSalary}>Add Salary</Button>
                         </div>
@@ -670,7 +670,7 @@ export default function AdminDashboardPage() {
                                 <TableRow key={salary.id}>
                                 <TableCell>{salary.employee}</TableCell>
                                 <TableCell>{salary.role}</TableCell>
-                                <TableCell>${salary.salary.toLocaleString()} / mo</TableCell>
+                                <TableCell>{salary.currency === 'USD' ? '$' : 'Rs.'}{salary.salary.toLocaleString()} / mo</TableCell>
                                 <TableCell className="text-right">
                                     <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
                                 </TableCell>
@@ -685,7 +685,7 @@ export default function AdminDashboardPage() {
                             <h3 className="font-semibold mb-2">Add New Equipment Cost</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <Input placeholder="Item Name" value={newEquipment.item} onChange={(e) => setNewEquipment({...newEquipment, item: e.target.value})} />
-                                <Input type="number" placeholder="Cost ($)" value={newEquipment.cost} onChange={(e) => setNewEquipment({...newEquipment, cost: e.target.value})} />
+                                <Input type="number" placeholder="Cost (NPR)" value={newEquipment.cost} onChange={(e) => setNewEquipment({...newEquipment, cost: e.target.value})} />
                                 <Input type="date" placeholder="Purchase Date" value={newEquipment.purchaseDate} onChange={(e) => setNewEquipment({...newEquipment, purchaseDate: e.target.value})} />
                                 <Input placeholder="Vendor" value={newEquipment.vendor} onChange={(e) => setNewEquipment({...newEquipment, vendor: e.target.value})} />
                                 <Input placeholder="Image URL" value={newEquipment.imageUrl} onChange={(e) => setNewEquipment({...newEquipment, imageUrl: e.target.value})} />
@@ -708,7 +708,7 @@ export default function AdminDashboardPage() {
                                 {equipment.map((equip) => (
                                     <TableRow key={equip.id}>
                                     <TableCell>{equip.item}</TableCell>
-                                    <TableCell>${equip.cost.toLocaleString()}</TableCell>
+                                    <TableCell>Rs.{equip.cost.toLocaleString()}</TableCell>
                                     <TableCell>{new Date(equip.purchaseDate).toLocaleDateString()}</TableCell>
                                     <TableCell>{equip.vendor}</TableCell>
                                     <TableCell className="text-right">
@@ -725,7 +725,7 @@ export default function AdminDashboardPage() {
                             <h3 className="font-semibold mb-2">Add New Miscellaneous Cost</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                 <Input placeholder="Item Name" value={newMiscExpense.item} onChange={(e) => setNewMiscExpense({...newMiscExpense, item: e.target.value})} />
-                                <Input type="number" placeholder="Cost ($)" value={newMiscExpense.cost} onChange={(e) => setNewMiscExpense({...newMiscExpense, cost: e.target.value})} />
+                                <Input type="number" placeholder="Cost (NPR)" value={newMiscExpense.cost} onChange={(e) => setNewMiscExpense({...newMiscExpense, cost: e.target.value})} />
                                 <Input type="date" placeholder="Purchase Date" value={newMiscExpense.purchaseDate} onChange={(e) => setNewMiscExpense({...newMiscExpense, purchaseDate: e.target.value})} />
                                 <Input placeholder="Vendor" value={newMiscExpense.vendor} onChange={(e) => setNewMiscExpense({...newMiscExpense, vendor: e.target.value})} />
                             </div>
@@ -746,7 +746,7 @@ export default function AdminDashboardPage() {
                                 {miscExpenses.map((expense) => (
                                     <TableRow key={expense.id}>
                                         <TableCell>{expense.item}</TableCell>
-                                        <TableCell>${expense.cost.toLocaleString()}</TableCell>
+                                        <TableCell>Rs.{expense.cost.toLocaleString()}</TableCell>
                                         <TableCell>{new Date(expense.purchaseDate).toLocaleDateString()}</TableCell>
                                         <TableCell>{expense.vendor}</TableCell>
                                         <TableCell className="text-right">

@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CreditCard, DollarSign, Landmark, Save } from 'lucide-react';
+import { CreditCard, Landmark, Save } from 'lucide-react';
 import { currentUser } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
@@ -32,7 +32,7 @@ interface DonationDialogProps {
   onDonate: (amount: number) => void;
 }
 
-const presetAmounts = [10, 25, 50, 100, 250, 500];
+const presetAmounts = [1000, 2500, 5000, 10000, 25000, 50000];
 
 const creditCardSchema = z.object({
   cardNumber: z.string().regex(/^\d{16}$/, "Card number must be 16 digits."),
@@ -78,7 +78,7 @@ export function DonationDialog({
       setError('Please consent to the fund relocation policy to proceed.');
       return;
     }
-    console.log(`Donation of $${numericAmount} for "${projectName}" with relocation consent: ${relocationConsent}`);
+    console.log(`Donation of Rs.${numericAmount} for "${projectName}" with relocation consent: ${relocationConsent}`);
     onDonate(numericAmount);
     onOpenChange(false); // Close dialog on successful donation
     setAmount(''); // Reset amount
@@ -203,12 +203,12 @@ export function DonationDialog({
                     <div className="grid grid-cols-3 gap-2">
                         {presetAmounts.map(preset => (
                             <Button key={preset} variant="outline" onClick={() => handlePresetClick(preset)}>
-                                ${preset}
+                                Rs.{preset.toLocaleString()}
                             </Button>
                         ))}
                     </div>
                     <div className="relative">
-                        <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">Rs.</span>
                         <Input
                         id="amount"
                         type="number"

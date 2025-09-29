@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { DollarSign, Users, Target } from 'lucide-react';
+import { Users, Target } from 'lucide-react';
 import { useDonationContext } from '@/components/projects/donation-dialog-wrapper';
 import { Skeleton } from '../ui/skeleton';
 
@@ -28,16 +28,15 @@ export function FundraisingProgress() {
             <Progress value={percentage} className="h-3" aria-label={`${percentage}% funded`} />
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <span className="font-bold text-muted-foreground">Raised</span>
                 <div>
-                  <p className="font-bold">${raisedAmount.toLocaleString()}</p>
-                  <p className="text-muted-foreground">Raised</p>
+                  <p className="font-bold">Rs.{raisedAmount.toLocaleString()}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Target className="h-4 w-4 text-muted-foreground" />
                 <div>
-                  <p className="font-bold">${project.targetAmount.toLocaleString()}</p>
+                  <p className="font-bold">Rs.{project.targetAmount.toLocaleString()}</p>
                   <p className="text-muted-foreground">Target</p>
                 </div>
               </div>

@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { DollarSign, Users, Target, CheckCircle, ArrowRight } from 'lucide-react';
+import { Users, Target, CheckCircle, ArrowRight } from 'lucide-react';
 import { DonorsList } from '@/components/projects/donors-list';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
@@ -45,7 +45,7 @@ export default function OperationalCostsPage() {
 
     const interval = setInterval(() => {
       setRaisedAmount((prev) => {
-        const newAmount = prev + Math.floor(Math.random() * 50) + 5;
+        const newAmount = prev + Math.floor(Math.random() * 5000) + 500;
         return Math.min(newAmount, operationalCostsFund.targetAmount);
       });
       if (Math.random() > 0.7) {
@@ -61,7 +61,7 @@ export default function OperationalCostsPage() {
     setDonors((prev) => prev + 1);
     toast({
       title: 'Thank You for Your Support!',
-      description: `Your generous donation of $${amount} will help us continue our mission.`,
+      description: `Your generous donation of Rs.${amount} will help us continue our mission.`,
       variant: 'default',
     });
   };
@@ -128,19 +128,18 @@ export default function OperationalCostsPage() {
                   />
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-bold text-muted-foreground">Raised</span>
                       <div>
                         <p className="font-bold">
-                          ${raisedAmount.toLocaleString()}
+                          Rs.{raisedAmount.toLocaleString()}
                         </p>
-                        <p className="text-muted-foreground">Raised</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Target className="h-4 w-4 text-muted-foreground" />
                       <div>
                         <p className="font-bold">
-                          ${operationalCostsFund.targetAmount.toLocaleString()}
+                          Rs.{operationalCostsFund.targetAmount.toLocaleString()}
                         </p>
                         <p className="text-muted-foreground">Target</p>
                       </div>

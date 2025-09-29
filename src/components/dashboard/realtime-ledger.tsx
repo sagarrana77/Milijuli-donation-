@@ -41,7 +41,7 @@ export function RealtimeLedger() {
             id: Date.now(),
             donor: randomDonor,
             project: randomProject.name,
-            amount: Math.floor(Math.random() * 200) + 10,
+            amount: Math.floor(Math.random() * 20000) + 1000,
             date: new Date(),
         };
 
@@ -102,7 +102,7 @@ export function RealtimeLedger() {
                   </Link>
                 </TableCell>
                 <TableCell>{donation.project}</TableCell>
-                <TableCell className="text-right">${donation.amount.toLocaleString()}</TableCell>
+                <TableCell className="text-right">Rs.{donation.amount.toLocaleString()}</TableCell>
                 <TableCell className="text-right">{isClient ? formatDistanceToNow(donation.date, { addSuffix: true }) : ''}</TableCell>
               </TableRow>
             ))}

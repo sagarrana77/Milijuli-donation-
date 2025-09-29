@@ -95,15 +95,15 @@ export let projects: Project[] = [
       'This project aims to build and equip schools in remote areas of Nepal, providing access to quality education for children who would otherwise be left behind. Funds will be used for school construction, teacher salaries, and learning materials.',
     imageUrl: getImageUrl('project-education-nepal'),
     imageHint: 'nepal classroom',
-    targetAmount: 50000,
-    raisedAmount: 32500,
+    targetAmount: 5000000,
+    raisedAmount: 3250000,
     donors: 450,
     verified: true,
     updates: [
        {
         id: 'update-notif-1',
         title: 'New Donation Received!',
-        description: 'Jane Doe just donated $50. Thank you for your support!',
+        description: 'Jane Doe just donated NPR 5,000. Thank you for your support!',
         date: new Date(Date.now() - 1000 * 60 * 5),
       },
       {
@@ -127,7 +127,7 @@ export let projects: Project[] = [
       {
         id: 'exp-1',
         item: 'School Textbooks Batch 1',
-        amount: 1200,
+        amount: 120000,
         date: new Date('2023-10-12'),
         receiptUrl: getImageUrl('receipt-1'),
         receiptHint: 'receipt scan',
@@ -135,7 +135,7 @@ export let projects: Project[] = [
       {
         id: 'exp-2',
         item: 'Cement and Bricks',
-        amount: 3500,
+        amount: 350000,
         date: new Date('2023-09-15'),
         receiptUrl: getImageUrl('receipt-2'),
         receiptHint: 'invoice document',
@@ -177,7 +177,7 @@ export let projects: Project[] = [
         description: 'Provides a full set of required textbooks for one primary school student for a year.',
         quantityNeeded: 200,
         quantityDonated: 50,
-        costPerItem: 25,
+        costPerItem: 2500,
         imageUrl: getImageUrl('update-photo-1'),
         imageHint: 'school books',
         allowInKind: true,
@@ -188,7 +188,7 @@ export let projects: Project[] = [
         description: 'A sturdy desk and chair for a student to learn comfortably.',
         quantityNeeded: 100,
         quantityDonated: 20,
-        costPerItem: 40,
+        costPerItem: 4000,
         imageUrl: 'https://picsum.photos/seed/wishlist-desk/400/300',
         imageHint: 'student desk',
         allowInKind: false,
@@ -206,8 +206,8 @@ export let projects: Project[] = [
       'Access to clean water is a fundamental human right. This project focuses on drilling wells and installing water purification systems in communities that lack safe drinking water, reducing disease and improving overall health.',
     imageUrl: getImageUrl('project-clean-water'),
     imageHint: 'water well',
-    targetAmount: 75000,
-    raisedAmount: 80000,
+    targetAmount: 7500000,
+    raisedAmount: 8000000,
     donors: 1250,
     verified: true,
     updates: [],
@@ -215,7 +215,7 @@ export let projects: Project[] = [
         {
             id: 'exp-cw-1',
             item: 'Well Drilling Equipment',
-            amount: 15000,
+            amount: 1500000,
             date: new Date('2023-11-01'),
             receiptUrl: getImageUrl('receipt-1'),
             receiptHint: 'receipt scan',
@@ -235,8 +235,8 @@ export let projects: Project[] = [
       'We are setting up community health posts staffed by trained professionals to provide essential healthcare services, including maternal care, vaccinations, and treatment for common illnesses, directly within remote communities.',
     imageUrl: getImageUrl('project-community-health'),
     imageHint: 'community health',
-    targetAmount: 120000,
-    raisedAmount: 45000,
+    targetAmount: 12000000,
+    raisedAmount: 4500000,
     donors: 800,
     verified: false,
     updates: [],
@@ -244,7 +244,7 @@ export let projects: Project[] = [
          {
             id: 'exp-chp-1',
             item: 'Medical Supplies',
-            amount: 8000,
+            amount: 800000,
             date: new Date('2023-11-05'),
             receiptUrl: getImageUrl('receipt-2'),
             receiptHint: 'invoice document',
@@ -264,8 +264,8 @@ export let projects: Project[] = [
       'This fund is dedicated to providing swift and effective relief in the aftermath of natural disasters. Donations help us deliver food, shelter, medical supplies, and other critical aid to those in desperate need.',
     imageUrl: getImageUrl('project-disaster-relief'),
     imageHint: 'disaster relief',
-    targetAmount: 250000,
-    raisedAmount: 180000,
+    targetAmount: 25000000,
+    raisedAmount: 18000000,
     donors: 2500,
     verified: true,
     updates: [],
@@ -273,7 +273,7 @@ export let projects: Project[] = [
         {
             id: 'exp-drf-1',
             item: 'Emergency Food Supplies',
-            amount: 25000,
+            amount: 2500000,
             date: new Date('2023-10-20'),
             receiptUrl: getImageUrl('receipt-1'),
             receiptHint: 'receipt scan',
@@ -291,8 +291,8 @@ export let projects: Project[] = [
     longDescription: 'Our community library was a cornerstone of our town, offering a safe space for learning and discovery for all ages. After a tragic fire, we are fundraising to rebuild it from the ground up, with modern amenities and a larger collection of books. Your support will help us bring back this vital community hub.',
     imageUrl: 'https://picsum.photos/seed/library-fire/600/400',
     imageHint: 'library books',
-    targetAmount: 85000,
-    raisedAmount: 12000,
+    targetAmount: 8500000,
+    raisedAmount: 1200000,
     donors: 150,
     verified: false,
     updates: [],
@@ -317,8 +317,8 @@ export let projects: Project[] = [
     longDescription: 'Our current stray animal shelter is at full capacity, and we are forced to turn away animals in need every day. This campaign will fund the construction of a new wing, allowing us to rescue, treat, and re-home dozens more stray dogs and cats. Every dollar brings us closer to giving these animals a second chance.',
     imageUrl: 'https://picsum.photos/seed/stray-dog/600/400',
     imageHint: 'stray dog',
-    targetAmount: 40000,
-    raisedAmount: 38000,
+    targetAmount: 4000000,
+    raisedAmount: 3800000,
     donors: 600,
     verified: true,
     updates: [],
@@ -378,7 +378,7 @@ export let equipment: {
   {
     id: 'eq-1',
     item: 'MacBook Pro 16"',
-    cost: 2500,
+    cost: 332500,
     purchaseDate: new Date('2023-10-01'),
     vendor: 'Apple Store',
     imageUrl: getImageUrl('equipment-macbook'),
@@ -387,7 +387,7 @@ export let equipment: {
   {
     id: 'eq-2',
     item: 'Ergonomic Office Chairs (x5)',
-    cost: 750,
+    cost: 99750,
     purchaseDate: new Date('2023-09-15'),
     vendor: 'Office Depot',
     imageUrl: getImageUrl('equipment-chair'),
@@ -396,7 +396,7 @@ export let equipment: {
   {
     id: 'eq-3',
     item: 'Cloud Server Hosting (1yr)',
-    cost: 1200,
+    cost: 159600,
     purchaseDate: new Date('2023-10-20'),
     vendor: 'Cloud Provider Inc.',
     imageUrl: getImageUrl('equipment-server'),
@@ -414,14 +414,14 @@ export let miscExpenses: {
     {
         id: 'misc-1',
         item: 'Office Rent (Q4)',
-        cost: 1500,
+        cost: 199500,
         purchaseDate: new Date('2023-10-01'),
         vendor: 'City Properties',
     },
     {
         id: 'misc-2',
         item: 'Internet Bill (October)',
-        cost: 100,
+        cost: 13300,
         purchaseDate: new Date('2023-10-05'),
         vendor: 'FastNet ISP',
     }
@@ -430,9 +430,9 @@ export let miscExpenses: {
 // Calculate operational costs
 const totalSalaryCosts = salaries.reduce((acc, s) => {
     // Basic conversion for calculation, in a real app this would use live rates
-    const usdAmount = s.currency === 'NPR' ? s.salary / 133 : s.salary;
-    return acc + usdAmount;
-}, 0); // Monthly in USD
+    const nprAmount = s.currency === 'USD' ? s.salary * 133 : s.salary;
+    return acc + nprAmount;
+}, 0); // Monthly in NPR
 const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
 const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
 export const totalOperationalCosts = totalSalaryCosts * 12 + totalEquipmentCosts + totalMiscCosts; // Annualized for target
@@ -441,8 +441,8 @@ export let operationalCostsFund = {
     id: 'operational-costs',
     name: 'Operational Costs',
     description: 'Support the core team and infrastructure that make our work possible.',
-    targetAmount: 150000, // Static target for now
-    raisedAmount: 15750,
+    targetAmount: 15000000, // Static target for now
+    raisedAmount: 1575000,
     donors: 88,
     imageUrl: getImageUrl('team-photo'),
     imageHint: 'team meeting',
@@ -475,7 +475,7 @@ const fundsInHand = totalRaised - totalSpending;
 
 export let dashboardStats = {
   totalFunds: totalRaised,
-  monthlyIncrease: 20123,
+  monthlyIncrease: 2012300,
   totalDonors: 4950,
   newDonors: 213,
   projectsFunded: 4,
@@ -593,49 +593,49 @@ export const recentDonations: {
     id: 1,
     donor: users.find(u => u.id === 'user-jane-doe')!,
     project: 'Education for All Nepal',
-    amount: 50,
+    amount: 5000,
     date: new Date('2023-10-29T10:00:00Z'),
   },
   {
     id: 2,
     donor: users.find(u => u.id === 'user-john-smith')!,
     project: 'Clean Water Initiative',
-    amount: 100,
+    amount: 10000,
     date: new Date('2023-10-29T09:30:00Z'),
   },
   {
     id: 3,
     donor: users.find(u => u.id === 'user-ai-chan')!,
     project: 'Disaster Relief Fund',
-    amount: 250,
+    amount: 25000,
     date: new Date('2023-10-28T15:00:00Z'),
   },
   {
     id: 4,
     donor: users.find(u => u.id === 'user-raj-patel')!,
     project: 'Community Health Posts',
-    amount: 75,
+    amount: 7500,
     date: new Date('2023-10-28T12:45:00Z'),
   },
   {
     id: 5,
     donor: users.find(u => u.id === 'user-anonymous')!,
     project: 'Clean Water Initiative',
-    amount: 1000,
+    amount: 100000,
     date: new Date('2023-10-27T18:20:00Z'),
   },
   {
     id: 6,
     donor: users.find(u => u.id === 'user-jane-doe')!,
     project: 'Operational Costs',
-    amount: 25,
+    amount: 2500,
     date: new Date('2023-10-26T11:00:00Z'),
   },
     {
     id: 7,
     donor: users.find(u => u.id === 'user-raj-patel')!,
     project: 'Operational Costs',
-    amount: 50,
+    amount: 5000,
     date: new Date('2023-10-25T14:00:00Z'),
   },
 ];
@@ -711,7 +711,7 @@ export const notifications: Notification[] = [
   {
     id: 'notif-1',
     title: 'New Donation!',
-    description: 'You received a $50 donation for "Education for All Nepal".',
+    description: 'You received a NPR 5,000 donation for "Education for All Nepal".',
     date: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
     read: false,
   },
@@ -746,7 +746,7 @@ export const notifications: Notification[] = [
   {
     id: 'notif-4',
     title: 'Weekly Summary',
-    description: 'Your projects raised a total of $1,250 this week.',
+    description: 'Your projects raised a total of NPR 125,000 this week.',
     date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
     read: true,
   },

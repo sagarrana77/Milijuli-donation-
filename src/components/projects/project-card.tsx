@@ -63,7 +63,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className="w-full">
           <div className="mb-1 flex justify-between text-xs text-muted-foreground">
             <span>
-              ${project.raisedAmount.toLocaleString()} raised
+              Rs.{project.raisedAmount.toLocaleString()} raised
             </span>
             <span>{percentage}%</span>
           </div>

@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -44,14 +45,14 @@ const prompt = ai.definePrompt({
 The email should:
 1.  Have a clear and appreciative subject line.
 2.  Personally thank the donor by their name.
-3.  Acknowledge the specific amount they donated and the project they supported.
+3.  Acknowledge the specific amount they donated and the project they supported. The currency is Nepalese Rupees (NPR).
 4.  Briefly reiterate the importance of their contribution to the project's success.
 5.  Maintain a friendly and sincere tone.
 
 Do not include any placeholders like "[Your Name]" or "[Your Title]". The email should be ready to send as is.
 
 Donor Name: {{{donorName}}}
-Donation Amount: \${{{amount}}}
+Donation Amount: NPR {{{amount}}}
 Project Name: {{{projectName}}}
 `,
 });

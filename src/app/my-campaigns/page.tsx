@@ -95,7 +95,7 @@ export default function MyCampaignsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      ${project.raisedAmount.toLocaleString()}
+                      Rs.{project.raisedAmount.toLocaleString()}
                     </TableCell>
                     <TableCell>{project.donors.toLocaleString()}</TableCell>
                     <TableCell className="text-right">

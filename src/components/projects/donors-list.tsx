@@ -31,7 +31,7 @@ export function DonorsList({ projectName }: DonorsListProps) {
                         <p className="text-sm text-muted-foreground">{format(donation.date, 'PPP')}</p>
                     </div>
                 </Link>
-                <p className="font-bold text-lg text-primary">${donation.amount.toLocaleString()}</p>
+                <p className="font-bold text-lg text-primary">Rs.{donation.amount.toLocaleString()}</p>
               </li>
             ))}
           </ul>

@@ -93,9 +93,9 @@ export function TransferFundsDialog({
                 name="amount"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Amount ($)</FormLabel>
+                    <FormLabel>Amount (NPR)</FormLabel>
                     <FormControl>
-                        <Input type="number" placeholder="e.g., 1000.00" {...field} />
+                        <Input type="number" placeholder="e.g., 100000.00" {...field} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -212,9 +213,9 @@ export default function NewProjectPage() {
                 name="targetAmount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fundraising Target ($)</FormLabel>
+                    <FormLabel>Fundraising Target (NPR)</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder="50000" {...field} />
+                      <Input type="number" placeholder="5000000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

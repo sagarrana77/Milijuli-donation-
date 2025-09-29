@@ -59,10 +59,10 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-chart-1">
-                ${currentDashboardStats.totalFunds.toLocaleString()}
+                Rs.{currentDashboardStats.totalFunds.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
-                +${currentDashboardStats.monthlyIncrease.toLocaleString()} from last
+                +Rs.{currentDashboardStats.monthlyIncrease.toLocaleString()} from last
                 month
               </p>
             </CardContent>
@@ -76,7 +76,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-chart-2">
-                ${currentDashboardStats.fundsInHand.toLocaleString()}
+                Rs.{currentDashboardStats.fundsInHand.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
                 Remaining funds after all expenses
@@ -94,7 +94,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-chart-3">
-                ${currentDashboardStats.totalSpent.toLocaleString()}
+                Rs.{currentDashboardStats.totalSpent.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
                 Includes project and operational costs
@@ -113,7 +113,7 @@ export default function DashboardPage() {
               <div className="w-full">
                   <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                       <span>
-                      ${operationalCostsFund.raisedAmount.toLocaleString()} raised
+                      Rs.{operationalCostsFund.raisedAmount.toLocaleString()} raised
                       </span>
                       <span>{opsPercentage}%</span>
                   </div>
@@ -236,5 +236,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

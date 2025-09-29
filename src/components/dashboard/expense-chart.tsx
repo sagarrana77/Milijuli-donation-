@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell as RechartsPrimitive } from 'recharts';
@@ -63,7 +64,7 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent
-            formatter={(value) => `$${Number(value).toLocaleString()}`}
+            formatter={(value) => `Rs.${Number(value).toLocaleString()}`}
             hideLabel
             />}
         />

@@ -80,7 +80,7 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
                         </TableCell>
                         <TableCell>{salary.role}</TableCell>
                         <TableCell className="text-right">
-                            {salary.currency === 'NPR' ? 'NPR' : '$'}{salary.salary.toLocaleString()}
+                            {salary.currency === 'USD' ? '$' : 'Rs.'}{salary.salary.toLocaleString()}
                         </TableCell>
                         </TableRow>
                     );
@@ -107,7 +107,7 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
                         <TableCell>{item.vendor}</TableCell>
                         <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
                         <TableCell className="text-right">
-                        ${item.cost.toLocaleString()}
+                        Rs.{item.cost.toLocaleString()}
                         </TableCell>
                     </TableRow>
                     ))}
@@ -133,7 +133,7 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
                         <TableCell>{item.vendor}</TableCell>
                         <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
                         <TableCell className="text-right">
-                        ${item.cost.toLocaleString()}
+                        Rs.{item.cost.toLocaleString()}
                         </TableCell>
                     </TableRow>
                     ))}

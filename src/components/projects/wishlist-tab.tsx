@@ -92,7 +92,7 @@ export function WishlistTab() {
               </CardHeader>
               <CardContent className="flex-grow space-y-2">
                 <div className="text-lg font-bold text-primary">
-                  ${item.costPerItem.toLocaleString()} per item
+                  Rs.{item.costPerItem.toLocaleString()} per item
                 </div>
                 <div>
                   <div className="mb-1 flex justify-between text-xs text-muted-foreground">

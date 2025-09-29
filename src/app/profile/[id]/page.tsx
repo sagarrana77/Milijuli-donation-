@@ -20,7 +20,7 @@ import InstagramIcon from '@/components/icons/instagram-icon';
 import TwitterIcon from '@/components/icons/TwitterIcon';
 import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { ProfileInKindDonations } from '@/components/profile/in-kind-donations';
-import { Calendar, DollarSign, List } from 'lucide-react';
+import { Calendar, List } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 
@@ -86,7 +86,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
             <TableRow>
                 <TableHead className="flex items-center gap-2"><List className="h-4 w-4 text-amber-600" />Project</TableHead>
                 <TableHead><Calendar className="h-4 w-4 inline-block mr-2 text-amber-600" />Date</TableHead>
-                <TableHead className="text-right"><DollarSign className="h-4 w-4 inline-block mr-2 text-amber-600"/>Amount</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
             </TableRow>
             </TableHeader>
             <TableBody>
@@ -103,7 +103,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                            )}
                         </TableCell>
                         <TableCell>{format(donation.date, 'PPP')}</TableCell>
-                        <TableCell className="text-right font-semibold">${donation.amount.toLocaleString()}</TableCell>
+                        <TableCell className="text-right font-semibold">Rs.{donation.amount.toLocaleString()}</TableCell>
                     </TableRow>
                   )
                 })

@@ -119,9 +119,9 @@ export function RecordExpenseDialog({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount ($)</FormLabel>
+                  <FormLabel>Amount (NPR)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="e.g., 500.00" {...field} />
+                    <Input type="number" placeholder="e.g., 50000.00" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
