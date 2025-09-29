@@ -164,6 +164,7 @@ export default function CreateCampaignPage() {
   
   const handleGenerateStory = async () => {
     const campaignTitle = form.getValues('name');
+    const storyDraft = form.getValues('longDescription');
     if (!campaignTitle || campaignTitle.length < 5) {
         toast({
             variant: 'destructive',
@@ -175,7 +176,7 @@ export default function CreateCampaignPage() {
 
     setIsGeneratingStory(true);
     try {
-        const result = await generateCampaignStory({ campaignTitle });
+        const result = await generateCampaignStory({ campaignTitle, storyDraft });
         form.setValue('longDescription', result.campaignStory, { shouldValidate: true, shouldDirty: true });
         toast({
             title: "AI Story Generated!",
