@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Image from 'next/image';
@@ -36,7 +35,7 @@ interface ProjectPageClientContentProps {
 export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
     const { openPhoto } = usePhotoDialog();
     const { toast } = useToast();
-    const { allUpdates } = useDonationContext();
+    const { allUpdates, isClient } = useDonationContext();
     const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
     const [summary, setSummary] = useState<SummarizeProjectOutput | null>(null);
 
@@ -130,7 +129,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         </div>
                                         <div>
                                             <p className="font-semibold">{update.title}</p>
-                                            <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
+                                            <p className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</p>
                                             <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                         </div>
                                     </div>
@@ -144,7 +143,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                             </div>
                                             <div>
                                                 <p className="font-semibold">{update.title}</p>
-                                                <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
+                                                <p className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</p>
                                                 <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                             </div>
                                         </div>
@@ -158,7 +157,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         </div>
                                         <div>
                                             <p className="font-semibold">{update.title}</p>
-                                            <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
+                                            <p className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</p>
                                             <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                         </div>
                                     </div>
@@ -182,7 +181,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                                         {' '}donated <span className="font-bold text-primary">Rs.{update.monetaryDonationDetails.amount.toLocaleString()}</span>
                                                     </p>
                                                 </div>
-                                                <p className="text-xs text-muted-foreground">{format(new Date(update.date), 'PPp')}</p>
+                                                <p className="text-xs text-muted-foreground">{isClient ? format(new Date(update.date), 'PPp') : <Skeleton className="h-4 w-24" />}</p>
                                             </div>
                                         </div>
                                     )
@@ -202,7 +201,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                 )}
                                 <div>
                                     <p className="font-semibold">{update.title}</p>
-                                    <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
+                                    <p className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</p>
                                     <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                 </div>
                                 </div>
@@ -256,3 +255,5 @@ export function ProjectPageClientAside({ project }: { project: typeof typeProjec
         </aside>
     )
 }
+
+    
