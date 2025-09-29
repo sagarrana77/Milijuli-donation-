@@ -98,17 +98,28 @@ export default function EditUserCampaignPage() {
   }
 
   const handleCreditUsage = () => {
-      if (currentUser?.aiCredits !== undefined && currentUser.aiCredits > 0) {
-          currentUser.aiCredits -= 1;
-          setCredits(currentUser.aiCredits);
-          return true;
-      }
-      toast({
-          variant: 'destructive',
-          title: 'Out of AI Credits',
-          description: 'Please purchase more credits to use this feature.'
-      });
-      return false;
+    if (!currentUser) return false;
+
+    if (currentUser.aiCredits !== undefined && currentUser.aiCredits > 0) {
+        currentUser.aiCredits -= 1;
+        setCredits(currentUser.aiCredits);
+        if (currentUser.aiCredits < 10) {
+            toast({
+                title: 'Low AI Credits',
+                description: `You have ${currentUser.aiCredits} credits remaining. Purchase more to continue using AI features.`,
+                variant: 'destructive',
+            });
+        }
+        return true;
+    }
+
+    toast({
+        variant: 'destructive',
+        title: 'Out of AI Credits',
+        description: 'Redirecting you to the pricing page to get more.',
+    });
+    router.push('/pricing');
+    return false;
   }
 
   const form = useForm<ProjectFormData>({
@@ -165,8 +176,6 @@ export default function EditUserCampaignPage() {
   };
 
   const handleGenerateSeo = async () => {
-    if (!handleCreditUsage()) return;
-
     const name = form.getValues('name');
     const longDescription = form.getValues('longDescription');
 
@@ -187,6 +196,8 @@ export default function EditUserCampaignPage() {
         });
         return;
     }
+    
+    if (!handleCreditUsage()) return;
     
     setIsGeneratingSeo(true);
     try {

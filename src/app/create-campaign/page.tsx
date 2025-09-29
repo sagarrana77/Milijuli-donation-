@@ -83,17 +83,28 @@ export default function CreateCampaignPage() {
   });
 
   const handleCreditUsage = () => {
-      if (currentUser?.aiCredits !== undefined && currentUser.aiCredits > 0) {
-          currentUser.aiCredits -= 1;
-          setCredits(currentUser.aiCredits);
-          return true;
-      }
-      toast({
-          variant: 'destructive',
-          title: 'Out of AI Credits',
-          description: 'Please purchase more credits to use this feature.'
-      });
-      return false;
+    if (!currentUser) return false;
+
+    if (currentUser.aiCredits !== undefined && currentUser.aiCredits > 0) {
+        currentUser.aiCredits -= 1;
+        setCredits(currentUser.aiCredits);
+        if (currentUser.aiCredits < 10) {
+            toast({
+                title: 'Low AI Credits',
+                description: `You have ${currentUser.aiCredits} credits remaining. Purchase more to continue using AI features.`,
+                variant: 'destructive',
+            });
+        }
+        return true;
+    }
+
+    toast({
+        variant: 'destructive',
+        title: 'Out of AI Credits',
+        description: 'Redirecting you to the pricing page to get more.',
+    });
+    router.push('/pricing');
+    return false;
   }
 
   function onSubmit(data: ProjectFormData) {
@@ -138,8 +149,6 @@ export default function CreateCampaignPage() {
   };
 
   const handleGenerateSummary = async () => {
-    if (!handleCreditUsage()) return;
-
     const longDescription = form.getValues('longDescription');
     const name = form.getValues('name');
     if (!longDescription || longDescription.length < 100) {
@@ -158,6 +167,8 @@ export default function CreateCampaignPage() {
         });
         return;
     }
+    
+    if (!handleCreditUsage()) return;
 
     setIsGeneratingSummary(true);
     try {
@@ -180,8 +191,6 @@ export default function CreateCampaignPage() {
   };
   
   const handleGenerateStory = async () => {
-    if (!handleCreditUsage()) return;
-
     const campaignTitle = form.getValues('name');
     const storyDraft = form.getValues('longDescription');
     if (!campaignTitle || campaignTitle.length < 5) {
@@ -192,6 +201,8 @@ export default function CreateCampaignPage() {
         });
         return;
     }
+
+    if (!handleCreditUsage()) return;
 
     setIsGeneratingStory(true);
     try {
