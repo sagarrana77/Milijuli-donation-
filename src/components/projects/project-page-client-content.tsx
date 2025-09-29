@@ -215,9 +215,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 </Card>
                 </TabsContent>
                 <TabsContent value="donors" className="mt-4">
-                    <Card className="bg-blue-500/5 border-blue-500/10">
-                        <DonorsList projectName={project.name} />
-                    </Card>
+                    <DonorsList />
                 </TabsContent>
                 <TabsContent value="in-kind" className="mt-4">
                     <InKindDonationsTab />
@@ -256,5 +254,3 @@ export function ProjectPageClientAside({ project }: { project: typeof typeProjec
         </aside>
     )
 }
-
-    
