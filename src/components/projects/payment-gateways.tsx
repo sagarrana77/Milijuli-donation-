@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { paymentGateways } from '@/lib/data';
+import { paymentGateways as defaultPaymentGateways } from '@/lib/data';
 import type { Gateway } from '@/lib/data';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -17,9 +17,15 @@ const PlaceholderLogo = ({ name }: { name: string }) => (
   </div>
 );
 
-export function PaymentGateways() {
+interface PaymentGatewaysProps {
+    gateways?: Gateway[];
+}
+
+export function PaymentGateways({ gateways }: PaymentGatewaysProps) {
   const [selectedGateway, setSelectedGateway] = useState<Gateway | null>(null);
-  const enabledGateways = paymentGateways.filter((g) => g.enabled);
+  
+  const availableGateways = gateways && gateways.length > 0 ? gateways : defaultPaymentGateways;
+  const enabledGateways = availableGateways.filter((g) => g.enabled);
 
   const handleGatewayClick = (gateway: Gateway) => {
     if (selectedGateway?.name === gateway.name) {

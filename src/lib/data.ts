@@ -27,6 +27,13 @@ export type WishlistItem = {
   allowInKind?: boolean;
 }
 
+export type ProjectGateway = {
+    name: string;
+    enabled: boolean;
+    qrValue: string;
+    generatedQr: string;
+};
+
 export type Project = {
   id: string;
   name: string;
@@ -58,6 +65,7 @@ export type Project = {
   }[];
   discussion: Comment[];
   wishlist: WishlistItem[];
+  gateways?: ProjectGateway[];
 };
 
 export let projects: Project[] = [
@@ -261,6 +269,11 @@ export let projects: Project[] = [
     expenses: [],
     discussion: [],
     wishlist: [],
+    gateways: [
+        { name: 'Esewa', enabled: true, qrValue: 'my-esewa-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=my-esewa-id' },
+        { name: 'Khalti', enabled: false, qrValue: '', generatedQr: '' },
+        { name: 'PayPal', enabled: true, qrValue: 'paypal.me/my-campaign', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=paypal.me%2Fmy-campaign' },
+    ]
   },
   {
     id: 'stray-animal-shelter',
@@ -279,6 +292,7 @@ export let projects: Project[] = [
     expenses: [],
     discussion: [],
     wishlist: [],
+    gateways: []
   },
 ];
 
@@ -906,6 +920,7 @@ export let paymentGateways: Gateway[] = [
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
+
 
 
 

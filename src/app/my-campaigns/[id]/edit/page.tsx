@@ -27,10 +27,11 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Trash2, Save } from 'lucide-react';
+import { PlusCircle, Trash2, Save, CreditCard } from 'lucide-react';
 import Link from 'next/link';
-import { projects, type Project, currentUser } from '@/lib/data';
+import { projects, type Project, currentUser, paymentGateways as defaultGateways } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from 'next/image';
 
 const wishlistItemSchema = z.object({
   id: z.string(),
@@ -53,6 +54,13 @@ const updateSchema = z.object({
   imageHint: z.string().min(1, "Image hint is required."),
 });
 
+const gatewaySchema = z.object({
+    name: z.string(),
+    enabled: z.boolean(),
+    qrValue: z.string(),
+    generatedQr: z.string(),
+})
+
 const projectSchema = z.object({
   name: z.string().min(5, 'Project name must be at least 5 characters.'),
   organization: z.string().min(3, 'Organization name is required.'),
@@ -64,6 +72,7 @@ const projectSchema = z.object({
   verified: z.boolean(),
   wishlist: z.array(wishlistItemSchema),
   updates: z.array(updateSchema),
+  gateways: z.array(gatewaySchema).optional(),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
@@ -87,7 +96,8 @@ export default function EditUserCampaignPage() {
       ...project,
       verified: project.verified, // Ensure verified is part of the form
       wishlist: project.wishlist.map(item => ({...item, allowInKind: item.allowInKind || false})),
-      updates: project.updates.map(update => ({...update, date: new Date(update.date)}))
+      updates: project.updates.map(update => ({...update, date: new Date(update.date)})),
+      gateways: project.gateways && project.gateways.length > 0 ? project.gateways : defaultGateways.map(g => ({...g, enabled: false, qrValue: '', generatedQr: ''}))
     } : undefined,
   });
 
@@ -100,6 +110,12 @@ export default function EditUserCampaignPage() {
     control: form.control,
     name: "updates",
   });
+  
+  const { fields: gatewayFields } = useFieldArray({
+    control: form.control,
+    name: "gateways"
+  });
+
 
   function onSubmit(data: ProjectFormData) {
     const projectIndex = projects.findIndex(p => p.id === projectId);
@@ -114,6 +130,17 @@ export default function EditUserCampaignPage() {
     router.push('/my-campaigns');
   }
 
+  const handleGenerateQr = (index: number) => {
+    const gateways = form.getValues('gateways');
+    if(gateways) {
+        const gateway = gateways[index];
+        if (gateway && gateway.qrValue) {
+            const newQr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(gateway.qrValue)}`;
+            form.setValue(`gateways.${index}.generatedQr`, newQr, { shouldDirty: true });
+        }
+    }
+  };
+
   return (
     <div className="mx-auto max-w-4xl">
         <div className="mb-8">
@@ -126,10 +153,11 @@ export default function EditUserCampaignPage() {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Tabs defaultValue="details">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="details">Campaign Details</TabsTrigger>
                     <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                     <TabsTrigger value="updates">Updates</TabsTrigger>
+                    <TabsTrigger value="gateways">Payments</TabsTrigger>
                 </TabsList>
                 <TabsContent value="details" className="space-y-8 mt-6">
                     <Card>
@@ -477,6 +505,81 @@ export default function EditUserCampaignPage() {
                             </Button>
                         </CardContent>
                     </Card>
+                </TabsContent>
+                <TabsContent value="gateways" className="mt-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                        <CreditCard />
+                        Payment Gateways
+                        </CardTitle>
+                        <CardDescription>
+                        Enable gateways and generate QR codes for your campaign. These will override the platform's default gateways.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        {gatewayFields.map((field, index) => (
+                            <div key={field.id} className="space-y-4 rounded-md border p-4">
+                                <div className="flex items-center justify-between">
+                                    <FormField
+                                        control={form.control}
+                                        name={`gateways.${index}.name`}
+                                        render={({ field }) => (
+                                        <FormLabel className="text-lg font-medium">{field.value}</FormLabel>
+                                        )}
+                                    />
+                                     <FormField
+                                        control={form.control}
+                                        name={`gateways.${index}.enabled`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Switch
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <FormField
+                                        control={form.control}
+                                        name={`gateways.${index}.qrValue`}
+                                        render={({ field }) => (
+                                <FormItem>
+                                <FormLabel className="text-sm font-normal">Payment URL or ID</FormLabel>
+                                <div className="flex gap-2">
+                                    <FormControl>
+                                    <Input
+                                        placeholder={`Enter ${form.getValues(`gateways.${index}.name`)} URL or ID`}
+                                        {...field}
+                                    />
+                                    </FormControl>
+                                    <Button type="button" onClick={() => handleGenerateQr(index)}>Generate QR</Button>
+                                </div>
+                                <FormMessage />
+                                </FormItem>
+                                )}
+                                />
+                                {form.watch(`gateways.${index}.generatedQr`) && (
+                                    <div className="flex flex-col items-center gap-2 rounded-lg bg-muted p-3 sm:flex-row">
+                                        <Image
+                                            src={form.watch(`gateways.${index}.generatedQr`)}
+                                            alt={`${form.watch(`gateways.${index}.name`)} QR Code`}
+                                            width={150}
+                                            height={150}
+                                            data-ai-hint="qr code"
+                                        />
+                                        <p className="text-center text-xs text-muted-foreground break-all sm:text-left">
+                                            QR Code for: {form.watch(`gateways.${index}.qrValue`)}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
                 </TabsContent>
             </Tabs>
 

@@ -142,7 +142,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                         <CardTitle>Donate via QR</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center gap-4">
-                        <PaymentGateways />
+                        <PaymentGateways gateways={project.gateways} />
                     </CardContent>
                 </Card>
               </ScrollFadeIn>
