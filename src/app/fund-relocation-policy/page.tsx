@@ -13,8 +13,8 @@ export default function FundRelocationPolicyPage() {
       <ScrollFadeIn>
         <div className="text-center">
             <Handshake className="mx-auto h-12 w-12 text-primary" />
-            <h1 className="mt-4 text-4xl font-bold tracking-tight">Fund Relocation Policy</h1>
-            <p className="mt-2 text-lg text-muted-foreground">
+            <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">Fund Relocation Policy</h1>
+            <p className="mt-2 text-base md:text-lg text-muted-foreground">
             Ensuring every dollar makes an impact.
             </p>
         </div>
@@ -25,7 +25,7 @@ export default function FundRelocationPolicyPage() {
             <CardHeader className="flex-row items-start gap-4">
                 <Info className="h-8 w-8 text-primary mt-1" />
                 <div>
-                    <CardTitle className="text-2xl text-primary">Our Commitment to Impact</CardTitle>
+                    <CardTitle className="text-xl md:text-2xl text-primary">Our Commitment to Impact</CardTitle>
                     <CardDescription className="mt-2 text-base">
                         At ClarityChain, our primary goal is to ensure that every donation contributes to positive change. Sometimes, circumstances change, and to maximize the impact of your generosity, we may need to reallocate funds. This policy explains how and why we do this, always with transparency at the forefront.
                     </CardDescription>
@@ -106,7 +106,7 @@ export default function FundRelocationPolicyPage() {
                 <CardHeader className="flex-row items-start gap-4">
                     <AlertCircle className="h-8 w-8 text-amber-600 mt-1" />
                     <div>
-                        <CardTitle className="text-2xl text-amber-700">Your Consent Matters</CardTitle>
+                        <CardTitle className="text-xl md:text-2xl text-amber-700">Your Consent Matters</CardTitle>
                         <CardDescription className="mt-2 text-base text-amber-800/80">
                             By agreeing to our fund relocation policy during the donation process, you give us the flexibility to make sure your contribution has the greatest possible impact. We take this responsibility seriously and are committed to upholding the highest standards of transparency at every step. If you have any questions, please don't hesitate to contact our support team.
                         </CardDescription>

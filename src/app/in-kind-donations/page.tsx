@@ -24,10 +24,10 @@ export default function InKindDonationsPage() {
     <div className="mx-auto max-w-6xl space-y-8">
       <div className="text-center">
         <Package className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">
+        <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">
           Donation Hall of Fame
         </h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+        <p className="mt-2 text-base md:text-lg text-muted-foreground">
           A heartfelt thank you to our donors for these generous physical
           contributions.
         </p>

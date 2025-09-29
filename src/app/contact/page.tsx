@@ -67,10 +67,10 @@ export default function ContactPage() {
     <div className="mx-auto max-w-2xl space-y-8">
       <div className="text-center">
         <Mail className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">
+        <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">
           Feature Your Campaign
         </h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+        <p className="mt-2 text-base md:text-lg text-muted-foreground">
           Interested in showcasing your fundraising campaign on ClarityChain?
           Fill out the form below to get in touch with our team.
         </p>

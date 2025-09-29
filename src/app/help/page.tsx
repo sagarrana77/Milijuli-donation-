@@ -22,8 +22,8 @@ export default function HelpPage() {
     <div className="space-y-8">
       <div className="text-center">
         <InfoIcon className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">Help & Support</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+        <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">Help & Support</h1>
+        <p className="mt-2 text-base md:text-lg text-muted-foreground">
           Find answers to your questions and get in touch with our team.
         </p>
       </div>

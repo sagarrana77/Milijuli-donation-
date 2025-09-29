@@ -198,7 +198,7 @@ export default function CreateCampaignPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Create New Campaign</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">Create New Campaign</h1>
         <p className="text-muted-foreground">
           Fill out the details below to launch your fundraising campaign.
         </p>

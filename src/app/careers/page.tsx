@@ -120,8 +120,8 @@ export default function CareersPage() {
     <div className="mx-auto max-w-4xl space-y-8">
       <div className="mb-8 text-center">
         <UserPlus className="mx-auto h-12 w-12 text-primary" />
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">Join Our Team</h1>
-        <p className="mt-2 text-lg text-muted-foreground">
+        <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">Join Our Team</h1>
+        <p className="mt-2 text-base md:text-lg text-muted-foreground">
           Help us build a more transparent and accountable world. We're looking
           for passionate individuals to join our mission.
         </p>

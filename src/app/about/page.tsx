@@ -70,7 +70,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
             <div className="text-center text-white">
               <h1 className="text-4xl font-bold md:text-5xl">About ClarityChain</h1>
-              <p className="mt-4 max-w-2xl text-lg">
+              <p className="mt-4 max-w-2xl text-base md:text-lg">
                 {aboutContent.tagline}
               </p>
             </div>
@@ -84,10 +84,10 @@ export default function AboutPage() {
                 <section>
                 <Card>
                     <CardHeader>
-                    <CardTitle className="text-3xl">Our Mission</CardTitle>
+                    <CardTitle className="text-2xl md:text-3xl">Our Mission</CardTitle>
                     </CardHeader>
                     <CardContent>
-                    <p className="text-lg text-muted-foreground">
+                    <p className="text-base md:text-lg text-muted-foreground">
                         {aboutContent.mission}
                     </p>
                     </CardContent>
@@ -97,7 +97,7 @@ export default function AboutPage() {
             
             <ScrollFadeIn asChild>
                 <section>
-                <h2 className="mb-6 text-center text-3xl font-bold">How We Practice Transparency</h2>
+                <h2 className="mb-6 text-center text-2xl md:text-3xl font-bold">How We Practice Transparency</h2>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {features.map((feature, index) => (
                     <ScrollFadeIn key={feature.title} delay={index * 100}>
@@ -125,7 +125,7 @@ export default function AboutPage() {
 
             <ScrollFadeIn asChild>
                 <section>
-                <h2 className="mb-6 text-center text-3xl font-bold">Meet Our Team</h2>
+                <h2 className="mb-6 text-center text-2xl md:text-3xl font-bold">Meet Our Team</h2>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     {teamMembers.map((member, index) => (
                     <ScrollFadeIn key={member.id} delay={index * 100}>
@@ -153,7 +153,7 @@ export default function AboutPage() {
                 <aside className="sticky top-24 space-y-8">
                      <Card>
                         <CardHeader>
-                            <CardTitle className="text-2xl">Our Core Values</CardTitle>
+                            <CardTitle className="text-xl md:text-2xl">Our Core Values</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                              {values.map((value, index) => (
