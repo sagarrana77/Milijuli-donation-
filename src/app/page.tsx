@@ -58,7 +58,7 @@ export default function DashboardPage() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-chart-1">
                 ${currentDashboardStats.totalFunds.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -75,7 +75,7 @@ export default function DashboardPage() {
               <HandCoins className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-chart-2">
                 ${currentDashboardStats.fundsInHand.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -93,7 +93,7 @@ export default function DashboardPage() {
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-chart-3">
                 ${currentDashboardStats.totalSpent.toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
