@@ -99,5 +99,4 @@ export function PaymentGateways({ project }: PaymentGatewaysProps) {
     </div>
   );
 }
-
     

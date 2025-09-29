@@ -14,11 +14,11 @@ import { Pagination } from '../ui/pagination';
 const ITEMS_PER_PAGE = 5;
 
 export function DonorsList() {
-  const { project, donations: projectDonations } = useDonationContext();
+  const { donations } = useDonationContext();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(projectDonations.length / ITEMS_PER_PAGE);
-  const paginatedDonations = projectDonations.slice(
+  const totalPages = Math.ceil(donations.length / ITEMS_PER_PAGE);
+  const paginatedDonations = donations.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );

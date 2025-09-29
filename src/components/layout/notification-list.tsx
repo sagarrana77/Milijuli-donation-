@@ -81,5 +81,4 @@ export function NotificationList() {
     </Card>
   );
 }
-
     

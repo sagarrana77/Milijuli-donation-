@@ -35,7 +35,7 @@ export function WishlistTab() {
         donationType: data.donationType,
         address: data.address,
         status: 'Pending',
-        date: new Date(),
+        date: new Date().toISOString(),
         comments: [],
     });
 

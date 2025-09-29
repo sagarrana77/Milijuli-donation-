@@ -214,5 +214,4 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
     </Card>
   );
 }
-
     

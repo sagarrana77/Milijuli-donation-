@@ -33,6 +33,7 @@ import { projects, currentUser } from '@/lib/data';
 import { summarizeProject } from '@/ai/flows/summarize-project';
 import { generateCampaignStory } from '@/ai/flows/generate-campaign-story';
 import { useState } from 'react';
+import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 const projectSchema = z.object({
   name: z.string().min(5, 'Project name must be at least 5 characters.'),
@@ -50,6 +51,7 @@ type ProjectFormData = z.infer<typeof projectSchema>;
 export default function NewProjectPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { openDialog } = usePricingDialog();
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [isGeneratingStory, setIsGeneratingStory] = useState(false);
   const [credits, setCredits] = useState(currentUser?.aiCredits ?? 0);
@@ -69,16 +71,27 @@ export default function NewProjectPage() {
   });
 
   const handleCreditUsage = () => {
-      if (currentUser?.aiCredits !== undefined && currentUser.aiCredits > 0) {
+      if (!currentUser) return false;
+
+      if (currentUser.aiCredits !== undefined && currentUser.aiCredits > 0) {
           currentUser.aiCredits -= 1;
-          setCredits(currentUser.aiCredits);
+          setCredits(currentUser.aiCredits); // Update local state to re-render
+          if (currentUser.aiCredits < 10 && currentUser.aiCredits > 0) {
+              toast({
+                  title: 'Low AI Credits',
+                  description: `You have ${currentUser.aiCredits} credits remaining. Purchase more to continue using AI features.`,
+                  variant: 'destructive',
+              });
+          }
           return true;
       }
+
       toast({
           variant: 'destructive',
           title: 'Out of AI Credits',
-          description: 'Please purchase more credits to use this feature.'
+          description: 'Please purchase more credits to use this feature.',
       });
+      openDialog();
       return false;
   }
 
@@ -102,8 +115,6 @@ export default function NewProjectPage() {
   }
 
    const handleGenerateSummary = async () => {
-    if (!handleCreditUsage()) return;
-
     const longDescription = form.getValues('longDescription');
     const name = form.getValues('name');
     if (!longDescription || longDescription.length < 100) {
@@ -122,6 +133,8 @@ export default function NewProjectPage() {
         });
         return;
     }
+    
+    if (!handleCreditUsage()) return;
 
     setIsGeneratingSummary(true);
     try {
@@ -144,8 +157,6 @@ export default function NewProjectPage() {
   };
 
   const handleGenerateStory = async () => {
-    if (!handleCreditUsage()) return;
-
     const campaignTitle = form.getValues('name');
     const storyDraft = form.getValues('longDescription');
     if (!campaignTitle || campaignTitle.length < 5) {
@@ -156,6 +167,8 @@ export default function NewProjectPage() {
         });
         return;
     }
+    
+    if (!handleCreditUsage()) return;
 
     setIsGeneratingStory(true);
     try {

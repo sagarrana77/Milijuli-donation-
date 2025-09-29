@@ -110,5 +110,4 @@ export function RealtimeLedger() {
     </Card>
   );
 }
-
     
