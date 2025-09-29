@@ -48,6 +48,7 @@ import {
   Copy,
   Sparkles,
   Gift,
+  Trash2,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -138,6 +139,15 @@ export default function AdminDashboardPage() {
       setForceRender(c => c + 1);
     }
   };
+  
+  const handleDeleteSalary = (id: string) => {
+    const index = salaries.findIndex(s => s.id === id);
+    if(index > -1) {
+        salaries.splice(index, 1);
+        setForceRender(c => c + 1);
+        toast({ title: "Salary Deleted", description: "The salary has been removed." });
+    }
+  }
 
   const handleAddEquipment = () => {
     if (newEquipment.item && newEquipment.cost && newEquipment.purchaseDate && newEquipment.vendor) {
@@ -157,6 +167,15 @@ export default function AdminDashboardPage() {
     }
   };
   
+  const handleDeleteEquipment = (id: string) => {
+    const index = equipment.findIndex(s => s.id === id);
+    if(index > -1) {
+        equipment.splice(index, 1);
+        setForceRender(c => c + 1);
+        toast({ title: "Equipment Deleted", description: "The equipment has been removed." });
+    }
+  }
+  
   const handleAddMiscExpense = () => {
       if (newMiscExpense.item && newMiscExpense.cost && newMiscExpense.purchaseDate && newMiscExpense.vendor) {
           const newMisc = { 
@@ -172,6 +191,15 @@ export default function AdminDashboardPage() {
         setForceRender(c => c + 1);
       }
     };
+    
+    const handleDeleteMiscExpense = (id: string) => {
+        const index = miscExpenses.findIndex(s => s.id === id);
+        if(index > -1) {
+            miscExpenses.splice(index, 1);
+            setForceRender(c => c + 1);
+            toast({ title: "Expense Deleted", description: "The expense has been removed." });
+        }
+    }
 
     const handleAddInKindDonation = () => {
         if (newInKindDonation.donorName && newInKindDonation.wishlistItemId) {
@@ -825,12 +853,20 @@ export default function AdminDashboardPage() {
                             <TableBody>
                                 {salaries.map((salary) => (
                                 <TableRow key={salary.id}>
-                                <TableCell>{salary.employee}</TableCell>
-                                <TableCell>{salary.role}</TableCell>
-                                <TableCell>{salary.currency === 'USD' ? '$' : 'Rs.'}{salary.salary.toLocaleString()} / mo</TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                                </TableCell>
+                                    <TableCell>
+                                        <Input defaultValue={salary.employee} onChange={(e) => salary.employee = e.target.value} />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Input defaultValue={salary.role} onChange={(e) => salary.role = e.target.value} />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Input type="number" defaultValue={salary.salary} onChange={(e) => salary.salary = parseFloat(e.target.value)} />
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="icon" onClick={() => handleDeleteSalary(salary.id)}>
+                                            <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                                 ))}
                             </TableBody>
@@ -864,13 +900,23 @@ export default function AdminDashboardPage() {
                             <TableBody>
                                 {equipment.map((equip) => (
                                     <TableRow key={equip.id}>
-                                    <TableCell>{equip.item}</TableCell>
-                                    <TableCell>Rs.{equip.cost.toLocaleString()}</TableCell>
-                                    <TableCell>{new Date(equip.purchaseDate).toLocaleDateString()}</TableCell>
-                                    <TableCell>{equip.vendor}</TableCell>
-                                    <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                                    </TableCell>
+                                        <TableCell>
+                                            <Input defaultValue={equip.item} onChange={(e) => equip.item = e.target.value} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input type="number" defaultValue={equip.cost} onChange={(e) => equip.cost = parseFloat(e.target.value)} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input type="date" defaultValue={equip.purchaseDate} onChange={(e) => equip.purchaseDate = e.target.value} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input defaultValue={equip.vendor} onChange={(e) => equip.vendor = e.target.value} />
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost" size="icon" onClick={() => handleDeleteEquipment(equip.id)}>
+                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                            </Button>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -902,12 +948,22 @@ export default function AdminDashboardPage() {
                             <TableBody>
                                 {miscExpenses.map((expense) => (
                                     <TableRow key={expense.id}>
-                                        <TableCell>{expense.item}</TableCell>
-                                        <TableCell>Rs.{expense.cost.toLocaleString()}</TableCell>
-                                        <TableCell>{new Date(expense.purchaseDate).toLocaleDateString()}</TableCell>
-                                        <TableCell>{expense.vendor}</TableCell>
+                                        <TableCell>
+                                            <Input defaultValue={expense.item} onChange={(e) => expense.item = e.target.value} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input type="number" defaultValue={expense.cost} onChange={(e) => expense.cost = parseFloat(e.target.value)} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input type="date" defaultValue={expense.purchaseDate} onChange={(e) => expense.purchaseDate = e.target.value} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Input defaultValue={expense.vendor} onChange={(e) => expense.vendor = e.target.value} />
+                                        </TableCell>
                                         <TableCell className="text-right">
-                                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                            <Button variant="ghost" size="icon" onClick={() => handleDeleteMiscExpense(expense.id)}>
+                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
