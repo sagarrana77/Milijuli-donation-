@@ -255,9 +255,9 @@ export default function CreateCampaignPage() {
                         name="targetAmount"
                         render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Fundraising Target ($)</FormLabel>
+                            <FormLabel>Fundraising Target (NPR)</FormLabel>
                             <FormControl>
-                            <Input type="number" placeholder="5000" {...field} />
+                            <Input type="number" placeholder="500000" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

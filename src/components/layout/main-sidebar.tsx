@@ -42,7 +42,6 @@ import { useState } from 'react';
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/projects', label: 'All Projects', icon: HeartHandshake },
-  { href: '/in-kind-donations', label: 'In-Kind Donations', icon: Package },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
@@ -99,6 +98,7 @@ export function MainSidebar() {
             </SidebarMenuItem>
           )}
           {currentUser && (
+            <>
             <SidebarMenuItem>
               <SidebarMenuButton
                   asChild
@@ -111,6 +111,19 @@ export function MainSidebar() {
                   </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                  asChild
+                  isActive={isActive('/in-kind-donations')}
+                  tooltip={{ children: 'In-Kind Donations', side: 'right' }}
+              >
+                  <Link href="/in-kind-donations" onClick={handleLinkClick}>
+                  <Package />
+                  <span>In-Kind Donations</span>
+                  </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            </>
           )}
           <SidebarMenuItem className="my-2">
             <hr className="border-sidebar-border"/>

@@ -271,7 +271,7 @@ export default function EditUserCampaignPage() {
                             name="targetAmount"
                             render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Fundraising Target ($)</FormLabel>
+                                <FormLabel>Fundraising Target (NPR)</FormLabel>
                                 <FormControl>
                                 <Input type="number" {...field} />
                                 </FormControl>
@@ -350,7 +350,7 @@ export default function EditUserCampaignPage() {
                                             name={`wishlist.${index}.costPerItem`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Cost per Item ($)</FormLabel>
+                                                    <FormLabel>Cost per Item (NPR)</FormLabel>
                                                     <FormControl><Input type="number" {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>

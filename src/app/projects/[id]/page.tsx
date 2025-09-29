@@ -1,27 +1,14 @@
 
 
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import { projects, type Project } from '@/lib/data';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TransparencySealIcon } from '@/components/icons/transparency-seal';
-import { PaymentGateways } from '@/components/projects/payment-gateways';
-import { DiscussionSection } from '@/components/projects/discussion-section';
-import { format } from 'date-fns';
 import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wrapper';
-import { DonorsList } from '@/components/projects/donors-list';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
-import { FundraisingProgress } from '@/components/projects/fundraising-progress';
-import { WishlistTab } from '@/components/projects/wishlist-tab';
 import { ProjectPageClientContent } from '@/components/projects/project-page-client-content';
 
 
@@ -59,9 +46,21 @@ export default function ProjectDetailPage({
                 <p className="text-lg text-muted-foreground">{project.organization}</p>
             </header>
           </ScrollFadeIn>
-
-          <ProjectPageClientContent project={project} />
-          
+           <div className="grid gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+                <ScrollFadeIn>
+                    <Card className="overflow-hidden">
+                         <ProjectPageClientContent project={project} />
+                        <CardContent className="p-6">
+                        <p className="text-base text-foreground/90">
+                            {project.longDescription}
+                        </p>
+                        </CardContent>
+                    </Card>
+                </ScrollFadeIn>
+            </div>
+            <ProjectPageClientContent.Aside />
+          </div>
       </DonationDialogWrapper>
     </div>
   );
