@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardFooter,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Project as typeProject, platformSettings } from '@/lib/data';
@@ -28,10 +29,13 @@ import { Skeleton } from '../ui/skeleton';
 import { useDonationContext } from './donation-dialog-wrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Link from 'next/link';
+import { Pagination } from '../ui/pagination';
 
 interface ProjectPageClientContentProps {
     project: typeof typeProject;
 }
+
+const UPDATES_PER_PAGE = 5;
 
 export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
     const { openPhoto } = usePhotoDialog();
@@ -39,6 +43,13 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
     const { allUpdates, isClient } = useDonationContext();
     const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
     const [summary, setSummary] = useState<SummarizeProjectOutput | null>(null);
+    const [updatesPage, setUpdatesPage] = useState(1);
+
+    const totalUpdatesPages = Math.ceil(allUpdates.length / UPDATES_PER_PAGE);
+    const paginatedUpdates = allUpdates.slice(
+        (updatesPage - 1) * UPDATES_PER_PAGE,
+        updatesPage * UPDATES_PER_PAGE
+    );
 
     const handleGenerateSummary = async () => {
         setIsGeneratingSummary(true);
@@ -119,9 +130,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 <TabsContent value="updates" className="mt-4">
                     <Card className="bg-primary/5 border-primary/10">
                         <CardContent className="p-6">
-                        {allUpdates.length > 0 ? (
+                        {paginatedUpdates.length > 0 ? (
                             <div className="space-y-6">
-                            {allUpdates.map(update => {
+                            {paginatedUpdates.map(update => {
                                 if (update.isTransfer) {
                                 return (
                                     <div key={update.id} className="flex items-start gap-4 rounded-md border bg-card p-4">
@@ -130,7 +141,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         </div>
                                         <div>
                                             <p className="font-semibold">{update.title}</p>
-                                            <div className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</div>
+                                            <div className="text-sm text-muted-foreground">
+                                                {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
+                                            </div>
                                             <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                         </div>
                                     </div>
@@ -144,7 +157,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                             </div>
                                             <div>
                                                 <p className="font-semibold">{update.title}</p>
-                                                <div className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</div>
+                                                <div className="text-sm text-muted-foreground">
+                                                    {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
+                                                </div>
                                                 <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                             </div>
                                         </div>
@@ -158,7 +173,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         </div>
                                         <div>
                                             <p className="font-semibold">{update.title}</p>
-                                            <div className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</div>
+                                            <div className="text-sm text-muted-foreground">
+                                                {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
+                                            </div>
                                             <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                         </div>
                                     </div>
@@ -182,7 +199,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                                         {' '}donated <span className="font-bold text-primary">Rs.{update.monetaryDonationDetails.amount.toLocaleString()}</span>
                                                     </div>
                                                 </div>
-                                                <div className="text-xs text-muted-foreground">{isClient ? format(new Date(update.date), 'PPp') : <Skeleton className="h-4 w-24" />}</div>
+                                                <div className="text-xs text-muted-foreground">
+                                                    {isClient ? format(new Date(update.date), 'PPp') : <Skeleton className="h-4 w-24" />}
+                                                </div>
                                             </div>
                                         </div>
                                     )
@@ -202,7 +221,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                 )}
                                 <div>
                                     <p className="font-semibold">{update.title}</p>
-                                    <div className="text-sm text-muted-foreground">{isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
+                                    </div>
                                     <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                 </div>
                                 </div>
@@ -211,6 +232,15 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                             </div>
                         ) : <p className="text-muted-foreground">No updates posted yet.</p>}
                         </CardContent>
+                        {totalUpdatesPages > 1 && (
+                            <CardFooter>
+                                <Pagination
+                                    currentPage={updatesPage}
+                                    totalPages={totalUpdatesPages}
+                                    onPageChange={setUpdatesPage}
+                                />
+                            </CardFooter>
+                        )}
                     </Card>
                 </TabsContent>
                 <TabsContent value="wishlist" className="mt-4">
@@ -256,7 +286,3 @@ export function ProjectPageClientAside({ project }: { project: typeof typeProjec
         </aside>
     )
 }
-
-    
-
-    
