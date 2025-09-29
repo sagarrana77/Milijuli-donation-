@@ -1,15 +1,22 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  "projectId": "claritychaincopy-5248246-a89a9",
-  "appId": "1:558600078971:web:419c6aa09059581f9e84de",
-  "apiKey": "AIzaSyC-DcgLVpAmpbJ-8I-zWzux8cOrrUgjrAs",
-  "authDomain": "claritychaincopy-5248246-a89a9.firebaseapp.com",
+  "projectId": "clarity-chainfinal2-5492-9f214",
+  "appId": "1:84723762935:web:137a6d525928256a8d35f2",
+  "apiKey": "AIzaSyBijGQCTwKQNBb4ZrvWnhlpngmEwLfhbmM",
+  "authDomain": "clarity-chainfinal2-5492-9f214.firebaseapp.com",
   "measurementId": "",
-  "messagingSenderId": "558600078971"
+  "messagingSenderId": "84723762935"
 };
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-export { app };
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+export { app, auth, db, storage };

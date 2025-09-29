@@ -1,11 +1,10 @@
-
 'use client';
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '../ui/button';
-import { Bell, User } from 'lucide-react';
+import { Bell, User, LogIn, LogOut } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +19,10 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Breadcrumbs } from './breadcrumbs';
-import { currentUser } from '@/lib/data';
 import { NotificationList } from './notification-list';
 import { useNotifications } from '@/context/notification-provider';
+import { useAuth } from '@/context/auth-provider';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith('/admin/projects/new')) {
@@ -91,6 +91,8 @@ function getPageTitle(pathname: string): string {
         return 'Notifications';
     case '/fund-relocation-policy':
         return 'Fund Relocation Policy';
+    case '/login':
+        return 'Login or Sign Up';
     default:
       return 'ClarityChain';
   }
@@ -99,6 +101,7 @@ function getPageTitle(pathname: string): string {
 export function Header() {
   const pathname = usePathname();
   const { notifications } = useNotifications();
+  const { user, signOut } = useAuth();
   const title = getPageTitle(pathname);
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -110,7 +113,8 @@ export function Header() {
         </div>
         <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
         <div className="ml-auto flex items-center gap-2">
-          <Popover>
+          {user && (
+            <Popover>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full relative">
                   <Bell className="h-5 w-5" />
@@ -127,28 +131,42 @@ export function Header() {
                 <NotificationList />
               </PopoverContent>
             </Popover>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <User className="h-5 w-5" />
-                <span className="sr-only">Toggle user menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/profile/current-user">Profile</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/settings">Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/">Logout</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          )}
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? ""} />
+                        <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                 </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href={`/profile/${user.uid}`}>Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/settings">Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild>
+                <Link href="/login">
+                    <LogIn className="mr-2 h-4 w-4" />
+                    Login
+                </Link>
+            </Button>
+          )}
         </div>
       </div>
       <Breadcrumbs />
