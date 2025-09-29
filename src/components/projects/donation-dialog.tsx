@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CreditCard, Landmark, Save } from 'lucide-react';
+import { CreditCard, Landmark, Save, UserX } from 'lucide-react';
 import { currentUser } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
@@ -30,7 +30,7 @@ interface DonationDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   projectName: string;
-  onDonate: (amount: number) => void;
+  onDonate: (amount: number, isAnonymous: boolean) => void;
 }
 
 const presetAmounts: { [key: string]: number[] } = {
@@ -67,6 +67,7 @@ export function DonationDialog({
   const [error, setError] = useState('');
   const [hasPaymentMethod, setHasPaymentMethod] = useState(currentUser?.hasPaymentMethod || false);
   const [relocationConsent, setRelocationConsent] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [currency, setCurrency] = useState<'NPR' | 'USD' | 'EUR'>('NPR');
   const { toast } = useToast();
 
@@ -94,11 +95,12 @@ export function DonationDialog({
     const nprAmount = numericAmount * exchangeRates[currency];
 
     console.log(`Donation of Rs.${nprAmount} for "${projectName}" with relocation consent: ${relocationConsent}`);
-    onDonate(nprAmount);
+    onDonate(nprAmount, isAnonymous);
     onOpenChange(false); // Close dialog on successful donation
     setAmount(''); // Reset amount
     setError('');
     setRelocationConsent(false);
+    setIsAnonymous(false);
     setCurrency('NPR');
   };
 
@@ -272,6 +274,22 @@ export function DonationDialog({
                             </label>
                             <p className="text-sm text-muted-foreground">
                             If this project is over-funded or cancelled, your donation may be moved to another project. <Link href="/fund-relocation-policy" target="_blank" className="text-primary hover:underline">Learn More</Link>.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="items-top flex space-x-2">
+                        <Checkbox id="anonymous" checked={isAnonymous} onCheckedChange={(checked) => {
+                            setIsAnonymous(checked as boolean);
+                        }} />
+                        <div className="grid gap-1.5 leading-none">
+                            <label
+                            htmlFor="anonymous"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
+                            >
+                            <UserX className="h-4 w-4" /> Donate Anonymously
+                            </label>
+                            <p className="text-sm text-muted-foreground">
+                                Your name and profile will not be publicly displayed for this donation.
                             </p>
                         </div>
                     </div>

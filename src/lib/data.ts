@@ -648,6 +648,7 @@ export type Donation = {
   project: string;
   amount: number;
   date: string; // Use string to prevent timezone issues
+  isAnonymous?: boolean;
 };
 
 // This represents a larger, more complete list of donations for the whole platform
@@ -656,25 +657,25 @@ function createDonationData(): Donation[] {
     
     // Create a static, deterministic list of donations
     const staticDonations: Omit<Donation, 'donor'|'id'>[] = [
-        { project: 'Education for All Nepal', amount: 5000, date: '2024-05-20T10:00:00Z' },
-        { project: 'Stray Animal Shelter Expansion', amount: 7500, date: '2024-05-19T14:30:00Z' },
-        { project: 'Education for All Nepal', amount: 2000, date: '2024-05-18T09:00:00Z' },
-        { project: 'Clean Water Initiative', amount: 10000, date: '2024-05-20T11:00:00Z' },
-        { project: 'Clean Water Initiative', amount: 15000, date: '2024-05-19T18:00:00Z' },
-        { project: 'Community Health Posts', amount: 8000, date: '2024-05-20T12:00:00Z' },
-        { project: 'Disaster Relief Fund', amount: 25000, date: '2024-05-20T13:00:00Z' },
-        { project: 'Disaster Relief Fund', amount: 50000, date: '2024-05-19T20:00:00Z' },
-        { project: 'Rebuild the Local Library', amount: 3000, date: '2024-05-20T14:00:00Z' },
-        { project: 'Stray Animal Shelter Expansion', amount: 12000, date: '2024-05-19T22:00:00Z' },
-        { project: 'Operational Costs', amount: 1000, date: '2024-05-20T15:00:00Z' },
-        { project: 'Operational Costs', amount: 2500, date: '2024-05-18T16:00:00Z' },
-        { project: 'Operational Costs', amount: 500, date: '2024-05-17T11:00:00Z' },
+      { project: 'Education for All Nepal', amount: 5000, date: '2024-05-20T10:00:00Z', isAnonymous: false },
+      { project: 'Stray Animal Shelter Expansion', amount: 7500, date: '2024-05-19T14:30:00Z', isAnonymous: false },
+      { project: 'Education for All Nepal', amount: 2000, date: '2024-05-18T09:00:00Z', isAnonymous: true },
+      { project: 'Clean Water Initiative', amount: 10000, date: '2024-05-20T11:00:00Z', isAnonymous: false },
+      { project: 'Clean Water Initiative', amount: 15000, date: '2024-05-19T18:00:00Z', isAnonymous: false },
+      { project: 'Community Health Posts', amount: 8000, date: '2024-05-20T12:00:00Z', isAnonymous: false },
+      { project: 'Disaster Relief Fund', amount: 25000, date: '2024-05-20T13:00:00Z', isAnonymous: true },
+      { project: 'Disaster Relief Fund', amount: 50000, date: '2024-05-19T20:00:00Z', isAnonymous: false },
+      { project: 'Rebuild the Local Library', amount: 3000, date: '2024-05-20T14:00:00Z', isAnonymous: false },
+      { project: 'Stray Animal Shelter Expansion', amount: 12000, date: '2024-05-19T22:00:00Z', isAnonymous: false },
+      { project: 'Operational Costs', amount: 1000, date: '2024-05-20T15:00:00Z', isAnonymous: true },
+      { project: 'Operational Costs', amount: 2500, date: '2024-05-18T16:00:00Z', isAnonymous: false },
+      { project: 'Operational Costs', amount: 500, date: '2024-05-17T11:00:00Z', isAnonymous: false },
     ];
 
     return staticDonations.map((donation, index) => ({
         ...donation,
         id: index + 1,
-        donor: donorPool[index % donorPool.length],
+        donor: donation.isAnonymous ? users.find(u => u.id === 'user-anonymous')! : donorPool[index % donorPool.length],
     }));
 }
 
@@ -754,7 +755,7 @@ export const notifications: Notification[] = [
     id: 'notif-1',
     title: 'New Donation!',
     description: 'You received a NPR 5,000 donation for "Education for All Nepal".',
-    date: new Date(Date.now() - 1000 * 60 * 5).toISOString(), // 5 minutes ago
+    date: '2024-07-27T10:00:00Z', // 5 minutes ago
     read: false,
     href: '/projects/education-for-all-nepal?tab=donors',
   },
@@ -762,7 +763,7 @@ export const notifications: Notification[] = [
     id: 'notif-2',
     title: 'Project Update',
     description: '"Clean Water Initiative" has been successfully funded!',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
+    date: '2024-07-27T08:05:00Z', // 2 hours ago
     read: false,
     href: '/projects/clean-water-initiative',
   },
@@ -770,7 +771,7 @@ export const notifications: Notification[] = [
     id: 'notif-5',
     title: 'You were mentioned',
     description: 'Aayush KC mentioned you in a comment on "Education for All Nepal".',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString(), // 8 hours ago
+    date: '2024-07-27T02:05:00Z', // 8 hours ago
     read: false,
     href: '/projects/education-for-all-nepal?tab=discussion',
   },
@@ -778,7 +779,7 @@ export const notifications: Notification[] = [
     id: 'notif-6',
     title: 'New Reply',
     description: 'Aayush KC replied to your comment on "Education for All Nepal".',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString(), // 8 hours ago
+    date: '2024-07-27T02:05:00Z', // 8 hours ago
     read: true,
     href: '/projects/education-for-all-nepal?tab=discussion',
   },
@@ -786,7 +787,7 @@ export const notifications: Notification[] = [
     id: 'notif-3',
     title: 'New Team Member',
     description: 'Rohan Maharjan has joined the team as Lead Full-Stack Developer.',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
+    date: '2024-07-26T10:05:00Z', // 1 day ago
     read: true,
     href: '/team/rohan-maharjan',
   },
@@ -794,7 +795,7 @@ export const notifications: Notification[] = [
     id: 'notif-4',
     title: 'Weekly Summary',
     description: 'Your projects raised a total of NPR 125,000 this week.',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
+    date: '2024-07-24T10:05:00Z', // 3 days ago
     read: true,
     href: '/my-campaigns',
   },

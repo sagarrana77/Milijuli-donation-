@@ -6,7 +6,7 @@ import type { Project, Donation } from '@/lib/data';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { sendThankYouEmail } from '@/ai/flows/send-thank-you-email';
-import { currentUser, allDonations as initialDonations } from '@/lib/data';
+import { currentUser, allDonations as initialDonations, users } from '@/lib/data';
 
 interface DonationContextType {
   raisedAmount: number;
@@ -58,16 +58,11 @@ export function DonationDialogWrapper({
         // Add a new donation to the list for real-time feel
         const newDonation: Donation = {
             id: Date.now(),
-            donor: {
-                id: 'user-anonymous',
-                name: 'Anonymous',
-                avatarUrl: 'https://images.unsplash.com/photo-1705975848221-d73d53c0119d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBlcnNvbnxlbnwwfHx8fDE3NTg4Mzc1MTF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-                profileUrl: '/profile/user-anonymous',
-                bio: 'An anonymous donor making a difference.'
-            },
+            donor: users.find(u => u.id === 'user-anonymous')!,
             project: project.name,
             amount: newAmount,
             date: new Date().toISOString(),
+            isAnonymous: true,
         };
         setDonations(prev => [newDonation, ...prev]);
 
@@ -78,7 +73,7 @@ export function DonationDialogWrapper({
   }, [project.targetAmount, raisedAmount, project.name]);
 
 
-  const handleDonation = async (amount: number) => {
+  const handleDonation = async (amount: number, isAnonymous: boolean) => {
     if (!currentUser) {
         toast({
             variant: "destructive",
@@ -90,12 +85,15 @@ export function DonationDialogWrapper({
     setRaisedAmount((prev) => prev + amount);
     setDonors((prev) => prev + 1);
 
+    const donor = isAnonymous ? users.find(u => u.id === 'user-anonymous')! : currentUser;
+
     const newDonation: Donation = {
         id: Date.now(),
-        donor: currentUser,
+        donor: donor,
         project: project.name,
         amount: amount,
         date: new Date().toISOString(),
+        isAnonymous: isAnonymous,
     };
     setDonations(prev => [newDonation, ...prev]);
 
@@ -117,7 +115,7 @@ export function DonationDialogWrapper({
       variant: 'default',
     });
 
-    if (currentUser?.email) {
+    if (currentUser?.email && !isAnonymous) {
       try {
         await sendThankYouEmail({
           donorName: currentUser.name,
