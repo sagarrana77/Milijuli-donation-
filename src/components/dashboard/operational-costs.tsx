@@ -6,6 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import {
   Table,
@@ -14,12 +15,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { salaries as SalariesType, equipment as EquipmentType, miscExpenses as MiscExpensesType, teamMembers as TeamMembersType } from '@/lib/data';
+import { platformSettings } from '@/lib/data';
 import { Briefcase, MonitorSmartphone, Archive } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { Separator } from '../ui/separator';
 
 interface OperationalCostsProps {
     salaries: SalariesType;
@@ -28,11 +32,32 @@ interface OperationalCostsProps {
     teamMembers: TeamMembersType;
 }
 
+const TAX_RATE = 0.13; // 13% VAT for demonstration
+
 export function OperationalCosts({ salaries, equipment, miscExpenses, teamMembers }: OperationalCostsProps) {
     const findTeamMemberId = (employeeName: string) => {
         const member = teamMembers.find(m => m.name === employeeName);
         return member ? member.id : null;
     }
+
+    const calculateSubtotal = (items: { cost: number }[] | { salary: number, currency: 'NPR' | 'USD' }[]) => {
+        return items.reduce((acc, item) => {
+            if ('salary' in item) { // It's a salary item
+                const nprAmount = item.currency === 'USD' ? item.salary * 133 : item.salary;
+                return acc + nprAmount;
+            }
+            return acc + (item as {cost: number}).cost;
+        }, 0);
+    };
+
+    const salariesSubtotal = calculateSubtotal(salaries);
+    const equipmentSubtotal = calculateSubtotal(equipment);
+    const miscSubtotal = calculateSubtotal(miscExpenses);
+    
+    const grandSubtotal = salariesSubtotal + equipmentSubtotal + miscSubtotal;
+    const taxAmount = grandSubtotal * TAX_RATE;
+    const grandTotal = grandSubtotal + taxAmount;
+    
   return (
     <Card>
       <CardHeader>
@@ -86,6 +111,14 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
                     );
                     })}
                 </TableBody>
+                 {platformSettings.showOperationalCostsTotal && (
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={2} className="font-semibold">Salaries Subtotal</TableCell>
+                            <TableCell className="text-right font-semibold">Rs.{salariesSubtotal.toLocaleString()}</TableCell>
+                        </TableRow>
+                    </TableFooter>
+                )}
                 </Table>
             </div>
           </TabsContent>
@@ -112,6 +145,14 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
                     </TableRow>
                     ))}
                 </TableBody>
+                 {platformSettings.showOperationalCostsTotal && (
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={3} className="font-semibold">Equipment Subtotal</TableCell>
+                            <TableCell className="text-right font-semibold">Rs.{equipmentSubtotal.toLocaleString()}</TableCell>
+                        </TableRow>
+                    </TableFooter>
+                )}
                 </Table>
             </div>
           </TabsContent>
@@ -138,11 +179,38 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
                     </TableRow>
                     ))}
                 </TableBody>
+                {platformSettings.showOperationalCostsTotal && (
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={3} className="font-semibold">Miscellaneous Subtotal</TableCell>
+                            <TableCell className="text-right font-semibold">Rs.{miscSubtotal.toLocaleString()}</TableCell>
+                        </TableRow>
+                    </TableFooter>
+                )}
                 </Table>
             </div>
           </TabsContent>
         </Tabs>
       </CardContent>
+       {platformSettings.showOperationalCostsTotal && (
+         <>
+            <Separator className="my-4" />
+            <CardFooter className="flex flex-col items-end gap-2 p-6 pt-0">
+                <div className="flex justify-between w-full max-w-xs text-muted-foreground">
+                    <span>Subtotal:</span>
+                    <span>Rs.{grandSubtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between w-full max-w-xs text-muted-foreground">
+                    <span>Government Taxes ({(TAX_RATE * 100).toFixed(0)}%):</span>
+                    <span>Rs.{taxAmount.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between w-full max-w-xs text-lg font-bold">
+                    <span>Grand Total:</span>
+                    <span className="text-primary">Rs.{grandTotal.toLocaleString()}</span>
+                </div>
+            </CardFooter>
+        </>
+      )}
     </Card>
   );
 }

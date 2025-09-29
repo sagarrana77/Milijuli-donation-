@@ -159,6 +159,6 @@ A collection for storing singleton documents that manage global site content and
     -   Document Data: `{ "whatsapp": "string", "viber": "string", ... }`
 -   **`globalConfig`**:
     -   Path: `/platformSettings/globalConfig`
-    -   Document Data: `{ "campaignCreationEnabled": "boolean", "userQrPaymentsEnabled": "boolean", "paymentGateways": [ { "name": "string", ... } ] }`
+    -   Document Data: `{ "campaignCreationEnabled": "boolean", "userQrPaymentsEnabled": "boolean", "showOperationalCostsTotal": "boolean", "paymentGateways": [ { "name": "string", ... } ] }`
 
 This structure provides a robust and scalable foundation for building out the backend of the ClarityChain application.

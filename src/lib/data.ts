@@ -506,8 +506,8 @@ export type User = {
 export let users: User[] = [
     { 
         id: 'current-user', 
-        name: 'Current User', 
-        email: 'donor@example.com',
+        name: 'Aayush KC', 
+        email: 'aayush.kc@example.com',
         avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop', 
         profileUrl: '/profile/current-user',
         bio: 'A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.',
@@ -567,7 +567,7 @@ export let users: User[] = [
     },
      { 
         id: 'clarity-chain-admin', 
-        name: 'ClarityChain', 
+        name: 'ClarityChain Admin', 
         email: 'admin@claritychain.com',
         avatarUrl: getImageUrl('logo-clarity-chain'), 
         profileUrl: '/profile/clarity-chain-admin',
@@ -583,6 +583,26 @@ export let users: User[] = [
         avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
         profileUrl: '/team/sunita-sharma',
         bio: 'Sunita is a community engagement specialist from Kathmandu, passionate about connecting people and causes.',
+        friends: [],
+    },
+    {
+        id: 'rohan-maharjan',
+        name: 'Rohan Maharjan',
+        role: 'Lead Full-Stack Developer',
+        avatarUrl: getImageUrl('avatar-sam-chen'),
+        profileUrl: '/team/rohan-maharjan',
+        bio:
+        "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of ClarityChain to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
+        friends: [],
+    },
+    {
+        id: 'priya-adhikari',
+        name: 'Priya Adhikari',
+        role: 'Head of Operations (Nepal)',
+        avatarUrl: getImageUrl('avatar-maria-garcia'),
+        profileUrl: '/team/priya-adhikari',
+        bio:
+        "Priya ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Priya's dedication is the driving force behind our operational excellence.",
         friends: [],
     }
 ];
@@ -737,7 +757,7 @@ export const notifications: Notification[] = [
   {
     id: 'notif-5',
     title: 'You were mentioned',
-    description: 'Current User mentioned you in a comment on "Education for All Nepal".',
+    description: 'Aayush KC mentioned you in a comment on "Education for All Nepal".',
     date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
     read: false,
     href: '/projects/education-for-all-nepal?tab=discussion',
@@ -745,7 +765,7 @@ export const notifications: Notification[] = [
   {
     id: 'notif-6',
     title: 'New Reply',
-    description: 'Current User replied to your comment on "Education for All Nepal".',
+    description: 'Aayush KC replied to your comment on "Education for All Nepal".',
     date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
     read: true,
     href: '/projects/education-for-all-nepal?tab=discussion',
@@ -1032,5 +1052,6 @@ export let paymentGateways: Gateway[] = [
 export let platformSettings = {
     userQrPaymentsEnabled: true,
     campaignCreationEnabled: true,
+    showOperationalCostsTotal: true,
 }
     

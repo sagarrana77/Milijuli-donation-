@@ -42,6 +42,7 @@ import {
   Users,
   Wand2,
   Loader2,
+  Receipt,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -375,6 +376,14 @@ export default function AdminDashboardPage() {
     });
   };
 
+  const handleShowTotalCostToggle = (enabled: boolean) => {
+    platformSettings.showOperationalCostsTotal = enabled;
+    setForceRender(c => c + 1);
+    toast({
+        title: 'Setting Updated!',
+        description: `Operational cost total is now ${enabled ? 'visible' : 'hidden'} to users.`
+    });
+  }
 
 
   return (
@@ -881,6 +890,15 @@ export default function AdminDashboardPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
+                             <div className="rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <Label htmlFor="ops-total-switch" className="text-base font-medium">Show Operational Cost Totals</Label>
+                                        <p className="text-sm text-muted-foreground">Display the total with taxes on the public operational costs page.</p>
+                                    </div>
+                                    <Switch id="ops-total-switch" checked={platformSettings.showOperationalCostsTotal} onCheckedChange={handleShowTotalCostToggle} />
+                                </div>
+                            </div>
                             <div className="rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div>
