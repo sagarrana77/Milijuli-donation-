@@ -21,7 +21,7 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
-import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins, GalleryHorizontal } from 'lucide-react';
+import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins, GalleryHorizontal, MessageSquare, History } from 'lucide-react';
 import { useState } from 'react';
 import { summarizeProject, SummarizeProjectOutput } from '@/ai/flows/summarize-project';
 import { useToast } from '@/hooks/use-toast';
@@ -124,12 +124,12 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
             <ScrollFadeIn asChild delay={200}>
             <Tabs defaultValue="updates" className="mt-8 px-6 pb-6">
                 <TabsList className="grid w-full grid-cols-6">
-                <TabsTrigger value="updates">Updates</TabsTrigger>
-                <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
-                <TabsTrigger value="album">Album</TabsTrigger>
-                <TabsTrigger value="donors">Donors</TabsTrigger>
-                <TabsTrigger value="in-kind">In-Kind</TabsTrigger>
-                <TabsTrigger value="discussion">Discussion</TabsTrigger>
+                    <TabsTrigger value="updates"><History className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Updates</span></TabsTrigger>
+                    <TabsTrigger value="wishlist"><ShoppingCart className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Wishlist</span></TabsTrigger>
+                    <TabsTrigger value="album"><GalleryHorizontal className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Album</span></TabsTrigger>
+                    <TabsTrigger value="donors"><HandCoins className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Donors</span></TabsTrigger>
+                    <TabsTrigger value="in-kind"><Gift className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">In-Kind</span></TabsTrigger>
+                    <TabsTrigger value="discussion"><MessageSquare className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Discussion</span></TabsTrigger>
                 </TabsList>
                 <TabsContent value="updates" className="mt-4">
                     <Card className="bg-primary/5 border-primary/10">
