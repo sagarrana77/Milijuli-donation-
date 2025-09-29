@@ -28,6 +28,7 @@ export function ImageDialog() {
   const { imageUrl, imageAlt, title, donor, project, comments } = photoData;
 
   const hasDonorInfo = donor && project;
+  const hasComments = comments && comments.length > 0;
 
   return (
     <Dialog open={isOpen} onOpenChange={closeImage}>

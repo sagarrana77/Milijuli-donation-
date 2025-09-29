@@ -21,7 +21,7 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
-import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins } from 'lucide-react';
+import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins, GalleryHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { summarizeProject, SummarizeProjectOutput } from '@/ai/flows/summarize-project';
 import { useToast } from '@/hooks/use-toast';
@@ -50,6 +50,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
         (updatesPage - 1) * UPDATES_PER_PAGE,
         updatesPage * UPDATES_PER_PAGE
     );
+    
+    const imageUpdates = allUpdates.filter(update => update.imageUrl);
+
 
     const handleGenerateSummary = async () => {
         setIsGeneratingSummary(true);
@@ -120,11 +123,12 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
             
             <ScrollFadeIn asChild delay={200}>
             <Tabs defaultValue="updates" className="mt-8 px-6 pb-6">
-                <TabsList>
+                <TabsList className="grid w-full grid-cols-6">
                 <TabsTrigger value="updates">Updates</TabsTrigger>
                 <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
+                <TabsTrigger value="album">Album</TabsTrigger>
                 <TabsTrigger value="donors">Donors</TabsTrigger>
-                <TabsTrigger value="in-kind">In-Kind Donations</TabsTrigger>
+                <TabsTrigger value="in-kind">In-Kind</TabsTrigger>
                 <TabsTrigger value="discussion">Discussion</TabsTrigger>
                 </TabsList>
                 <TabsContent value="updates" className="mt-4">
@@ -174,7 +178,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         <div>
                                             <p className="font-semibold">{update.title}</p>
                                             <div className="text-sm text-muted-foreground">
-                                                {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
+                                                {isClient ? format(new Date(update.date), 'PPP') : <div className="h-4 w-24" />}
                                             </div>
                                             <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                         </div>
@@ -220,13 +224,13 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         height={150} 
                                         className="aspect-video w-full rounded-md object-cover sm:w-48 cursor-pointer" 
                                         data-ai-hint={update.imageHint} 
-                                        onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title })}
+                                        onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title, comments: project.discussion })}
                                     />
                                 )}
                                 <div>
                                     <p className="font-semibold">{update.title}</p>
                                     <div className="text-sm text-muted-foreground">
-                                        {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
+                                        {isClient ? format(new Date(update.date), 'PPP') : <div className="h-4 w-24" />}
                                     </div>
                                     <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                 </div>
@@ -249,6 +253,36 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 </TabsContent>
                 <TabsContent value="wishlist" className="mt-4">
                     <WishlistTab />
+                </TabsContent>
+                <TabsContent value="album" className="mt-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2"><GalleryHorizontal /> Project Album</CardTitle>
+                            <CardDescription>A collection of all images from project updates.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {imageUpdates.length > 0 ? (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                    {imageUpdates.map(update => (
+                                        <div key={`album-${update.id}`} className="aspect-square relative rounded-lg overflow-hidden cursor-pointer group" onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title, comments: project.discussion })}>
+                                            <Image 
+                                                src={update.imageUrl!} 
+                                                alt={update.title} 
+                                                fill
+                                                className="object-cover transition-transform group-hover:scale-110"
+                                                data-ai-hint={update.imageHint} 
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
+                                                <p className="text-white text-xs font-medium line-clamp-2">{update.title}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-muted-foreground text-center py-8">No images have been posted in updates yet.</p>
+                            )}
+                        </CardContent>
+                    </Card>
                 </TabsContent>
                 <TabsContent value="donors" className="mt-4">
                     <DonorsList />
