@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import Link from 'next/link';
 import { Card, CardContent } from './card';
 import { DiscussionSection } from '../projects/discussion-section';
+import { ScrollArea } from './scroll-area';
 
 export function ImageDialog() {
   const { isOpen, closeImage, photoData } = usePhotoDialog();
@@ -47,34 +48,36 @@ export function ImageDialog() {
                 className="object-contain"
                 />
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-               {donor && project && (
-                 <Card>
-                    <CardContent className="p-4">
-                        <p className="font-semibold text-lg">{title}</p>
-                         <p className="text-sm text-muted-foreground">
-                            for <Link href={`/projects/${project.id}`} className="text-primary hover:underline">{project.name}</Link>
-                        </p>
-                        <div className="mt-4">
-                            <Link href={donor.profileUrl} className="flex items-center gap-3 w-full">
-                                <Avatar className="h-10 w-10 border">
-                                    <AvatarImage
-                                    src={donor.avatarUrl}
-                                    alt={donor.name}
-                                    />
-                                    <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <div className="font-medium">Donated by {donor.name}</div>
-                                </div>
-                            </Link>
-                        </div>
-                    </CardContent>
-                 </Card>
-               )}
+            <ScrollArea className="flex-1">
+                <div className="p-4 space-y-4">
+                {donor && project && (
+                    <Card>
+                        <CardContent className="p-4">
+                            <p className="font-semibold text-lg">{title}</p>
+                            <p className="text-sm text-muted-foreground">
+                                for <Link href={`/projects/${project.id}`} className="text-primary hover:underline">{project.name}</Link>
+                            </p>
+                            <div className="mt-4">
+                                <Link href={donor.profileUrl} className="flex items-center gap-3 w-full">
+                                    <Avatar className="h-10 w-10 border">
+                                        <AvatarImage
+                                        src={donor.avatarUrl}
+                                        alt={donor.name}
+                                        />
+                                        <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <div className="font-medium">Donated by {donor.name}</div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
-              <DiscussionSection comments={comments || []} projectId="photo-dialog" />
-            </div>
+                <DiscussionSection comments={comments || []} projectId="photo-dialog" />
+                </div>
+            </ScrollArea>
           </div>
         </div>
       </DialogContent>
