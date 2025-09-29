@@ -30,6 +30,7 @@ import { useDonationContext } from './donation-dialog-wrapper';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Link from 'next/link';
 import { Pagination } from '../ui/pagination';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface ProjectPageClientContentProps {
     project: typeof typeProject;
@@ -122,14 +123,15 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
             </CardContent>
             
             <ScrollFadeIn asChild delay={200}>
+            <TooltipProvider>
             <Tabs defaultValue="updates" className="mt-8 px-6 pb-6">
                 <TabsList className="grid w-full grid-cols-6">
-                    <TabsTrigger value="updates"><History className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Updates</span></TabsTrigger>
-                    <TabsTrigger value="wishlist"><ShoppingCart className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Wishlist</span></TabsTrigger>
-                    <TabsTrigger value="album"><GalleryHorizontal className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Album</span></TabsTrigger>
-                    <TabsTrigger value="donors"><HandCoins className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Donors</span></TabsTrigger>
-                    <TabsTrigger value="in-kind"><Gift className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">In-Kind</span></TabsTrigger>
-                    <TabsTrigger value="discussion"><MessageSquare className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Discussion</span></TabsTrigger>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="updates"><History className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Updates</span></TabsTrigger></TooltipTrigger><TooltipContent>Updates</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="wishlist"><ShoppingCart className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Wishlist</span></TabsTrigger></TooltipTrigger><TooltipContent>Wishlist</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="album"><GalleryHorizontal className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Album</span></TabsTrigger></TooltipTrigger><TooltipContent>Album</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="donors"><HandCoins className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Donors</span></TabsTrigger></TooltipTrigger><TooltipContent>Donors</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="in-kind"><Gift className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">In-Kind</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="discussion"><MessageSquare className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Discussion</span></TabsTrigger></TooltipTrigger><TooltipContent>Discussion</TooltipContent></Tooltip>
                 </TabsList>
                 <TabsContent value="updates" className="mt-4">
                     <Card className="bg-primary/5 border-primary/10">
@@ -178,7 +180,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         <div>
                                             <p className="font-semibold">{update.title}</p>
                                             <div className="text-sm text-muted-foreground">
-                                                {isClient ? format(new Date(update.date), 'PPP') : <div className="h-4 w-24" />}
+                                                {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
                                             </div>
                                             <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                         </div>
@@ -230,7 +232,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                 <div>
                                     <p className="font-semibold">{update.title}</p>
                                     <div className="text-sm text-muted-foreground">
-                                        {isClient ? format(new Date(update.date), 'PPP') : <div className="h-4 w-24" />}
+                                        {isClient ? format(new Date(update.date), 'PPP') : <Skeleton className="h-4 w-24" />}
                                     </div>
                                     <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                 </div>
@@ -299,6 +301,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 </Card>
                 </TabsContent>
             </Tabs>
+            </TooltipProvider>
             </ScrollFadeIn>
       </>
     )
