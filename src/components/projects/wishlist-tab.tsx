@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -10,7 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import type { WishlistItem } from '@/lib/data';
 import { InKindDonationDialog } from './in-kind-donation-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { physicalDonations } from '@/lib/data';
+import { physicalDonations, currentUser } from '@/lib/data';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 
@@ -26,8 +27,8 @@ export function WishlistTab() {
     // In a real app, this would be an API call
     physicalDonations.unshift({
         id: `pd-${Date.now()}`,
-        donorName: 'Current User', // From auth
-        donorEmail: 'current.user@example.com', // From auth
+        donorName: currentUser?.name || 'Anonymous',
+        donorEmail: currentUser?.email || 'anonymous@example.com',
         projectName: project.name,
         itemName: selectedItem.name,
         quantity: data.quantity,

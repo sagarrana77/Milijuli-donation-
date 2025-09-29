@@ -38,9 +38,10 @@ import {
   List,
   Archive,
   HandCoins,
+  Package,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings } from '@/lib/data';
-import type { PhysicalDonation } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users } from '@/lib/data';
+import type { PhysicalDonation, Project } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,6 +60,7 @@ import { RecordExpenseDialog } from '@/components/admin/record-expense-dialog';
 import { TransferFundsDialog } from '@/components/admin/transfer-funds-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 export default function AdminDashboardPage() {
@@ -70,7 +72,13 @@ export default function AdminDashboardPage() {
   const [newSalary, setNewSalary] = useState({ employee: '', role: '', salary: '' });
   const [newEquipment, setNewEquipment] = useState({ item: '', cost: '', purchaseDate: '', vendor: '', imageUrl: '', imageHint: '' });
   const [newMiscExpense, setNewMiscExpense] = useState({ item: '', cost: '', purchaseDate: '', vendor: '' });
-
+  const [newInKindDonation, setNewInKindDonation] = useState({
+    donorName: '',
+    projectName: '',
+    itemName: '',
+    quantity: '1',
+    date: format(new Date(), 'yyyy-MM-dd'),
+  });
 
   const handleAddSalary = () => {
     if (newSalary.employee && newSalary.role && newSalary.salary) {
@@ -114,6 +122,60 @@ export default function AdminDashboardPage() {
         setForceRender(c => c + 1);
       }
     };
+
+    const handleAddInKindDonation = () => {
+        if (newInKindDonation.donorName && newInKindDonation.projectName && newInKindDonation.itemName && newInKindDonation.quantity) {
+          const project = projects.find(p => p.name === newInKindDonation.projectName);
+          const donor = users.find(u => u.name === newInKindDonation.donorName);
+    
+          if (!project || !donor) {
+            toast({ variant: 'destructive', title: "Error", description: "Selected project or donor not found." });
+            return;
+          }
+    
+          const newDonation: PhysicalDonation = {
+            id: `pd-admin-${Date.now()}`,
+            donorName: newInKindDonation.donorName,
+            donorEmail: donor.email || 'N/A',
+            projectName: newInKindDonation.projectName,
+            itemName: newInKindDonation.itemName,
+            quantity: parseInt(newInKindDonation.quantity, 10),
+            donationType: 'received',
+            status: 'Completed',
+            date: new Date(newInKindDonation.date),
+            comments: [],
+          };
+    
+          physicalDonations.unshift(newDonation);
+    
+          // Create an update for the project
+          const newUpdate: Project['updates'][0] = {
+            id: `update-inkind-${Date.now()}`,
+            title: `New In-Kind Donation Received!`,
+            description: `${newInKindDonation.donorName} generously donated ${newInKindDonation.quantity}x ${newInKindDonation.itemName}.`,
+            date: new Date(newInKindDonation.date),
+            isInKindDonation: true,
+            inKindDonationDetails: {
+              donorName: newInKindDonation.donorName,
+              itemName: newInKindDonation.itemName,
+              quantity: parseInt(newInKindDonation.quantity, 10),
+            },
+          };
+    
+          project.updates.unshift(newUpdate);
+    
+          setNewInKindDonation({
+            donorName: '',
+            projectName: '',
+            itemName: '',
+            quantity: '1',
+            date: format(new Date(), 'yyyy-MM-dd'),
+          });
+    
+          toast({ title: "In-Kind Donation Posted", description: "The donation has been recorded and an update was posted to the project page." });
+          setForceRender(c => c + 1);
+        }
+      };
 
 
   const handleGenerateQr = (name: string) => {
@@ -163,11 +225,39 @@ export default function AdminDashboardPage() {
     setForceRender(c => c + 1);
   }
 
-  const handleFundsTransferred = () => {
+  const handleFundsTransferred = (data: { from: string; to: string; amount: number; reason: string }) => {
+    const fromProject = projects.find(p => p.name === data.from);
+    const toProject = projects.find(p => p.name === data.to);
+
+    if (fromProject) fromProject.raisedAmount -= data.amount;
+    if (toProject) toProject.raisedAmount += data.amount;
+    
+    // Create updates for both projects
+    const fromUpdate = {
+        id: `update-transfer-from-${Date.now()}`,
+        title: 'Fund Transfer',
+        description: `An amount of $${data.amount.toLocaleString()} was transferred from this project to "${data.to}". Reason: ${data.reason}`,
+        date: new Date(),
+        isTransfer: true,
+        transferDetails: { amount: data.amount, toProject: data.to }
+    };
+     const toUpdate = {
+        id: `update-transfer-to-${Date.now()}`,
+        title: 'Funds Received',
+        description: `An amount of $${data.amount.toLocaleString()} was received from "${data.from}". Reason: ${data.reason}`,
+        date: new Date(),
+        isTransfer: true,
+        transferDetails: { amount: data.amount, fromProject: data.from }
+    };
+    
+    if (fromProject) fromProject.updates.unshift(fromUpdate);
+    if (toProject) toProject.updates.unshift(toUpdate);
+
     toast({
         title: 'Funds Transferred',
-        description: 'The funds have been successfully transferred.',
+        description: 'The funds have been successfully transferred and updates posted.',
     });
+    setForceRender(c => c + 1);
   }
   
   const handleSaveSocialLinks = () => {
@@ -281,7 +371,7 @@ export default function AdminDashboardPage() {
       <Tabs defaultValue="projects">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
-          <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> In-Kind Donation Pledges</TabsTrigger>
+          <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> In-Kind Donations</TabsTrigger>
           <TabsTrigger value="operational-costs"><Briefcase className="mr-2 h-4 w-4"/> Operational Costs</TabsTrigger>
           <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
         </TabsList>
@@ -365,65 +455,111 @@ export default function AdminDashboardPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Donor</TableHead>
-                                <TableHead>Item</TableHead>
-                                <TableHead>Project</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead><span className="sr-only">Actions</span></TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {physicalDonations.map(donation => (
-                                <TableRow key={donation.id}>
-                                    <TableCell>{format(donation.date, 'PPP')}</TableCell>
-                                    <TableCell>
-                                        <div className="font-medium">{donation.donorName}</div>
-                                        <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
-                                    </TableCell>
-                                    <TableCell>{donation.itemName} (x{donation.quantity})</TableCell>
-                                    <TableCell>{donation.projectName}</TableCell>
-                                    <TableCell>
-                                        <Badge variant={donation.donationType === 'pickup' ? 'default' : 'secondary'}>
-                                            {donation.donationType}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant={
-                                            donation.status === 'Completed' ? 'default' : 
-                                            donation.status === 'Cancelled' ? 'destructive' : 'secondary'
-                                        }>
-                                            {donation.status}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuLabel>Change Status</DropdownMenuLabel>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Pending')}>
-                                                    Mark as Pending
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Completed')}>
-                                                    Mark as Completed
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Cancelled')} className="text-destructive">
-                                                    Mark as Cancelled
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <Tabs defaultValue="pledges">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="pledges"><List className="mr-2 h-4 w-4"/> Pledges</TabsTrigger>
+                            <TabsTrigger value="post-received"><Package className="mr-2 h-4 w-4"/> Post Received Donation</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="pledges" className="mt-4">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Donor</TableHead>
+                                        <TableHead>Item</TableHead>
+                                        <TableHead>Project</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead><span className="sr-only">Actions</span></TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {physicalDonations.map(donation => (
+                                        <TableRow key={donation.id}>
+                                            <TableCell>{format(donation.date, 'PPP')}</TableCell>
+                                            <TableCell>
+                                                <div className="font-medium">{donation.donorName}</div>
+                                                <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
+                                            </TableCell>
+                                            <TableCell>{donation.itemName} (x{donation.quantity})</TableCell>
+                                            <TableCell>{donation.projectName}</TableCell>
+                                            <TableCell>
+                                                <Badge variant={donation.donationType === 'pickup' ? 'default' : 'secondary'}>
+                                                    {donation.donationType}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge variant={
+                                                    donation.status === 'Completed' ? 'default' : 
+                                                    donation.status === 'Cancelled' ? 'destructive' : 'secondary'
+                                                }>
+                                                    {donation.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Pending')}>
+                                                            Mark as Pending
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Completed')}>
+                                                            Mark as Completed
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Cancelled')} className="text-destructive">
+                                                            Mark as Cancelled
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TabsContent>
+                         <TabsContent value="post-received" className="mt-4">
+                            <div className="space-y-4 rounded-md border p-4">
+                                <h3 className="font-semibold mb-2">Post a Received In-Kind Donation</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label>Donor</Label>
+                                         <Select value={newInKindDonation.donorName} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, donorName: value})}>
+                                            <SelectTrigger><SelectValue placeholder="Select a donor" /></SelectTrigger>
+                                            <SelectContent>
+                                                {users.map(user => <SelectItem key={user.id} value={user.name}>{user.name}</SelectItem>)}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Project</Label>
+                                        <Select value={newInKindDonation.projectName} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, projectName: value})}>
+                                            <SelectTrigger><SelectValue placeholder="Select a project" /></SelectTrigger>
+                                            <SelectContent>
+                                                {projects.map(project => <SelectItem key={project.id} value={project.name}>{project.name}</SelectItem>)}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Item Name</Label>
+                                        <Input placeholder="e.g., Laptops, Blankets" value={newInKindDonation.itemName} onChange={(e) => setNewInKindDonation({...newInKindDonation, itemName: e.target.value})} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Quantity</Label>
+                                        <Input type="number" placeholder="1" value={newInKindDonation.quantity} onChange={(e) => setNewInKindDonation({...newInKindDonation, quantity: e.target.value})} />
+                                    </div>
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label>Date Received</Label>
+                                        <Input type="date" value={newInKindDonation.date} onChange={(e) => setNewInKindDonation({...newInKindDonation, date: e.target.value})} />
+                                    </div>
+                                </div>
+                                <Button className="mt-4" onClick={handleAddInKindDonation}>Post Donation</Button>
+                            </div>
+                         </TabsContent>
+                    </Tabs>
                 </CardContent>
             </Card>
         </TabsContent>

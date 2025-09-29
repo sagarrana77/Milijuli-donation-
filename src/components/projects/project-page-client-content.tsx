@@ -1,6 +1,5 @@
 
 
-
 'use client';
 
 import Image from 'next/image';
@@ -18,9 +17,10 @@ import { DiscussionSection } from '@/components/projects/discussion-section';
 import { WishlistTab } from '@/components/projects/wishlist-tab';
 import { FundraisingProgress } from '@/components/projects/fundraising-progress';
 import { PaymentGateways } from '@/components/projects/payment-gateways';
-import { CardHeader, CardTitle } from '../ui/card';
+import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
+import { ArrowRight, Gift, PackageCheck } from 'lucide-react';
 
 interface ProjectPageClientContentProps {
     project: Project;
@@ -62,32 +62,64 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                     <TabsTrigger value="discussion">Discussion</TabsTrigger>
                     </TabsList>
                     <TabsContent value="updates" className="mt-4">
-                    <Card>
-                        <CardContent className="p-6">
-                        {project.updates.length > 0 ? (
-                            <div className="space-y-6">
-                            {project.updates.map(update => (
-                                <div key={update.id} className="flex flex-col gap-4 sm:flex-row">
-                                <Image 
-                                    src={update.imageUrl} 
-                                    alt={update.title} 
-                                    width={200} 
-                                    height={150} 
-                                    className="aspect-video w-full rounded-md object-cover sm:w-48 cursor-pointer" 
-                                    data-ai-hint={update.imageHint} 
-                                    onClick={() => openPhoto({ imageUrl: update.imageUrl, title: update.title })}
-                                />
-                                <div>
-                                    <p className="font-semibold">{update.title}</p>
-                                    <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
-                                    <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
+                        <Card>
+                            <CardContent className="p-6">
+                            {project.updates.length > 0 ? (
+                                <div className="space-y-6">
+                                {project.updates.map(update => {
+                                    if (update.isTransfer) {
+                                    return (
+                                        <div key={update.id} className="flex items-start gap-4 rounded-md border bg-muted/50 p-4">
+                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                                <ArrowRight className="h-5 w-5" />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold">{update.title}</p>
+                                                <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
+                                                <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
+                                            </div>
+                                        </div>
+                                    )
+                                    }
+                                     if (update.isInKindDonation) {
+                                        return (
+                                             <div key={update.id} className="flex items-start gap-4 rounded-md border bg-green-500/10 p-4">
+                                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10 text-green-600">
+                                                    <Gift className="h-5 w-5" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold">{update.title}</p>
+                                                    <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
+                                                    <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                    return (
+                                    <div key={update.id} className="flex flex-col gap-4 sm:flex-row">
+                                    {update.imageUrl && (
+                                        <Image 
+                                            src={update.imageUrl} 
+                                            alt={update.title} 
+                                            width={200} 
+                                            height={150} 
+                                            className="aspect-video w-full rounded-md object-cover sm:w-48 cursor-pointer" 
+                                            data-ai-hint={update.imageHint} 
+                                            onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title })}
+                                        />
+                                    )}
+                                    <div>
+                                        <p className="font-semibold">{update.title}</p>
+                                        <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
+                                        <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
+                                    </div>
+                                    </div>
+                                    )
+                                })}
                                 </div>
-                                </div>
-                            ))}
-                            </div>
-                        ) : <p className="text-muted-foreground">No updates posted yet.</p>}
-                        </CardContent>
-                    </Card>
+                            ) : <p className="text-muted-foreground">No updates posted yet.</p>}
+                            </CardContent>
+                        </Card>
                     </TabsContent>
                     <TabsContent value="wishlist" className="mt-4">
                         <WishlistTab />
@@ -151,5 +183,3 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
           </div>
     )
 }
-
-    

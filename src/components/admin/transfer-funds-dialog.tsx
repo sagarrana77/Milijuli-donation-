@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -15,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
     Select,
     SelectContent,
@@ -29,6 +31,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form';
 import { projects, operationalCostsFund } from '@/lib/data';
 
@@ -36,6 +39,7 @@ const transferSchema = z.object({
   amount: z.coerce.number().positive('Amount must be a positive number.'),
   from: z.string().min(1, 'Please select a source.'),
   to: z.string().min(1, 'Please select a destination.'),
+  reason: z.string().min(10, 'Please provide a brief justification for the transfer.'),
 }).refine(data => data.from !== data.to, {
     message: "Source and destination cannot be the same.",
     path: ["to"],
@@ -46,7 +50,7 @@ type TransferFormData = z.infer<typeof transferSchema>;
 interface TransferFundsDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onFundsTransferred: () => void;
+  onFundsTransferred: (data: TransferFormData) => void;
 }
 
 export function TransferFundsDialog({
@@ -60,15 +64,14 @@ export function TransferFundsDialog({
       amount: 0,
       from: '',
       to: '',
+      reason: '',
     },
   });
 
   const allCategories = [operationalCostsFund, ...projects];
 
   const onSubmit = (data: TransferFormData) => {
-    // In a real app, you would submit this to your backend
-    console.log('Transferring funds:', data);
-    onFundsTransferred();
+    onFundsTransferred(data);
     form.reset();
     onOpenChange(false);
   };
@@ -79,7 +82,7 @@ export function TransferFundsDialog({
         <DialogHeader>
           <DialogTitle>Transfer Funds</DialogTitle>
           <DialogDescription>
-            Move funds between different projects or operational costs.
+            Move funds between different projects or operational costs. This action will be posted as an update on both project pages.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -111,7 +114,7 @@ export function TransferFundsDialog({
                     </FormControl>
                     <SelectContent>
                       {allCategories.map(category => (
-                        <SelectItem key={`from-${category.name}`} value={category.name}>{category.name}</SelectItem>
+                        <SelectItem key={`from-${category.id}`} value={category.name}>{category.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -133,10 +136,26 @@ export function TransferFundsDialog({
                     </FormControl>
                     <SelectContent>
                       {allCategories.map(category => (
-                        <SelectItem key={`to-${category.name}`} value={category.name}>{category.name}</SelectItem>
+                        <SelectItem key={`to-${category.id}`} value={category.name}>{category.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="reason"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reason for Transfer</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="e.g., Reallocating surplus funds from a completed project..." {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Please ensure you have donor consent for this transfer if required by your policies.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -156,5 +175,3 @@ export function TransferFundsDialog({
     </Dialog>
   );
 }
-
-    

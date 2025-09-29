@@ -15,6 +15,27 @@ export type Comment = {
   text: string;
 };
 
+export type Update = {
+    id: string;
+    title: string;
+    description: string;
+    date: Date;
+    imageUrl?: string;
+    imageHint?: string;
+    isTransfer?: boolean; // To distinguish transfer updates
+    transferDetails?: {
+      amount: number;
+      fromProject?: string;
+      toProject?: string;
+    };
+    isInKindDonation?: boolean;
+    inKindDonationDetails?: {
+        donorName: string;
+        itemName: string;
+        quantity: number;
+    }
+};
+
 export type WishlistItem = {
   id: string;
   name: string;
@@ -47,14 +68,7 @@ export type Project = {
   donors: number;
   verified: boolean;
   ownerId?: string; // New field to link project to a user
-  updates: {
-    id: string;
-    title: string;
-    description: string;
-    date: Date;
-    imageUrl: string;
-    imageHint: string;
-  }[];
+  updates: Update[];
   expenses: {
     id: 'string';
     item: string;
@@ -177,8 +191,8 @@ export let projects: Project[] = [
     imageUrl: getImageUrl('project-clean-water'),
     imageHint: 'water well',
     targetAmount: 75000,
-    raisedAmount: 76100,
-    donors: 1200,
+    raisedAmount: 80000,
+    donors: 1250,
     verified: true,
     updates: [],
     expenses: [
@@ -393,6 +407,7 @@ const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
 export const totalOperationalCosts = totalSalaryCosts * 12 + totalEquipmentCosts + totalMiscCosts; // Annualized for target
 
 export let operationalCostsFund = {
+    id: 'operational-costs',
     name: 'Operational Costs',
     description: 'Support the core team and infrastructure that make our work possible.',
     targetAmount: 150000, // Static target for now
@@ -586,7 +601,7 @@ export type PhysicalDonation = {
     projectName: string;
     itemName: string;
     quantity: number;
-    donationType: 'drop-off' | 'pickup';
+    donationType: 'drop-off' | 'pickup' | 'received';
     address?: string;
     status: 'Pending' | 'Completed' | 'Cancelled';
     date: Date;
@@ -919,11 +934,4 @@ export let paymentGateways: Gateway[] = [
 export let platformSettings = {
     userQrPaymentsEnabled: true,
 }
-    
-
-
-
-
-
-
     
