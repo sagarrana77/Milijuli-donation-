@@ -661,30 +661,39 @@ function mulberry32(a: number) {
 }
 
 function createDonationData() {
-    const random = mulberry32(12345); // Seed the generator
     const donations: Donation[] = [];
+    
+    // Use a separate, stable list of donors for generation
+    const donorPool = users.filter(u => u.id !== 'clarity-chain-admin');
 
     projects.forEach((project, projectIndex) => {
         for (let i = 0; i < project.donors; i++) {
-            const donorUser = users[Math.floor(random() * (users.length - 1))];
+            const donorUser = donorPool[i % donorPool.length]; // Cycle through donors deterministically
+            
+            // Generate a deterministic amount based on stable inputs
+            const amount = 1000 + (project.id.charCodeAt(0) + donorUser.id.charCodeAt(5) + i * 137) % 20000;
+            
             donations.push({
                 id: projectIndex * 10000 + i,
                 donor: donorUser,
                 project: project.name,
-                amount: Math.floor(random() * (project.targetAmount / project.donors * 2)) + 100,
-                date: new Date(Date.now() - Math.floor(random() * 30) * 24 * 60 * 60 * 1000),
+                amount: amount,
+                date: new Date(1672531200000 + (i * 9999999)), // Stable start date + increment
             });
         }
     });
 
     for (let i = 0; i < operationalCostsFund.donors; i++) {
-        const donorUser = users[Math.floor(random() * (users.length - 1))];
+        const donorUser = donorPool[i % donorPool.length];
+        
+        const amount = 500 + (donorUser.id.charCodeAt(2) + i * 251) % 10000;
+
         donations.push({
             id: 900000 + i,
             donor: donorUser,
             project: 'Operational Costs',
-            amount: Math.floor(random() * 20000) + 1000,
-            date: new Date(Date.now() - Math.floor(random() * 30) * 24 * 60 * 60 * 1000),
+            amount: amount,
+            date: new Date(1672531200000 + (i * 8888888)),
         });
     }
 
