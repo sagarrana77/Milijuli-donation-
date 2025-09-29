@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -76,6 +75,8 @@ function getPageTitle(pathname: string): string {
       return 'AI Reports';
     case '/about':
       return 'About Us';
+    case '/pricing':
+        return 'Pricing';
     case '/careers':
       return 'Careers';
     case '/help':

@@ -133,9 +133,11 @@ export default function SettingsPage() {
                 </div>
             </div>
              <p className="text-sm text-muted-foreground">
-                Pro members get bonus credits and discounts. You can become a Pro member by donating to our <Link href="/operational-costs" className="text-primary underline">Operational Costs</Link> fund.
+                Pro members get exclusive benefits and bonus credits. You can become a Pro member by donating to our <Link href="/operational-costs" className="text-primary underline">Operational Costs</Link> fund.
             </p>
-            <Button>Get More Credits</Button>
+            <Button asChild>
+                <Link href="/pricing">Get More Credits</Link>
+            </Button>
         </CardContent>
       </Card>
 

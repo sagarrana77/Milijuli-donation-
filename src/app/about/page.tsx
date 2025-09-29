@@ -12,10 +12,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { teamMembers, values, aboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2 } from 'lucide-react';
+import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2, Star } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
+import { Button } from '@/components/ui/button';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -38,8 +39,8 @@ const features: { title: string; description: string; icon: LucideIcon, link?: s
         icon: LineChart,
     },
     {
-        title: 'AI-Generated Reports',
-        description: 'Generate simple, donor-friendly summaries of project financials with a single click, making complex data easy to understand and share.',
+        title: 'AI-Powered Features',
+        description: 'Generate simple, donor-friendly summaries and create compelling campaign stories with a single click, making complex data easy to understand and share.',
         icon: Wand2,
     },
     {
@@ -120,6 +121,30 @@ export default function AboutPage() {
                     </ScrollFadeIn>
                     ))}
                 </div>
+                </section>
+            </ScrollFadeIn>
+            
+            <ScrollFadeIn asChild>
+                 <section>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-2xl md:text-3xl flex items-center gap-2">
+                                <Star className="h-7 w-7 text-primary" />
+                                Pro Membership & AI Credits
+                            </CardTitle>
+                            <CardDescription>
+                                Supercharge your fundraising with our Pro Membership and AI credits.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <p className="text-muted-foreground">
+                                While ClarityChain is free to use, our Pro Membership and AI credits provide powerful tools to enhance your campaigns. Pro members get exclusive benefits, and AI credits can be used to generate compelling stories, summaries, and social media posts.
+                            </p>
+                            <Button asChild>
+                                <Link href="/pricing">View Pricing & Benefits</Link>
+                            </Button>
+                        </CardContent>
+                    </Card>
                 </section>
             </ScrollFadeIn>
 

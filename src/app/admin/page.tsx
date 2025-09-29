@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -10,6 +9,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import {
   Table,
@@ -73,7 +73,10 @@ import { generateWish, GenerateWishOutput } from '@/ai/flows/generate-wishes';
 import { generateSocialMediaPost, GenerateSocialMediaPostOutput } from '@/ai/flows/generate-social-media-post';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Pagination } from '@/components/ui/pagination';
 
+
+const ITEMS_PER_PAGE = 5;
 
 export default function AdminDashboardPage() {
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
@@ -99,6 +102,29 @@ export default function AdminDashboardPage() {
   const [socialPostPlatform, setSocialPostPlatform] = useState('Twitter');
   const [generatedSocialPost, setGeneratedSocialPost] = useState<GenerateSocialMediaPostOutput | null>(null);
   const [isGeneratingSocialPost, setIsGeneratingSocialPost] = useState(false);
+  
+  const [projectPage, setProjectPage] = useState(1);
+  const [donationPage, setDonationPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
+
+  const paginatedProjects = projects.slice(
+    (projectPage - 1) * ITEMS_PER_PAGE,
+    projectPage * ITEMS_PER_PAGE
+  );
+  const totalProjectPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
+  
+  const paginatedDonations = physicalDonations.slice(
+    (donationPage - 1) * ITEMS_PER_PAGE,
+    donationPage * ITEMS_PER_PAGE
+  );
+  const totalDonationPages = Math.ceil(physicalDonations.length / ITEMS_PER_PAGE);
+
+  const nonAdminUsers = users.filter(u => u.id !== 'clarity-chain-admin');
+  const paginatedUsers = nonAdminUsers.slice(
+    (userPage - 1) * ITEMS_PER_PAGE,
+    userPage * ITEMS_PER_PAGE
+  );
+  const totalUserPages = Math.ceil(nonAdminUsers.length / ITEMS_PER_PAGE);
 
 
   const handleAddSalary = () => {
@@ -568,7 +594,7 @@ export default function AdminDashboardPage() {
                         </TableRow>
                         </TableHeader>
                         <TableBody>
-                        {projects.map((project) => (
+                        {paginatedProjects.map((project) => (
                             <TableRow key={project.id}>
                             <TableCell className="font-medium">{project.name}</TableCell>
                             <TableCell>{project.organization}</TableCell>
@@ -606,6 +632,11 @@ export default function AdminDashboardPage() {
                     </Table>
                 </div>
                 </CardContent>
+                {totalProjectPages > 1 && (
+                    <CardFooter>
+                        <Pagination currentPage={projectPage} totalPages={totalProjectPages} onPageChange={setProjectPage} />
+                    </CardFooter>
+                )}
             </Card>
         </TabsContent>
          <TabsContent value="donations" className="mt-6">
@@ -636,7 +667,7 @@ export default function AdminDashboardPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {physicalDonations.map(donation => (
+                                    {paginatedDonations.map(donation => (
                                         <TableRow key={donation.id}>
                                             <TableCell>{format(donation.date, 'PPP')}</TableCell>
                                             <TableCell>
@@ -682,6 +713,11 @@ export default function AdminDashboardPage() {
                                     ))}
                                 </TableBody>
                             </Table>
+                             {totalDonationPages > 1 && (
+                                <div className="mt-4">
+                                   <Pagination currentPage={donationPage} totalPages={totalDonationPages} onPageChange={setDonationPage} />
+                                </div>
+                            )}
                         </TabsContent>
                          <TabsContent value="post-received" className="mt-4">
                             <div className="space-y-4 rounded-md border p-4">
@@ -877,7 +913,7 @@ export default function AdminDashboardPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.filter(u => u.id !== 'clarity-chain-admin').map(user => (
+                            {paginatedUsers.map(user => (
                                 <TableRow key={user.id}>
                                     <TableCell>
                                         <div className="flex items-center gap-3">
@@ -915,6 +951,11 @@ export default function AdminDashboardPage() {
                         </TableBody>
                     </Table>
                 </CardContent>
+                 {totalUserPages > 1 && (
+                    <CardFooter>
+                        <Pagination currentPage={userPage} totalPages={totalUserPages} onPageChange={setUserPage} />
+                    </CardFooter>
+                )}
             </Card>
         </TabsContent>
         <TabsContent value="ai-tools" className="mt-6">
@@ -1255,6 +1296,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
-    
-

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -9,6 +8,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,9 +30,14 @@ import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { projects, currentUser, platformSettings } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
+import { Pagination } from '@/components/ui/pagination';
+import { useState } from 'react';
+
+const ITEMS_PER_PAGE = 5;
 
 export default function MyCampaignsPage() {
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
 
   if (!currentUser) {
     router.push('/');
@@ -41,6 +46,12 @@ export default function MyCampaignsPage() {
 
   const userProjects = projects.filter(p => p.ownerId === currentUser.id);
   const canCreateCampaigns = currentUser?.isAdmin || (platformSettings.campaignCreationEnabled && currentUser?.canCreateCampaigns);
+
+  const totalPages = Math.ceil(userProjects.length / ITEMS_PER_PAGE);
+  const paginatedProjects = userProjects.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="flex flex-col gap-8">
@@ -82,7 +93,7 @@ export default function MyCampaignsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {userProjects.map((project) => (
+                {paginatedProjects.map((project) => (
                   <TableRow key={project.id}>
                     <TableCell className="font-medium">
                       <Link href={`/projects/${project.id}`} className="hover:underline">
@@ -137,6 +148,15 @@ export default function MyCampaignsPage() {
             </div>
           )}
         </CardContent>
+         {totalPages > 1 && (
+            <CardFooter>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
+            </CardFooter>
+        )}
       </Card>
     </div>
   );

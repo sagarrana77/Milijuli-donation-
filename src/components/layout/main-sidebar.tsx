@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -35,6 +34,7 @@ import {
   BookOpen,
   Edit,
   ChevronDown,
+  Sparkles
 } from 'lucide-react';
 import { currentUser, platformSettings, projects, physicalDonations } from '@/lib/data';
 import { Button } from '../ui/button';
@@ -49,6 +49,7 @@ const menuItems = [
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
   { href: '/about', label: 'About', icon: Users },
+  { href: '/pricing', label: 'Pricing', icon: Sparkles },
 ];
 
 const adminMenuItems = [
