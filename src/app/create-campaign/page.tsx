@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, CreditCard, Wand2, Loader2 } from 'lucide-react';
+import { PlusCircle, CreditCard, Wand2, Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { projects, currentUser, paymentGateways as defaultGateways } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -61,6 +61,7 @@ export default function CreateCampaignPage() {
   const router = useRouter();
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [isGeneratingStory, setIsGeneratingStory] = useState(false);
+  const [credits, setCredits] = useState(currentUser?.aiCredits ?? 0);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -80,6 +81,20 @@ export default function CreateCampaignPage() {
     control: form.control,
     name: "gateways"
   });
+
+  const handleCreditUsage = () => {
+      if (currentUser?.aiCredits !== undefined && currentUser.aiCredits > 0) {
+          currentUser.aiCredits -= 1;
+          setCredits(currentUser.aiCredits);
+          return true;
+      }
+      toast({
+          variant: 'destructive',
+          title: 'Out of AI Credits',
+          description: 'Please purchase more credits to use this feature.'
+      });
+      return false;
+  }
 
   function onSubmit(data: ProjectFormData) {
     if (!currentUser) {
@@ -123,6 +138,8 @@ export default function CreateCampaignPage() {
   };
 
   const handleGenerateSummary = async () => {
+    if (!handleCreditUsage()) return;
+
     const longDescription = form.getValues('longDescription');
     const name = form.getValues('name');
     if (!longDescription || longDescription.length < 100) {
@@ -163,6 +180,8 @@ export default function CreateCampaignPage() {
   };
   
   const handleGenerateStory = async () => {
+    if (!handleCreditUsage()) return;
+
     const campaignTitle = form.getValues('name');
     const storyDraft = form.getValues('longDescription');
     if (!campaignTitle || campaignTitle.length < 5) {
@@ -260,12 +279,17 @@ export default function CreateCampaignPage() {
                                     {...field}
                                 />
                                 </FormControl>
-                                <Button type="button" variant="outline" size="icon" onClick={handleGenerateStory} disabled={isGeneratingStory} title="Generate with AI">
+                                <Button type="button" variant="outline" size="icon" onClick={handleGenerateStory} disabled={isGeneratingStory || credits <= 0} title="Generate with AI">
                                     {isGeneratingStory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
                                 </Button>
                             </div>
-                            <FormDescription>
-                                This will be shown on the main campaign page. You can write this yourself or generate it with AI based on the campaign name.
+                            <FormDescription className="flex items-center justify-between">
+                                <span>
+                                This will be shown on the main campaign page. You can write this yourself or generate it with AI.
+                                </span>
+                                 <span className="flex items-center gap-1 text-xs">
+                                    <Sparkles className="h-3 w-3" /> {credits} Credits
+                                </span>
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -284,12 +308,17 @@ export default function CreateCampaignPage() {
                                     {...field}
                                 />
                                 </FormControl>
-                                <Button type="button" variant="outline" size="icon" onClick={handleGenerateSummary} disabled={isGeneratingSummary} title="Generate with AI">
+                                <Button type="button" variant="outline" size="icon" onClick={handleGenerateSummary} disabled={isGeneratingSummary || credits <= 0} title="Generate with AI">
                                     {isGeneratingSummary ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
                                 </Button>
                             </div>
-                            <FormDescription>
-                                This will be shown on campaign cards. You can write this yourself or generate it with AI based on the full description above.
+                            <FormDescription className="flex items-center justify-between">
+                                <span>
+                                This will be shown on campaign cards. You can write this yourself or generate it with AI based on the full description.
+                                </span>
+                                 <span className="flex items-center gap-1 text-xs">
+                                    <Sparkles className="h-3 w-3" /> {credits} Credits
+                                </span>
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

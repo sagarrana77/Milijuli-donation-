@@ -8,6 +8,7 @@ import {
   operationalCostsFund as initialOperationalCostsFund,
   teamMembers,
   equipment,
+  currentUser
 } from '@/lib/data';
 import {
   Card,
@@ -18,7 +19,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Users, Target, CheckCircle, ArrowRight } from 'lucide-react';
+import { Users, Target, CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { DonorsList } from '@/components/projects/donors-list';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
@@ -47,9 +48,18 @@ export default function OperationalCostsPage() {
         raisedAmount: prev.raisedAmount + amount,
         donors: prev.donors + 1
     }));
+    
+    let toastDescription = `Your generous donation of Rs.${amount} will help us continue our mission.`;
+    
+    if (currentUser && !currentUser.isProMember) {
+        currentUser.isProMember = true;
+        currentUser.aiCredits = (currentUser.aiCredits || 0) + 100;
+        toastDescription += " You've been upgraded to a Pro Member and received 100 bonus AI credits!";
+    }
+
     toast({
       title: 'Thank You for Your Support!',
-      description: `Your generous donation of Rs.${amount} will help us continue our mission.`,
+      description: toastDescription,
       variant: 'default',
     });
   };
@@ -161,8 +171,11 @@ export default function OperationalCostsPage() {
                 </div>
               )}
               <Button size="lg" className="w-full text-lg" onClick={() => setIsDonationOpen(true)}>
-                Fund Our Operations
+                <Sparkles className="mr-2 h-5 w-5"/> Become a Pro Member
               </Button>
+               <p className="text-xs text-center text-muted-foreground">
+                Donate to our operational costs to become a Pro member and receive bonus AI credits.
+              </p>
             </CardContent>
           </Card>
           <Card>

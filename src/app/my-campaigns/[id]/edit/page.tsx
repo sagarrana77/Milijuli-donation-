@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Trash2, Save, CreditCard, Wand2, Loader2, Copy } from 'lucide-react';
+import { PlusCircle, Trash2, Save, CreditCard, Wand2, Loader2, Copy, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { projects, type Project, currentUser, paymentGateways as defaultGateways } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -88,12 +88,27 @@ export default function EditUserCampaignPage() {
   const params = useParams();
   const projectId = params.id as string;
   const [isGeneratingSeo, setIsGeneratingSeo] = useState(false);
+  const [credits, setCredits] = useState(currentUser?.aiCredits ?? 0);
 
   const project = projects.find(p => p.id === projectId);
   
   // Authorization check
   if (!project || (project.ownerId !== currentUser?.id && !currentUser?.isAdmin)) {
     notFound();
+  }
+
+  const handleCreditUsage = () => {
+      if (currentUser?.aiCredits !== undefined && currentUser.aiCredits > 0) {
+          currentUser.aiCredits -= 1;
+          setCredits(currentUser.aiCredits);
+          return true;
+      }
+      toast({
+          variant: 'destructive',
+          title: 'Out of AI Credits',
+          description: 'Please purchase more credits to use this feature.'
+      });
+      return false;
   }
 
   const form = useForm<ProjectFormData>({
@@ -150,6 +165,8 @@ export default function EditUserCampaignPage() {
   };
 
   const handleGenerateSeo = async () => {
+    if (!handleCreditUsage()) return;
+
     const name = form.getValues('name');
     const longDescription = form.getValues('longDescription');
 
@@ -344,10 +361,16 @@ export default function EditUserCampaignPage() {
                             <CardDescription>Generate AI-powered keywords and meta descriptions to improve search visibility.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <Button type="button" onClick={handleGenerateSeo} disabled={isGeneratingSeo}>
-                                {isGeneratingSeo ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                Generate SEO Suggestions
-                            </Button>
+                             <div className="flex items-center gap-4">
+                                <Button type="button" onClick={handleGenerateSeo} disabled={isGeneratingSeo || credits <= 0}>
+                                    {isGeneratingSeo ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                    Generate SEO Suggestions
+                                </Button>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <Sparkles className="h-4 w-4" />
+                                    <span>{credits} Credits Remaining</span>
+                                </div>
+                            </div>
                             <FormField
                                 control={form.control}
                                 name="metaDescription"

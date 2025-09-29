@@ -27,9 +27,9 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Wand2, Loader2 } from 'lucide-react';
+import { PlusCircle, Wand2, Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { projects } from '@/lib/data';
+import { projects, currentUser } from '@/lib/data';
 import { summarizeProject } from '@/ai/flows/summarize-project';
 import { generateCampaignStory } from '@/ai/flows/generate-campaign-story';
 import { useState } from 'react';
@@ -52,6 +52,7 @@ export default function NewProjectPage() {
   const router = useRouter();
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [isGeneratingStory, setIsGeneratingStory] = useState(false);
+  const [credits, setCredits] = useState(currentUser?.aiCredits ?? 0);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -66,6 +67,20 @@ export default function NewProjectPage() {
       verified: false,
     },
   });
+
+  const handleCreditUsage = () => {
+      if (currentUser?.aiCredits !== undefined && currentUser.aiCredits > 0) {
+          currentUser.aiCredits -= 1;
+          setCredits(currentUser.aiCredits);
+          return true;
+      }
+      toast({
+          variant: 'destructive',
+          title: 'Out of AI Credits',
+          description: 'Please purchase more credits to use this feature.'
+      });
+      return false;
+  }
 
   function onSubmit(data: ProjectFormData) {
     const newProject = {
@@ -87,6 +102,8 @@ export default function NewProjectPage() {
   }
 
    const handleGenerateSummary = async () => {
+    if (!handleCreditUsage()) return;
+
     const longDescription = form.getValues('longDescription');
     const name = form.getValues('name');
     if (!longDescription || longDescription.length < 100) {
@@ -127,6 +144,8 @@ export default function NewProjectPage() {
   };
 
   const handleGenerateStory = async () => {
+    if (!handleCreditUsage()) return;
+
     const campaignTitle = form.getValues('name');
     const storyDraft = form.getValues('longDescription');
     if (!campaignTitle || campaignTitle.length < 5) {
@@ -217,12 +236,17 @@ export default function NewProjectPage() {
                             {...field}
                         />
                         </FormControl>
-                        <Button type="button" variant="outline" size="icon" onClick={handleGenerateStory} disabled={isGeneratingStory} title="Generate with AI">
+                        <Button type="button" variant="outline" size="icon" onClick={handleGenerateStory} disabled={isGeneratingStory || credits <= 0} title="Generate with AI">
                             {isGeneratingStory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
                         </Button>
                     </div>
-                    <FormDescription>
+                    <FormDescription className="flex items-center justify-between">
+                        <span>
                         This will be shown on the main project page. You can write this yourself or generate it with AI based on the project name.
+                        </span>
+                        <span className="flex items-center gap-1 text-xs">
+                            <Sparkles className="h-3 w-3" /> {credits} Credits
+                        </span>
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -241,12 +265,17 @@ export default function NewProjectPage() {
                             {...field}
                         />
                         </FormControl>
-                        <Button type="button" variant="outline" size="icon" onClick={handleGenerateSummary} disabled={isGeneratingSummary} title="Generate with AI">
+                        <Button type="button" variant="outline" size="icon" onClick={handleGenerateSummary} disabled={isGeneratingSummary || credits <= 0} title="Generate with AI">
                             {isGeneratingSummary ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
                         </Button>
                     </div>
-                     <FormDescription>
+                     <FormDescription className="flex items-center justify-between">
+                        <span>
                         This will be shown on project cards. You can write this yourself or generate it with AI based on the full description above.
+                        </span>
+                         <span className="flex items-center gap-1 text-xs">
+                            <Sparkles className="h-3 w-3" /> {credits} Credits
+                        </span>
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

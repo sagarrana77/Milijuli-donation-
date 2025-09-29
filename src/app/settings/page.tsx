@@ -13,11 +13,13 @@ import InstagramIcon from '@/components/icons/instagram-icon';
 import TwitterIcon from '@/components/icons/TwitterIcon';
 import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditCard, Landmark, Save } from 'lucide-react';
+import { CreditCard, Landmark, Save, Sparkles } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { currentUser } from '@/lib/data';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 
 const profileSchema = z.object({
@@ -105,6 +107,38 @@ export default function SettingsPage() {
           Manage your account and application settings.
         </p>
       </div>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>AI Credits & Status</CardTitle>
+          <CardDescription>
+            Manage your AI features usage and Pro status.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border p-4">
+                <div className="space-y-1">
+                    <p className="font-medium">Your Status</p>
+                    {currentUser?.isProMember ? (
+                        <Badge>
+                            <Sparkles className="mr-2 h-4 w-4" /> Pro Member
+                        </Badge>
+                    ) : (
+                         <Badge variant="secondary">Standard Member</Badge>
+                    )}
+                </div>
+                 <div className="space-y-1 mt-4 sm:mt-0 text-left sm:text-right">
+                    <p className="font-medium">AI Credits</p>
+                    <p className="text-2xl font-bold">{currentUser?.aiCredits ?? 0}</p>
+                </div>
+            </div>
+             <p className="text-sm text-muted-foreground">
+                Pro members get bonus credits and discounts. You can become a Pro member by donating to our <Link href="/operational-costs" className="text-primary underline">Operational Costs</Link> fund.
+            </p>
+            <Button>Get More Credits</Button>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Account Information</CardTitle>

@@ -510,6 +510,8 @@ export type User = {
     isAdmin?: boolean;
     canCreateCampaigns?: boolean;
     friends?: string[];
+    aiCredits?: number;
+    isProMember?: boolean;
 }
 
 export let users: User[] = [
@@ -523,6 +525,8 @@ export let users: User[] = [
         hasPaymentMethod: false,
         isAdmin: true,
         friends: ['user-sita-rai', 'user-hari-thapa'],
+        aiCredits: 10,
+        isProMember: false,
     },
     { 
         id: 'user-sita-rai', 
@@ -534,6 +538,8 @@ export let users: User[] = [
         hasPaymentMethod: true,
         canCreateCampaigns: true,
         friends: ['current-user'],
+        aiCredits: 5,
+        isProMember: false,
     },
     { 
         id: 'user-hari-thapa', 
@@ -544,6 +550,8 @@ export let users: User[] = [
         bio: 'Focused on environmental causes and clean water initiatives.',
         hasPaymentMethod: true,
         friends: ['current-user', 'user-maya-gurung'],
+        aiCredits: 15,
+        isProMember: true,
     },
     { 
         id: 'user-maya-gurung', 
@@ -554,6 +562,8 @@ export let users: User[] = [
         bio: 'Supports disaster relief and emergency response efforts.',
         hasPaymentMethod: true,
         friends: ['user-hari-thapa'],
+        aiCredits: 0,
+        isProMember: false,
     },
     { 
         id: 'user-bikram-shah', 
@@ -564,6 +574,8 @@ export let users: User[] = [
         bio: 'Interested in community health and wellness projects.',
         hasPaymentMethod: false,
         friends: [],
+        aiCredits: 0,
+        isProMember: false,
     },
     { 
         id: 'user-anonymous', 
@@ -573,6 +585,8 @@ export let users: User[] = [
         bio: 'An anonymous donor making a difference.',
         hasPaymentMethod: true,
         friends: [],
+        aiCredits: 0,
+        isProMember: false,
     },
      { 
         id: 'clarity-chain-admin', 
@@ -584,6 +598,8 @@ export let users: User[] = [
         hasPaymentMethod: true,
         isAdmin: true,
         friends: [],
+        aiCredits: 999,
+        isProMember: true,
     },
     {
         id: 'sunita-sharma',
@@ -593,6 +609,8 @@ export let users: User[] = [
         profileUrl: '/team/sunita-sharma',
         bio: 'Sunita is a community engagement specialist from Kathmandu, passionate about connecting people and causes.',
         friends: [],
+        aiCredits: 10,
+        isProMember: false,
     },
     {
         id: 'rohan-maharjan',
@@ -603,6 +621,8 @@ export let users: User[] = [
         bio:
         "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of ClarityChain to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
         friends: [],
+        aiCredits: 10,
+        isProMember: false,
     },
     {
         id: 'priya-adhikari',
@@ -613,6 +633,8 @@ export let users: User[] = [
         bio:
         "Priya ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Priya's dedication is the driving force behind our operational excellence.",
         friends: [],
+        aiCredits: 10,
+        isProMember: false,
     }
 ];
 
