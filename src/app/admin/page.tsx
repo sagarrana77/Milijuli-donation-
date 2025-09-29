@@ -669,7 +669,7 @@ export default function AdminDashboardPage() {
                                 <TableBody>
                                     {paginatedDonations.map(donation => (
                                         <TableRow key={donation.id}>
-                                            <TableCell>{format(donation.date, 'PPP')}</TableCell>
+                                            <TableCell>{donation.date.toLocaleDateString()}</TableCell>
                                             <TableCell>
                                                 <div className="font-medium">{donation.donorName}</div>
                                                 <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
@@ -840,7 +840,7 @@ export default function AdminDashboardPage() {
                                     <TableRow key={equip.id}>
                                     <TableCell>{equip.item}</TableCell>
                                     <TableCell>Rs.{equip.cost.toLocaleString()}</TableCell>
-                                    <TableCell>{new Date(equip.purchaseDate).toLocaleDateString()}</TableCell>
+                                    <TableCell>{equip.purchaseDate.toLocaleDateString()}</TableCell>
                                     <TableCell>{equip.vendor}</TableCell>
                                     <TableCell className="text-right">
                                         <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
@@ -878,7 +878,7 @@ export default function AdminDashboardPage() {
                                     <TableRow key={expense.id}>
                                         <TableCell>{expense.item}</TableCell>
                                         <TableCell>Rs.{expense.cost.toLocaleString()}</TableCell>
-                                        <TableCell>{new Date(expense.purchaseDate).toLocaleDateString()}</TableCell>
+                                        <TableCell>{expense.purchaseDate.toLocaleDateString()}</TableCell>
                                         <TableCell>{expense.vendor}</TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>

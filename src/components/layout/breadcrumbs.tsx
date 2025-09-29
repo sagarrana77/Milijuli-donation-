@@ -31,7 +31,7 @@ const formatCrumb = (crumb: string) => {
     .join(' ');
 };
 
-const getNameForId = (id: string, type: 'team' | 'profile' | 'projects' | 'my-campaigns') => {
+const getNameForId = (id: string, type: string) => {
     if (type === 'team') {
         const member = teamMembers.find(m => m.id === id);
         return member ? member.name : formatCrumb(id);
@@ -72,35 +72,17 @@ export function Breadcrumbs() {
           const isLast = index === pathSegments.length - 1;
           const href = '/' + pathSegments.slice(0, index + 1).join('/');
 
-          // Special handling for dynamic routes
-            if (isLast) {
-                const prevSegment = pathSegments[index - 1];
-                if (['team', 'profile', 'projects', 'my-campaigns'].includes(prevSegment)) {
-                    let pageTitle = getNameForId(segment, prevSegment as any);
-                    if (pathSegments[index + 1] === 'edit') {
-                        // This case is handled by the next segment check
-                    } else {
-                        return (
-                             <React.Fragment key={href}>
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>{pageTitle}</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </React.Fragment>
-                        )
-                    }
-                }
-                 if (segment === 'edit' && ['my-campaigns', 'admin/projects'].includes(pathSegments.slice(0, index - 1).join('/'))) {
-                    return (
-                        <React.Fragment key={href}>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                            <BreadcrumbPage>Edit</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </React.Fragment>
-                    );
-                }
-            }
+          let segmentLabel = formatCrumb(segment);
+          const prevSegment = pathSegments[index - 1];
+
+          // Special handling for dynamic routes to get a user-friendly name
+          if (['team', 'profile', 'projects', 'my-campaigns'].includes(prevSegment)) {
+              segmentLabel = getNameForId(segment, prevSegment);
+          }
+          
+          if(prevSegment === 'admin' && segment === 'projects') {
+              segmentLabel = 'Projects'; // Don't format this one
+          }
 
 
           return (
@@ -108,10 +90,10 @@ export function Breadcrumbs() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{formatCrumb(segment)}</BreadcrumbPage>
+                  <BreadcrumbPage>{segmentLabel}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link href={href}>{formatCrumb(segment)}</Link>
+                    <Link href={href}>{segmentLabel}</Link>
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
