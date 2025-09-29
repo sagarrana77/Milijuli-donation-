@@ -128,6 +128,11 @@ export default function DashboardPage() {
           </Card>
         </ScrollFadeIn>
       </div>
+      
+      <ScrollFadeIn>
+        <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} />
+      </ScrollFadeIn>
+      
       <div className="grid gap-8 lg:grid-cols-2">
         <ScrollFadeIn>
           <RealtimeLedger />
@@ -230,9 +235,6 @@ export default function DashboardPage() {
         </section>
       </ScrollFadeIn>
 
-      <ScrollFadeIn>
-        <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} />
-      </ScrollFadeIn>
     </div>
   );
 }
