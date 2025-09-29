@@ -318,24 +318,35 @@ export let salaries: {
     employee: string;
     role: string;
     salary: number;
+    currency: 'NPR' | 'USD';
 }[] = [
   {
     id: 'sal-1',
     employee: 'Alex Johnson',
-    role: 'Project Manager',
-    salary: 3000,
+    role: 'Founder & CEO',
+    salary: 4000,
+    currency: 'USD',
   },
   {
     id: 'sal-2',
     employee: 'Maria Garcia',
-    role: 'Lead Developer',
-    salary: 4000,
+    role: 'Head of Operations (Nepal)',
+    salary: 150000,
+    currency: 'NPR',
   },
   {
     id: 'sal-3',
     employee: 'Sam Chen',
-    role: 'Marketing Head',
-    salary: 2800,
+    role: 'Lead Full-Stack Developer',
+    salary: 3500,
+    currency: 'USD',
+  },
+  {
+    id: 'sal-4',
+    employee: 'Sunita Sharma',
+    role: 'Community Manager (Nepal)',
+    salary: 80000,
+    currency: 'NPR',
   },
 ];
 
@@ -401,7 +412,11 @@ export let miscExpenses: {
 ]
 
 // Calculate operational costs
-const totalSalaryCosts = salaries.reduce((acc, s) => acc + s.salary, 0); // Monthly
+const totalSalaryCosts = salaries.reduce((acc, s) => {
+    // Basic conversion for calculation, in a real app this would use live rates
+    const usdAmount = s.currency === 'NPR' ? s.salary / 133 : s.salary;
+    return acc + usdAmount;
+}, 0); // Monthly in USD
 const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
 const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
 export const totalOperationalCosts = totalSalaryCosts * 12 + totalEquipmentCosts + totalMiscCosts; // Annualized for target
@@ -430,7 +445,7 @@ const reliefExpenses = projects
   .filter(p => p.id === 'disaster-relief-fund')
   .reduce((sum, p) => sum + p.expenses.reduce((acc, exp) => acc + exp.amount, 0), 0);
   
-const currentOperationalExpenses = (totalSalaryCosts + totalEquipmentCosts + totalMiscCosts);
+const currentOperationalExpenses = (totalSalaryCosts * 12) + totalEquipmentCosts + totalMiscCosts; // Use annualized salary for this calculation
 
 // Calculate totals for dashboard stats
 const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0) + operationalCostsFund.raisedAmount;
@@ -530,6 +545,13 @@ export let users: User[] = [
         hasPaymentMethod: true,
         isAdmin: true,
     },
+    {
+        id: 'sunita-sharma',
+        name: 'Sunita Sharma',
+        avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
+        profileUrl: '/team/sunita-sharma',
+        bio: 'Sunita is a community engagement specialist from Kathmandu, passionate about connecting people and causes.'
+    }
 ];
 
 export const currentUser = users.find(u => u.id === 'current-user');
@@ -742,47 +764,69 @@ export let teamMembers: TeamMember[] = [
   {
     id: 'maria-garcia',
     name: 'Maria Garcia',
-    role: 'Head of Operations',
+    role: 'Head of Operations (Nepal)',
     avatarUrl: getImageUrl('avatar-maria-garcia'),
     bio:
-      "Maria ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork, she is an expert in logistics, community engagement, and sustainable development. Maria's dedication is the driving force behind our operational excellence.",
+      "Maria ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Maria's dedication is the driving force behind our operational excellence.",
     socials: {
         twitter: 'https://twitter.com/mariagarcia',
         linkedin: 'https://linkedin.com/in/mariagarcia'
     },
     experience: [
-        { role: 'Head of Operations', company: 'ClarityChain', duration: '2022 - Present' },
-        { role: 'Program Director', company: 'Global Aid Network', duration: '2015 - 2022' },
-        { role: 'Field Coordinator', company: 'Hope International', duration: '2010 - 2015' },
+        { role: 'Head of Operations (Nepal)', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Program Director', company: 'Himalayan Aid', duration: '2015 - 2022' },
+        { role: 'Field Coordinator', company: 'Hope International, Nepal', duration: '2010 - 2015' },
     ],
     education: [
-        { degree: 'M.A. in International Development', institution: 'Georgetown University', year: '2010' },
-        { degree: 'B.A. in Sociology', institution: 'University of Texas at Austin', year: '2008' },
+        { degree: 'M.A. in International Development', institution: 'Kathmandu University', year: '2010' },
+        { degree: 'B.A. in Sociology', institution: 'Tribhuvan University', year: '2008' },
     ],
-    skills: ['Non-Profit Management', 'Project Coordination', 'Community Outreach', 'Logistics', 'Grant Management'],
+    skills: ['Non-Profit Management', 'Project Coordination', 'Community Outreach', 'Logistics (Nepal)', 'Grant Management'],
   },
   {
     id: 'sam-chen',
     name: 'Sam Chen',
-    role: 'Lead Blockchain Developer',
+    role: 'Lead Full-Stack Developer',
     avatarUrl: getImageUrl('avatar-sam-chen'),
     bio:
-      "Sam is the architect behind our transparent ledger technology. He's a firm believer in the power of decentralization to create a fairer and more accountable world. With expertise in smart contracts and distributed systems, Sam built the core of ClarityChain to be secure, auditable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
+      "Sam is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Sam built the core of ClarityChain to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
     socials: {
         twitter: 'https://twitter.com/samchen',
         linkedin: 'https://linkedin.com/in/samchen'
     },
     experience: [
-        { role: 'Lead Blockchain Developer', company: 'ClarityChain', duration: '2022 - Present' },
-        { role: 'Senior Solidity Developer', company: 'DeFi Systems', duration: '2019 - 2022' },
+        { role: 'Lead Full-Stack Developer', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Senior Software Engineer', company: 'ConnectSphere', duration: '2019 - 2022' },
         { role: 'Backend Engineer', company: 'Fintech Innovations', duration: '2017 - 2019' },
     ],
     education: [
         { degree: 'B.S. in Software Engineering', institution: 'Carnegie Mellon University', year: '2017' },
     ],
-    skills: ['Solidity', 'Smart Contracts', 'Ethereum', 'Distributed Systems', 'Cryptography', 'Node.js'],
+    skills: ['Next.js', 'React', 'Node.js', 'TypeScript', 'System Architecture', 'Firebase'],
+  },
+  {
+    id: 'sunita-sharma',
+    name: 'Sunita Sharma',
+    role: 'Community Manager (Nepal)',
+    avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    bio:
+      'Sunita is the voice of ClarityChain in Nepal. She works directly with our local project partners and user community, providing support, gathering feedback, and sharing their stories. Her passion for community building and her deep understanding of the local context are invaluable to our mission.',
+    socials: {
+        twitter: 'https://twitter.com/sunitasharma',
+        linkedin: 'https://linkedin.com/in/sunitasharma'
+    },
+    experience: [
+        { role: 'Community Manager (Nepal)', company: 'ClarityChain', duration: '2023 - Present' },
+        { role: 'Social Media Coordinator', company: 'SastoDeal', duration: '2020 - 2023' },
+        { role: 'Communications Intern', company: 'UNESCO Nepal', duration: '2019 - 2020' },
+    ],
+    education: [
+        { degree: 'B.A. in Journalism and Mass Communication', institution: 'Ratna Rajya Laxmi Campus, Kathmandu', year: '2019' },
+    ],
+    skills: ['Community Engagement', 'Social Media Management', 'Content Creation', 'Event Planning', 'Nepali & English Fluency'],
   },
 ];
+
 
 export function getTeamMember(id: string) {
   return teamMembers.find((member) => member.id === id);

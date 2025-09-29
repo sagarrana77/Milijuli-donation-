@@ -79,7 +79,7 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
                       </TableCell>
                       <TableCell>{salary.role}</TableCell>
                       <TableCell className="text-right">
-                        ${salary.salary.toLocaleString()}
+                        {salary.currency === 'NPR' ? 'NPR' : '$'}{salary.salary.toLocaleString()}
                       </TableCell>
                     </TableRow>
                   );

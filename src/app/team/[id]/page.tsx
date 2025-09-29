@@ -33,14 +33,14 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
             <div className="flex justify-center gap-2 pt-2 sm:justify-start">
                {member.socials.twitter && (
                 <Button variant="ghost" size="icon" asChild>
-                    <Link href={member.socials.twitter} target="_blank">
+                    <Link href={member.socials.twitter} target="_blank" rel="noopener noreferrer">
                         <TwitterIcon className="h-5 w-5 text-sky-500" />
                     </Link>
                 </Button>
                )}
                 {member.socials.linkedin && (
                 <Button variant="ghost" size="icon" asChild>
-                    <Link href={member.socials.linkedin} target="_blank">
+                    <Link href={member.socials.linkedin} target="_blank" rel="noopener noreferrer">
                         <LinkedInIcon className="h-5 w-5 text-blue-700" />
                     </Link>
                 </Button>
