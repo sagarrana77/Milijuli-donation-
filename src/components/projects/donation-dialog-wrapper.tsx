@@ -45,22 +45,28 @@ export function DonationDialogWrapper({
 
   useEffect(() => {
     setIsClient(true);
-    if (raisedAmount >= project.targetAmount) {
-      return;
-    }
-
+    // Simulate real-time donations and expenses
     const interval = setInterval(() => {
-      setRaisedAmount((prev) => {
-        const newAmount = prev + Math.floor(Math.random() * 150) + 20;
-        return Math.min(newAmount, project.targetAmount);
-      });
-       if (Math.random() > 0.5) {
-        setDonors((prev) => prev + 1);
+      const action = Math.random();
+      if (action > 0.3 && raisedAmount < project.targetAmount) { // 70% chance of donation
+        setRaisedAmount((prev) => {
+          const newAmount = prev + Math.floor(Math.random() * 150) + 20;
+          return Math.min(newAmount, project.targetAmount);
+        });
+        if (Math.random() > 0.5) {
+          setDonors((prev) => prev + 1);
+        }
+      } else { // 30% chance of a small expense deduction
+        setRaisedAmount((prev) => {
+           const newAmount = prev - Math.floor(Math.random() * 50) + 10;
+           return Math.max(0, newAmount);
+        });
       }
     }, 4000);
 
     return () => clearInterval(interval);
   }, [project.targetAmount, raisedAmount]);
+
 
   const handleDonation = async (amount: number) => {
     setRaisedAmount((prev) => prev + amount);
