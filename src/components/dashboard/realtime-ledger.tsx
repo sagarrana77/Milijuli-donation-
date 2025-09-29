@@ -60,9 +60,26 @@ export function RealtimeLedger() {
                 <CardDescription>A live feed of all incoming donations.</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="h-64 flex items-center justify-center text-muted-foreground">
-                    Loading live feed...
-                </div>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Donor</TableHead>
+                            <TableHead>Project</TableHead>
+                            <TableHead className="text-right">Amount</TableHead>
+                            <TableHead className="text-right">Date</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {donations.map((donation) => (
+                            <TableRow key={donation.id}>
+                                <TableCell><Skeleton className="h-9 w-32" /></TableCell>
+                                <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                                <TableCell className="text-right"><Skeleton className="h-4 w-12 ml-auto" /></TableCell>
+                                <TableCell className="text-right"><Skeleton className="h-4 w-20 ml-auto" /></TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             </CardContent>
         </Card>
     );

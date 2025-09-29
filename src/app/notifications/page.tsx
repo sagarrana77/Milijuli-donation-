@@ -26,7 +26,7 @@ export default function NotificationsPage() {
     <div className="max-w-4xl mx-auto">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between border-b p-4">
-          <CardTitle className="text-2xl">All Notifications</CardTitle>
+          <CardTitle className="text-2xl md:text-3xl">All Notifications</CardTitle>
           {unreadCount > 0 && (
             <Button variant="outline" size="sm" onClick={markAllAsRead}>
               <Check className="mr-2 h-4 w-4" />
