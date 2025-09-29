@@ -93,7 +93,7 @@ export default function ProfilePage() {
             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex items-center justify-center gap-2">
-            <CardTitle className="text-3xl">{user.name}</CardTitle>
+            <CardTitle className="text-2xl md:text-3xl">{user.name}</CardTitle>
             <TooltipProvider>
                 <div className="flex items-center gap-1">
                     {isDonor && (
@@ -176,7 +176,14 @@ export default function ProfilePage() {
                         return (
                         <TableRow key={donation.id}>
                             <TableCell className="font-medium">
-                            {project ? (
+                            {donation.project === 'Operational Costs' ? (
+                                <Link
+                                href="/operational-costs"
+                                className="hover:underline"
+                                >
+                                {donation.project}
+                                </Link>
+                            ) : project ? (
                                 <Link
                                 href={`/projects/${project.id}`}
                                 className="hover:underline"
