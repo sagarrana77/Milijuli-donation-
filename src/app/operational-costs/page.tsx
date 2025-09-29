@@ -8,7 +8,8 @@ import {
   operationalCostsFund as initialOperationalCostsFund,
   teamMembers,
   equipment,
-  currentUser
+  currentUser,
+  allDonations
 } from '@/lib/data';
 import {
   Card,
@@ -34,6 +35,8 @@ export default function OperationalCostsPage() {
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
+  
+  const operationalDonations = allDonations.filter(d => d.project === 'Operational Costs');
 
   useEffect(() => {
     setIsClient(true);
@@ -93,7 +96,7 @@ export default function OperationalCostsPage() {
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground">
-                        Our mission is to bring radical transparency to fundraising. We believe donors have the right to know exactly how their contributions create change. ClarityChain provides a secure, auditable platform to track funds, ensuring accountability and rebuilding trust in the non-profit sector.
+                        Our mission is to bring radical transparency to fundraising. We believe donors have the right to know exactly how their contributions create change. milijuli sewa provides a secure, auditable platform to track funds, ensuring accountability and rebuilding trust in the non-profit sector.
                     </p>
                 </CardContent>
             </Card>
@@ -106,7 +109,7 @@ export default function OperationalCostsPage() {
                     <CardDescription>Supporters helping to fund our core operations.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <DonorsList projectName={operationalCostsFund.name} />
+                    <DonorsList donations={operationalDonations} />
                 </CardContent>
             </Card>
         </div>

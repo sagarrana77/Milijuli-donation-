@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -11,11 +10,19 @@ import { Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useDonationContext } from './donation-dialog-wrapper';
 import { Pagination } from '../ui/pagination';
+import type { Donation } from '@/lib/data';
+
+interface DonorsListProps {
+    donations?: Donation[];
+}
 
 const ITEMS_PER_PAGE = 5;
 
-export function DonorsList() {
-  const { donations } = useDonationContext();
+export function DonorsList({ donations: donationsProp }: DonorsListProps) {
+  const context = useDonationContext();
+  // Use donations from props if provided, otherwise fall back to context
+  const donations = donationsProp || context.donations;
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(donations.length / ITEMS_PER_PAGE);
