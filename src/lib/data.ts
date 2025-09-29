@@ -429,7 +429,7 @@ export let users: User[] = [
     },
     { 
         id: 'user-raj-patel', 
-        name: 'Raj Patel', 
+        name: 'Raj Patel',
         avatarUrl: getImageUrl('avatar-raj-patel'), 
         profileUrl: '/profile/user-raj-patel',
         bio: 'Interested in community health and wellness projects.',
@@ -774,9 +774,15 @@ export let faqs: FAQ[] = [
   },
   {
     id: 'faq-2',
-    question: 'What does a "Verified Transparent" project mean?',
+    question: 'What does the "Verified Transparent" badge mean?',
     answer:
-      'A "Verified Transparent" badge means the project has committed to our highest standards of transparency. All their expenses are logged on our public ledger with corresponding receipts, and they provide regular, detailed updates on their progress.',
+      'This is our highest standard. A project with this badge has committed to full on-chain transparency. This means every donation, expense, and transfer of funds is recorded on a public blockchain, which is cryptographically secured and cannot be altered. Donors can independently audit all financial activity from start to finish, ensuring the highest level of accountability.',
+  },
+  {
+    id: 'faq-4',
+    question: 'How does a project get a "Verified" badge?',
+    answer:
+      'To get a "Verified" badge, an organization must pass our standard due diligence process. We check their legal registration, and track record, and confirm their identity. This badge indicates that the organization is legitimate and has been vetted by ClarityChain, but it does not require them to use our on-chain financial tracking for full transparency. It serves as a baseline level of trust.',
   },
   {
     id: 'faq-3',
@@ -809,12 +815,14 @@ export type Gateway = {
 };
   
 export let paymentGateways: Gateway[] = [
-    { name: 'Esewa', enabled: true, qrValue: '', generatedQr: '' },
-    { name: 'Khalti', enabled: true, qrValue: '', generatedQr: '' },
-    { name: 'FonePay', enabled: true, qrValue: '', generatedQr: '' },
+    { name: 'Esewa', enabled: true, qrValue: 'esewa-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=esewa-id' },
+    { name: 'Khalti', enabled: true, qrValue: 'khalti-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=khalti-id' },
+    { name: 'FonePay', enabled: true, qrValue: 'fonepay-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=fonepay-id' },
     { name: 'PayPal', enabled: false, qrValue: '', generatedQr: '' },
-    { name: 'Stripe', enabled: true, qrValue: '', generatedQr: '' },
+    { name: 'Stripe', enabled: true, qrValue: 'stripe-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=stripe-id' },
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
+
+
 
