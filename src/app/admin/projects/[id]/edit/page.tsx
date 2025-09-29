@@ -123,9 +123,30 @@ export default function EditProjectPage() {
   }
 
   const handleGenerateSeo = async () => {
+    const name = form.getValues('name');
+    const longDescription = form.getValues('longDescription');
+
+    if (!name || name.length < 5) {
+        toast({
+            variant: 'destructive',
+            title: 'Project Name Too Short',
+            description: 'Please provide a project name of at least 5 characters.'
+        });
+        return;
+    }
+
+    if (!longDescription || longDescription.length < 100) {
+        toast({
+            variant: 'destructive',
+            title: 'Full Description Too Short',
+            description: 'Please provide a full description of at least 100 characters.'
+        });
+        return;
+    }
+
     setIsGeneratingSeo(true);
     try {
-        const result = await generateSeoSuggestions({ projectId });
+        const result = await generateSeoSuggestions({ name, longDescription });
         form.setValue('metaDescription', result.metaDescription, { shouldDirty: true });
         form.setValue('keywords', result.keywords, { shouldDirty: true });
         toast({

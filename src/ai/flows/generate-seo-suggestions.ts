@@ -7,7 +7,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { projects } from '@/lib/data';
 import { 
     GenerateSeoSuggestionsInputSchema, 
     GenerateSeoSuggestionsOutputSchema, 
@@ -15,30 +14,6 @@ import {
     type GenerateSeoSuggestionsOutput 
 } from '@/ai/schemas/seo-suggestions';
 
-// Tool to get project details for SEO
-const getProjectDetailsForSeo = ai.defineTool(
-  {
-    name: 'getProjectDetailsForSeo',
-    description: 'Returns the name and full description for a given project ID to be used for SEO optimization.',
-    inputSchema: z.object({
-      projectId: z.string().describe('The unique ID of the project.'),
-    }),
-    outputSchema: z.object({
-      name: z.string(),
-      longDescription: z.string(),
-    }),
-  },
-  async ({ projectId }) => {
-    const project = projects.find(p => p.id === projectId);
-    if (!project) {
-      throw new Error('Project not found');
-    }
-    return {
-      name: project.name,
-      longDescription: project.longDescription,
-    };
-  }
-);
 
 export async function generateSeoSuggestions(
   input: GenerateSeoSuggestionsInput
@@ -50,13 +25,13 @@ const prompt = ai.definePrompt({
   name: 'generateSeoSuggestionsPrompt',
   input: {schema: GenerateSeoSuggestionsInputSchema},
   output: {schema: GenerateSeoSuggestionsOutputSchema},
-  tools: [getProjectDetailsForSeo],
   prompt: `You are an SEO expert specializing in content optimization for non-profit and fundraising websites.
-Your task is to generate SEO suggestions for the project with ID '{{{projectId}}}'.
+Your task is to generate SEO suggestions for the following project:
 
-Use the getProjectDetailsForSeo tool to fetch the project's name and long description.
+Project Name: "{{{name}}}"
+Project Description: "{{{longDescription}}}"
 
-Based on the fetched content, please provide the following:
+Based on the provided content, please provide the following:
 1.  **Keywords**: A list of 5-7 relevant, high-impact SEO keywords. Include a mix of short-tail and long-tail keywords. Focus on terms that potential donors might use to search for such a project.
 2.  **Meta Description**: A compelling, concise meta description. It must be under 160 characters and should entice users to click through from a search engine results page. It should summarize the project's goal and include a call to action.
 `,

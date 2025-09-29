@@ -4,7 +4,8 @@
 import {z} from 'genkit';
 
 export const GenerateSeoSuggestionsInputSchema = z.object({
-  projectId: z.string().describe('The ID of the project to generate SEO suggestions for.'),
+  name: z.string().describe("The name of the project."),
+  longDescription: z.string().describe("The full description of the project."),
 });
 export type GenerateSeoSuggestionsInput = z.infer<typeof GenerateSeoSuggestionsInputSchema>;
 
