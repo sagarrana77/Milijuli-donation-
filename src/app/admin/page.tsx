@@ -45,6 +45,7 @@ import {
   Receipt,
   ShoppingCart,
   Copy,
+  Sparkles,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -373,6 +374,18 @@ export default function AdminDashboardPage() {
         toast({
             title: 'Permission Updated!',
             description: `${user.name}'s ability to create campaigns has been ${canCreate ? 'enabled' : 'disabled'}.`
+        });
+    }
+  }
+
+  const handleUserProMemberToggle = (userId: string, isPro: boolean) => {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        user.isProMember = isPro;
+        setForceRender(c => c + 1);
+        toast({
+            title: 'Pro Status Updated!',
+            description: `${user.name} is ${isPro ? 'now' : 'no longer'} a Pro Member.`
         });
     }
   }
@@ -859,6 +872,7 @@ export default function AdminDashboardPage() {
                                 <TableHead>User</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Role</TableHead>
+                                <TableHead>Pro Member</TableHead>
                                 <TableHead className="text-right">Can Create Campaigns</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -880,6 +894,13 @@ export default function AdminDashboardPage() {
                                             {user.isAdmin ? 'Admin' : 'User'}
                                         </Badge>
                                     </TableCell>
+                                    <TableCell>
+                                        <Switch
+                                            checked={user.isProMember || false}
+                                            onCheckedChange={(checked) => handleUserProMemberToggle(user.id, checked)}
+                                            aria-label={`Toggle pro member status for ${user.name}`}
+                                        />
+                                    </TableCell>
                                     <TableCell className="text-right">
                                         {!user.isAdmin && (
                                             <Switch
@@ -897,7 +918,7 @@ export default function AdminDashboardPage() {
             </Card>
         </TabsContent>
         <TabsContent value="ai-tools" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                 <Card>
                     <CardHeader>
                         <CardTitle>AI Wish Generator</CardTitle>
@@ -1236,3 +1257,4 @@ export default function AdminDashboardPage() {
 }
 
     
+
