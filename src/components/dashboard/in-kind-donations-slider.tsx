@@ -22,9 +22,11 @@ import { physicalDonations, projects, users } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useImageDialog } from '@/context/image-dialog-provider';
 
 export function InKindDonationsSlider() {
   const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
+  const { openImage } = useImageDialog();
 
   if (completedDonations.length === 0) {
     return (
@@ -62,17 +64,20 @@ export function InKindDonationsSlider() {
                 
                 if (!wishlistItem || !donor) return null;
 
+                const imageUrl = wishlistItem.imageUrl || 'https://picsum.photos/seed/placeholder/400/225';
+
                 return (
                     <CarouselItem key={donation.id} className="md:basis-1/2">
                         <div className="p-1 h-full">
                         <Card className="flex flex-col h-full overflow-hidden">
                              <Image
-                                src={wishlistItem.imageUrl || 'https://picsum.photos/seed/placeholder/400/225'}
+                                src={imageUrl}
                                 alt={wishlistItem.name}
                                 width={400}
                                 height={225}
-                                className="rounded-t-lg object-cover w-full h-auto aspect-[16/9]"
+                                className="rounded-t-lg object-cover w-full h-auto aspect-[16/9] cursor-pointer"
                                 data-ai-hint={wishlistItem.imageHint}
+                                onClick={() => openImage(imageUrl, wishlistItem.name)}
                             />
                             <CardContent className="p-4 flex-grow">
                                 <p className="font-semibold text-lg">{donation.quantity}x {donation.itemName}</p>

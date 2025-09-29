@@ -12,12 +12,14 @@ import type { WishlistItem } from '@/lib/data';
 import { InKindDonationDialog } from './in-kind-donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { physicalDonations } from '@/lib/data';
+import { useImageDialog } from '@/context/image-dialog-provider';
 
 
 export function WishlistTab() {
   const { project, setIsDonationOpen } = useDonationContext();
   const [selectedItem, setSelectedItem] = useState<WishlistItem | null>(null);
   const { toast } = useToast();
+  const { openImage } = useImageDialog();
 
   const handleInKindSubmit = (data: { donationType: 'drop-off' | 'pickup', quantity: number, address?: string }) => {
     if (!selectedItem) return;
@@ -78,8 +80,9 @@ export function WishlistTab() {
                       alt={item.name}
                       width={400}
                       height={300}
-                      className="aspect-video w-full object-cover rounded-t-lg"
+                      className="aspect-video w-full object-cover rounded-t-lg cursor-pointer"
                       data-ai-hint={item.imageHint}
+                      onClick={() => openImage(item.imageUrl!, item.name)}
                   />
               )}
               <CardHeader>

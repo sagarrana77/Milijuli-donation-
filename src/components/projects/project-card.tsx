@@ -1,4 +1,6 @@
 
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Project } from '@/lib/data';
@@ -13,28 +15,24 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { TransparencySealIcon } from '@/components/icons/transparency-seal';
+import { useImageDialog } from '@/context/image-dialog-provider';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { openImage } = useImageDialog();
   const percentage = Math.round(
     (project.raisedAmount / project.targetAmount) * 100
   );
-
-  const getProgressColor = () => {
-    if (percentage < 34) return 'bg-red-500';
-    if (percentage < 100) return 'bg-yellow-500';
-    return 'bg-green-500';
-  };
   
   const isFunded = percentage >= 100;
 
   return (
     <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="relative p-0">
-        <Link href={`/projects/${project.id}`}>
+        <div onClick={() => openImage(project.imageUrl, project.name)} className="cursor-pointer">
           <Image
             src={project.imageUrl}
             alt={project.name}
@@ -43,7 +41,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             className="aspect-video w-full object-cover"
             data-ai-hint={project.imageHint}
           />
-        </Link>
+        </div>
         {project.verified && (
           <div
             className="absolute right-2 top-2 rounded-full bg-background/80 p-1.5 text-green-600 backdrop-blur-sm"
@@ -69,7 +67,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </span>
             <span>{percentage}%</span>
           </div>
-          <Progress value={percentage} indicatorClassName={getProgressColor()} aria-label={`${percentage}% funded`} />
+          <Progress value={percentage} aria-label={`${percentage}% funded`} />
         </div>
         <Button asChild className="w-full" variant={isFunded ? 'secondary' : 'default'}>
             <Link href={`/projects/${project.id}`}>

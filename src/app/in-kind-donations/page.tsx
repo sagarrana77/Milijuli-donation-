@@ -8,8 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { physicalDonations, projects, users } from '@/lib/data';
 import { Package } from 'lucide-react';
+import { useImageDialog } from '@/context/image-dialog-provider';
 
 export default function InKindDonationsPage() {
+  const { openImage } = useImageDialog();
   const completedDonations = physicalDonations.filter(
     (d) => d.status === 'Completed'
   );
@@ -59,21 +61,23 @@ export default function InKindDonationsPage() {
 
                         if (!wishlistItem || !donor) return null;
 
+                        const imageUrl =
+                          wishlistItem.imageUrl ||
+                          'https://picsum.photos/seed/placeholder/400/300';
+                        
                         return (
                           <Card
                             key={donation.id}
                             className="overflow-hidden transition-shadow hover:shadow-lg"
                           >
                             <Image
-                              src={
-                                wishlistItem.imageUrl ||
-                                'https://picsum.photos/seed/placeholder/400/300'
-                              }
+                              src={imageUrl}
                               alt={wishlistItem.name}
                               width={400}
                               height={300}
-                              className="aspect-video w-full object-cover"
+                              className="aspect-video w-full object-cover cursor-pointer"
                               data-ai-hint={wishlistItem.imageHint}
+                              onClick={() => openImage(imageUrl, wishlistItem.name)}
                             />
                             <CardContent className="p-4">
                               <p className="font-semibold">
