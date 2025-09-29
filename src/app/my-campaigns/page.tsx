@@ -81,7 +81,11 @@ export default function MyCampaignsPage() {
               <TableBody>
                 {userProjects.map((project) => (
                   <TableRow key={project.id}>
-                    <TableCell className="font-medium">{project.name}</TableCell>
+                    <TableCell className="font-medium">
+                      <Link href={`/projects/${project.id}`} className="hover:underline">
+                        {project.name}
+                      </Link>
+                    </TableCell>
                     <TableCell>
                       <Badge variant={project.verified ? 'default' : 'secondary'}>
                         {project.verified ? 'Verified' : 'Pending Review'}
@@ -132,4 +136,3 @@ export default function MyCampaignsPage() {
     </div>
   );
 }
-
