@@ -55,85 +55,91 @@ export function OperationalCosts({ salaries, equipment, miscExpenses, teamMember
             </TabsTrigger>
           </TabsList>
           <TabsContent value="salaries" className="mt-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Employee</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead className="text-right">Monthly Salary</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {salaries.map((salary) => {
-                  const memberId = findTeamMemberId(salary.employee);
-                  return (
-                    <TableRow key={salary.id}>
-                      <TableCell className="font-medium">
-                        {memberId ? (
-                            <Link href={`/team/${memberId}`} className="hover:underline text-primary">
-                                {salary.employee}
-                            </Link>
-                        ) : (
-                            salary.employee
-                        )}
-                      </TableCell>
-                      <TableCell>{salary.role}</TableCell>
-                      <TableCell className="text-right">
-                        {salary.currency === 'NPR' ? 'NPR' : '$'}{salary.salary.toLocaleString()}
-                      </TableCell>
+            <div className="overflow-x-auto">
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead>Employee</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead className="text-right">Monthly Salary</TableHead>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                    {salaries.map((salary) => {
+                    const memberId = findTeamMemberId(salary.employee);
+                    return (
+                        <TableRow key={salary.id}>
+                        <TableCell className="font-medium">
+                            {memberId ? (
+                                <Link href={`/team/${memberId}`} className="hover:underline text-primary">
+                                    {salary.employee}
+                                </Link>
+                            ) : (
+                                salary.employee
+                            )}
+                        </TableCell>
+                        <TableCell>{salary.role}</TableCell>
+                        <TableCell className="text-right">
+                            {salary.currency === 'NPR' ? 'NPR' : '$'}{salary.salary.toLocaleString()}
+                        </TableCell>
+                        </TableRow>
+                    );
+                    })}
+                </TableBody>
+                </Table>
+            </div>
           </TabsContent>
           <TabsContent value="equipment" className="mt-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Item</TableHead>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Cost</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {equipment.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.item}</TableCell>
-                    <TableCell>{item.vendor}</TableCell>
-                    <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
-                    <TableCell className="text-right">
-                      ${item.cost.toLocaleString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="overflow-x-auto">
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead>Item</TableHead>
+                    <TableHead>Vendor</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Cost</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {equipment.map((item) => (
+                    <TableRow key={item.id}>
+                        <TableCell className="font-medium">{item.item}</TableCell>
+                        <TableCell>{item.vendor}</TableCell>
+                        <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
+                        <TableCell className="text-right">
+                        ${item.cost.toLocaleString()}
+                        </TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
+                </Table>
+            </div>
           </TabsContent>
           <TabsContent value="misc" className="mt-4">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Item</TableHead>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Cost</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {miscExpenses.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.item}</TableCell>
-                    <TableCell>{item.vendor}</TableCell>
-                    <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
-                    <TableCell className="text-right">
-                      ${item.cost.toLocaleString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <div className="overflow-x-auto">
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                    <TableHead>Item</TableHead>
+                    <TableHead>Vendor</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Cost</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {miscExpenses.map((item) => (
+                    <TableRow key={item.id}>
+                        <TableCell className="font-medium">{item.item}</TableCell>
+                        <TableCell>{item.vendor}</TableCell>
+                        <TableCell>{format(new Date(item.purchaseDate), 'PP')}</TableCell>
+                        <TableCell className="text-right">
+                        ${item.cost.toLocaleString()}
+                        </TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
+                </Table>
+            </div>
           </TabsContent>
         </Tabs>
       </CardContent>
