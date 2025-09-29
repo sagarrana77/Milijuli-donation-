@@ -39,6 +39,7 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 const socialLinks = [
   { href: '#', icon: LinkedInIcon, label: 'LinkedIn', color: 'text-blue-700' },
@@ -55,6 +56,7 @@ export default function ProfilePage() {
   const userId = params.id as string;
   const user = getUser(userId);
   const { toast } = useToast();
+  const { openDialog } = usePricingDialog();
 
   if (!user) {
     notFound();
@@ -143,6 +145,41 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
+      {isCurrentUserProfile && (
+        <Card>
+            <CardHeader>
+            <CardTitle>AI Credits & Status</CardTitle>
+            <CardDescription>
+                Manage your AI features usage and Pro status.
+            </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-1">
+                        <p className="font-medium">Your Status</p>
+                        {currentUser?.isProMember ? (
+                            <Badge>
+                                <Sparkles className="mr-2 h-4 w-4" /> Pro Member
+                            </Badge>
+                        ) : (
+                            <Badge variant="secondary">Standard Member</Badge>
+                        )}
+                    </div>
+                    <div className="space-y-1 mt-4 sm:mt-0 text-left sm:text-right">
+                        <p className="font-medium">AI Credits</p>
+                        <p className="text-2xl font-bold">{currentUser?.aiCredits ?? 0}</p>
+                    </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                    Pro members get exclusive benefits and bonus credits. You can become a Pro member by donating to our <Link href="/operational-costs" className="text-primary underline">Operational Costs</Link> fund. Each AI feature usage (like generating a story or summary) costs 1 credit.
+                </p>
+                <Button onClick={openDialog}>
+                    <Sparkles className="mr-2 h-4 w-4" /> Get More Credits or Go Pro
+                </Button>
+            </CardContent>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
             <Card>
@@ -176,7 +213,7 @@ export default function ProfilePage() {
                         return (
                         <TableRow key={donation.id}>
                             <TableCell className="font-medium">
-                             {donation.project === 'Operational Costs' ? (
+                            {donation.project === 'Operational Costs' ? (
                                 <Link
                                 href="/operational-costs"
                                 className="hover:underline"
