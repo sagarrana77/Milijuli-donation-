@@ -136,9 +136,11 @@ export default function SettingsPage() {
                 </div>
             </div>
              <p className="text-sm text-muted-foreground">
-                Pro members get exclusive benefits and bonus credits. You can become a Pro member by donating to our <Link href="/operational-costs" className="text-primary underline">Operational Costs</Link> fund.
+                Pro members get exclusive benefits and bonus credits. You can become a Pro member by donating to our <Link href="/operational-costs" className="text-primary underline">Operational Costs</Link> fund. Each AI feature usage (like generating a story or summary) costs 1 credit.
             </p>
-            <Button onClick={openDialog}>Get More Credits</Button>
+            <Button onClick={openDialog}>
+                <Sparkles className="mr-2 h-4 w-4" /> Get More Credits or Go Pro
+            </Button>
         </CardContent>
       </Card>
 

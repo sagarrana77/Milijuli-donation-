@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Star } from "lucide-react";
 import { currentUser } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './dialog';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 const proFeatures = [
@@ -55,13 +56,16 @@ export function PricingDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={closeDialog}>
-        <DialogContent className="max-w-5xl">
-            <DialogHeader>
-                 <DialogTitle className="text-center text-3xl font-bold tracking-tight md:text-4xl">
+        <DialogContent className="max-w-4xl p-0">
+            <DialogHeader className="p-6 pb-0 text-center">
+                 <DialogTitle className="text-3xl font-bold tracking-tight">
                     Pricing & Membership
                 </DialogTitle>
+                <DialogDescription>
+                    Supercharge your fundraising with Pro status and AI credits.
+                </DialogDescription>
             </DialogHeader>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 py-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 p-6">
                 <Card className="flex flex-col border-primary border-2 shadow-primary/20">
                     <CardHeader className="text-center">
                         <Star className="mx-auto h-10 w-10 text-primary mb-4" />
