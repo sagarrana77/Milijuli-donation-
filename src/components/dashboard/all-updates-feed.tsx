@@ -51,7 +51,7 @@ export function AllUpdatesFeed() {
     
     // Simulate real-time updates
     const interval = setInterval(() => {
-        if (document.hidden) return; // Don't update if tab is not visible
+        if (document.hidden || projects.length === 0) return; // Don't update if tab is not visible or no projects exist
 
         const randomProject = projects[Math.floor(Math.random() * projects.length)];
         const randomDonor = users.find(u => u.id === 'user-anonymous')!;
