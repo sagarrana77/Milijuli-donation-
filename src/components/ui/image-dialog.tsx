@@ -36,8 +36,8 @@ export function ImageDialog() {
         <DialogHeader className="p-4 border-b">
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col h-full overflow-hidden">
-          <div className="relative bg-black flex-1 flex items-center justify-center">
+        <div className="grid md:grid-cols-2 h-full overflow-hidden">
+          <div className="relative bg-black flex items-center justify-center h-full w-full">
             <Image
               src={imageUrl}
               alt={imageAlt || title}
@@ -45,7 +45,7 @@ export function ImageDialog() {
               className="object-contain"
             />
           </div>
-          <div className="flex flex-col flex-1 h-1/2 overflow-y-auto border-t">
+          <div className="flex flex-col h-full overflow-y-auto border-t md:border-t-0 md:border-l">
              <ScrollArea className="h-full">
                 <div className="p-4 space-y-4">
                   {hasInteractionTabs ? (
