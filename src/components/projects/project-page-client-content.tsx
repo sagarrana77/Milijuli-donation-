@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Image from 'next/image';
@@ -174,12 +175,12 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                             </Link>
                                             <div>
                                                 <div className="flex items-baseline gap-2">
-                                                    <p className="text-sm">
+                                                    <div className="text-sm">
                                                         <Link href={update.monetaryDonationDetails.donorProfileUrl} className="font-semibold hover:underline">
                                                             {update.monetaryDonationDetails.donorName}
                                                         </Link>
                                                         {' '}donated <span className="font-bold text-primary">Rs.{update.monetaryDonationDetails.amount.toLocaleString()}</span>
-                                                    </p>
+                                                    </div>
                                                 </div>
                                                 <div className="text-xs text-muted-foreground">{isClient ? format(new Date(update.date), 'PPp') : <Skeleton className="h-4 w-24" />}</div>
                                             </div>

@@ -18,6 +18,7 @@ import { Skeleton } from '../ui/skeleton';
 export function FundraisingProgress() {
   const { project, raisedAmount, donors, percentage, isClient, setIsDonationOpen } = useDonationContext();
   const totalSpent = project.expenses.reduce((acc, exp) => acc + exp.amount, 0);
+  const availableFunds = raisedAmount - totalSpent;
 
   return (
     <Card>
@@ -32,7 +33,7 @@ export function FundraisingProgress() {
               <div className="flex items-center gap-2">
                 <span className="font-bold text-muted-foreground">Available</span>
                 <div>
-                  <p className="font-bold">Rs.{raisedAmount.toLocaleString()}</p>
+                  <p className="font-bold">Rs.{availableFunds.toLocaleString()}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">

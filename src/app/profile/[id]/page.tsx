@@ -40,6 +40,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { useEffect, useState } from 'react';
 
 const socialLinks = [
   { href: '#', icon: LinkedInIcon, label: 'LinkedIn', color: 'text-blue-700' },
@@ -57,6 +58,11 @@ export default function ProfilePage() {
   const user = getUser(userId);
   const { toast } = useToast();
   const { openDialog } = usePricingDialog();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   if (!user) {
     notFound();
@@ -166,8 +172,11 @@ export default function ProfilePage() {
                         )}
                     </div>
                     <div className="space-y-1 mt-4 sm:mt-0 text-left sm:text-right">
-                        <p className="font-medium">AI Credits</p>
+                        <p className="font-medium">AI Credits Remaining</p>
                         <p className="text-2xl font-bold">{currentUser?.aiCredits ?? 0}</p>
+                         <p className="text-xs text-muted-foreground">
+                            (1 credit = 1 AI generation)
+                        </p>
                     </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -231,7 +240,7 @@ export default function ProfilePage() {
                                 <span>{donation.project}</span>
                             )}
                             </TableCell>
-                            <TableCell>{format(new Date(donation.date), 'PPP')}</TableCell>
+                            <TableCell>{isClient ? format(new Date(donation.date), 'PPP') : null}</TableCell>
                             <TableCell className="text-right font-semibold">
                             Rs.{donation.amount.toLocaleString()}
                             </TableCell>
@@ -293,5 +302,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    

@@ -199,7 +199,7 @@ export let projects: Project[] = [
         name: 'Set of Textbooks for a Child',
         description: 'Provides a full set of required textbooks for one primary school student for a year.',
         quantityNeeded: 200,
-        quantityDonated: 50,
+        quantityDonated: 5,
         costPerItem: 2500,
         imageUrl: getImageUrl('update-photo-1'),
         imageHint: 'school books',

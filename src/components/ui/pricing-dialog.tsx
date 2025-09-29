@@ -61,11 +61,11 @@ export function PricingDialog() {
                  <DialogTitle className="text-3xl font-bold tracking-tight">
                     Pricing & Membership
                 </DialogTitle>
-                <DialogDescription>
+                <DialogDescription className="text-base md:text-lg">
                     Supercharge your fundraising with Pro status and AI credits.
                 </DialogDescription>
             </DialogHeader>
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 p-6">
+            <div className="grid grid-cols-1 gap-8 p-4 md:grid-cols-2 md:p-6">
                 <Card className="flex flex-col border-primary border-2 shadow-primary/20">
                     <CardHeader className="text-center">
                         <Star className="mx-auto h-10 w-10 text-primary mb-4" />
@@ -105,7 +105,7 @@ export function PricingDialog() {
                     <CardContent className="flex-grow space-y-6">
                         {creditPacks.map((pack) => (
                             <Card key={pack.credits} className={pack.bestValue ? "border-primary" : ""}>
-                                <CardContent className="p-4 flex items-center justify-between gap-4">
+                                <CardContent className="p-4 flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
                                     <div>
                                         <p className="font-bold text-xl">{pack.credits.toLocaleString()} Credits</p>
                                         <p className="text-sm text-muted-foreground">${pack.pricePerCredit.toFixed(3)} / credit</p>

@@ -131,8 +131,11 @@ export default function SettingsPage() {
                     )}
                 </div>
                  <div className="space-y-1 mt-4 sm:mt-0 text-left sm:text-right">
-                    <p className="font-medium">AI Credits</p>
+                    <p className="font-medium">AI Credits Remaining</p>
                     <p className="text-2xl font-bold">{currentUser?.aiCredits ?? 0}</p>
+                    <p className="text-xs text-muted-foreground">
+                        (1 credit = 1 AI generation)
+                    </p>
                 </div>
             </div>
              <p className="text-sm text-muted-foreground">

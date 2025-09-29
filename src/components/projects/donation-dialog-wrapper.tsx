@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, ReactNode, createContext, useContext, useMemo } from 'react';
@@ -42,7 +43,7 @@ export function DonationDialogWrapper({
   const [raisedAmount, setRaisedAmount] = useState(project.raisedAmount);
   const [donors, setDonors] = useState(project.donors);
   const [allUpdates, setAllUpdates] = useState<Update[]>(() => [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-  const [allDonations, setAllDonations] = useState<Donation[]>(() => initialDonations.filter(d => d.project === project.name) || []);
+  const [allDonations, setAllDonations] = useState<Donation[]>(() => (initialDonations.filter(d => d.project === project.name) || []));
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
@@ -61,47 +62,50 @@ export function DonationDialogWrapper({
     });
     setAllUpdates(initialCombinedUpdates);
     
-    // The real-time simulation is now client-only
-    const interval = setInterval(() => {
-      if(document.hidden) return;
-      const isDonation = Math.random() > 0.7; // 30% chance of donation
-      if (isDonation && raisedAmount < project.targetAmount) {
-        const newAmount = Math.floor(Math.random() * 150) + 20;
-        
-        setRaisedAmount((prev) => Math.min(prev + newAmount, project.targetAmount));
-        setDonors((prev) => prev + 1);
-        
-        const donor = users.find(u => u.id === 'user-anonymous')!;
-        
-        const newDonationUpdate: Update = {
-          id: `update-donation-${Date.now()}`,
-          title: `New Anonymous Donation!`,
-          description: `${donor.name} generously donated Rs.${newAmount.toLocaleString()}.`,
-          date: new Date().toISOString(),
-          isMonetaryDonation: true,
-          monetaryDonationDetails: {
-            donorName: donor.name,
-            donorAvatarUrl: donor.avatarUrl,
-            donorProfileUrl: donor.profileUrl,
-            amount: newAmount,
-          },
-        };
-        
-        setAllUpdates(prev => [newDonationUpdate, ...prev]);
-
-        const newDonationEntry: Donation = {
-            id: Date.now(),
-            donor: donor,
-            project: project.name,
-            amount: newAmount,
+    if (typeof window !== 'undefined') {
+        const interval = setInterval(() => {
+        if(document.hidden) return;
+        const totalSpent = project.expenses.reduce((acc, exp) => acc + exp.amount, 0);
+        const availableFunds = raisedAmount - totalSpent;
+        const isDonation = Math.random() > 0.7; // 30% chance of donation
+        if (isDonation && availableFunds < project.targetAmount) {
+            const newAmount = Math.floor(Math.random() * 150) + 20;
+            
+            setRaisedAmount((prev) => Math.min(prev + newAmount, project.targetAmount));
+            setDonors((prev) => prev + 1);
+            
+            const donor = users.find(u => u.id === 'user-anonymous')!;
+            
+            const newDonationUpdate: Update = {
+            id: `update-donation-${Date.now()}`,
+            title: `New Anonymous Donation!`,
+            description: `${donor.name} generously donated Rs.${newAmount.toLocaleString()}.`,
             date: new Date().toISOString(),
-            isAnonymous: true,
-        }
-        setAllDonations(prev => [newDonationEntry, ...prev]);
-      }
-    }, 4000);
+            isMonetaryDonation: true,
+            monetaryDonationDetails: {
+                donorName: donor.name,
+                donorAvatarUrl: donor.avatarUrl,
+                donorProfileUrl: donor.profileUrl,
+                amount: newAmount,
+            },
+            };
+            
+            setAllUpdates(prev => [newDonationUpdate, ...prev]);
 
-    return () => clearInterval(interval);
+            const newDonationEntry: Donation = {
+                id: Date.now(),
+                donor: donor,
+                project: project.name,
+                amount: newAmount,
+                date: new Date().toISOString(),
+                isAnonymous: true,
+            }
+            setAllDonations(prev => [newDonationEntry, ...prev]);
+        }
+        }, 4000);
+
+        return () => clearInterval(interval);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project.id, project.raisedAmount, project.donors, project.updates]);
 
@@ -182,9 +186,11 @@ export function DonationDialogWrapper({
       }
     }
   };
-
+  
+  const totalSpent = project.expenses.reduce((acc, exp) => acc + exp.amount, 0);
+  const availableFunds = raisedAmount - totalSpent;
   const percentage = Math.round(
-    (raisedAmount / project.targetAmount) * 100
+    (availableFunds / project.targetAmount) * 100
   );
   
   const sortedUpdates = useMemo(() => {
@@ -196,7 +202,7 @@ export function DonationDialogWrapper({
   }, [allUpdates]);
 
   const contextValue = {
-    raisedAmount,
+    raisedAmount: availableFunds,
     donors,
     percentage,
     isClient,
