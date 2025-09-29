@@ -31,6 +31,7 @@ import { PlusCircle, Wand2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { projects } from '@/lib/data';
 import { summarizeProject } from '@/ai/flows/summarize-project';
+import { generateCampaignStory } from '@/ai/flows/generate-campaign-story';
 import { useState } from 'react';
 
 const projectSchema = z.object({
@@ -50,6 +51,7 @@ export default function NewProjectPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [isGeneratingStory, setIsGeneratingStory] = useState(false);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -126,6 +128,37 @@ export default function NewProjectPage() {
     }
   };
 
+  const handleGenerateStory = async () => {
+    const campaignTitle = form.getValues('name');
+    if (!campaignTitle || campaignTitle.length < 5) {
+        toast({
+            variant: 'destructive',
+            title: 'Project Name Too Short',
+            description: 'Please provide a project name of at least 5 characters before generating a story.'
+        });
+        return;
+    }
+
+    setIsGeneratingStory(true);
+    try {
+        const result = await generateCampaignStory({ campaignTitle });
+        form.setValue('longDescription', result.campaignStory, { shouldValidate: true, shouldDirty: true });
+        toast({
+            title: "AI Story Generated!",
+            description: "The full project description has been filled in."
+        });
+    } catch (error) {
+        console.error("Error generating story:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error Generating Story',
+            description: 'Could not generate story. Please try again.'
+        });
+    } finally {
+        setIsGeneratingStory(false);
+    }
+  };
+
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8">
@@ -177,15 +210,20 @@ export default function NewProjectPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Full Project Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        rows={6}
-                        placeholder="Describe the project's goals, methods, and expected impact in detail."
-                        {...field}
-                      />
-                    </FormControl>
+                    <div className="flex items-start gap-2">
+                        <FormControl>
+                        <Textarea
+                            rows={6}
+                            placeholder="Describe the project's goals, methods, and expected impact in detail."
+                            {...field}
+                        />
+                        </FormControl>
+                        <Button type="button" variant="outline" size="icon" onClick={handleGenerateStory} disabled={isGeneratingStory} title="Generate with AI">
+                            {isGeneratingStory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                        </Button>
+                    </div>
                     <FormDescription>
-                        This will be shown on the main project page. Use markdown for formatting if needed.
+                        This will be shown on the main project page. You can write this yourself or generate it with AI based on the project name.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

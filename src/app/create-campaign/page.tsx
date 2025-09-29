@@ -34,6 +34,7 @@ import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
 import { useState } from 'react';
 import { summarizeProject } from '@/ai/flows/summarize-project';
+import { generateCampaignStory } from '@/ai/flows/generate-campaign-story';
 
 const gatewaySchema = z.object({
     name: z.string(),
@@ -59,6 +60,7 @@ export default function CreateCampaignPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+  const [isGeneratingStory, setIsGeneratingStory] = useState(false);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -159,6 +161,37 @@ export default function CreateCampaignPage() {
         setIsGeneratingSummary(false);
     }
   };
+  
+  const handleGenerateStory = async () => {
+    const campaignTitle = form.getValues('name');
+    if (!campaignTitle || campaignTitle.length < 5) {
+        toast({
+            variant: 'destructive',
+            title: 'Campaign Name Too Short',
+            description: 'Please provide a campaign name of at least 5 characters before generating a story.'
+        });
+        return;
+    }
+
+    setIsGeneratingStory(true);
+    try {
+        const result = await generateCampaignStory({ campaignTitle });
+        form.setValue('longDescription', result.campaignStory, { shouldValidate: true, shouldDirty: true });
+        toast({
+            title: "AI Story Generated!",
+            description: "The full campaign story has been filled in."
+        });
+    } catch (error) {
+        console.error("Error generating story:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error Generating Story',
+            description: 'Could not generate story. Please try again.'
+        });
+    } finally {
+        setIsGeneratingStory(false);
+    }
+  };
 
 
   return (
@@ -218,15 +251,20 @@ export default function CreateCampaignPage() {
                         render={({ field }) => (
                         <FormItem>
                             <FormLabel>Full Campaign Story</FormLabel>
-                            <FormControl>
-                            <Textarea
-                                rows={6}
-                                placeholder="Tell your story. Describe the campaign's goals, why it's important, and the impact it will have."
-                                {...field}
-                            />
-                            </FormControl>
+                            <div className="flex items-start gap-2">
+                                <FormControl>
+                                <Textarea
+                                    rows={6}
+                                    placeholder="Tell your story. Describe the campaign's goals, why it's important, and the impact it will have."
+                                    {...field}
+                                />
+                                </FormControl>
+                                <Button type="button" variant="outline" size="icon" onClick={handleGenerateStory} disabled={isGeneratingStory} title="Generate with AI">
+                                    {isGeneratingStory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                                </Button>
+                            </div>
                             <FormDescription>
-                                This will be shown on the main campaign page. Use markdown for formatting if needed.
+                                This will be shown on the main campaign page. You can write this yourself or generate it with AI based on the campaign name.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -404,5 +442,3 @@ export default function CreateCampaignPage() {
     </div>
   );
 }
-
-    
