@@ -2,7 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { notifications as initialNotifications, type Notification } from '@/lib/data';
+import type { Notification } from '@/lib/data';
 
 interface NotificationContextType {
   notifications: Notification[];
@@ -14,7 +14,7 @@ interface NotificationContextType {
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
-  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications.map(n => ({...n, date: new Date(n.date)})));
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const markAsRead = (id: string) => {
     setNotifications(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));

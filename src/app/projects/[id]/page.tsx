@@ -1,10 +1,8 @@
-
-
 import { notFound } from 'next/navigation';
-import { projects, type Project } from '@/lib/data';
+import { getProject } from '@/services/projects-service';
+import type { Project } from '@/lib/data';
 import {
   Card,
-  CardContent,
 } from '@/components/ui/card';
 import { TransparencySealIcon } from '@/components/icons/transparency-seal';
 import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wrapper';
@@ -12,16 +10,12 @@ import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { ProjectPageClientContent, ProjectPageClientAside } from '@/components/projects/project-page-client-content';
 
 
-function getProject(id: string): Project | undefined {
-  return projects.find((p) => p.id === id);
-}
-
-export default function ProjectDetailPage({
+export default async function ProjectDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const project = getProject(params.id);
+  const project = await getProject(params.id);
 
   if (!project) {
     notFound();

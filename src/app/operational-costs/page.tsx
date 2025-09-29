@@ -9,7 +9,6 @@ import {
   teamMembers,
   equipment,
   currentUser,
-  allDonations
 } from '@/lib/data';
 import {
   Card,
@@ -36,11 +35,10 @@ export default function OperationalCostsPage() {
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
   
-  const operationalDonations = allDonations.filter(d => d.project === 'Operational Costs');
 
   useEffect(() => {
     setIsClient(true);
-    // This effect will re-sync the state if the underlying mock data changes (e.g., via admin actions)
+    // This effect will re-sync the state if the underlying data changes (e.g., via admin actions)
     setOperationalCostsFund(initialOperationalCostsFund);
   }, [initialOperationalCostsFund.raisedAmount, initialOperationalCostsFund.donors]);
 
@@ -109,7 +107,7 @@ export default function OperationalCostsPage() {
                     <CardDescription>Supporters helping to fund our core operations.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <DonorsList donations={operationalDonations} />
+                    <DonorsList donations={[]} />
                 </CardContent>
             </Card>
         </div>

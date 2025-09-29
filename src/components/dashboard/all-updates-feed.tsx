@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -13,14 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { projects, type Update, users } from '@/lib/data';
+import { type Project, type Update, users } from '@/lib/data';
 import { Skeleton } from '../ui/skeleton';
 import { ArrowRight, Gift, ShoppingCart } from 'lucide-react';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
@@ -30,15 +22,19 @@ type UpdateWithProject = Update & {
     projectId: string;
 };
 
-export function AllUpdatesFeed() {
+interface AllUpdatesFeedProps {
+    allProjects: Project[];
+}
+
+export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
   const [allUpdates, setAllUpdates] = useState<UpdateWithProject[]>([]);
   const [isClient, setIsClient] = useState(false);
   const { openPhoto } = usePhotoDialog();
 
   useEffect(() => {
     // Aggregate updates from all projects
-    const updates = projects.flatMap(project =>
-      project.updates.map(update => ({
+    const updates = allProjects.flatMap(project =>
+      (project.updates || []).map(update => ({
         ...update,
         projectName: project.name,
         projectId: project.id,
@@ -51,12 +47,14 @@ export function AllUpdatesFeed() {
     
     // Simulate real-time updates
     const interval = setInterval(() => {
-        if (document.hidden || projects.length === 0) return; // Don't update if tab is not visible or no projects exist
+        if (document.hidden || allProjects.length === 0) return; // Don't update if tab is not visible or no projects exist
 
-        const randomProject = projects[Math.floor(Math.random() * projects.length)];
+        const randomProject = allProjects[Math.floor(Math.random() * allProjects.length)];
         const randomDonor = users.find(u => u.id === 'user-anonymous')!;
         const randomAmount = Math.floor(Math.random() * (5000 - 100 + 1)) + 100;
         
+        if (!randomProject) return;
+
         const newDonationUpdate: UpdateWithProject = {
             id: `rt-donation-${Date.now()}`,
             title: `New Anonymous Donation!`,
@@ -79,7 +77,7 @@ export function AllUpdatesFeed() {
 
     return () => clearInterval(interval);
 
-  }, []);
+  }, [allProjects]);
 
   if (!isClient) {
     return (
@@ -184,4 +182,3 @@ export function AllUpdatesFeed() {
     </Card>
   );
 }
-    

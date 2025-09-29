@@ -1,9 +1,3 @@
-
-
-'use client';
-
-import { useState } from 'react';
-import Link from 'next/link';
 import {
   Card,
   CardContent,
@@ -26,16 +20,67 @@ import {
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { dashboardStats, operationalCostsFund, projects, jobOpenings, salaries, equipment, miscExpenses, teamMembers } from '@/lib/data';
+import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers } from '@/lib/data';
+import { getProjects } from '@/services/projects-service';
 import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { InKindDonationsSlider } from '@/components/dashboard/in-kind-donations-slider';
+import Link from 'next/link';
 
-export default function DashboardPage() {
-    const [currentDashboardStats, setCurrentDashboardStats] = useState(dashboardStats);
+export default async function DashboardPage() {
+    const projects = await getProjects();
     
+    // Calculate operational costs
+    const totalSalaryCosts = salaries.reduce((acc, s) => {
+        const nprAmount = s.currency === 'USD' ? s.salary * 133 : s.salary;
+        return acc + nprAmount;
+    }, 0); // Monthly in NPR
+    const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
+    const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
+    const currentOperationalExpenses = (totalSalaryCosts * 12) + totalEquipmentCosts + totalMiscCosts; // Annualized for target
+
+    // Calculate project expenses by category
+    const educationExpenses = projects
+      .filter(p => p.id === 'education-for-all-nepal')
+      .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
+
+    const healthExpenses = projects
+      .filter(p => ['clean-water-initiative', 'community-health-posts'].includes(p.id))
+      .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
+
+    const reliefExpenses = projects
+      .filter(p => p.id === 'disaster-relief-fund')
+      .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
+
+    // Calculate totals for dashboard stats
+    const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0) + operationalCostsFund.raisedAmount;
+    const totalProjectExpenses = projects.reduce(
+      (acc, p) => acc + (p.expenses?.reduce((sum, e) => sum + e.amount, 0) || 0),
+      0
+    );
+    const totalSpending = totalProjectExpenses + currentOperationalExpenses;
+    const fundsInHand = totalRaised - totalSpending;
+    
+    const dashboardStats = {
+        totalFunds: totalRaised,
+        monthlyIncrease: 2012300,
+        totalDonors: 4950,
+        newDonors: 213,
+        projectsFunded: projects.filter(p => p.raisedAmount >= p.targetAmount).length,
+        countries: 1,
+        totalSpent: totalSpending,
+        fundsInHand: fundsInHand,
+        spendingBreakdown: [
+            { name: 'Education', value: educationExpenses, key: 'education' },
+            { name: 'Health', value: healthExpenses, key: 'health' },
+            { name: 'Relief', value: reliefExpenses, key: 'relief' },
+            { name: 'Operational', value: currentOperationalExpenses, key: 'operational' },
+        ],
+    };
+
+
     const opsPercentage = Math.round(
     (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
   );
@@ -59,10 +104,10 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-chart-1">
-                Rs.{currentDashboardStats.totalFunds.toLocaleString()}
+                Rs.{(dashboardStats.totalFunds || 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
-                +Rs.{currentDashboardStats.monthlyIncrease.toLocaleString()} from last
+                +Rs.{(dashboardStats.monthlyIncrease || 0).toLocaleString()} from last
                 month
               </p>
             </CardContent>
@@ -76,7 +121,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-chart-2">
-                Rs.{currentDashboardStats.fundsInHand.toLocaleString()}
+                Rs.{(dashboardStats.fundsInHand || 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
                 Remaining funds after all expenses
@@ -94,7 +139,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-chart-3">
-                Rs.{currentDashboardStats.totalSpent.toLocaleString()}
+                Rs.{(dashboardStats.totalSpent || 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
                 Includes project and operational costs
@@ -134,11 +179,11 @@ export default function DashboardPage() {
       </ScrollFadeIn>
       
       <ScrollFadeIn>
-        <AllUpdatesFeed />
+        <AllUpdatesFeed allProjects={projects} />
       </ScrollFadeIn>
       
       <ScrollFadeIn>
-        <InKindDonationsSlider />
+        <InKindDonationsSlider allProjects={projects} />
       </ScrollFadeIn>
 
       <ScrollFadeIn asChild>
@@ -220,9 +265,9 @@ export default function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center">
-              <ExpenseChart data={currentDashboardStats.spendingBreakdown} />
+              <ExpenseChart data={dashboardStats.spendingBreakdown} />
                <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
-                  {currentDashboardStats.spendingBreakdown.map((entry, index) => (
+                  {dashboardStats.spendingBreakdown.map((entry, index) => (
                       <div key={entry.name} className="flex items-center gap-2 rounded-full border bg-muted px-3 py-1">
                           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(var(--chart-${index + 1}))` }} />
                           <span className="font-medium">{entry.name}</span>
@@ -236,5 +281,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    

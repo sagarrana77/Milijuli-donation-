@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from 'next/image';
@@ -18,13 +17,17 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { physicalDonations, projects, users } from '@/lib/data';
+import { physicalDonations, type Project, users } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { ArrowRight } from 'lucide-react';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 
-export function InKindDonationsSlider() {
+interface InKindDonationsSliderProps {
+    allProjects: Project[];
+}
+
+export function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProps) {
   const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
   const { openPhoto } = usePhotoDialog();
 
@@ -58,11 +61,11 @@ export function InKindDonationsSlider() {
         >
           <CarouselContent>
             {completedDonations.map((donation) => {
-                const project = projects.find(p => p.name === donation.projectName);
-                const wishlistItem = project?.wishlist.find(w => w.name === donation.itemName);
+                const project = allProjects.find(p => p.name === donation.projectName);
+                const wishlistItem = project?.wishlist?.find(w => w.name === donation.itemName);
                 const donor = users.find(u => u.name === donation.donorName);
                 
-                if (!wishlistItem || !donor) return null;
+                if (!wishlistItem || !donor || !project) return null;
 
                 const imageUrl = wishlistItem.imageUrl || 'https://picsum.photos/seed/placeholder/400/225';
 

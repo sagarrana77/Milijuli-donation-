@@ -1,5 +1,4 @@
-
-
+import { getProjects } from '@/services/projects-service';
 import { PlaceHolderImages } from './placeholder-images';
 
 function getImageUrl(id: string) {
@@ -97,9 +96,6 @@ export type Project = {
   metaDescription?: string;
   keywords?: string[];
 };
-
-export let projects: Project[] = [];
-
 
 export let salaries: {
     id: string;
@@ -199,16 +195,6 @@ export let miscExpenses: {
     }
 ]
 
-// Calculate operational costs
-const totalSalaryCosts = salaries.reduce((acc, s) => {
-    // Basic conversion for calculation, in a real app this would use live rates
-    const nprAmount = s.currency === 'USD' ? s.salary * 133 : s.salary;
-    return acc + nprAmount;
-}, 0); // Monthly in NPR
-const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
-const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
-export const totalOperationalCosts = totalSalaryCosts * 12 + totalEquipmentCosts + totalMiscCosts; // Annualized for target
-
 export let operationalCostsFund = {
     id: 'operational-costs',
     name: 'Operational Costs',
@@ -218,48 +204,6 @@ export let operationalCostsFund = {
     donors: 88,
     imageUrl: getImageUrl('team-photo'),
     imageHint: 'team meeting',
-};
-
-// Calculate project expenses by category
-const educationExpenses = projects
-  .filter(p => p.id === 'education-for-all-nepal')
-  .reduce((sum, p) => sum + p.expenses.reduce((acc, exp) => acc + exp.amount, 0), 0);
-
-const healthExpenses = projects
-  .filter(p => ['clean-water-initiative', 'community-health-posts'].includes(p.id))
-  .reduce((sum, p) => sum + p.expenses.reduce((acc, exp) => acc + exp.amount, 0), 0);
-
-const reliefExpenses = projects
-  .filter(p => p.id === 'disaster-relief-fund')
-  .reduce((sum, p) => sum + p.expenses.reduce((acc, exp) => acc + exp.amount, 0), 0);
-  
-const currentOperationalExpenses = (totalSalaryCosts * 12) + totalEquipmentCosts + totalMiscCosts; // Use annualized salary for this calculation
-
-// Calculate totals for dashboard stats
-const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0) + operationalCostsFund.raisedAmount;
-const totalProjectExpenses = projects.reduce(
-  (acc, p) => acc + p.expenses.reduce((sum, e) => sum + e.amount, 0),
-  0
-);
-const totalSpending = totalProjectExpenses + currentOperationalExpenses;
-const fundsInHand = totalRaised - totalSpending;
-
-
-export let dashboardStats = {
-  totalFunds: totalRaised,
-  monthlyIncrease: 2012300,
-  totalDonors: 4950,
-  newDonors: 213,
-  projectsFunded: 4,
-  countries: 1,
-  totalSpent: totalSpending,
-  fundsInHand: fundsInHand,
-  spendingBreakdown: [
-    { name: 'Education', value: educationExpenses, key: 'education' },
-    { name: 'Health', value: healthExpenses, key: 'health' },
-    { name: 'Relief', value: reliefExpenses, key: 'relief' },
-    { name: 'Operational', value: currentOperationalExpenses, key: 'operational' },
-  ],
 };
 
 export type User = {
@@ -278,140 +222,6 @@ export type User = {
     isProMember?: boolean;
 }
 
-export let users: User[] = [
-    { 
-        id: 'current-user', 
-        uid: 'current-user',
-        name: 'Aayush KC', 
-        email: 'aayush.kc@example.com',
-        avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop', 
-        profileUrl: '/profile/current-user',
-        bio: 'A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.',
-        hasPaymentMethod: false,
-        isAdmin: true,
-        friends: ['user-sita-rai', 'user-hari-thapa'],
-        aiCredits: 100,
-        isProMember: true,
-    },
-    { 
-        id: 'user-sita-rai', 
-        uid: 'user-sita-rai',
-        name: 'Sita Rai', 
-        email: 'sita.rai@example.com',
-        avatarUrl: getImageUrl('avatar-jane-doe'), 
-        profileUrl: '/profile/user-sita-rai',
-        bio: 'Loves to contribute to educational projects. Believes in the power of knowledge.',
-        hasPaymentMethod: true,
-        canCreateCampaigns: true,
-        friends: ['current-user'],
-        aiCredits: 5,
-        isProMember: false,
-    },
-    { 
-        id: 'user-hari-thapa', 
-        uid: 'user-hari-thapa',
-        name: 'Hari Thapa', 
-        email: 'hari.thapa@example.com',
-        avatarUrl: getImageUrl('avatar-john-smith'), 
-        profileUrl: '/profile/user-hari-thapa',
-        bio: 'Focused on environmental causes and clean water initiatives.',
-        hasPaymentMethod: true,
-        friends: ['current-user', 'user-maya-gurung'],
-        aiCredits: 15,
-        isProMember: true,
-    },
-    { 
-        id: 'user-maya-gurung', 
-        uid: 'user-maya-gurung',
-        name: 'Maya Gurung', 
-        email: 'maya.gurung@example.com',
-        avatarUrl: getImageUrl('avatar-ai-chan'), 
-        profileUrl: '/profile/user-maya-gurung',
-        bio: 'Supports disaster relief and emergency response efforts.',
-        hasPaymentMethod: true,
-        friends: ['user-hari-thapa'],
-        aiCredits: 0,
-        isProMember: false,
-    },
-    { 
-        id: 'user-bikram-shah', 
-        uid: 'user-bikram-shah',
-        name: 'Bikram Shah',
-        email: 'bikram.shah@example.com',
-        avatarUrl: getImageUrl('avatar-raj-patel'), 
-        profileUrl: '/profile/user-bikram-shah',
-        bio: 'Interested in community health and wellness projects.',
-        hasPaymentMethod: false,
-        friends: [],
-        aiCredits: 0,
-        isProMember: false,
-    },
-    { 
-        id: 'user-anonymous', 
-        uid: 'user-anonymous',
-        name: 'Anonymous', 
-        avatarUrl: getImageUrl('avatar-anonymous'), 
-        profileUrl: '/profile/user-anonymous',
-        bio: 'An anonymous donor making a difference.',
-        hasPaymentMethod: true,
-        friends: [],
-        aiCredits: 0,
-        isProMember: false,
-    },
-     { 
-        id: 'milijuli-sewa-admin',
-        uid: 'milijuli-sewa-admin',
-        name: 'milijuli sewa Admin', 
-        email: 'admin@milijulisewa.com',
-        avatarUrl: getImageUrl('logo-milijuli-sewa'), 
-        profileUrl: '/profile/milijuli-sewa-admin',
-        bio: 'The official account for the milijuli sewa organization.',
-        hasPaymentMethod: true,
-        isAdmin: true,
-        friends: [],
-        aiCredits: 999,
-        isProMember: true,
-    },
-    {
-        id: 'sunita-sharma',
-        uid: 'sunita-sharma',
-        name: 'Sunita Sharma',
-        email: 'sunita.sharma@example.com',
-        avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
-        profileUrl: '/team/sunita-sharma',
-        bio: 'Sunita is a community engagement specialist from Kathmandu, passionate about connecting people and causes.',
-        friends: [],
-        aiCredits: 10,
-        isProMember: false,
-    },
-    {
-        id: 'rohan-maharjan',
-        uid: 'rohan-maharjan',
-        name: 'Rohan Maharjan',
-        avatarUrl: getImageUrl('avatar-sam-chen'),
-        profileUrl: '/team/rohan-maharjan',
-        bio:
-        "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of milijuli sewa to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
-        friends: [],
-        aiCredits: 10,
-        isProMember: false,
-    },
-    {
-        id: 'priya-adhikari',
-        uid: 'priya-adhikari',
-        name: 'Priya Adhikari',
-        avatarUrl: getImageUrl('avatar-maria-garcia'),
-        profileUrl: '/team/priya-adhikari',
-        bio:
-      "Priya ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Priya's dedication is the driving force behind our operational excellence.",
-        friends: [],
-        aiCredits: 10,
-        isProMember: false,
-    }
-];
-
-export const currentUser = users.find(u => u.id === 'current-user');
-
 export type Donor = Omit<User, 'email' | 'hasPaymentMethod' | 'isAdmin' | 'friends'>;
 
 export type Donation = {
@@ -422,37 +232,6 @@ export type Donation = {
   date: string; // Use string to prevent timezone issues
   isAnonymous?: boolean;
 };
-
-// This represents a larger, more complete list of donations for the whole platform
-function createDonationData(): Donation[] {
-    const donorPool = users.filter(u => u.id !== 'milijuli-sewa-admin');
-    
-    // Create a static, deterministic list of donations
-    const staticDonations: Omit<Donation, 'donor'|'id'>[] = [
-      { project: 'Education for All Nepal', amount: 5000, date: '2024-05-20T10:00:00Z', isAnonymous: false },
-      { project: 'Stray Animal Shelter Expansion', amount: 7500, date: '2024-05-19T14:30:00Z', isAnonymous: false },
-      { project: 'Education for All Nepal', amount: 2000, date: '2024-05-18T09:00:00Z', isAnonymous: true },
-      { project: 'Clean Water Initiative', amount: 10000, date: '2024-05-20T11:00:00Z', isAnonymous: false },
-      { project: 'Clean Water Initiative', amount: 15000, date: '2024-05-19T18:00:00Z', isAnonymous: false },
-      { project: 'Community Health Posts', amount: 8000, date: '2024-05-20T12:00:00Z', isAnonymous: false },
-      { project: 'Disaster Relief Fund', amount: 25000, date: '2024-05-20T13:00:00Z', isAnonymous: true },
-      { project: 'Disaster Relief Fund', amount: 50000, date: '2024-05-19T20:00:00Z', isAnonymous: false },
-      { project: 'Rebuild the Local Library', amount: 3000, date: '2024-05-20T14:00:00Z', isAnonymous: false },
-      { project: 'Stray Animal Shelter Expansion', amount: 12000, date: '2024-05-19T22:00:00Z', isAnonymous: false },
-      { project: 'Operational Costs', amount: 1000, date: '2024-05-20T15:00:00Z', isAnonymous: true },
-      { project: 'Operational Costs', amount: 2500, date: '2024-05-18T16:00:00Z', isAnonymous: false },
-      { project: 'Operational Costs', amount: 500, date: '2024-05-17T11:00:00Z', isAnonymous: false },
-    ];
-
-    return staticDonations.map((donation, index) => ({
-        ...donation,
-        id: index + 1,
-        donor: donation.isAnonymous ? users.find(u => u.id === 'user-anonymous')! : donorPool[index % donorPool.length],
-    }));
-}
-
-
-export const allDonations: Donation[] = createDonationData();
 
 export type PhysicalDonation = {
     id: string;
@@ -467,52 +246,6 @@ export type PhysicalDonation = {
     date: string; // Use string to prevent timezone issues
     comments: Comment[];
 };
-  
-export let physicalDonations: PhysicalDonation[] = [
-    {
-        id: 'pd-1',
-        donorName: 'Sita Rai',
-        donorEmail: 'sita.rai@example.com',
-        projectName: 'Education for All Nepal',
-        itemName: 'Set of Textbooks for a Child',
-        quantity: 5,
-        donationType: 'drop-off',
-        status: 'Completed',
-        date: '2023-11-10T10:00:00Z',
-        address: '123 Transparency Lane\nKathmandu, Nepal',
-        comments: [
-            {
-                id: 'pdc-1',
-                author: 'Aayush KC',
-                avatarUrl: getImageUrl('avatar-alex-johnson'),
-                profileUrl: '/team/aayush-kc',
-                date: '2023-11-11T10:00:00Z',
-                text: 'Thank you so much for your generous donation, Sita! These textbooks will make a huge difference.'
-            },
-            {
-                id: 'pdc-2',
-                author: 'Sita Rai',
-                avatarUrl: getImageUrl('avatar-jane-doe'),
-                profileUrl: '/profile/user-sita-rai',
-                date: '2023-11-11T12:30:00Z',
-                text: "You're very welcome! Happy to help."
-            }
-        ]
-    },
-    {
-        id: 'pd-2',
-        donorName: 'Bikram Shah',
-        donorEmail: 'bikram.shah@example.com',
-        projectName: 'Education for All Nepal',
-        itemName: 'Set of Textbooks for a Child',
-        quantity: 10,
-        donationType: 'pickup',
-        address: '456 Oak Avenue, Springfield',
-        status: 'Pending',
-        date: '2023-11-12T10:00:00Z',
-        comments: []
-    }
-];
 
 export type Notification = {
   id: string;
@@ -522,58 +255,6 @@ export type Notification = {
   read: boolean;
   href: string;
 };
-
-export const notifications: Notification[] = [
-  {
-    id: 'notif-1',
-    title: 'New Donation!',
-    description: 'You received a NPR 5,000 donation for "Education for All Nepal".',
-    date: '2024-07-27T10:00:00Z', // 5 minutes ago
-    read: false,
-    href: '/projects/education-for-all-nepal?tab=donors',
-  },
-  {
-    id: 'notif-2',
-    title: 'Project Update',
-    description: '"Clean Water Initiative" has been successfully funded!',
-    date: '2024-07-27T08:05:00Z', // 2 hours ago
-    read: false,
-    href: '/projects/clean-water-initiative',
-  },
-  {
-    id: 'notif-5',
-    title: 'You were mentioned',
-    description: 'Aayush KC mentioned you in a comment on "Education for All Nepal".',
-    date: '2024-07-27T02:05:00Z', // 8 hours ago
-    read: false,
-    href: '/projects/education-for-all-nepal?tab=discussion',
-  },
-  {
-    id: 'notif-6',
-    title: 'New Reply',
-    description: 'Aayush KC replied to your comment on "Education for All Nepal".',
-    date: '2024-07-27T02:05:00Z', // 8 hours ago
-    read: true,
-    href: '/projects/education-for-all-nepal?tab=discussion',
-  },
-  {
-    id: 'notif-3',
-    title: 'New Team Member',
-    description: 'Rohan Maharjan has joined the team as Lead Full-Stack Developer.',
-    date: '2024-07-26T10:05:00Z', // 1 day ago
-    read: true,
-    href: '/team/rohan-maharjan',
-  },
-  {
-    id: 'notif-4',
-    title: 'Weekly Summary',
-    description: 'Your projects raised a total of NPR 125,000 this week.',
-    date: '2024-07-24T10:05:00Z', // 3 days ago
-    read: true,
-    href: '/my-campaigns',
-  },
-];
-
 
 export type TeamMember = {
   id: string;
@@ -598,7 +279,7 @@ export type TeamMember = {
   skills: string[];
 };
 
-export let teamMembers: TeamMember[] = [
+export const teamMembers: TeamMember[] = [
   {
     id: 'aayush-kc',
     name: 'Aayush KC',
@@ -725,7 +406,7 @@ export type JobOpening = {
   featured?: boolean;
 };
 
-export let jobOpenings: JobOpening[] = [
+export const jobOpenings: JobOpening[] = [
   {
     id: 'job-1',
     title: 'Community Manager',
@@ -843,6 +524,3 @@ export let platformSettings = {
     showOperationalCostsTotal: true,
     aiSummaryEnabled: true,
 }
-    
-
-    

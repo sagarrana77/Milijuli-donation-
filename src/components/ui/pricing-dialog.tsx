@@ -1,15 +1,14 @@
 
-
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Star } from "lucide-react";
-import { currentUser } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './dialog';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { useAuth } from '@/context/auth-provider';
 
 const proFeatures = [
     "Exclusive 'Pro Member' badge on your profile",
@@ -30,10 +29,13 @@ export function PricingDialog() {
     const { toast } = useToast();
     const router = useRouter();
     const { isOpen, closeDialog, onPurchase } = usePricingDialog();
+    const { user } = useAuth();
 
     const handlePurchaseCredits = (credits: number, price: number) => {
-        if (currentUser) {
-            currentUser.aiCredits = (currentUser.aiCredits || 0) + credits;
+        if (user) {
+            // In a real app, this would be an API call to update the user's credits in the database.
+            // For now, we'll optimistically update the local user object.
+            user.aiCredits = (user.aiCredits || 0) + credits;
             toast({
                 title: 'Purchase Successful!',
                 description: `You've added ${credits} AI credits to your account for $${price}.`,
