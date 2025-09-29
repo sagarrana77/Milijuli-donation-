@@ -40,6 +40,8 @@ import {
   HandCoins,
   Package,
   Users,
+  Wand2,
+  Loader2,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -63,6 +65,8 @@ import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { generateWish, GenerateWishOutput } from '@/ai/flows/generate-wishes';
+import { Textarea } from '@/components/ui/textarea';
 
 
 export default function AdminDashboardPage() {
@@ -81,6 +85,10 @@ export default function AdminDashboardPage() {
     quantity: '1',
     date: format(new Date(), 'yyyy-MM-dd'),
   });
+  const [wishOccasion, setWishOccasion] = useState('');
+  const [generatedWish, setGeneratedWish] = useState<GenerateWishOutput | null>(null);
+  const [isGeneratingWish, setIsGeneratingWish] = useState(false);
+
 
   const handleAddSalary = () => {
     if (newSalary.employee && newSalary.role && newSalary.salary) {
@@ -196,7 +204,7 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const handleExpenseRecorded = (data: { project: string; amount: number }) => {
+  const handleExpenseRecorded = (data: { project: string; item: string; amount: number }) => {
     const categoryMap: { [key: string]: string } = {
         'Education for All Nepal': 'Education',
         'Clean Water Initiative': 'Health', // Or a new 'Water' category
@@ -334,6 +342,39 @@ export default function AdminDashboardPage() {
     }
   }
 
+  const handleGenerateWish = async () => {
+    if (!wishOccasion) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Please enter an occasion.' });
+      return;
+    }
+    setIsGeneratingWish(true);
+    setGeneratedWish(null);
+    try {
+      const result = await generateWish({ occasion: wishOccasion });
+      setGeneratedWish(result);
+    } catch (error) {
+      console.error('Error generating wish:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error Generating Wish',
+        description: 'There was a problem communicating with the AI. Please try again.',
+      });
+    } finally {
+      setIsGeneratingWish(false);
+    }
+  };
+  
+  const handleSendWish = () => {
+    if (!generatedWish) return;
+    // In a real app, this would trigger an email/notification service for all users.
+    console.log(`Sending wish to all users: ${generatedWish.wish}`);
+    toast({
+      title: 'Wish Sent!',
+      description: 'The message has been queued for delivery to all users.',
+    });
+  };
+
+
 
   return (
     <div className="flex flex-col gap-8">
@@ -393,11 +434,12 @@ export default function AdminDashboardPage() {
       </Card>
       
       <Tabs defaultValue="projects">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
           <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> In-Kind Donations</TabsTrigger>
           <TabsTrigger value="operational-costs"><Briefcase className="mr-2 h-4 w-4"/> Operational Costs</TabsTrigger>
           <TabsTrigger value="user-management"><Users className="mr-2 h-4 w-4"/> User Management</TabsTrigger>
+          <TabsTrigger value="ai-tools"><Wand2 className="mr-2 h-4 w-4" /> AI Tools</TabsTrigger>
           <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
         </TabsList>
         <TabsContent value="projects" className="mt-6">
@@ -769,6 +811,58 @@ export default function AdminDashboardPage() {
                             ))}
                         </TableBody>
                     </Table>
+                </CardContent>
+            </Card>
+        </TabsContent>
+        <TabsContent value="ai-tools" className="mt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>AI Wish Generator</CardTitle>
+                    <CardDescription>
+                        Create professional, occasion-based wishes to send to all your users.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="wish-occasion">Occasion</Label>
+                        <Input
+                        id="wish-occasion"
+                        placeholder="e.g., New Year, Holiday Season, Platform Anniversary"
+                        value={wishOccasion}
+                        onChange={(e) => setWishOccasion(e.target.value)}
+                        />
+                    </div>
+                    <Button onClick={handleGenerateWish} disabled={isGeneratingWish}>
+                        {isGeneratingWish ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                        <Wand2 className="mr-2 h-4 w-4" />
+                        )}
+                        Generate Wish
+                    </Button>
+
+                    {(isGeneratingWish || generatedWish) && (
+                        <div className="space-y-2 rounded-md border bg-muted p-4">
+                            <Label>Generated Message</Label>
+                            {isGeneratingWish ? (
+                                <div className="space-y-2">
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-3/4" />
+                                </div>
+                            ) : (
+                            <>
+                                <Textarea
+                                    readOnly
+                                    value={generatedWish?.wish}
+                                    rows={8}
+                                    className="bg-background"
+                                />
+                                <Button onClick={handleSendWish}>Send to All Users</Button>
+                            </>
+                            )}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
         </TabsContent>
