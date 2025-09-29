@@ -5,6 +5,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { NotificationProvider } from '@/context/notification-provider';
 import { PhotoDialogProvider } from '@/context/image-dialog-provider';
+import { PricingDialogProvider } from '@/context/pricing-dialog-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -25,7 +26,9 @@ export default function RootLayout({
       <body className={`${inter.variable} font-body antialiased`}>
         <PhotoDialogProvider>
           <NotificationProvider>
-            <AppShell>{children}</AppShell>
+            <PricingDialogProvider>
+              <AppShell>{children}</AppShell>
+            </PricingDialogProvider>
           </NotificationProvider>
         </PhotoDialogProvider>
         <Toaster />

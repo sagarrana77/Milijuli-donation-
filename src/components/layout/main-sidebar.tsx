@@ -40,6 +40,7 @@ import { currentUser, platformSettings, projects, physicalDonations } from '@/li
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { useState } from 'react';
+import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -49,7 +50,6 @@ const menuItems = [
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
   { href: '/about', label: 'About', icon: Users },
-  { href: '/pricing', label: 'Pricing', icon: Sparkles },
 ];
 
 const adminMenuItems = [
@@ -64,6 +64,7 @@ export function MainSidebar() {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/admin'));
+  const { openDialog } = usePricingDialog();
 
   const canCreateCampaigns = currentUser?.isAdmin || (platformSettings.campaignCreationEnabled && currentUser?.canCreateCampaigns);
 
@@ -151,6 +152,15 @@ export function MainSidebar() {
             </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+           <SidebarMenuItem>
+              <SidebarMenuButton
+                  onClick={() => openDialog()}
+                  tooltip={{ children: 'Pricing', side: 'right' }}
+              >
+                  <Sparkles />
+                  <span>Pricing</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             {currentUser?.isAdmin && (
                  <Collapsible open={isAdminOpen} onOpenChange={setIsAdminOpen} asChild>
                     <SidebarMenuItem>

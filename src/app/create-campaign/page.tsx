@@ -35,6 +35,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { summarizeProject } from '@/ai/flows/summarize-project';
 import { generateCampaignStory } from '@/ai/flows/generate-campaign-story';
+import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 const gatewaySchema = z.object({
     name: z.string(),
@@ -59,6 +60,7 @@ type ProjectFormData = z.infer<typeof projectSchema>;
 export default function CreateCampaignPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { openDialog } = usePricingDialog();
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [isGeneratingStory, setIsGeneratingStory] = useState(false);
   const [credits, setCredits] = useState(currentUser?.aiCredits ?? 0);
@@ -87,7 +89,7 @@ export default function CreateCampaignPage() {
 
     if (currentUser.aiCredits !== undefined && currentUser.aiCredits > 0) {
         currentUser.aiCredits -= 1;
-        setCredits(currentUser.aiCredits);
+        setCredits(currentUser.aiCredits); // Update local state to re-render
         if (currentUser.aiCredits < 10) {
             toast({
                 title: 'Low AI Credits',
@@ -101,9 +103,9 @@ export default function CreateCampaignPage() {
     toast({
         variant: 'destructive',
         title: 'Out of AI Credits',
-        description: 'Redirecting you to the pricing page to get more.',
+        description: 'Please purchase more credits to use this feature.',
     });
-    router.push('/pricing');
+    openDialog();
     return false;
   }
 

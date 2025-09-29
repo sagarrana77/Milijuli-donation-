@@ -35,6 +35,7 @@ import Image from 'next/image';
 import { generateSeoSuggestions } from '@/ai/flows/generate-seo-suggestions';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
+import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 const wishlistItemSchema = z.object({
   id: z.string(),
@@ -87,6 +88,7 @@ export default function EditUserCampaignPage() {
   const router = useRouter();
   const params = useParams();
   const projectId = params.id as string;
+  const { openDialog } = usePricingDialog();
   const [isGeneratingSeo, setIsGeneratingSeo] = useState(false);
   const [credits, setCredits] = useState(currentUser?.aiCredits ?? 0);
 
@@ -116,9 +118,9 @@ export default function EditUserCampaignPage() {
     toast({
         variant: 'destructive',
         title: 'Out of AI Credits',
-        description: 'Redirecting you to the pricing page to get more.',
+        description: 'Please purchase more credits to use this feature.',
     });
-    router.push('/pricing');
+    openDialog();
     return false;
   }
 

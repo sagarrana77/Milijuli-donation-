@@ -21,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 import { currentUser } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 
 const profileSchema = z.object({
@@ -52,6 +53,7 @@ const bankAccountSchema = z.object({
 
 export default function SettingsPage() {
     const { toast } = useToast();
+    const { openDialog } = usePricingDialog();
 
     const profileForm = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
@@ -136,9 +138,7 @@ export default function SettingsPage() {
              <p className="text-sm text-muted-foreground">
                 Pro members get exclusive benefits and bonus credits. You can become a Pro member by donating to our <Link href="/operational-costs" className="text-primary underline">Operational Costs</Link> fund.
             </p>
-            <Button asChild>
-                <Link href="/pricing">Get More Credits</Link>
-            </Button>
+            <Button onClick={openDialog}>Get More Credits</Button>
         </CardContent>
       </Card>
 

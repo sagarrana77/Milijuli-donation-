@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { Button } from '@/components/ui/button';
+import { usePricingDialog } from '@/context/pricing-dialog-provider';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -53,6 +54,7 @@ const features: { title: string; description: string; icon: LucideIcon, link?: s
 
 export default function AboutPage() {
   const { openPhoto } = usePhotoDialog();
+  const { openDialog: openPricingDialog } = usePricingDialog();
   const teamPhotoUrl = getImageUrl('team-photo');
 
   return (
@@ -140,9 +142,7 @@ export default function AboutPage() {
                             <p className="text-muted-foreground">
                                 While ClarityChain is free to use, our Pro Membership and AI credits provide powerful tools to enhance your campaigns. Pro members get exclusive benefits, and AI credits can be used to generate compelling stories, summaries, and social media posts.
                             </p>
-                            <Button asChild>
-                                <Link href="/pricing">View Pricing & Benefits</Link>
-                            </Button>
+                            <Button onClick={openPricingDialog}>View Pricing & Benefits</Button>
                         </CardContent>
                     </Card>
                 </section>
