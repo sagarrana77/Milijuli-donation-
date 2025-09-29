@@ -20,14 +20,14 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
-import { ArrowRight, Gift, PackageCheck } from 'lucide-react';
+import { ArrowRight, Gift } from 'lucide-react';
 import { useDonationContext } from './donation-dialog-wrapper';
 
 interface ProjectPageClientContentProps {
     project: Project;
 }
 
-const ProjectPageClientMainContent = ({ project }: ProjectPageClientContentProps) => {
+export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
     const { openPhoto } = usePhotoDialog();
     return (
         <>
@@ -179,6 +179,4 @@ const ProjectPageClientAside = () => {
     )
 }
 
-export const ProjectPageClientContent = Object.assign(ProjectPageClientMainContent, {
-    Aside: ProjectPageClientAside,
-});
+ProjectPageClientContent.Aside = ProjectPageClientAside;
