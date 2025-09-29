@@ -46,7 +46,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </Link>
         {project.verified && (
           <div
-            className="absolute right-2 top-2 rounded-full bg-background/80 p-1.5 text-primary backdrop-blur-sm"
+            className="absolute right-2 top-2 rounded-full bg-background/80 p-1.5 text-green-600 backdrop-blur-sm"
             title="Verified Transparent"
           >
             <TransparencySealIcon className="h-5 w-5" />
