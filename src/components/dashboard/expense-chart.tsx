@@ -68,8 +68,8 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
             />}
         />
         <Bar dataKey="value" radius={5}>
-          {data.map((entry) => (
-            <RechartsPrimitive key={`cell-${entry.key}`} fill={`hsl(var(--chart-${Object.keys(chartConfig).indexOf(entry.name) + 1}))`}/>
+          {data.map((entry, index) => (
+            <RechartsPrimitive key={`cell-${entry.key}`} fill={`hsl(var(--chart-${index + 1}))`}/>
           ))}
         </Bar>
       </BarChart>
