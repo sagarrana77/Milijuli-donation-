@@ -24,6 +24,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '../ui/checkbox';
 import Link from 'next/link';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface DonationDialogProps {
   isOpen: boolean;
@@ -32,7 +33,17 @@ interface DonationDialogProps {
   onDonate: (amount: number) => void;
 }
 
-const presetAmounts = [1000, 2500, 5000, 10000, 25000, 50000];
+const presetAmounts: { [key: string]: number[] } = {
+    NPR: [1000, 2500, 5000, 10000, 25000, 50000],
+    USD: [10, 20, 50, 100, 200, 500],
+    EUR: [10, 20, 50, 100, 200, 500],
+};
+
+const exchangeRates = {
+    NPR: 1,
+    USD: 133,
+    EUR: 142,
+};
 
 const creditCardSchema = z.object({
   cardNumber: z.string().regex(/^\d{16}$/, "Card number must be 16 digits."),
@@ -56,6 +67,7 @@ export function DonationDialog({
   const [error, setError] = useState('');
   const [hasPaymentMethod, setHasPaymentMethod] = useState(currentUser?.hasPaymentMethod || false);
   const [relocationConsent, setRelocationConsent] = useState(false);
+  const [currency, setCurrency] = useState<'NPR' | 'USD' | 'EUR'>('NPR');
   const { toast } = useToast();
 
   const ccForm = useForm<z.infer<typeof creditCardSchema>>({
@@ -78,12 +90,16 @@ export function DonationDialog({
       setError('Please consent to the fund relocation policy to proceed.');
       return;
     }
-    console.log(`Donation of Rs.${numericAmount} for "${projectName}" with relocation consent: ${relocationConsent}`);
-    onDonate(numericAmount);
+    
+    const nprAmount = numericAmount * exchangeRates[currency];
+
+    console.log(`Donation of Rs.${nprAmount} for "${projectName}" with relocation consent: ${relocationConsent}`);
+    onDonate(nprAmount);
     onOpenChange(false); // Close dialog on successful donation
     setAmount(''); // Reset amount
     setError('');
     setRelocationConsent(false);
+    setCurrency('NPR');
   };
 
   const handleSavePaymentMethod = () => {
@@ -111,6 +127,8 @@ export function DonationDialog({
     setAmount(preset.toString());
     if (error) setError('');
   };
+  
+  const estimatedNprAmount = currency !== 'NPR' ? parseFloat(amount) * exchangeRates[currency] : null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -201,26 +219,45 @@ export function DonationDialog({
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                     <div className="grid grid-cols-3 gap-2">
-                        {presetAmounts.map(preset => (
+                        {presetAmounts[currency].map(preset => (
                             <Button key={preset} variant="outline" onClick={() => handlePresetClick(preset)}>
-                                Rs.{preset.toLocaleString()}
+                                {new Intl.NumberFormat('en-US', { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(preset).replace('NPR', 'Rs.')}
                             </Button>
                         ))}
                     </div>
-                    <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">Rs.</span>
-                        <Input
-                        id="amount"
-                        type="number"
-                        placeholder="Or enter custom amount"
-                        value={amount}
-                        onChange={(e) => {
-                            setAmount(e.target.value);
-                            if (error) setError('');
-                        }}
-                        className="pl-10 text-lg"
-                        />
+                    <div className="flex gap-2">
+                        <div className="relative flex-1">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">
+                               {currency === 'NPR' ? 'Rs.' : currency === 'USD' ? '$' : '€'}
+                            </span>
+                            <Input
+                            id="amount"
+                            type="number"
+                            placeholder="Or enter custom amount"
+                            value={amount}
+                            onChange={(e) => {
+                                setAmount(e.target.value);
+                                if (error) setError('');
+                            }}
+                            className="pl-8 text-lg"
+                            />
+                        </div>
+                        <Select value={currency} onValueChange={(value) => setCurrency(value as 'NPR' | 'USD' | 'EUR')}>
+                            <SelectTrigger className="w-[100px]">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="NPR">NPR</SelectItem>
+                                <SelectItem value="USD">USD</SelectItem>
+                                <SelectItem value="EUR">EUR</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
+                     {estimatedNprAmount && !isNaN(estimatedNprAmount) && (
+                        <p className="text-sm text-muted-foreground text-center">
+                            Estimated contribution: <span className="font-bold text-primary">Rs.{estimatedNprAmount.toLocaleString()}</span>
+                        </p>
+                    )}
                     <div className="items-top flex space-x-2">
                         <Checkbox id="terms1" checked={relocationConsent} onCheckedChange={(checked) => {
                             setRelocationConsent(checked as boolean);
