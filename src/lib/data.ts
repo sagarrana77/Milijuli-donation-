@@ -782,13 +782,13 @@ let faqs: FAQ[] = [
     id: 'faq-3',
     question: 'How does a project get a "Verified" badge?',
     answer:
-      'To get a "Verified" badge, an organization must pass our standard due diligence process. We check their legal registration, and track record, and confirm their identity. This badge indicates that the organization is legitimate and has been vetted by ClarityChain, but it does not require them to use our on-chain financial tracking for full transparency. It serves as a baseline level of trust.',
+      'To earn a "Verified" badge, an organization must undergo our standard due diligence process. This badge indicates that the organization is legitimate and has been vetted by ClarityChain.\n\nHere is the standard checklist to become verified:\n1. Proof of legal registration as a non-profit or charitable organization.\n2. Publicly available information about the organization\'s mission and leadership.\n3. A clear and detailed project proposal with a specific budget.\n4. Identity verification for the project leaders.',
   },
   {
     id: 'faq-4',
     question: 'What does the "Verified Transparent" badge mean?',
     answer:
-      'This is our highest standard. A project with this badge has committed to full on-chain transparency. This means every donation, expense, and transfer of funds is recorded on a public blockchain, which is cryptographically secured and cannot be altered. Donors can independently audit all financial activity from start to finish, ensuring the highest level of accountability.',
+      'This is our highest standard of accountability. A "Verified Transparent" project has committed to full on-chain financial transparency. This means every donation, expense, and transfer of funds is recorded on a public blockchain, which is cryptographically secured and cannot be altered. Donors can independently audit all financial activity from start to finish.',
   },
 ];
 
@@ -831,6 +831,7 @@ export let paymentGateways: Gateway[] = [
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
+
 
 
 
