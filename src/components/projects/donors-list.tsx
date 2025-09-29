@@ -44,7 +44,7 @@ export function DonorsList({ projectName }: DonorsListProps) {
                                 </TooltipProvider>
                            )}
                         </div>
-                        <p className="text-sm text-muted-foreground">{format(donation.date, 'PPP')}</p>
+                        <p className="text-sm text-muted-foreground">{format(new Date(donation.date), 'PPP')}</p>
                     </div>
                 </Link>
                 <p className="font-bold text-lg text-primary">Rs.{donation.amount.toLocaleString()}</p>
@@ -59,3 +59,5 @@ export function DonorsList({ projectName }: DonorsListProps) {
       </CardContent>
   );
 }
+
+    

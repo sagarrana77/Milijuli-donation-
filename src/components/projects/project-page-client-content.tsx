@@ -10,7 +10,7 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { project as typeProject, platformSettings } from '@/lib/data';
+import { Project as typeProject, platformSettings } from '@/lib/data';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { DonorsList } from '@/components/projects/donors-list';
 import { DiscussionSection } from '@/components/projects/discussion-section';
@@ -199,7 +199,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                             <li key={expense.id} className="flex items-center justify-between gap-4 rounded-md border bg-card p-3">
                             <div>
                                 <p className="font-medium">{expense.item}</p>
-                                <p className="text-sm text-muted-foreground">{format(expense.date, 'PP')}</p>
+                                <p className="text-sm text-muted-foreground">{format(new Date(expense.date), 'PP')}</p>
                             </div>
                             <div className="flex items-center gap-4">
                                 <p className="font-semibold">Rs.{expense.amount.toLocaleString()}</p>
@@ -256,3 +256,5 @@ export function ProjectPageClientAside({ project }: { project: typeof typeProjec
         </aside>
     )
 }
+
+    

@@ -9,10 +9,16 @@ import { BellRing, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications } from '@/context/notification-provider';
 import { cn } from '@/lib/utils';
+import { useEffect, useState } from 'react';
 
 
 export function NotificationList() {
   const { notifications, markAllAsRead, markAsRead } = useNotifications();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -48,9 +54,11 @@ export function NotificationList() {
                     <p className="text-sm text-muted-foreground">
                       {notification.description}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(new Date(notification.date), { addSuffix: true })}
-                    </p>
+                    {isClient && (
+                      <p className="text-xs text-muted-foreground">
+                        {formatDistanceToNow(new Date(notification.date), { addSuffix: true })}
+                      </p>
+                    )}
                   </div>
                    {!notification.read && (
                     <div className="mt-1 h-2 w-2 rounded-full bg-primary" title="Unread" />
@@ -73,3 +81,5 @@ export function NotificationList() {
     </Card>
   );
 }
+
+    

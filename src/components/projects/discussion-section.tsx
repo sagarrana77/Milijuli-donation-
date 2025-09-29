@@ -50,7 +50,7 @@ export function DiscussionSection({
       author: 'Current User', // This would come from auth
       avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
       profileUrl: '/profile/current-user',
-      date: new Date(),
+      date: new Date().toISOString(),
       text: values.comment,
     };
 
@@ -111,7 +111,7 @@ export function DiscussionSection({
                         {comment.author}
                     </Link>
                     <p className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(comment.date, { addSuffix: true })}
+                      {formatDistanceToNow(new Date(comment.date), { addSuffix: true })}
                     </p>
                   </div>
                     {comment.replyTo && (
@@ -131,3 +131,5 @@ export function DiscussionSection({
       </CardContent>
   );
 }
+
+    

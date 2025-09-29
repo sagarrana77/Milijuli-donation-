@@ -111,7 +111,7 @@ export default function ProfilePage() {
                     {user.isProMember && (
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                 <Sparkles className="h-6 w-6 text-primary cursor-pointer" />
+                                 <button><Sparkles className="h-6 w-6 text-primary cursor-pointer" /></button>
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Pro Member</p>
@@ -293,3 +293,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    

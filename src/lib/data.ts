@@ -11,7 +11,7 @@ export type Comment = {
   author: string;
   avatarUrl: string;
   profileUrl: string;
-  date: Date;
+  date: string; // Use string to prevent timezone issues
   text: string;
   replyTo?: string; // Author name of the comment being replied to
 };
@@ -20,7 +20,7 @@ export type Update = {
     id: string;
     title: string;
     description: string;
-    date: Date;
+    date: string; // Use string to prevent timezone issues
     imageUrl?: string;
     imageHint?: string;
     isTransfer?: boolean; // To distinguish transfer updates
@@ -76,10 +76,10 @@ export type Project = {
   ownerId?: string; // New field to link project to a user
   updates: Update[];
   expenses: {
-    id: 'string';
+    id: string;
     item: string;
     amount: number;
-    date: Date;
+    date: string; // Use string to prevent timezone issues
     receiptUrl: string;
     receiptHint: string;
   }[];
@@ -113,13 +113,13 @@ export let projects: Project[] = [
         id: 'update-notif-1',
         title: 'New Donation Received!',
         description: 'Sita Rai just donated NPR 5,000. Thank you for your support!',
-        date: new Date(Date.now() - 1000 * 60 * 5),
+        date: '2024-05-20T10:00:00Z',
       },
       {
         id: 'update-1',
         title: 'New textbooks arrived!',
         description: 'The first batch of new textbooks has been delivered to the students. Their faces lit up with joy!',
-        date: new Date('2023-10-15'),
+        date: '2023-10-15T10:00:00Z',
         imageUrl: getImageUrl('update-photo-1'),
         imageHint: 'happy students',
       },
@@ -127,7 +127,7 @@ export let projects: Project[] = [
         id: 'update-2',
         title: 'Foundation for the new school building is complete.',
         description: 'Construction is on schedule! The foundation has been laid, and we are ready for the next phase.',
-        date: new Date('2023-09-20'),
+        date: '2023-09-20T10:00:00Z',
         imageUrl: getImageUrl('update-photo-2'),
         imageHint: 'construction site',
       },
@@ -137,7 +137,7 @@ export let projects: Project[] = [
         id: 'exp-1',
         item: 'School Textbooks Batch 1',
         amount: 120000,
-        date: new Date('2023-10-12'),
+        date: '2023-10-12T10:00:00Z',
         receiptUrl: getImageUrl('receipt-1'),
         receiptHint: 'receipt scan',
       },
@@ -145,7 +145,7 @@ export let projects: Project[] = [
         id: 'exp-2',
         item: 'Cement and Bricks',
         amount: 350000,
-        date: new Date('2023-09-15'),
+        date: '2023-09-15T10:00:00Z',
         receiptUrl: getImageUrl('receipt-2'),
         receiptHint: 'invoice document',
       },
@@ -156,7 +156,7 @@ export let projects: Project[] = [
         author: 'Sita Rai',
         avatarUrl: getImageUrl('avatar-jane-doe'),
         profileUrl: '/profile/user-sita-rai',
-        date: new Date('2023-10-18T14:30:00Z'),
+        date: '2023-10-18T14:30:00Z',
         text:
           "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work.",
       },
@@ -165,7 +165,7 @@ export let projects: Project[] = [
         author: 'Hari Thapa',
         avatarUrl: getImageUrl('avatar-john-smith'),
         profileUrl: '/profile/user-hari-thapa',
-        date: new Date('2023-10-19T09:00:00Z'),
+        date: '2023-10-19T09:00:00Z',
         text:
           'I agree with Sita. The transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
       },
@@ -174,7 +174,7 @@ export let projects: Project[] = [
         author: 'Current User',
         avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
         profileUrl: '/profile/current-user',
-        date: new Date('2023-10-20T11:00:00Z'),
+        date: '2023-10-20T11:00:00Z',
         text: 'Hey @Hari Thapa, great point! I was also wondering if there are plans to post updates on teacher training?',
         replyTo: 'Hari Thapa',
       },
@@ -225,7 +225,7 @@ export let projects: Project[] = [
             id: 'exp-cw-1',
             item: 'Well Drilling Equipment',
             amount: 1500000,
-            date: new Date('2023-11-01'),
+            date: '2023-11-01T10:00:00Z',
             receiptUrl: getImageUrl('receipt-1'),
             receiptHint: 'receipt scan',
         }
@@ -254,7 +254,7 @@ export let projects: Project[] = [
             id: 'exp-chp-1',
             item: 'Medical Supplies',
             amount: 800000,
-            date: new Date('2023-11-05'),
+            date: '2023-11-05T10:00:00Z',
             receiptUrl: getImageUrl('receipt-2'),
             receiptHint: 'invoice document',
         }
@@ -283,7 +283,7 @@ export let projects: Project[] = [
             id: 'exp-drf-1',
             item: 'Emergency Food Supplies',
             amount: 2500000,
-            date: new Date('2023-10-20'),
+            date: '2023-10-20T10:00:00Z',
             receiptUrl: getImageUrl('receipt-1'),
             receiptHint: 'receipt scan',
         }
@@ -379,7 +379,7 @@ export let equipment: {
     id: string;
     item: string;
     cost: number;
-    purchaseDate: Date;
+    purchaseDate: string; // Use string to prevent timezone issues
     vendor: string;
     imageUrl?: string;
     imageHint?: string;
@@ -388,7 +388,7 @@ export let equipment: {
     id: 'eq-1',
     item: 'MacBook Pro 16"',
     cost: 332500,
-    purchaseDate: new Date('2023-10-01'),
+    purchaseDate: '2023-10-01T10:00:00Z',
     vendor: 'Apple Store',
     imageUrl: getImageUrl('equipment-macbook'),
     imageHint: 'laptop computer',
@@ -397,7 +397,7 @@ export let equipment: {
     id: 'eq-2',
     item: 'Ergonomic Office Chairs (x5)',
     cost: 99750,
-    purchaseDate: new Date('2023-09-15'),
+    purchaseDate: '2023-09-15T10:00:00Z',
     vendor: 'Office Depot',
     imageUrl: getImageUrl('equipment-chair'),
     imageHint: 'office chair',
@@ -406,7 +406,7 @@ export let equipment: {
     id: 'eq-3',
     item: 'Cloud Server Hosting (1yr)',
     cost: 159600,
-    purchaseDate: new Date('2023-10-20'),
+    purchaseDate: '2023-10-20T10:00:00Z',
     vendor: 'Cloud Provider Inc.',
     imageUrl: getImageUrl('equipment-server'),
     imageHint: 'server rack',
@@ -417,21 +417,21 @@ export let miscExpenses: {
     id: string;
     item: string;
     cost: number;
-    purchaseDate: Date;
+    purchaseDate: string; // Use string to prevent timezone issues
     vendor: string;
 }[] = [
     {
         id: 'misc-1',
         item: 'Office Rent (Q4)',
         cost: 199500,
-        purchaseDate: new Date('2023-10-01'),
+        purchaseDate: '2023-10-01T10:00:00Z',
         vendor: 'City Properties',
     },
     {
         id: 'misc-2',
         item: 'Internet Bill (October)',
         cost: 13300,
-        purchaseDate: new Date('2023-10-05'),
+        purchaseDate: '2023-10-05T10:00:00Z',
         vendor: 'FastNet ISP',
     }
 ]
@@ -647,7 +647,7 @@ export type Donation = {
   donor: Donor;
   project: string;
   amount: number;
-  date: Date;
+  date: string; // Use string to prevent timezone issues
 };
 
 // This represents a larger, more complete list of donations for the whole platform
@@ -656,30 +656,19 @@ function createDonationData(): Donation[] {
     
     // Create a static, deterministic list of donations
     const staticDonations: Omit<Donation, 'donor'|'id'>[] = [
-        // Donations for Education for All Nepal
-        { project: 'Education for All Nepal', amount: 5000, date: new Date('2024-05-20T10:00:00Z') },
-        { project: 'Stray Animal Shelter Expansion', amount: 7500, date: new Date('2024-05-19T14:30:00Z') },
-        { project: 'Education for All Nepal', amount: 2000, date: new Date('2024-05-18T09:00:00Z') },
-
-        // Donations for Clean Water Initiative
-        { project: 'Clean Water Initiative', amount: 10000, date: new Date('2024-05-20T11:00:00Z') },
-        { project: 'Clean Water Initiative', amount: 15000, date: new Date('2024-05-19T18:00:00Z') },
-
-        // Donations for Community Health Posts
-        { project: 'Community Health Posts', amount: 8000, date: new Date('2024-05-20T12:00:00Z') },
-
-        // Donations for Disaster Relief Fund
-        { project: 'Disaster Relief Fund', amount: 25000, date: new Date('2024-05-20T13:00:00Z') },
-        { project: 'Disaster Relief Fund', amount: 50000, date: new Date('2024-05-19T20:00:00Z') },
-
-        // Donations for user-created campaigns
-        { project: 'Rebuild the Local Library', amount: 3000, date: new Date('2024-05-20T14:00:00Z') },
-        { project: 'Stray Animal Shelter Expansion', amount: 12000, date: new Date('2024-05-19T22:00:00Z') },
-
-        // Donations for Operational Costs
-        { project: 'Operational Costs', amount: 1000, date: new Date('2024-05-20T15:00:00Z') },
-        { project: 'Operational Costs', amount: 2500, date: new Date('2024-05-18T16:00:00Z') },
-        { project: 'Operational Costs', amount: 500, date: new Date('2024-05-17T11:00:00Z') },
+        { project: 'Education for All Nepal', amount: 5000, date: '2024-05-20T10:00:00Z' },
+        { project: 'Stray Animal Shelter Expansion', amount: 7500, date: '2024-05-19T14:30:00Z' },
+        { project: 'Education for All Nepal', amount: 2000, date: '2024-05-18T09:00:00Z' },
+        { project: 'Clean Water Initiative', amount: 10000, date: '2024-05-20T11:00:00Z' },
+        { project: 'Clean Water Initiative', amount: 15000, date: '2024-05-19T18:00:00Z' },
+        { project: 'Community Health Posts', amount: 8000, date: '2024-05-20T12:00:00Z' },
+        { project: 'Disaster Relief Fund', amount: 25000, date: '2024-05-20T13:00:00Z' },
+        { project: 'Disaster Relief Fund', amount: 50000, date: '2024-05-19T20:00:00Z' },
+        { project: 'Rebuild the Local Library', amount: 3000, date: '2024-05-20T14:00:00Z' },
+        { project: 'Stray Animal Shelter Expansion', amount: 12000, date: '2024-05-19T22:00:00Z' },
+        { project: 'Operational Costs', amount: 1000, date: '2024-05-20T15:00:00Z' },
+        { project: 'Operational Costs', amount: 2500, date: '2024-05-18T16:00:00Z' },
+        { project: 'Operational Costs', amount: 500, date: '2024-05-17T11:00:00Z' },
     ];
 
     return staticDonations.map((donation, index) => ({
@@ -702,7 +691,7 @@ export type PhysicalDonation = {
     donationType: 'drop-off' | 'pickup' | 'received';
     address?: string;
     status: 'Pending' | 'Completed' | 'Cancelled';
-    date: Date;
+    date: string; // Use string to prevent timezone issues
     comments: Comment[];
 };
   
@@ -716,14 +705,14 @@ export let physicalDonations: PhysicalDonation[] = [
         quantity: 5,
         donationType: 'drop-off',
         status: 'Completed',
-        date: new Date('2023-11-10'),
+        date: '2023-11-10T10:00:00Z',
         comments: [
             {
                 id: 'pdc-1',
                 author: 'Aayush KC',
                 avatarUrl: getImageUrl('avatar-alex-johnson'),
                 profileUrl: '/team/aayush-kc',
-                date: new Date('2023-11-11T10:00:00Z'),
+                date: '2023-11-11T10:00:00Z',
                 text: 'Thank you so much for your generous donation, Sita! These textbooks will make a huge difference.'
             },
             {
@@ -731,7 +720,7 @@ export let physicalDonations: PhysicalDonation[] = [
                 author: 'Sita Rai',
                 avatarUrl: getImageUrl('avatar-jane-doe'),
                 profileUrl: '/profile/user-sita-rai',
-                date: new Date('2023-11-11T12:30:00Z'),
+                date: '2023-11-11T12:30:00Z',
                 text: "You're very welcome! Happy to help."
             }
         ]
@@ -746,7 +735,7 @@ export let physicalDonations: PhysicalDonation[] = [
         donationType: 'pickup',
         address: '456 Oak Avenue, Springfield',
         status: 'Pending',
-        date: new Date('2023-11-12'),
+        date: '2023-11-12T10:00:00Z',
         comments: []
     }
 ];
@@ -755,7 +744,7 @@ export type Notification = {
   id: string;
   title: string;
   description: string;
-  date: Date;
+  date: string; // Use string to prevent timezone issues
   read: boolean;
   href: string;
 };
@@ -765,7 +754,7 @@ export const notifications: Notification[] = [
     id: 'notif-1',
     title: 'New Donation!',
     description: 'You received a NPR 5,000 donation for "Education for All Nepal".',
-    date: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
+    date: new Date(Date.now() - 1000 * 60 * 5).toISOString(), // 5 minutes ago
     read: false,
     href: '/projects/education-for-all-nepal?tab=donors',
   },
@@ -773,7 +762,7 @@ export const notifications: Notification[] = [
     id: 'notif-2',
     title: 'Project Update',
     description: '"Clean Water Initiative" has been successfully funded!',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+    date: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
     read: false,
     href: '/projects/clean-water-initiative',
   },
@@ -781,7 +770,7 @@ export const notifications: Notification[] = [
     id: 'notif-5',
     title: 'You were mentioned',
     description: 'Aayush KC mentioned you in a comment on "Education for All Nepal".',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
+    date: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString(), // 8 hours ago
     read: false,
     href: '/projects/education-for-all-nepal?tab=discussion',
   },
@@ -789,7 +778,7 @@ export const notifications: Notification[] = [
     id: 'notif-6',
     title: 'New Reply',
     description: 'Aayush KC replied to your comment on "Education for All Nepal".',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
+    date: new Date(Date.now() - 1000 * 60 * 60 * 8).toISOString(), // 8 hours ago
     read: true,
     href: '/projects/education-for-all-nepal?tab=discussion',
   },
@@ -797,7 +786,7 @@ export const notifications: Notification[] = [
     id: 'notif-3',
     title: 'New Team Member',
     description: 'Rohan Maharjan has joined the team as Lead Full-Stack Developer.',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
     read: true,
     href: '/team/rohan-maharjan',
   },
@@ -805,7 +794,7 @@ export const notifications: Notification[] = [
     id: 'notif-4',
     title: 'Weekly Summary',
     description: 'Your projects raised a total of NPR 125,000 this week.',
-    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
+    date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
     read: true,
     href: '/my-campaigns',
   },
@@ -1078,4 +1067,6 @@ export let platformSettings = {
     showOperationalCostsTotal: true,
     aiSummaryEnabled: true,
 }
+    
+
     
