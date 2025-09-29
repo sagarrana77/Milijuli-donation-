@@ -244,6 +244,42 @@ export let projects: Project[] = [
     discussion: [],
     wishlist: [],
   },
+   {
+    id: 'rebuild-the-local-library',
+    name: 'Rebuild the Local Library',
+    organization: 'Current User',
+    ownerId: 'current-user',
+    description: 'Help us rebuild our beloved community library after the recent fire.',
+    longDescription: 'Our community library was a cornerstone of our town, offering a safe space for learning and discovery for all ages. After a tragic fire, we are fundraising to rebuild it from the ground up, with modern amenities and a larger collection of books. Your support will help us bring back this vital community hub.',
+    imageUrl: 'https://picsum.photos/seed/library-fire/600/400',
+    imageHint: 'library books',
+    targetAmount: 85000,
+    raisedAmount: 12000,
+    donors: 150,
+    verified: false,
+    updates: [],
+    expenses: [],
+    discussion: [],
+    wishlist: [],
+  },
+  {
+    id: 'stray-animal-shelter',
+    name: 'Stray Animal Shelter Expansion',
+    organization: 'Current User',
+    ownerId: 'current-user',
+    description: 'Help us expand our shelter to care for more stray animals in our city.',
+    longDescription: 'Our current stray animal shelter is at full capacity, and we are forced to turn away animals in need every day. This campaign will fund the construction of a new wing, allowing us to rescue, treat, and re-home dozens more stray dogs and cats. Every dollar brings us closer to giving these animals a second chance.',
+    imageUrl: 'https://picsum.photos/seed/stray-dog/600/400',
+    imageHint: 'stray dog',
+    targetAmount: 40000,
+    raisedAmount: 38000,
+    donors: 600,
+    verified: true,
+    updates: [],
+    expenses: [],
+    discussion: [],
+    wishlist: [],
+  },
 ];
 
 export let salaries: {
@@ -254,19 +290,19 @@ export let salaries: {
 }[] = [
   {
     id: 'sal-1',
-    employee: 'John Doe',
+    employee: 'Alex Johnson',
     role: 'Project Manager',
     salary: 3000,
   },
   {
     id: 'sal-2',
-    employee: 'Jane Smith',
+    employee: 'Maria Garcia',
     role: 'Lead Developer',
     salary: 4000,
   },
   {
     id: 'sal-3',
-    employee: 'Peter Jones',
+    employee: 'Sam Chen',
     role: 'Marketing Head',
     salary: 2800,
   },
@@ -870,5 +906,6 @@ export let paymentGateways: Gateway[] = [
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
+
 
 
