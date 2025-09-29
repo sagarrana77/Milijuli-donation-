@@ -47,7 +47,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             className="absolute right-2 top-2 rounded-full bg-background/80 p-1.5 text-green-600 backdrop-blur-sm"
             title="Verified Transparent"
           >
-            <TransparencySealIcon className="h-5 w-5" />
+            <TransparencySealIcon className="h-5 w-5 rounded-full animate-subtle-glow" />
           </div>
         )}
       </CardHeader>
@@ -71,7 +71,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
         <Button asChild className="w-full" variant={isFunded ? 'secondary' : 'default'}>
             <Link href={`/projects/${project.id}`}>
-              {isFunded ? 'View Funded Project' : 'View Project'}
+              {isFunded ? 'View Funded Project' : 'Donate Now'}
             </Link>
         </Button>
       </CardFooter>

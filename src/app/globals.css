@@ -93,4 +93,15 @@
     opacity: 1;
     transform: translateY(0);
   }
+  @keyframes subtle-glow {
+    0%, 100% {
+      box-shadow: 0 0 4px 1px hsla(var(--primary), 0.3);
+    }
+    50% {
+      box-shadow: 0 0 10px 3px hsla(var(--primary), 0.5);
+    }
+  }
+  .animate-subtle-glow {
+    animation: subtle-glow 3s ease-in-out infinite;
+  }
 }

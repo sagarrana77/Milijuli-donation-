@@ -51,7 +51,7 @@ export default function ProjectDetailPage({
                     </h1>
                     {project.verified && (
                         <div className="flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-sm text-green-600">
-                            <TransparencySealIcon className="h-5 w-5" />
+                            <TransparencySealIcon className="h-5 w-5 rounded-full animate-subtle-glow" />
                             <span className="font-semibold">Verified Transparent</span>
                         </div>
                     )}
