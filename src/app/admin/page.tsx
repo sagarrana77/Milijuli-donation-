@@ -49,6 +49,7 @@ import {
   Sparkles,
   Gift,
   Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -74,10 +75,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { generateWish, GenerateWishOutput } from '@/ai/flows/generate-wishes';
 import { generateSocialMediaPost, GenerateSocialMediaPostOutput } from '@/ai/flows/generate-social-media-post';
+import { generateRecoveryPlan, GenerateRecoveryPlanOutput } from '@/ai/flows/generate-recovery-plan';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/ui/pagination';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 
 const ITEMS_PER_PAGE = 5;
@@ -106,6 +109,10 @@ export default function AdminDashboardPage() {
   const [socialPostPlatform, setSocialPostPlatform] = useState('Twitter');
   const [generatedSocialPost, setGeneratedSocialPost] = useState<GenerateSocialMediaPostOutput | null>(null);
   const [isGeneratingSocialPost, setIsGeneratingSocialPost] = useState(false);
+
+  const [isGeneratingRecoveryPlan, setIsGeneratingRecoveryPlan] = useState(false);
+  const [recoveryPlan, setRecoveryPlan] = useState<GenerateRecoveryPlanOutput | null>(null);
+  const [isRecoveryPlanOpen, setIsRecoveryPlanOpen] = useState(false);
   
   const [projectPage, setProjectPage] = useState(1);
   const [donationPage, setDonationPage] = useState(1);
@@ -543,6 +550,33 @@ export default function AdminDashboardPage() {
     // This forces a re-render to reflect the change in the sidebar
     setForceRender(c => c + 1);
   }
+  
+  const handleAppLogoChange = () => {
+    toast({
+        title: 'App Logo Updated!',
+        description: 'The application logo has been saved.',
+    });
+    setForceRender(c => c + 1);
+  }
+
+  const handleGenerateRecoveryPlan = async () => {
+    setIsGeneratingRecoveryPlan(true);
+    setRecoveryPlan(null);
+    try {
+        const result = await generateRecoveryPlan({ negativeAmount: dashboardStats.fundsInHand });
+        setRecoveryPlan(result);
+        setIsRecoveryPlanOpen(true);
+    } catch (error) {
+        console.error('Error generating recovery plan:', error);
+        toast({
+            variant: 'destructive',
+            title: 'Error Generating Plan',
+            description: 'There was a problem communicating with the AI. Please try again.',
+        });
+    } finally {
+        setIsGeneratingRecoveryPlan(false);
+    }
+  };
 
 
   return (
@@ -557,6 +591,17 @@ export default function AdminDashboardPage() {
         onOpenChange={setIsTransferDialogOpen}
         onFundsTransferred={handleFundsTransferred}
       />
+      <Dialog open={isRecoveryPlanOpen} onOpenChange={setIsRecoveryPlanOpen}>
+        <DialogContent className="sm:max-w-2xl">
+            <DialogHeader>
+                <DialogTitle>AI-Powered Financial Recovery Plan</DialogTitle>
+                <DialogDescription>
+                    Here are some strategies to address the negative fund balance of Rs.{Math.abs(dashboardStats.fundsInHand).toLocaleString()}.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="prose prose-sm max-w-none mt-4" dangerouslySetInnerHTML={{ __html: recoveryPlan?.plan.replace(/\n/g, '<br />') || '' }} />
+        </DialogContent>
+      </Dialog>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
@@ -584,7 +629,7 @@ export default function AdminDashboardPage() {
           </div>
           <div className="rounded-lg border bg-card p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Funds in Hand</h3>
-            <p className="text-2xl font-bold text-primary">Rs.{dashboardStats.fundsInHand.toLocaleString()}</p>
+            <p className={`text-2xl font-bold ${dashboardStats.fundsInHand < 0 ? 'text-destructive' : 'text-primary'}`}>Rs.{dashboardStats.fundsInHand.toLocaleString()}</p>
           </div>
            <div className="rounded-lg border bg-accent/20 p-4">
             <h3 className="text-sm font-medium text-muted-foreground">Actions</h3>
@@ -600,6 +645,29 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         </CardContent>
+         {dashboardStats.fundsInHand < 0 && (
+            <CardFooter>
+                 <div className="w-full rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
+                    <div className="flex items-start gap-3">
+                        <AlertTriangle className="h-5 w-5 mt-1" />
+                        <div>
+                            <p className="font-bold">Urgent: Negative Fund Balance</p>
+                            <p className="text-sm">
+                                Your funds in hand are negative. Immediate action is recommended to ensure financial stability.
+                            </p>
+                            <Button variant="destructive" size="sm" className="mt-2" onClick={handleGenerateRecoveryPlan} disabled={isGeneratingRecoveryPlan}>
+                                {isGeneratingRecoveryPlan ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Wand2 className="mr-2 h-4 w-4" />
+                                )}
+                                Generate Recovery Plan
+                            </Button>
+                        </div>
+                    </div>
+                 </div>
+            </CardFooter>
+        )}
       </Card>
       
       <Tabs defaultValue="projects">
@@ -1196,7 +1264,7 @@ export default function AdminDashboardPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <div className="rounded-lg border p-4 space-y-2">
+                             <div className="rounded-lg border p-4 space-y-2">
                                 <Label htmlFor="app-name-input" className="text-base font-medium">Application Name</Label>
                                 <div className="flex gap-2">
                                     <Input 
@@ -1207,6 +1275,18 @@ export default function AdminDashboardPage() {
                                     <Button onClick={handleAppNameChange}>Save</Button>
                                 </div>
                                 <p className="text-sm text-muted-foreground">This name will be displayed in the sidebar and other places across the app.</p>
+                            </div>
+                             <div className="rounded-lg border p-4 space-y-2">
+                                <Label htmlFor="app-logo-input" className="text-base font-medium">Application Logo URL</Label>
+                                <div className="flex gap-2">
+                                    <Input 
+                                        id="app-logo-input"
+                                        defaultValue={platformSettings.appLogoUrl}
+                                        onChange={(e) => platformSettings.appLogoUrl = e.target.value}
+                                    />
+                                    <Button onClick={handleAppLogoChange}>Save</Button>
+                                </div>
+                                <p className="text-sm text-muted-foreground">Enter a URL for the app logo. It will replace the default logo in the sidebar.</p>
                             </div>
                              <div className="rounded-lg border p-4">
                                 <div className="flex items-center justify-between">

@@ -43,6 +43,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/colla
 import { useState } from 'react';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
 import { useAuth } from '@/context/auth-provider';
+import Image from 'next/image';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -93,7 +94,11 @@ export function MainSidebar() {
       <SidebarHeader className="border-b p-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Logo className="h-8 w-8 text-primary" />
+            {platformSettings.appLogoUrl ? (
+                <Image src={platformSettings.appLogoUrl} alt={platformSettings.appName} width={32} height={32} className="h-8 w-8" />
+            ) : (
+                <Logo className="h-8 w-8 text-primary" />
+            )}
             <span className="text-lg font-semibold">{platformSettings.appName}</span>
           </div>
         </div>

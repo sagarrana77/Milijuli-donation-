@@ -8,3 +8,4 @@ import '@/ai/flows/generate-social-media-post.ts';
 import '@/ai/flows/generate-seo-suggestions.ts';
 import '@/ai/flows/summarize-project.ts';
 import '@/ai/flows/generate-campaign-story.ts';
+import '@/ai/flows/generate-recovery-plan.ts';

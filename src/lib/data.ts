@@ -837,6 +837,7 @@ export let paymentGateways: Gateway[] = [
 
 export let platformSettings = {
     appName: 'milijuli sewa',
+    appLogoUrl: '',
     userQrPaymentsEnabled: true,
     campaignCreationEnabled: true,
     showOperationalCostsTotal: true,
