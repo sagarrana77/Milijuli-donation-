@@ -62,7 +62,17 @@ const generateCampaignStoryFlow = ai.defineFlow(
     outputSchema: GenerateCampaignStoryOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+      const {output} = await prompt(input, {model: 'googleai/gemini-2.5-flash'});
+      return output!;
+    } catch (e: any) {
+      if (e.cause?.status === 503) {
+        console.log('gemini-2.5-flash is unavailable, falling back to gemini-pro');
+        const {output} = await prompt(input, {model: 'googleai/gemini-pro'});
+        return output!;
+      }
+      // Re-throw other errors
+      throw e;
+    }
   }
 );
