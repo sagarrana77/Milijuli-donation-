@@ -446,7 +446,7 @@ export default function AdminDashboardPage() {
                             <Input id="viber" defaultValue={socialLinks.viber} onChange={e => socialLinks.viber = e.target.value} />
                             </div>
                             <div className="space-y-2">
-                            <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-5 w-5"/> Instagram URL</Label>
+                            <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-5 w-5" stroke="currentColor"/> Instagram URL</Label>
                             <Input id="instagram" defaultValue={socialLinks.instagram} onChange={e => socialLinks.instagram = e.target.value} />
                             </div>
                             <div className="space-y-2">
@@ -737,6 +737,7 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
 
 
 

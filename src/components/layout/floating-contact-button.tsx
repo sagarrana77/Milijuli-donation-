@@ -32,7 +32,7 @@ export function FloatingContactButton() {
                 <div className="flex items-center gap-3 rounded-full bg-background border p-2 shadow-lg">
                     <Link href={whatsappLink} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-green-500 hover:bg-green-600 text-white">
-                            <WhatsAppIcon className="h-6 w-6" color="white"/>
+                            <WhatsAppIcon className="h-6 w-6" />
                         </Button>
                     </Link>
                     <Link href={viberLink} target="_blank" passHref>
@@ -42,12 +42,12 @@ export function FloatingContactButton() {
                     </Link>
                     <Link href={socialLinks.instagram} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-pink-600 hover:bg-pink-700 text-white">
-                            <InstagramIcon className="h-6 w-6" color="white" />
+                            <InstagramIcon className="h-6 w-6" stroke="white" />
                         </Button>
                     </Link>
                     <Link href={messengerLink} target="_blank" passHref>
                          <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-blue-600 hover:bg-blue-700 text-white">
-                            <MessengerIcon className="h-6 w-6" color="white" />
+                            <MessengerIcon className="h-6 w-6" />
                         </Button>
                     </Link>
                 </div>

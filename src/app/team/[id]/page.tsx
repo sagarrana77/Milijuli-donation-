@@ -96,20 +96,18 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
             </Card>
         </div>
 
-        <div className="lg:col-span-1">
-            <aside className="sticky top-24">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Star className="h-5 w-5 text-primary" /> Key Skills</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-wrap gap-2">
-                        {member.skills.map(skill => (
-                            <Badge key={skill} variant="secondary">{skill}</Badge>
-                        ))}
-                    </CardContent>
-                </Card>
-            </aside>
-        </div>
+        <aside className="lg:col-span-1 lg:sticky top-24 self-start">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><Star className="h-5 w-5 text-primary" /> Key Skills</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-wrap gap-2">
+                    {member.skills.map(skill => (
+                        <Badge key={skill} variant="secondary">{skill}</Badge>
+                    ))}
+                </CardContent>
+            </Card>
+        </aside>
       </div>
     </div>
   );
