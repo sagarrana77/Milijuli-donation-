@@ -66,7 +66,7 @@ export function MainSidebar() {
     if (href === '/') {
       return pathname === '/';
     }
-    return pathname.startsWith(href);
+    return pathname.startsWith(href) && href !== '/';
   };
   
   const handleLinkClick = () => {
