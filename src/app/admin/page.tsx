@@ -984,54 +984,56 @@ export default function AdminDashboardPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>User</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Role</TableHead>
-                                <TableHead>Pro Member</TableHead>
-                                <TableHead className="text-right">Can Create Campaigns</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {paginatedUsers.map(user => (
-                                <TableRow key={user.id}>
-                                    <TableCell>
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-9 w-9">
-                                                <AvatarImage src={user.avatarUrl} alt={user.name} />
-                                                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <span className="font-medium">{user.name}</span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>
-                                        <Badge variant={user.isAdmin ? 'default' : 'secondary'}>
-                                            {user.isAdmin ? 'Admin' : 'User'}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Switch
-                                            checked={user.isProMember || false}
-                                            onCheckedChange={(checked) => handleUserProMemberToggle(user.id, checked)}
-                                            aria-label={`Toggle pro member status for ${user.name}`}
-                                        />
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {!user.isAdmin && (
-                                            <Switch
-                                                checked={user.canCreateCampaigns || false}
-                                                onCheckedChange={(checked) => handleUserPermissionToggle(user.id, checked)}
-                                                aria-label={`Toggle campaign creation for ${user.name}`}
-                                            />
-                                        )}
-                                    </TableCell>
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>User</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead>Role</TableHead>
+                                    <TableHead>Pro Member</TableHead>
+                                    <TableHead className="text-right">Can Create Campaigns</TableHead>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {paginatedUsers.map(user => (
+                                    <TableRow key={user.id}>
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                <Avatar className="h-9 w-9">
+                                                    <AvatarImage src={user.avatarUrl} alt={user.name} />
+                                                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <span className="font-medium">{user.name}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>{user.email}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={user.isAdmin ? 'default' : 'secondary'}>
+                                                {user.isAdmin ? 'Admin' : 'User'}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Switch
+                                                checked={user.isProMember || false}
+                                                onCheckedChange={(checked) => handleUserProMemberToggle(user.id, checked)}
+                                                aria-label={`Toggle pro member status for ${user.name}`}
+                                            />
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            {!user.isAdmin && (
+                                                <Switch
+                                                    checked={user.canCreateCampaigns || false}
+                                                    onCheckedChange={(checked) => handleUserPermissionToggle(user.id, checked)}
+                                                    aria-label={`Toggle campaign creation for ${user.name}`}
+                                                />
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
                 </CardContent>
                  {totalUserPages > 1 && (
                     <CardFooter>
