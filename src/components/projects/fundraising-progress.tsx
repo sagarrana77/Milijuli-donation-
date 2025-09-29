@@ -10,13 +10,14 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Users, Target } from 'lucide-react';
+import { Users, Target, CircleDollarSign } from 'lucide-react';
 import { useDonationContext } from '@/components/projects/donation-dialog-wrapper';
 import { Skeleton } from '../ui/skeleton';
 
 
 export function FundraisingProgress() {
   const { project, raisedAmount, donors, percentage, isClient, setIsDonationOpen } = useDonationContext();
+  const totalSpent = project.expenses.reduce((acc, exp) => acc + exp.amount, 0);
 
   return (
     <Card>
@@ -32,6 +33,13 @@ export function FundraisingProgress() {
                 <span className="font-bold text-muted-foreground">Available</span>
                 <div>
                   <p className="font-bold">Rs.{raisedAmount.toLocaleString()}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                 <CircleDollarSign className="h-4 w-4 text-muted-foreground" />
+                <div>
+                  <p className="font-bold">Rs.{totalSpent.toLocaleString()}</p>
+                   <p className="text-muted-foreground">Used Funds</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -58,6 +66,10 @@ export function FundraisingProgress() {
                   <Skeleton className="h-4 w-12"/>
                   <Skeleton className="h-4 w-16"/>
               </div>
+               <div className="space-y-1">
+                  <Skeleton className="h-4 w-12"/>
+                  <Skeleton className="h-4 w-16"/>
+              </div>
                 <div className="space-y-1">
                   <Skeleton className="h-4 w-12"/>
                   <Skeleton className="h-4 w-20"/>
@@ -76,3 +88,4 @@ export function FundraisingProgress() {
     </Card>
   );
 }
+
