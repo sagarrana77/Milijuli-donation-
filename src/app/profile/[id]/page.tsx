@@ -22,6 +22,7 @@ import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { usePhotoDialog, PhotoDialogProvider } from '@/context/image-dialog-provider';
 import { ProfileInKindDonations } from '@/components/profile/in-kind-donations';
 import { Calendar, DollarSign, List } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 
 const socialLinks = [
@@ -128,4 +129,3 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
     </PhotoDialogProvider>
   );
 }
-
