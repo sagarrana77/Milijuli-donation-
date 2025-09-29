@@ -500,6 +500,7 @@ export type User = {
     hasPaymentMethod?: boolean;
     isAdmin?: boolean;
     canCreateCampaigns?: boolean;
+    friends?: string[];
 }
 
 export let users: User[] = [
@@ -512,6 +513,7 @@ export let users: User[] = [
         bio: 'A passionate supporter of community-driven projects and a firm believer in the power of transparent giving.',
         hasPaymentMethod: false,
         isAdmin: true,
+        friends: ['user-sita-rai', 'user-hari-thapa'],
     },
     { 
         id: 'user-sita-rai', 
@@ -522,6 +524,7 @@ export let users: User[] = [
         bio: 'Loves to contribute to educational projects. Believes in the power of knowledge.',
         hasPaymentMethod: true,
         canCreateCampaigns: true,
+        friends: ['current-user'],
     },
     { 
         id: 'user-hari-thapa', 
@@ -531,6 +534,7 @@ export let users: User[] = [
         profileUrl: '/profile/user-hari-thapa',
         bio: 'Focused on environmental causes and clean water initiatives.',
         hasPaymentMethod: true,
+        friends: ['current-user', 'user-maya-gurung'],
     },
     { 
         id: 'user-maya-gurung', 
@@ -540,6 +544,7 @@ export let users: User[] = [
         profileUrl: '/profile/user-maya-gurung',
         bio: 'Supports disaster relief and emergency response efforts.',
         hasPaymentMethod: true,
+        friends: ['user-hari-thapa'],
     },
     { 
         id: 'user-bikram-shah', 
@@ -549,6 +554,7 @@ export let users: User[] = [
         profileUrl: '/profile/user-bikram-shah',
         bio: 'Interested in community health and wellness projects.',
         hasPaymentMethod: false,
+        friends: [],
     },
     { 
         id: 'user-anonymous', 
@@ -557,6 +563,7 @@ export let users: User[] = [
         profileUrl: '/profile/user-anonymous',
         bio: 'An anonymous donor making a difference.',
         hasPaymentMethod: true,
+        friends: [],
     },
      { 
         id: 'clarity-chain-admin', 
@@ -567,6 +574,7 @@ export let users: User[] = [
         bio: 'The official account for the ClarityChain organization.',
         hasPaymentMethod: true,
         isAdmin: true,
+        friends: [],
     },
     {
         id: 'sunita-sharma',
@@ -574,13 +582,14 @@ export let users: User[] = [
         email: 'sunita.sharma@example.com',
         avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
         profileUrl: '/team/sunita-sharma',
-        bio: 'Sunita is a community engagement specialist from Kathmandu, passionate about connecting people and causes.'
+        bio: 'Sunita is a community engagement specialist from Kathmandu, passionate about connecting people and causes.',
+        friends: [],
     }
 ];
 
 export const currentUser = users.find(u => u.id === 'current-user');
 
-export type Donor = Omit<User, 'email' | 'hasPaymentMethod' | 'isAdmin'>;
+export type Donor = Omit<User, 'email' | 'hasPaymentMethod' | 'isAdmin' | 'friends'>;
 
 export const recentDonations: {
   id: number;

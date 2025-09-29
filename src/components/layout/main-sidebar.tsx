@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -42,6 +43,7 @@ import { useState } from 'react';
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/projects', label: 'All Projects', icon: HeartHandshake },
+  { href: '/friends', label: 'Friends', icon: Users },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
