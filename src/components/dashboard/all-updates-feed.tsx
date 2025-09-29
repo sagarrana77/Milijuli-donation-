@@ -20,7 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { projects, type Update } from '@/lib/data';
+import { projects, type Update, users } from '@/lib/data';
 import { Skeleton } from '../ui/skeleton';
 import { ArrowRight, Gift, ShoppingCart } from 'lucide-react';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
@@ -46,8 +46,39 @@ export function AllUpdatesFeed() {
     );
     // Sort by date, most recent first
     updates.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    setAllUpdates(updates.slice(0, 7)); // Limit to most recent 7 for the feed
+    setAllUpdates(updates);
     setIsClient(true);
+    
+    // Simulate real-time updates
+    const interval = setInterval(() => {
+        if (document.hidden) return; // Don't update if tab is not visible
+
+        const randomProject = projects[Math.floor(Math.random() * projects.length)];
+        const randomDonor = users.find(u => u.id === 'user-anonymous')!;
+        const randomAmount = Math.floor(Math.random() * (5000 - 100 + 1)) + 100;
+        
+        const newDonationUpdate: UpdateWithProject = {
+            id: `rt-donation-${Date.now()}`,
+            title: `New Anonymous Donation!`,
+            description: `${randomDonor.name} generously donated Rs.${randomAmount.toLocaleString()}.`,
+            date: new Date().toISOString(),
+            isMonetaryDonation: true,
+            monetaryDonationDetails: {
+                donorName: randomDonor.name,
+                donorAvatarUrl: randomDonor.avatarUrl,
+                donorProfileUrl: randomDonor.profileUrl,
+                amount: randomAmount,
+            },
+            projectName: randomProject.name,
+            projectId: randomProject.id,
+        };
+
+        setAllUpdates(prev => [newDonationUpdate, ...prev].slice(0, 50)); // Keep the list from growing indefinitely
+
+    }, 5000); // Add a new donation every 5 seconds
+
+    return () => clearInterval(interval);
+
   }, []);
 
   if (!isClient) {
@@ -83,7 +114,7 @@ export function AllUpdatesFeed() {
       <CardContent>
         <div className="space-y-4">
           {allUpdates.length > 0 ? (
-            allUpdates.map(update => (
+            allUpdates.slice(0, 7).map(update => (
               <div key={update.id} className="flex items-start gap-4">
                 <div className="w-10 flex justify-center">
                    {update.isMonetaryDonation && update.monetaryDonationDetails && (
@@ -153,5 +184,4 @@ export function AllUpdatesFeed() {
     </Card>
   );
 }
-
     
