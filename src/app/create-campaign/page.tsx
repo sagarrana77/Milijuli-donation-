@@ -26,12 +26,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, CreditCard } from 'lucide-react';
+import { PlusCircle, CreditCard, Wand2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { projects, currentUser, paymentGateways as defaultGateways } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
+import { useState } from 'react';
+import { summarizeProject } from '@/ai/flows/summarize-project';
 
 const gatewaySchema = z.object({
     name: z.string(),
@@ -56,6 +58,7 @@ type ProjectFormData = z.infer<typeof projectSchema>;
 export default function CreateCampaignPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -117,6 +120,47 @@ export default function CreateCampaignPage() {
     }
   };
 
+  const handleGenerateSummary = async () => {
+    const longDescription = form.getValues('longDescription');
+    if (!longDescription || longDescription.length < 100) {
+        toast({
+            variant: 'destructive',
+            title: 'Full Description Too Short',
+            description: 'Please write a full description of at least 100 characters before generating a summary.'
+        });
+        return;
+    }
+
+    setIsGeneratingSummary(true);
+    try {
+        const tempProject = { ...form.getValues(), id: 'temp-for-summary' };
+        projects.push(tempProject as any); 
+
+        const result = await summarizeProject({ projectId: 'temp-for-summary' });
+        
+        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
+        if (projectIndex !== -1) projects.splice(projectIndex, 1);
+
+        form.setValue('description', result.summary, { shouldValidate: true, shouldDirty: true });
+        toast({
+            title: "AI Summary Generated!",
+            description: "The short description has been filled in."
+        });
+    } catch (error) {
+        console.error("Error generating summary:", error);
+        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
+        if (projectIndex !== -1) projects.splice(projectIndex, 1);
+        toast({
+            variant: 'destructive',
+            title: 'Error Generating Summary',
+            description: 'Could not generate summary. Please try again.'
+        });
+    } finally {
+        setIsGeneratingSummary(false);
+    }
+  };
+
+
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8">
@@ -170,25 +214,6 @@ export default function CreateCampaignPage() {
                     />
                     <FormField
                         control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Short Description</FormLabel>
-                            <FormControl>
-                            <Textarea
-                                placeholder="A brief, one-sentence summary of your campaign."
-                                {...field}
-                            />
-                            </FormControl>
-                            <FormDescription>
-                                This will be shown on campaign cards.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
                         name="longDescription"
                         render={({ field }) => (
                         <FormItem>
@@ -202,6 +227,30 @@ export default function CreateCampaignPage() {
                             </FormControl>
                             <FormDescription>
                                 This will be shown on the main campaign page. Use markdown for formatting if needed.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Short Description</FormLabel>
+                             <div className="flex items-start gap-2">
+                                <FormControl>
+                                <Textarea
+                                    placeholder="A brief, one-sentence summary of your campaign."
+                                    {...field}
+                                />
+                                </FormControl>
+                                <Button type="button" variant="outline" size="icon" onClick={handleGenerateSummary} disabled={isGeneratingSummary} title="Generate with AI">
+                                    {isGeneratingSummary ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                                </Button>
+                            </div>
+                            <FormDescription>
+                                This will be shown on campaign cards. You can write this yourself or generate it with AI based on the full description above.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>

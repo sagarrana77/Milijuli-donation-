@@ -1046,5 +1046,6 @@ export let platformSettings = {
     userQrPaymentsEnabled: true,
     campaignCreationEnabled: true,
     showOperationalCostsTotal: true,
+    aiSummaryEnabled: true,
 }
     

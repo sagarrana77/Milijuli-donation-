@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Image from 'next/image';
@@ -9,7 +10,7 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { Project } from '@/lib/data';
+import { project as typeProject, platformSettings } from '@/lib/data';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { DonorsList } from '@/components/projects/donors-list';
 import { DiscussionSection } from '@/components/projects/discussion-section';
@@ -26,7 +27,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '../ui/skeleton';
 
 interface ProjectPageClientContentProps {
-    project: Project;
+    project: typeof typeProject;
 }
 
 export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
@@ -68,10 +69,12 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
             />
             
             <CardContent className="p-6 space-y-4">
-                 <Button onClick={handleGenerateSummary} disabled={isGeneratingSummary} variant="outline" className="w-full md:w-auto">
-                    {isGeneratingSummary ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                    Generate AI Summary
-                 </Button>
+                 {platformSettings.aiSummaryEnabled && (
+                    <Button onClick={handleGenerateSummary} disabled={isGeneratingSummary} variant="outline" className="w-full md:w-auto">
+                        {isGeneratingSummary ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                        Generate AI Summary
+                    </Button>
+                 )}
 
                  {(isGeneratingSummary || summary) && (
                      <Card className="bg-primary/5 border-dashed border-primary/20">
@@ -233,7 +236,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
     )
 }
 
-export function ProjectPageClientAside({ project }: { project: Project }) {
+export function ProjectPageClientAside({ project }: { project: typeof typeProject }) {
      return (
         <aside className="space-y-8 lg:sticky lg:top-24 self-start">
             <ScrollFadeIn>

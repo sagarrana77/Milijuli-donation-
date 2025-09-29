@@ -448,6 +448,15 @@ export default function AdminDashboardPage() {
     toast({ title: "Copied to Clipboard!" });
   };
 
+  const handleAiSummaryToggle = (enabled: boolean) => {
+    platformSettings.aiSummaryEnabled = enabled;
+    setForceRender(c => c + 1);
+    toast({
+        title: 'Setting Updated!',
+        description: `Public AI summary generation has been ${enabled ? 'enabled' : 'disabled'}.`
+    });
+  }
+
 
   return (
     <div className="flex flex-col gap-8">
@@ -1022,11 +1031,11 @@ export default function AdminDashboardPage() {
                     <Card className="lg:col-span-2">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                            <CreditCard />
-                            Platform Payment Gateways
+                            <Settings />
+                            General Platform Settings
                             </CardTitle>
                             <CardDescription>
-                            Enable gateways, QR codes, and user permissions for donations.
+                            Manage global settings for campaigns, costs, and AI features.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -1057,7 +1066,28 @@ export default function AdminDashboardPage() {
                                     <Switch id="user-qr-switch" checked={platformSettings.userQrPaymentsEnabled} onCheckedChange={handleUserQrToggle} />
                                 </div>
                             </div>
-
+                            <div className="rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <Label htmlFor="ai-summary-switch" className="text-base font-medium">Enable Public AI Summary Generation</Label>
+                                        <p className="text-sm text-muted-foreground">Allow donors to generate AI summaries on project pages.</p>
+                                    </div>
+                                    <Switch id="ai-summary-switch" checked={platformSettings.aiSummaryEnabled} onCheckedChange={handleAiSummaryToggle} />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card className="lg:col-span-2">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                            <CreditCard />
+                            Platform Payment Gateways
+                            </CardTitle>
+                            <CardDescription>
+                            Enable gateways and set QR code values for platform-wide donations.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
                             {paymentGateways.map((gateway, index) => (
                                 <div key={gateway.name} className="space-y-4 rounded-md border p-4">
                                     <div className="flex items-center justify-between">

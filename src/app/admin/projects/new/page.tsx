@@ -27,9 +27,11 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Wand2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { projects } from '@/lib/data';
+import { summarizeProject } from '@/ai/flows/summarize-project';
+import { useState } from 'react';
 
 const projectSchema = z.object({
   name: z.string().min(5, 'Project name must be at least 5 characters.'),
@@ -47,6 +49,7 @@ type ProjectFormData = z.infer<typeof projectSchema>;
 export default function NewProjectPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -80,6 +83,48 @@ export default function NewProjectPage() {
     });
     router.push('/admin');
   }
+
+   const handleGenerateSummary = async () => {
+    const longDescription = form.getValues('longDescription');
+    if (!longDescription || longDescription.length < 100) {
+        toast({
+            variant: 'destructive',
+            title: 'Full Description Too Short',
+            description: 'Please write a full description of at least 100 characters before generating a summary.'
+        });
+        return;
+    }
+
+    setIsGeneratingSummary(true);
+    try {
+        // We pass a temporary ID; the real one is created on submit.
+        // The AI flow is designed to fetch content, so we create a temporary project.
+        const tempProject = { ...form.getValues(), id: 'temp-for-summary' };
+        projects.push(tempProject as any); // Add temp project for the tool to find
+
+        const result = await summarizeProject({ projectId: 'temp-for-summary' });
+        
+        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
+        if (projectIndex !== -1) projects.splice(projectIndex, 1); // Clean up temp project
+
+        form.setValue('description', result.summary, { shouldValidate: true, shouldDirty: true });
+        toast({
+            title: "AI Summary Generated!",
+            description: "The short description has been filled in."
+        });
+    } catch (error) {
+        console.error("Error generating summary:", error);
+        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
+        if (projectIndex !== -1) projects.splice(projectIndex, 1); // Ensure cleanup on error too
+        toast({
+            variant: 'destructive',
+            title: 'Error Generating Summary',
+            description: 'Could not generate summary. Please try again.'
+        });
+    } finally {
+        setIsGeneratingSummary(false);
+    }
+  };
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -126,25 +171,6 @@ export default function NewProjectPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Short Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="A brief, one-sentence summary of the project."
-                        {...field}
-                      />
-                    </FormControl>
-                     <FormDescription>
-                        This will be shown on project cards.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
                <FormField
                 control={form.control}
                 name="longDescription"
@@ -160,6 +186,30 @@ export default function NewProjectPage() {
                     </FormControl>
                     <FormDescription>
                         This will be shown on the main project page. Use markdown for formatting if needed.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Short Description</FormLabel>
+                     <div className="flex items-start gap-2">
+                        <FormControl>
+                        <Textarea
+                            placeholder="A brief, one-sentence summary of the project."
+                            {...field}
+                        />
+                        </FormControl>
+                        <Button type="button" variant="outline" size="icon" onClick={handleGenerateSummary} disabled={isGeneratingSummary} title="Generate with AI">
+                            {isGeneratingSummary ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+                        </Button>
+                    </div>
+                     <FormDescription>
+                        This will be shown on project cards. You can write this yourself or generate it with AI based on the full description above.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
