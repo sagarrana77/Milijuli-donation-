@@ -27,7 +27,7 @@ import {
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import { dashboardStats, operationalCostsFund, projects, jobOpenings, salaries, equipment, miscExpenses, teamMembers } from '@/lib/data';
-import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
+import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
@@ -134,7 +134,7 @@ export default function DashboardPage() {
       </ScrollFadeIn>
       
       <ScrollFadeIn>
-        <RealtimeLedger />
+        <AllUpdatesFeed />
       </ScrollFadeIn>
       
       <ScrollFadeIn>
@@ -236,3 +236,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    
