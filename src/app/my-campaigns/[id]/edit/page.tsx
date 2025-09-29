@@ -143,7 +143,7 @@ export default function EditUserCampaignPage() {
     if(gateways) {
         const gateway = gateways[index];
         if (gateway && gateway.qrValue) {
-            const newQr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(gateway.qrValue)}`;
+            const newQr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${'\'\'\''encodeURIComponent(gateway.qrValue)\'\'\''}`;
             form.setValue(`gateways.${index}.generatedQr`, newQr, { shouldDirty: true });
         }
     }
@@ -526,7 +526,7 @@ export default function EditUserCampaignPage() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => appendWishlistItem({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false })}
+                                onClick={() => appendWishlistItem({ id: `wish-${'\'\'\''Date.now()\'\'\''}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add Wishlist Item
                             </Button>
@@ -594,7 +594,7 @@ export default function EditUserCampaignPage() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => appendUpdate({ id: `update-${Date.now()}`, title: '', description: '', date: new Date(), imageUrl: '', imageHint: '' })}
+                                onClick={() => appendUpdate({ id: `update-${'\'\'\''Date.now()\'\'\''}`, title: '', description: '', date: new Date(), imageUrl: '', imageHint: '' })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add New Update
                             </Button>
@@ -647,7 +647,7 @@ export default function EditUserCampaignPage() {
                                 <div className="flex gap-2">
                                     <FormControl>
                                     <Input
-                                        placeholder={`Enter ${form.getValues(`gateways.${index}.name`)} URL or ID`}
+                                        placeholder={`Enter ${'\'\'\''form.getValues(`gateways.${index}.name`)\'\'\''}`} URL or ID`}
                                         {...field}
                                     />
                                     </FormControl>
@@ -661,7 +661,7 @@ export default function EditUserCampaignPage() {
                                     <div className="flex flex-col items-center gap-2 rounded-lg bg-muted p-3 sm:flex-row">
                                         <Image
                                             src={form.watch(`gateways.${index}.generatedQr`)}
-                                            alt={`${form.watch(`gateways.${index}.name`)} QR Code`}
+                                            alt={`${'\'\'\''form.watch(`gateways.${index}.name`)\'\'\''}`} QR Code`}
                                             width={150}
                                             height={150}
                                             data-ai-hint="qr code"

@@ -3,13 +3,17 @@
  * @fileOverview A flow to generate SEO suggestions for projects.
  *
  * - generateSeoSuggestions - A function that generates SEO keywords and a meta description.
- * - GenerateSeoSuggestionsInput - The input type for the function.
- * - GenerateSeoSuggestionsOutput - The return type for the function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { projects } from '@/lib/data';
+import { 
+    GenerateSeoSuggestionsInputSchema, 
+    GenerateSeoSuggestionsOutputSchema, 
+    type GenerateSeoSuggestionsInput, 
+    type GenerateSeoSuggestionsOutput 
+} from '@/ai/schemas/seo-suggestions';
 
 // Tool to get project details for SEO
 const getProjectDetailsForSeo = ai.defineTool(
@@ -35,17 +39,6 @@ const getProjectDetailsForSeo = ai.defineTool(
     };
   }
 );
-
-export const GenerateSeoSuggestionsInputSchema = z.object({
-  projectId: z.string().describe('The ID of the project to generate SEO suggestions for.'),
-});
-export type GenerateSeoSuggestionsInput = z.infer<typeof GenerateSeoSuggestionsInputSchema>;
-
-export const GenerateSeoSuggestionsOutputSchema = z.object({
-  keywords: z.array(z.string()).describe('A list of 5-7 highly relevant SEO keywords for the project.'),
-  metaDescription: z.string().describe('A compelling, SEO-friendly meta description (max 160 characters).'),
-});
-export type GenerateSeoSuggestionsOutput = z.infer<typeof GenerateSeoSuggestionsOutputSchema>;
 
 export async function generateSeoSuggestions(
   input: GenerateSeoSuggestionsInput

@@ -31,7 +31,7 @@ import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { projects, type Project, currentUser } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { generateSeoSuggestions, GenerateSeoSuggestionsOutput } from '@/ai/flows/generate-seo-suggestions';
+import { generateSeoSuggestions } from '@/ai/flows/generate-seo-suggestions';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 
