@@ -856,3 +856,4 @@ export let paymentGateways: Gateway[] = [
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
+

@@ -44,6 +44,15 @@ const wishlistItemSchema = z.object({
   allowInKind: z.boolean().optional(),
 });
 
+const updateSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Title is required."),
+  description: z.string().min(1, "Description is required."),
+  date: z.date(),
+  imageUrl: z.string().url("Image URL is required."),
+  imageHint: z.string().min(1, "Image hint is required."),
+});
+
 const projectSchema = z.object({
   name: z.string().min(5, 'Project name must be at least 5 characters.'),
   organization: z.string().min(3, 'Organization name is required.'),
@@ -54,6 +63,7 @@ const projectSchema = z.object({
   targetAmount: z.coerce.number().positive('Target amount must be a positive number.'),
   verified: z.boolean(),
   wishlist: z.array(wishlistItemSchema),
+  updates: z.array(updateSchema),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
@@ -70,7 +80,8 @@ export default function EditProjectPage() {
     resolver: zodResolver(projectSchema),
     defaultValues: project ? {
       ...project,
-      wishlist: project.wishlist.map(item => ({...item, allowInKind: item.allowInKind || false}))
+      wishlist: project.wishlist.map(item => ({...item, allowInKind: item.allowInKind || false})),
+      updates: project.updates.map(update => ({...update, date: new Date(update.date)}))
     } : {
       name: '',
       organization: '',
@@ -81,12 +92,18 @@ export default function EditProjectPage() {
       targetAmount: 0,
       verified: false,
       wishlist: [],
+      updates: [],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields: wishlistFields, append: appendWishlistItem, remove: removeWishlistItem } = useFieldArray({
     control: form.control,
     name: "wishlist",
+  });
+
+  const { fields: updateFields, append: appendUpdate, remove: removeUpdate } = useFieldArray({
+    control: form.control,
+    name: "updates",
   });
 
   if (!project) {
@@ -118,9 +135,10 @@ export default function EditProjectPage() {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Tabs defaultValue="details">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="details">Project Details</TabsTrigger>
                     <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
+                    <TabsTrigger value="updates">Updates</TabsTrigger>
                 </TabsList>
                 <TabsContent value="details" className="space-y-8 mt-6">
                     <Card>
@@ -281,7 +299,7 @@ export default function EditProjectPage() {
                             <CardDescription>Manage specific items donors can fund for this project.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            {fields.map((item, index) => (
+                            {wishlistFields.map((item, index) => (
                                 <div key={item.id} className="space-y-4 rounded-md border p-4 relative">
                                     <FormField
                                         control={form.control}
@@ -384,7 +402,7 @@ export default function EditProjectPage() {
                                             </FormItem>
                                         )}
                                         />
-                                    <Button size="sm" variant="destructive" onClick={() => remove(index)} className="absolute top-2 right-2">
+                                    <Button size="sm" variant="destructive" onClick={() => removeWishlistItem(index)} className="absolute top-2 right-2">
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </div>
@@ -392,9 +410,77 @@ export default function EditProjectPage() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => append({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false })}
+                                onClick={() => appendWishlistItem({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add Wishlist Item
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent value="updates" className="mt-6">
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Project Updates</CardTitle>
+                            <CardDescription>Post updates for your project donors.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {updateFields.map((item, index) => (
+                                <div key={item.id} className="space-y-4 rounded-md border p-4 relative">
+                                    <FormField
+                                        control={form.control}
+                                        name={`updates.${index}.title`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Update Title</FormLabel>
+                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                     <FormField
+                                        control={form.control}
+                                        name={`updates.${index}.description`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Update Description</FormLabel>
+                                                <FormControl><Textarea rows={3} {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                     <FormField
+                                        control={form.control}
+                                        name={`updates.${index}.imageUrl`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Image URL</FormLabel>
+                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name={`updates.${index}.imageHint`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Image Hint</FormLabel>
+                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <Button size="sm" variant="destructive" onClick={() => removeUpdate(index)} className="absolute top-2 right-2">
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => appendUpdate({ id: `update-${Date.now()}`, title: '', description: '', date: new Date(), imageUrl: '', imageHint: '' })}
+                            >
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add New Update
                             </Button>
                         </CardContent>
                     </Card>
