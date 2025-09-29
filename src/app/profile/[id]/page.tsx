@@ -98,8 +98,8 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-1">
                     {isDonor && (
                         <Tooltip>
-                            <TooltipTrigger>
-                                <CheckCircle className="h-6 w-6 text-green-600" />
+                            <TooltipTrigger asChild>
+                                <CheckCircle className="h-6 w-6 text-green-600 cursor-pointer" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Verified Donor</p>
@@ -108,8 +108,8 @@ export default function ProfilePage() {
                     )}
                     {user.isProMember && (
                         <Tooltip>
-                            <TooltipTrigger>
-                                <Sparkles className="h-6 w-6 text-primary" />
+                            <TooltipTrigger asChild>
+                                <Sparkles className="h-6 w-6 text-primary cursor-pointer" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Pro Member</p>
