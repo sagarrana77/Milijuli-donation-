@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -46,6 +47,7 @@ import {
   ShoppingCart,
   Copy,
   Sparkles,
+  Gift,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -90,7 +92,7 @@ export default function AdminDashboardPage() {
   const [newInKindDonation, setNewInKindDonation] = useState({
     donorName: '',
     projectName: '',
-    itemName: '',
+    wishlistItemId: '',
     quantity: '1',
     date: format(new Date(), 'yyyy-MM-dd'),
   });
@@ -171,12 +173,13 @@ export default function AdminDashboardPage() {
     };
 
     const handleAddInKindDonation = () => {
-        if (newInKindDonation.donorName && newInKindDonation.projectName && newInKindDonation.itemName && newInKindDonation.quantity) {
-          const project = projects.find(p => p.name === newInKindDonation.projectName);
+        if (newInKindDonation.donorName && newInKindDonation.wishlistItemId) {
+          const project = projects.find(p => p.id === newInKindDonation.projectName);
           const donor = users.find(u => u.name === newInKindDonation.donorName);
+          const wishlistItem = project?.wishlist.find(w => w.id === newInKindDonation.wishlistItemId);
     
-          if (!project || !donor) {
-            toast({ variant: 'destructive', title: "Error", description: "Selected project or donor not found." });
+          if (!project || !donor || !wishlistItem) {
+            toast({ variant: 'destructive', title: "Error", description: "Invalid selection. Please check all fields." });
             return;
           }
     
@@ -184,8 +187,8 @@ export default function AdminDashboardPage() {
             id: `pd-admin-${Date.now()}`,
             donorName: newInKindDonation.donorName,
             donorEmail: donor.email || 'N/A',
-            projectName: newInKindDonation.projectName,
-            itemName: newInKindDonation.itemName,
+            projectName: project.name,
+            itemName: wishlistItem.name,
             quantity: parseInt(newInKindDonation.quantity, 10),
             donationType: 'received',
             status: 'Completed',
@@ -195,26 +198,26 @@ export default function AdminDashboardPage() {
     
           physicalDonations.unshift(newDonation);
     
-          // Create an update for the project
           const newUpdate: Project['updates'][0] = {
             id: `update-inkind-${Date.now()}`,
             title: `New In-Kind Donation Received!`,
-            description: `${newInKindDonation.donorName} generously donated ${newInKindDonation.quantity}x ${newInKindDonation.itemName}.`,
+            description: `${newInKindDonation.donorName} generously donated ${newInKindDonation.quantity}x ${wishlistItem.name}.`,
             date: newInKindDonation.date,
             isInKindDonation: true,
             inKindDonationDetails: {
               donorName: newInKindDonation.donorName,
-              itemName: newInKindDonation.itemName,
+              itemName: wishlistItem.name,
               quantity: parseInt(newInKindDonation.quantity, 10),
             },
           };
     
           project.updates.unshift(newUpdate);
+          wishlistItem.quantityDonated += parseInt(newInKindDonation.quantity, 10);
     
           setNewInKindDonation({
             donorName: '',
             projectName: '',
-            itemName: '',
+            wishlistItemId: '',
             quantity: '1',
             date: format(new Date(), 'yyyy-MM-dd'),
           });
@@ -248,7 +251,6 @@ export default function AdminDashboardPage() {
         operationalCostsFund.raisedAmount -= data.amount;
     } else if (project) {
         project.raisedAmount -= data.amount;
-        // Create a new update for the project expense
         const newUpdate: Project['updates'][0] = {
             id: `update-expense-${Date.now()}`,
             title: 'Funds Utilized for Project Expense',
@@ -730,39 +732,52 @@ export default function AdminDashboardPage() {
                          <TabsContent value="post-received" className="mt-4">
                             <div className="space-y-4 rounded-md border p-4">
                                 <h3 className="font-semibold mb-2">Post a Received In-Kind Donation</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label>Donor</Label>
-                                         <Select value={newInKindDonation.donorName} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, donorName: value})}>
-                                            <SelectTrigger><SelectValue placeholder="Select a donor" /></SelectTrigger>
-                                            <SelectContent>
-                                                {users.map(user => <SelectItem key={user.id} value={user.name}>{user.name}</SelectItem>)}
-                                            </SelectContent>
-                                        </Select>
+                                <div className="space-y-4">
+                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>Donor</Label>
+                                            <Select value={newInKindDonation.donorName} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, donorName: value})}>
+                                                <SelectTrigger><SelectValue placeholder="Select a donor" /></SelectTrigger>
+                                                <SelectContent>
+                                                    {users.map(user => <SelectItem key={user.id} value={user.name}>{user.name}</SelectItem>)}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Project</Label>
+                                            <Select value={newInKindDonation.projectName} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, projectName: value, wishlistItemId: ''})}>
+                                                <SelectTrigger><SelectValue placeholder="Select a project" /></SelectTrigger>
+                                                <SelectContent>
+                                                    {projects.map(project => <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>)}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                     </div>
+
+                                    {newInKindDonation.projectName && (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>Wishlist Item</Label>
+                                            <Select value={newInKindDonation.wishlistItemId} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, wishlistItemId: value})}>
+                                                <SelectTrigger><SelectValue placeholder="Select an item" /></SelectTrigger>
+                                                <SelectContent>
+                                                    {projects.find(p => p.id === newInKindDonation.projectName)?.wishlist.map(item => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                         <div className="space-y-2">
+                                            <Label>Quantity Received</Label>
+                                            <Input type="number" placeholder="1" value={newInKindDonation.quantity} onChange={(e) => setNewInKindDonation({...newInKindDonation, quantity: e.target.value})} />
+                                        </div>
+                                        </div>
+                                    )}
+
                                     <div className="space-y-2">
-                                        <Label>Project</Label>
-                                        <Select value={newInKindDonation.projectName} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, projectName: value})}>
-                                            <SelectTrigger><SelectValue placeholder="Select a project" /></SelectTrigger>
-                                            <SelectContent>
-                                                {projects.map(project => <SelectItem key={project.id} value={project.name}>{project.name}</SelectItem>)}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Item Name</Label>
-                                        <Input placeholder="e.g., Laptops, Blankets" value={newInKindDonation.itemName} onChange={(e) => setNewInKindDonation({...newInKindDonation, itemName: e.target.value})} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label>Quantity</Label>
-                                        <Input type="number" placeholder="1" value={newInKindDonation.quantity} onChange={(e) => setNewInKindDonation({...newInKindDonation, quantity: e.target.value})} />
-                                    </div>
-                                    <div className="space-y-2 md:col-span-2">
                                         <Label>Date Received</Label>
                                         <Input type="date" value={newInKindDonation.date} onChange={(e) => setNewInKindDonation({...newInKindDonation, date: e.target.value})} />
                                     </div>
                                 </div>
-                                <Button className="mt-4" onClick={handleAddInKindDonation}>Post Donation</Button>
+                                <Button className="mt-4" onClick={handleAddInKindDonation} disabled={!newInKindDonation.wishlistItemId}>Post Donation</Button>
                             </div>
                          </TabsContent>
                     </Tabs>

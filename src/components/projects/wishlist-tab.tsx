@@ -22,13 +22,13 @@ export function WishlistTab() {
   const { openPhoto } = usePhotoDialog();
 
   const handleInKindSubmit = (data: { donationType: 'drop-off' | 'pickup', quantity: number, address?: string }) => {
-    if (!selectedItem) return;
+    if (!selectedItem || !currentUser) return;
 
     // In a real app, this would be an API call
     physicalDonations.unshift({
         id: `pd-${Date.now()}`,
-        donorName: currentUser?.name || 'Anonymous',
-        donorEmail: currentUser?.email || 'anonymous@example.com',
+        donorName: currentUser.name,
+        donorEmail: currentUser.email || 'anonymous@example.com',
         projectName: project.name,
         itemName: selectedItem.name,
         quantity: data.quantity,

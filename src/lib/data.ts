@@ -40,6 +40,13 @@ export type Update = {
         item: string;
         amount: number;
     };
+    isMonetaryDonation?: boolean;
+    monetaryDonationDetails?: {
+        donorName: string;
+        donorAvatarUrl: string;
+        donorProfileUrl: string;
+        amount: number;
+    }
 };
 
 export type WishlistItem = {
@@ -114,6 +121,13 @@ export let projects: Project[] = [
         title: 'New Donation Received!',
         description: 'Sita Rai just donated NPR 5,000. Thank you for your support!',
         date: '2024-05-20T10:00:00Z',
+        isMonetaryDonation: true,
+        monetaryDonationDetails: {
+            donorName: 'Sita Rai',
+            donorAvatarUrl: getImageUrl('avatar-jane-doe'),
+            donorProfileUrl: '/profile/user-sita-rai',
+            amount: 5000,
+        }
       },
       {
         id: 'update-1',

@@ -20,11 +20,14 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
-import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2 } from 'lucide-react';
+import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins } from 'lucide-react';
 import { useState } from 'react';
 import { summarizeProject, SummarizeProjectOutput } from '@/ai/flows/summarize-project';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '../ui/skeleton';
+import { useDonationContext } from './donation-dialog-wrapper';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import Link from 'next/link';
 
 interface ProjectPageClientContentProps {
     project: typeof typeProject;
@@ -33,6 +36,7 @@ interface ProjectPageClientContentProps {
 export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
     const { openPhoto } = usePhotoDialog();
     const { toast } = useToast();
+    const { allUpdates } = useDonationContext();
     const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
     const [summary, setSummary] = useState<SummarizeProjectOutput | null>(null);
 
@@ -108,7 +112,6 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 <TabsList>
                 <TabsTrigger value="updates">Updates</TabsTrigger>
                 <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
-                <TabsTrigger value="spending">Spending</TabsTrigger>
                 <TabsTrigger value="donors">Donors</TabsTrigger>
                 <TabsTrigger value="in-kind">In-Kind Donations</TabsTrigger>
                 <TabsTrigger value="discussion">Discussion</TabsTrigger>
@@ -116,9 +119,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 <TabsContent value="updates" className="mt-4">
                     <Card className="bg-primary/5 border-primary/10">
                         <CardContent className="p-6">
-                        {project.updates.length > 0 ? (
+                        {allUpdates.length > 0 ? (
                             <div className="space-y-6">
-                            {project.updates.map(update => {
+                            {allUpdates.map(update => {
                                 if (update.isTransfer) {
                                 return (
                                     <div key={update.id} className="flex items-start gap-4 rounded-md border bg-card p-4">
@@ -147,16 +150,39 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         </div>
                                     )
                                 }
-                                    if (update.isInKindDonation) {
+                                if (update.isInKindDonation) {
+                                return (
+                                        <div key={update.id} className="flex items-start gap-4 rounded-md border bg-green-500/10 p-4">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10 text-green-600">
+                                            <Gift className="h-5 w-5" />
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold">{update.title}</p>
+                                            <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
+                                            <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
+                                        </div>
+                                    </div>
+                                )
+                                }
+                                if(update.isMonetaryDonation && update.monetaryDonationDetails) {
                                     return (
-                                            <div key={update.id} className="flex items-start gap-4 rounded-md border bg-green-500/10 p-4">
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10 text-green-600">
-                                                <Gift className="h-5 w-5" />
-                                            </div>
+                                        <div key={update.id} className="flex items-start gap-4 rounded-md border bg-card p-4">
+                                            <Link href={update.monetaryDonationDetails.donorProfileUrl}>
+                                                <Avatar className="h-10 w-10 border">
+                                                    <AvatarImage src={update.monetaryDonationDetails.donorAvatarUrl} alt={update.monetaryDonationDetails.donorName} />
+                                                    <AvatarFallback>{update.monetaryDonationDetails.donorName.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                            </Link>
                                             <div>
-                                                <p className="font-semibold">{update.title}</p>
-                                                <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
-                                                <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
+                                                <div className="flex items-baseline gap-2">
+                                                    <p className="text-sm">
+                                                        <Link href={update.monetaryDonationDetails.donorProfileUrl} className="font-semibold hover:underline">
+                                                            {update.monetaryDonationDetails.donorName}
+                                                        </Link>
+                                                        {' '}donated <span className="font-bold text-primary">Rs.{update.monetaryDonationDetails.amount.toLocaleString()}</span>
+                                                    </p>
+                                                </div>
+                                                <p className="text-xs text-muted-foreground">{format(new Date(update.date), 'PPp')}</p>
                                             </div>
                                         </div>
                                     )
@@ -189,30 +215,6 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 </TabsContent>
                 <TabsContent value="wishlist" className="mt-4">
                     <WishlistTab />
-                </TabsContent>
-                <TabsContent value="spending" className="mt-4">
-                <Card className="bg-red-500/5 border-red-500/10">
-                    <CardContent className="p-6">
-                    {project.expenses.length > 0 ? (
-                        <ul className="space-y-4">
-                        {project.expenses.map(expense => (
-                            <li key={expense.id} className="flex items-center justify-between gap-4 rounded-md border bg-card p-3">
-                            <div>
-                                <p className="font-medium">{expense.item}</p>
-                                <p className="text-sm text-muted-foreground">{format(new Date(expense.date), 'PP')}</p>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <p className="font-semibold">Rs.{expense.amount.toLocaleString()}</p>
-                                <a href={expense.receiptUrl} target="_blank" rel="noopener noreferrer">
-                                <Button variant="outline" size="sm">View Receipt</Button>
-                                </a>
-                            </div>
-                            </li>
-                        ))}
-                        </ul>
-                    ) : <p className="text-muted-foreground">No spending recorded yet.</p>}
-                    </CardContent>
-                </Card>
                 </TabsContent>
                 <TabsContent value="donors" className="mt-4">
                     <DonorsList />

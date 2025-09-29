@@ -1,8 +1,9 @@
 
+
 'use client';
 
-import { useState, useEffect, ReactNode, createContext, useContext } from 'react';
-import type { Project, Donation } from '@/lib/data';
+import { useState, useEffect, ReactNode, createContext, useContext, useMemo } from 'react';
+import type { Project, Update } from '@/lib/data';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { sendThankYouEmail } from '@/ai/flows/send-thank-you-email';
@@ -16,7 +17,7 @@ interface DonationContextType {
   isDonationOpen: boolean;
   setIsDonationOpen: (open: boolean) => void;
   project: Project;
-  donations: Donation[];
+  allUpdates: Update[];
 }
 
 const DonationContext = createContext<DonationContextType | null>(null);
@@ -40,41 +41,53 @@ export function DonationDialogWrapper({
 }: DonationDialogWrapperProps) {
   const [raisedAmount, setRaisedAmount] = useState(project.raisedAmount);
   const [donors, setDonors] = useState(project.donors);
-  const [donations, setDonations] = useState(() => initialDonations.filter(d => d.project === project.name));
+  const [allUpdates, setAllUpdates] = useState<Update[]>(() => [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
+ useEffect(() => {
     setIsClient(true);
     // This effect re-syncs state when the underlying mutable mock data changes (e.g., from an admin action)
     setRaisedAmount(project.raisedAmount);
     setDonors(project.donors);
 
-    // Simulate real-time donations
+    const initialCombinedUpdates = [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    setAllUpdates(initialCombinedUpdates);
+    
+    // The real-time simulation is now client-only
     const interval = setInterval(() => {
       const isDonation = Math.random() > 0.7; // 30% chance of donation
       if (isDonation && raisedAmount < project.targetAmount) {
         const newAmount = Math.floor(Math.random() * 150) + 20;
-        setRaisedAmount((prev) => Math.min(prev + newAmount, project.targetAmount));
-        setDonors((prev) => prev + 1);
+        const newDonorsCount = donors + 1;
         
-        // Add a new donation to the list for real-time feel
-        const newDonation: Donation = {
-            id: Date.now(),
-            donor: users.find(u => u.id === 'user-anonymous')!,
-            project: project.name,
+        setRaisedAmount((prev) => Math.min(prev + newAmount, project.targetAmount));
+        setDonors(newDonorsCount);
+        
+        const donor = users.find(u => u.id === 'user-anonymous')!;
+        
+        const newDonationUpdate: Update = {
+          id: `update-donation-${Date.now()}`,
+          title: `New Anonymous Donation!`,
+          description: `${donor.name} generously donated Rs.${newAmount.toLocaleString()}.`,
+          date: new Date().toISOString(),
+          isMonetaryDonation: true,
+          monetaryDonationDetails: {
+            donorName: donor.name,
+            donorAvatarUrl: donor.avatarUrl,
+            donorProfileUrl: donor.profileUrl,
             amount: newAmount,
-            date: new Date().toISOString(),
-            isAnonymous: true,
+          },
         };
-        setDonations(prev => [newDonation, ...prev]);
-
+        
+        setAllUpdates(prev => [newDonationUpdate, ...prev]);
       }
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [project.targetAmount, raisedAmount, project.name, project.raisedAmount, project.donors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project.id, project.raisedAmount, project.donors, project.updates]);
 
 
   const handleDonation = async (amount: number, isAnonymous: boolean) => {
@@ -86,32 +99,33 @@ export function DonationDialogWrapper({
         });
         return;
     }
-    setRaisedAmount((prev) => prev + amount);
-    setDonors((prev) => prev + 1);
+    const newRaisedAmount = raisedAmount + amount;
+    const newDonorsCount = donors + 1;
+    setRaisedAmount(newRaisedAmount);
+    setDonors(newDonorsCount);
 
     const donor = isAnonymous ? users.find(u => u.id === 'user-anonymous')! : currentUser;
 
-    const newDonation: Donation = {
-        id: Date.now(),
-        donor: donor,
-        project: project.name,
+    const newDonationUpdate: Update = {
+      id: `update-donation-${Date.now()}`,
+      title: 'New Donation Received!',
+      description: `${donor.name} generously donated Rs.${amount.toLocaleString()}.`,
+      date: new Date().toISOString(),
+      isMonetaryDonation: true,
+      monetaryDonationDetails: {
+        donorName: donor.name,
+        donorAvatarUrl: donor.avatarUrl,
+        donorProfileUrl: donor.profileUrl,
         amount: amount,
-        date: new Date().toISOString(),
-        isAnonymous: isAnonymous,
+      },
     };
-    setDonations(prev => [newDonation, ...prev]);
+    
+    setAllUpdates(prev => [newDonationUpdate, ...prev]);
 
     // This would be a database update in a real app
-    const donationIndex = initialDonations.findIndex(d => d.project === project.name);
-    if (donationIndex !== -1) {
-        initialDonations.splice(donationIndex, 0, newDonation);
-    } else {
-        initialDonations.unshift(newDonation);
-    }
-    
-    project.raisedAmount += amount;
-    project.donors += 1;
-
+    project.raisedAmount = newRaisedAmount;
+    project.donors = newDonorsCount;
+    project.updates.unshift(newDonationUpdate);
 
     toast({
       title: 'Thank You for Your Support!',
@@ -145,6 +159,14 @@ export function DonationDialogWrapper({
   const percentage = Math.round(
     (raisedAmount / project.targetAmount) * 100
   );
+  
+  const sortedUpdates = useMemo(() => {
+    return [...allUpdates].sort((a, b) => {
+        if (a.isInKindDonation && !b.isInKindDonation) return -1;
+        if (!a.isInKindDonation && b.isInKindDonation) return 1;
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+  }, [allUpdates]);
 
   const contextValue = {
     raisedAmount,
@@ -154,7 +176,7 @@ export function DonationDialogWrapper({
     isDonationOpen,
     setIsDonationOpen,
     project,
-    donations,
+    allUpdates: sortedUpdates,
   };
 
   return (
