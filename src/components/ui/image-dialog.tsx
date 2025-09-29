@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
@@ -33,10 +34,10 @@ export function ImageDialog() {
     <Dialog open={isOpen} onOpenChange={closeImage}>
       <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0 gap-0">
         <DialogHeader className="p-4 border-b">
-          <DialogTitle>Image Viewer: {title}</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <div className="grid md:grid-cols-2 h-full overflow-hidden">
-          <div className="relative bg-black flex items-center justify-center order-last md:order-first">
+        <div className="flex flex-col h-full overflow-hidden">
+          <div className="relative bg-black flex-1 flex items-center justify-center">
             <Image
               src={imageUrl}
               alt={imageAlt || title}
@@ -44,8 +45,8 @@ export function ImageDialog() {
               className="object-contain"
             />
           </div>
-          <div className="flex flex-col h-full overflow-y-auto">
-             <ScrollArea className="flex-1">
+          <div className="flex flex-col flex-1 h-1/2 overflow-y-auto border-t">
+             <ScrollArea className="h-full">
                 <div className="p-4 space-y-4">
                   {hasInteractionTabs ? (
                     <Tabs defaultValue="donor">
@@ -98,4 +99,3 @@ export function ImageDialog() {
     </Dialog>
   );
 }
-
