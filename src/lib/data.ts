@@ -655,46 +655,42 @@ function createDonationData(): Donation[] {
     const donorPool = users.filter(u => u.id !== 'clarity-chain-admin');
     
     // Create a static, deterministic list of donations
-    const staticDonations: Omit<Donation, 'donor'>[] = [
+    const staticDonations: Omit<Donation, 'donor'|'id'>[] = [
         // Donations for Education for All Nepal
-        { id: 1, project: 'Education for All Nepal', amount: 5000, date: new Date('2024-05-20T10:00:00Z') },
-        { id: 2, project: 'Education for All Nepal', amount: 7500, date: new Date('2024-05-19T14:30:00Z') },
-        { id: 3, project: 'Education for All Nepal', amount: 2000, date: new Date('2024-05-18T09:00:00Z') },
+        { project: 'Education for All Nepal', amount: 5000, date: new Date('2024-05-20T10:00:00Z') },
+        { project: 'Stray Animal Shelter Expansion', amount: 7500, date: new Date('2024-05-19T14:30:00Z') },
+        { project: 'Education for All Nepal', amount: 2000, date: new Date('2024-05-18T09:00:00Z') },
 
         // Donations for Clean Water Initiative
-        { id: 4, project: 'Clean Water Initiative', amount: 10000, date: new Date('2024-05-20T11:00:00Z') },
-        { id: 5, project: 'Clean Water Initiative', amount: 15000, date: new Date('2024-05-19T18:00:00Z') },
+        { project: 'Clean Water Initiative', amount: 10000, date: new Date('2024-05-20T11:00:00Z') },
+        { project: 'Clean Water Initiative', amount: 15000, date: new Date('2024-05-19T18:00:00Z') },
 
         // Donations for Community Health Posts
-        { id: 6, project: 'Community Health Posts', amount: 8000, date: new Date('2024-05-20T12:00:00Z') },
+        { project: 'Community Health Posts', amount: 8000, date: new Date('2024-05-20T12:00:00Z') },
 
         // Donations for Disaster Relief Fund
-        { id: 7, project: 'Disaster Relief Fund', amount: 25000, date: new Date('2024-05-20T13:00:00Z') },
-        { id: 8, project: 'Disaster Relief Fund', amount: 50000, date: new Date('2024-05-19T20:00:00Z') },
+        { project: 'Disaster Relief Fund', amount: 25000, date: new Date('2024-05-20T13:00:00Z') },
+        { project: 'Disaster Relief Fund', amount: 50000, date: new Date('2024-05-19T20:00:00Z') },
 
         // Donations for user-created campaigns
-        { id: 9, project: 'Rebuild the Local Library', amount: 3000, date: new Date('2024-05-20T14:00:00Z') },
-        { id: 10, project: 'Stray Animal Shelter Expansion', amount: 12000, date: new Date('2024-05-19T22:00:00Z') },
+        { project: 'Rebuild the Local Library', amount: 3000, date: new Date('2024-05-20T14:00:00Z') },
+        { project: 'Stray Animal Shelter Expansion', amount: 12000, date: new Date('2024-05-19T22:00:00Z') },
 
         // Donations for Operational Costs
-        { id: 11, project: 'Operational Costs', amount: 1000, date: new Date('2024-05-20T15:00:00Z') },
-        { id: 12, project: 'Operational Costs', amount: 2500, date: new Date('2024-05-18T16:00:00Z') },
-        { id: 13, project: 'Operational Costs', amount: 500, date: new Date('2024-05-17T11:00:00Z') },
+        { project: 'Operational Costs', amount: 1000, date: new Date('2024-05-20T15:00:00Z') },
+        { project: 'Operational Costs', amount: 2500, date: new Date('2024-05-18T16:00:00Z') },
+        { project: 'Operational Costs', amount: 500, date: new Date('2024-05-17T11:00:00Z') },
     ];
 
     return staticDonations.map((donation, index) => ({
         ...donation,
+        id: index + 1,
         donor: donorPool[index % donorPool.length],
     }));
 }
 
 
 export const allDonations: Donation[] = createDonationData();
-
-
-// This represents a small, "live" feed of the most recent donations
-export let recentDonations: Donation[] = allDonations.slice(0, 7);
-
 
 export type PhysicalDonation = {
     id: string;
@@ -1083,4 +1079,3 @@ export let platformSettings = {
     aiSummaryEnabled: true,
 }
     
-

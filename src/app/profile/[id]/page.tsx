@@ -92,9 +92,9 @@ export default function ProfilePage() {
             <AvatarImage src={user.avatarUrl} alt={user.name} />
             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
-          <div className="flex items-center justify-center gap-2">
-            <CardTitle className="text-2xl md:text-3xl">{user.name}</CardTitle>
-            <TooltipProvider>
+           <TooltipProvider>
+              <div className="flex items-center justify-center gap-2">
+                <CardTitle className="text-2xl md:text-3xl">{user.name}</CardTitle>
                 <div className="flex items-center gap-1">
                     {isDonor && (
                         <Tooltip>
@@ -109,7 +109,7 @@ export default function ProfilePage() {
                     {user.isProMember && (
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Sparkles className="h-6 w-6 text-primary cursor-pointer" />
+                                 <Sparkles className="h-6 w-6 text-primary cursor-pointer" />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Pro Member</p>
@@ -117,8 +117,8 @@ export default function ProfilePage() {
                         </Tooltip>
                     )}
                 </div>
-            </TooltipProvider>
-          </div>
+              </div>
+          </TooltipProvider>
           {user.email && <p className="text-muted-foreground">{user.email}</p>}
           <div className="mt-4 flex justify-center gap-2">
             {socialLinks.map((link) => (
@@ -176,7 +176,7 @@ export default function ProfilePage() {
                         return (
                         <TableRow key={donation.id}>
                             <TableCell className="font-medium">
-                            {donation.project === 'Operational Costs' ? (
+                             {donation.project === 'Operational Costs' ? (
                                 <Link
                                 href="/operational-costs"
                                 className="hover:underline"
