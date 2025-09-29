@@ -100,6 +100,12 @@ export let projects: Project[] = [
     donors: 450,
     verified: true,
     updates: [
+       {
+        id: 'update-notif-1',
+        title: 'New Donation Received!',
+        description: 'Jane Doe just donated $50. Thank you for your support!',
+        date: new Date(Date.now() - 1000 * 60 * 5),
+      },
       {
         id: 'update-1',
         title: 'New textbooks arrived!',
@@ -303,7 +309,7 @@ export let projects: Project[] = [
     ]
   },
   {
-    id: 'stray-animal-shelter',
+    id: 'stray-animal-shelter-expansion',
     name: 'Stray Animal Shelter Expansion',
     organization: 'Current User',
     ownerId: 'current-user',
