@@ -86,6 +86,8 @@ function getPageTitle(pathname: string): string {
         return 'Settings';
     case '/notifications':
         return 'Notifications';
+    case '/fund-relocation-policy':
+        return 'Fund Relocation Policy';
     default:
       return 'ClarityChain';
   }

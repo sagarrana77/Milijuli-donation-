@@ -20,8 +20,10 @@ import { Label } from '@/components/ui/label';
 import { CreditCard, DollarSign, Landmark, Save } from 'lucide-react';
 import { currentUser } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import { Checkbox } from '../ui/checkbox';
+import Link from 'next/link';
 
 interface DonationDialogProps {
   isOpen: boolean;
@@ -53,6 +55,7 @@ export function DonationDialog({
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [hasPaymentMethod, setHasPaymentMethod] = useState(currentUser?.hasPaymentMethod || false);
+  const [relocationConsent, setRelocationConsent] = useState(false);
   const { toast } = useToast();
 
   const ccForm = useForm<z.infer<typeof creditCardSchema>>({
@@ -71,10 +74,16 @@ export function DonationDialog({
       setError('Please enter a valid amount.');
       return;
     }
+     if (!relocationConsent) {
+      setError('Please consent to the fund relocation policy to proceed.');
+      return;
+    }
+    console.log(`Donation of $${numericAmount} for "${projectName}" with relocation consent: ${relocationConsent}`);
     onDonate(numericAmount);
     onOpenChange(false); // Close dialog on successful donation
     setAmount(''); // Reset amount
     setError('');
+    setRelocationConsent(false);
   };
 
   const handleSavePaymentMethod = () => {
@@ -100,7 +109,7 @@ export function DonationDialog({
 
   const handlePresetClick = (preset: number) => {
     setAmount(preset.toString());
-    setError('');
+    if (error) setError('');
   };
 
   return (
@@ -191,28 +200,45 @@ export function DonationDialog({
                 </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
-                <div className="grid grid-cols-3 gap-2">
-                    {presetAmounts.map(preset => (
-                        <Button key={preset} variant="outline" onClick={() => handlePresetClick(preset)}>
-                            ${preset}
-                        </Button>
-                    ))}
-                </div>
-                <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input
-                    id="amount"
-                    type="number"
-                    placeholder="Or enter custom amount"
-                    value={amount}
-                    onChange={(e) => {
-                        setAmount(e.target.value);
-                        if (error) setError('');
-                    }}
-                    className="pl-10 text-lg"
-                    />
-                </div>
-                {error && <p className="text-sm text-destructive">{error}</p>}
+                    <div className="grid grid-cols-3 gap-2">
+                        {presetAmounts.map(preset => (
+                            <Button key={preset} variant="outline" onClick={() => handlePresetClick(preset)}>
+                                ${preset}
+                            </Button>
+                        ))}
+                    </div>
+                    <div className="relative">
+                        <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input
+                        id="amount"
+                        type="number"
+                        placeholder="Or enter custom amount"
+                        value={amount}
+                        onChange={(e) => {
+                            setAmount(e.target.value);
+                            if (error) setError('');
+                        }}
+                        className="pl-10 text-lg"
+                        />
+                    </div>
+                    <div className="items-top flex space-x-2">
+                        <Checkbox id="terms1" checked={relocationConsent} onCheckedChange={(checked) => {
+                            setRelocationConsent(checked as boolean);
+                            if (error) setError('');
+                        }} />
+                        <div className="grid gap-1.5 leading-none">
+                            <label
+                            htmlFor="terms1"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                            I agree that my donation may be relocated if needed.
+                            </label>
+                            <p className="text-sm text-muted-foreground">
+                            If this project is over-funded or cancelled, your donation may be moved to another project. <Link href="/fund-relocation-policy" target="_blank" className="text-primary hover:underline">Learn More</Link>.
+                            </p>
+                        </div>
+                    </div>
+                    {error && <p className="text-sm text-destructive">{error}</p>}
                 </div>
                 <DialogFooter>
                 <DialogClose asChild>
