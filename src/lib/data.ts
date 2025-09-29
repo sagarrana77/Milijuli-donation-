@@ -525,8 +525,8 @@ export let users: User[] = [
         hasPaymentMethod: false,
         isAdmin: true,
         friends: ['user-sita-rai', 'user-hari-thapa'],
-        aiCredits: 10,
-        isProMember: false,
+        aiCredits: 100,
+        isProMember: true,
     },
     { 
         id: 'user-sita-rai', 
@@ -650,38 +650,48 @@ export type Donation = {
   date: Date;
 };
 
+// A seeded pseudo-random number generator to make our mock data deterministic
+function mulberry32(a: number) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+const random = mulberry32(12345);
+
+
 // This represents a larger, more complete list of donations for the whole platform
 export const allDonations: Donation[] = [
     ...projects.flatMap((project, projectIndex) => 
         Array.from({ length: project.donors }).map((_, i) => {
-            const donorUser = users[i % (users.length -1)]; // Cycle through users, skip admin
+            const donorUser = users[Math.floor(random() * (users.length -1))]; // Cycle through users, skip admin
             return {
                 id: projectIndex * 10000 + i,
                 donor: donorUser,
                 project: project.name,
-                amount: Math.floor(Math.random() * (project.targetAmount / project.donors * 2)) + 100, // Random-ish amount
-                date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000), // Random date in last 30 days
+                amount: Math.floor(random() * (project.targetAmount / project.donors * 2)) + 100, // Random-ish amount
+                date: new Date(Date.now() - Math.floor(random() * 30) * 24 * 60 * 60 * 1000), // Random date in last 30 days
             };
         })
     ),
     // Add operational cost donations
     ...Array.from({ length: operationalCostsFund.donors }).map((_, i) => {
-         const donorUser = users[i % (users.length -1)];
+         const donorUser = users[Math.floor(random() * (users.length -1))];
          return {
             id: 900000 + i,
             donor: donorUser,
             project: 'Operational Costs',
-            amount: Math.floor(Math.random() * 20000) + 1000,
-            date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000),
+            amount: Math.floor(random() * 20000) + 1000,
+            date: new Date(Date.now() - Math.floor(random() * 30) * 24 * 60 * 60 * 1000),
         }
     })
-];
+].sort((a, b) => b.date.getTime() - a.date.getTime());
 
 
 // This represents a small, "live" feed of the most recent donations
-export let recentDonations: Donation[] = allDonations
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
-    .slice(0, 7);
+export let recentDonations: Donation[] = allDonations.slice(0, 7);
 
 
 export type PhysicalDonation = {
