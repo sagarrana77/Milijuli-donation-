@@ -27,7 +27,6 @@ import { Badge } from '@/components/ui/badge';
 import {
   MoreHorizontal,
   PlusCircle,
-  QrCode,
   CreditCard,
   KeyRound,
   MessageSquare,
@@ -44,7 +43,7 @@ import {
   BookOpen,
   HandCoins,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings } from '@/lib/data';
 import type { PhysicalDonation } from '@/lib/data';
 import {
   DropdownMenu,
@@ -217,6 +216,15 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleUserQrToggle = (enabled: boolean) => {
+    platformSettings.userQrPaymentsEnabled = enabled;
+    setForceRender(c => c + 1);
+    toast({
+        title: 'Setting Updated!',
+        description: `User campaign QR codes have been ${enabled ? 'enabled' : 'disabled'}.`
+    });
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <RecordExpenseDialog 
@@ -310,13 +318,23 @@ export default function AdminDashboardPage() {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                             <CreditCard />
-                            Payment Gateways
+                            Platform Payment Gateways
                             </CardTitle>
                             <CardDescription>
-                            Enable gateways and generate QR codes for donations.
+                            Enable gateways and generate QR codes for platform-wide donations. These are the defaults.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
+                            <div className="rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <Label htmlFor="user-qr-switch" className="text-lg font-medium">Enable User Campaign QR Codes</Label>
+                                        <p className="text-sm text-muted-foreground">Allow users to configure their own QR codes on their campaigns.</p>
+                                    </div>
+                                    <Switch id="user-qr-switch" checked={platformSettings.userQrPaymentsEnabled} onCheckedChange={handleUserQrToggle} />
+                                </div>
+                            </div>
+
                             {paymentGateways.map((gateway, index) => (
                                 <div key={gateway.name} className="space-y-4 rounded-md border p-4">
                                     <div className="flex items-center justify-between">
@@ -745,3 +763,6 @@ export default function AdminDashboardPage() {
 
 
 
+
+
+    

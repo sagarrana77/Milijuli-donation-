@@ -1,11 +1,12 @@
 
+
 'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { paymentGateways as defaultPaymentGateways } from '@/lib/data';
-import type { Gateway } from '@/lib/data';
+import { paymentGateways as defaultPaymentGateways, platformSettings } from '@/lib/data';
+import type { Gateway, Project } from '@/lib/data';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const PlaceholderLogo = ({ name }: { name: string }) => (
@@ -18,14 +19,21 @@ const PlaceholderLogo = ({ name }: { name: string }) => (
 );
 
 interface PaymentGatewaysProps {
-    gateways?: Gateway[];
+    project: Project;
 }
 
-export function PaymentGateways({ gateways }: PaymentGatewaysProps) {
+export function PaymentGateways({ project }: PaymentGatewaysProps) {
   const [selectedGateway, setSelectedGateway] = useState<Gateway | null>(null);
+
+  const isAdminProject = !project.ownerId || project.ownerId === 'clarity-chain-admin';
+  const showUserGateways = !isAdminProject && platformSettings.userQrPaymentsEnabled && project.gateways && project.gateways.length > 0 && project.gateways.some(g => g.enabled);
   
-  const availableGateways = gateways && gateways.length > 0 ? gateways : defaultPaymentGateways;
+  const availableGateways = showUserGateways ? project.gateways! : defaultPaymentGateways;
   const enabledGateways = availableGateways.filter((g) => g.enabled);
+
+  if (enabledGateways.length === 0) {
+    return null; // Don't render the component if no gateways are enabled.
+  }
 
   const handleGatewayClick = (gateway: Gateway) => {
     if (selectedGateway?.name === gateway.name) {
@@ -80,3 +88,5 @@ export function PaymentGateways({ gateways }: PaymentGatewaysProps) {
     </div>
   );
 }
+
+    

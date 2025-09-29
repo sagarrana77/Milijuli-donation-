@@ -3,7 +3,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -26,9 +26,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, CreditCard } from 'lucide-react';
 import Link from 'next/link';
-import { projects, currentUser } from '@/lib/data';
+import { projects, currentUser, paymentGateways as defaultGateways } from '@/lib/data';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Switch } from '@/components/ui/switch';
+import Image from 'next/image';
+
+const gatewaySchema = z.object({
+    name: z.string(),
+    enabled: z.boolean(),
+    qrValue: z.string(),
+    generatedQr: z.string(),
+});
 
 const projectSchema = z.object({
   name: z.string().min(5, 'Project name must be at least 5 characters.'),
@@ -38,6 +48,7 @@ const projectSchema = z.object({
   imageUrl: z.string().url('Please enter a valid image URL.'),
   imageHint: z.string().min(2, 'Image hint is required.'),
   targetAmount: z.coerce.number().positive('Target amount must be a positive number.'),
+  gateways: z.array(gatewaySchema).optional(),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
@@ -56,7 +67,13 @@ export default function CreateCampaignPage() {
       imageUrl: '',
       imageHint: '',
       targetAmount: 0,
+      gateways: defaultGateways.map(g => ({...g, enabled: false, qrValue: '', generatedQr: ''}))
     },
+  });
+  
+  const { fields: gatewayFields } = useFieldArray({
+    control: form.control,
+    name: "gateways"
   });
 
   function onSubmit(data: ProjectFormData) {
@@ -89,6 +106,17 @@ export default function CreateCampaignPage() {
     router.push('/my-campaigns');
   }
 
+  const handleGenerateQr = (index: number) => {
+    const gateways = form.getValues('gateways');
+    if(gateways) {
+        const gateway = gateways[index];
+        if (gateway && gateway.qrValue) {
+            const newQr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(gateway.qrValue)}`;
+            form.setValue(`gateways.${index}.generatedQr`, newQr, { shouldDirty: true });
+        }
+    }
+  };
+
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8">
@@ -100,138 +128,220 @@ export default function CreateCampaignPage() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Campaign Details</CardTitle>
-              <CardDescription>
-                Basic information about your new campaign.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Campaign Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Help Rebuild the Local Library" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="organization"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Your Name or Organization Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Friends of the Library" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Short Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="A brief, one-sentence summary of your campaign."
-                        {...field}
-                      />
-                    </FormControl>
-                     <FormDescription>
-                        This will be shown on campaign cards.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="longDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Campaign Story</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        rows={6}
-                        placeholder="Tell your story. Describe the campaign's goals, why it's important, and the impact it will have."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                        This will be shown on the main campaign page. Use markdown for formatting if needed.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
+          <Tabs defaultValue="details">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="details">Campaign Details</TabsTrigger>
+                <TabsTrigger value="gateways">Payments</TabsTrigger>
+            </TabsList>
+            <TabsContent value="details" className="space-y-8 mt-6">
+                <Card>
+                    <CardHeader>
+                    <CardTitle>Campaign Details</CardTitle>
+                    <CardDescription>
+                        Basic information about your new campaign.
+                    </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                    <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Campaign Name</FormLabel>
+                            <FormControl>
+                            <Input placeholder="e.g., Help Rebuild the Local Library" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="organization"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Your Name or Organization Name</FormLabel>
+                            <FormControl>
+                            <Input placeholder="e.g., Friends of the Library" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Short Description</FormLabel>
+                            <FormControl>
+                            <Textarea
+                                placeholder="A brief, one-sentence summary of your campaign."
+                                {...field}
+                            />
+                            </FormControl>
+                            <FormDescription>
+                                This will be shown on campaign cards.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="longDescription"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Full Campaign Story</FormLabel>
+                            <FormControl>
+                            <Textarea
+                                rows={6}
+                                placeholder="Tell your story. Describe the campaign's goals, why it's important, and the impact it will have."
+                                {...field}
+                            />
+                            </FormControl>
+                            <FormDescription>
+                                This will be shown on the main campaign page. Use markdown for formatting if needed.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    </CardContent>
+                </Card>
 
-           <Card>
-            <CardHeader>
-              <CardTitle>Media & Goals</CardTitle>
-               <CardDescription>
-                Set the main image and financial target for your campaign.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-               <FormField
-                control={form.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Header Image URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://images.unsplash.com/..." {...field} />
-                    </FormControl>
-                     <FormDescription>
-                        Please provide a high-quality image URL (e.g., from Unsplash).
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="imageHint"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image AI Hint</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., children reading" {...field} />
-                    </FormControl>
-                     <FormDescription>
-                        Provide 1-2 keywords for AI to find replacement images.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="targetAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fundraising Target ($)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="5000" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
+                <Card>
+                    <CardHeader>
+                    <CardTitle>Media & Goals</CardTitle>
+                    <CardDescription>
+                        Set the main image and financial target for your campaign.
+                    </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                    <FormField
+                        control={form.control}
+                        name="imageUrl"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Header Image URL</FormLabel>
+                            <FormControl>
+                            <Input placeholder="https://images.unsplash.com/..." {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                Please provide a high-quality image URL (e.g., from Unsplash).
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="imageHint"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Image AI Hint</FormLabel>
+                            <FormControl>
+                            <Input placeholder="e.g., children reading" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                Provide 1-2 keywords for AI to find replacement images.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="targetAmount"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Fundraising Target ($)</FormLabel>
+                            <FormControl>
+                            <Input type="number" placeholder="5000" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    </CardContent>
+                </Card>
+            </TabsContent>
+            <TabsContent value="gateways" className="mt-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                        <CreditCard />
+                        Payment Gateways
+                        </CardTitle>
+                        <CardDescription>
+                        Enable gateways and generate QR codes for your campaign. These will override the platform's default gateways.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        {gatewayFields.map((field, index) => (
+                            <div key={field.id} className="space-y-4 rounded-md border p-4">
+                                <div className="flex items-center justify-between">
+                                    <FormField
+                                        control={form.control}
+                                        name={`gateways.${index}.name`}
+                                        render={({ field }) => (
+                                        <FormLabel className="text-lg font-medium">{field.value}</FormLabel>
+                                        )}
+                                    />
+                                     <FormField
+                                        control={form.control}
+                                        name={`gateways.${index}.enabled`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <Switch
+                                                        checked={field.value}
+                                                        onCheckedChange={field.onChange}
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
+                                <FormField
+                                        control={form.control}
+                                        name={`gateways.${index}.qrValue`}
+                                        render={({ field }) => (
+                                <FormItem>
+                                <FormLabel className="text-sm font-normal">Payment URL or ID</FormLabel>
+                                <div className="flex gap-2">
+                                    <FormControl>
+                                    <Input
+                                        placeholder={`Enter ${form.getValues(`gateways.${index}.name`)} URL or ID`}
+                                        {...field}
+                                    />
+                                    </FormControl>
+                                    <Button type="button" onClick={() => handleGenerateQr(index)}>Generate QR</Button>
+                                </div>
+                                <FormMessage />
+                                </FormItem>
+                                )}
+                                />
+                                {form.watch(`gateways.${index}.generatedQr`) && (
+                                    <div className="flex flex-col items-center gap-2 rounded-lg bg-muted p-3 sm:flex-row">
+                                        <Image
+                                            src={form.watch(`gateways.${index}.generatedQr`)}
+                                            alt={`${form.watch(`gateways.${index}.name`)} QR Code`}
+                                            width={150}
+                                            height={150}
+                                            data-ai-hint="qr code"
+                                        />
+                                        <p className="text-center text-xs text-muted-foreground break-all sm:text-left">
+                                            QR Code for: {form.watch(`gateways.${index}.qrValue`)}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            </TabsContent>
+          </Tabs>
           <div className="flex gap-4">
             <Button type="submit">
                 <PlusCircle className="mr-2 h-4 w-4" /> Launch Campaign
@@ -245,3 +355,5 @@ export default function CreateCampaignPage() {
     </div>
   );
 }
+
+    

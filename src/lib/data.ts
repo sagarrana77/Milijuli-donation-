@@ -27,7 +27,7 @@ export type WishlistItem = {
   allowInKind?: boolean;
 }
 
-export type ProjectGateway = {
+export type Gateway = {
     name: string;
     enabled: boolean;
     qrValue: string;
@@ -65,7 +65,7 @@ export type Project = {
   }[];
   discussion: Comment[];
   wishlist: WishlistItem[];
-  gateways?: ProjectGateway[];
+  gateways?: Gateway[];
 };
 
 export let projects: Project[] = [
@@ -903,13 +903,6 @@ export let socialLinks = {
     instagram: 'https://instagram.com/your-profile',
     messenger: 'your.username'
 }
-
-export type Gateway = {
-    name: string;
-    enabled: boolean;
-    qrValue: string;
-    generatedQr: string;
-};
   
 export let paymentGateways: Gateway[] = [
     { name: 'Esewa', enabled: true, qrValue: 'esewa-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=esewa-id' },
@@ -919,8 +912,15 @@ export let paymentGateways: Gateway[] = [
     { name: 'Stripe', enabled: true, qrValue: 'stripe-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=stripe-id' },
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
+
+export let platformSettings = {
+    userQrPaymentsEnabled: true,
+}
     
 
 
 
 
+
+
+    

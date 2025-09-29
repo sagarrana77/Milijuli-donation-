@@ -1,5 +1,6 @@
 
 
+
 'use client';
 
 import Image from 'next/image';
@@ -142,7 +143,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                         <CardTitle>Donate via QR</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center gap-4">
-                        <PaymentGateways gateways={project.gateways} />
+                        <PaymentGateways project={project} />
                     </CardContent>
                 </Card>
               </ScrollFadeIn>
@@ -150,3 +151,5 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
           </div>
     )
 }
+
+    
