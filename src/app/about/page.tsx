@@ -66,92 +66,97 @@ export default function AboutPage() {
           </div>
         </section>
       </ScrollFadeIn>
-
-      <ScrollFadeIn asChild>
-        <section>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl">Our Mission</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-lg text-muted-foreground">
-                {aboutContent.mission}
-              </p>
-            </CardContent>
-          </Card>
-        </section>
-      </ScrollFadeIn>
       
-      <ScrollFadeIn asChild>
-        <section>
-          <h2 className="mb-6 text-center text-3xl font-bold">How We Practice Transparency</h2>
-           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {features.map((feature, index) => (
-              <ScrollFadeIn key={feature.title} delay={index * 100}>
-                <Card className="h-full">
-                  <CardHeader className="flex-row items-start gap-4">
-                    <div className="rounded-full bg-primary/10 p-3 text-primary">
-                      <feature.icon className="h-6 w-6" />
-                    </div>
-                     <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </section>
-      </ScrollFadeIn>
-
-      <ScrollFadeIn asChild>
-        <section>
-          <h2 className="mb-6 text-center text-3xl font-bold">Meet Our Team</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {teamMembers.map((member, index) => (
-              <ScrollFadeIn key={member.id} delay={index * 100}>
-                <Card className="text-center transition-shadow hover:shadow-lg">
-                  <Link href={`/team/${member.id}`}>
-                    <CardContent className="p-6">
-                      <Avatar className="mx-auto mb-4 h-24 w-24 border-4 border-primary/20">
-                        <AvatarImage src={member.avatarUrl} alt={member.name} />
-                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <h3 className="text-xl font-semibold">{member.name}</h3>
-                      <p className="text-primary">{member.role}</p>
-                      <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{member.bio}</p>
-                    </CardContent>
-                  </Link>
-                </Card>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </section>
-      </ScrollFadeIn>
-
-      <ScrollFadeIn asChild>
-        <section>
-          <h2 className="mb-6 text-center text-3xl font-bold">Our Core Values</h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {values.map((value, index) => (
-              <ScrollFadeIn key={value.title} delay={index * 100}>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="md:col-span-2 space-y-12">
+            <ScrollFadeIn asChild>
+                <section>
                 <Card>
-                  <CardHeader className="flex-row items-center gap-4">
-                    <div className="rounded-full bg-primary/10 p-2 text-primary">
-                      <CheckCircle className="h-6 w-6" />
-                    </div>
-                    <CardTitle>{value.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{value.description}</p>
-                  </CardContent>
+                    <CardHeader>
+                    <CardTitle className="text-3xl">Our Mission</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                    <p className="text-lg text-muted-foreground">
+                        {aboutContent.mission}
+                    </p>
+                    </CardContent>
                 </Card>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </section>
-      </ScrollFadeIn>
+                </section>
+            </ScrollFadeIn>
+            
+            <ScrollFadeIn asChild>
+                <section>
+                <h2 className="mb-6 text-center text-3xl font-bold">How We Practice Transparency</h2>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    {features.map((feature, index) => (
+                    <ScrollFadeIn key={feature.title} delay={index * 100}>
+                        <Card className="h-full">
+                        <CardHeader className="flex-row items-start gap-4">
+                            <div className="rounded-full bg-primary/10 p-3 text-primary">
+                            <feature.icon className="h-6 w-6" />
+                            </div>
+                            <CardTitle className="text-xl">{feature.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">{feature.description}</p>
+                        </CardContent>
+                        </Card>
+                    </ScrollFadeIn>
+                    ))}
+                </div>
+                </section>
+            </ScrollFadeIn>
+
+            <ScrollFadeIn asChild>
+                <section>
+                <h2 className="mb-6 text-center text-3xl font-bold">Meet Our Team</h2>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    {teamMembers.map((member, index) => (
+                    <ScrollFadeIn key={member.id} delay={index * 100}>
+                        <Card className="text-center transition-shadow hover:shadow-lg">
+                        <Link href={`/team/${member.id}`}>
+                            <CardContent className="p-6">
+                            <Avatar className="mx-auto mb-4 h-24 w-24 border-4 border-primary/20">
+                                <AvatarImage src={member.avatarUrl} alt={member.name} />
+                                <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <h3 className="text-xl font-semibold">{member.name}</h3>
+                            <p className="text-primary">{member.role}</p>
+                            <p className="mt-2 text-sm text-muted-foreground line-clamp-3">{member.bio}</p>
+                            </CardContent>
+                        </Link>
+                        </Card>
+                    </ScrollFadeIn>
+                    ))}
+                </div>
+                </section>
+            </ScrollFadeIn>
+        </div>
+        <div className="md:col-span-1">
+             <ScrollFadeIn asChild>
+                <aside className="sticky top-24 space-y-8">
+                     <Card>
+                        <CardHeader>
+                            <CardTitle className="text-2xl">Our Core Values</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                             {values.map((value, index) => (
+                                <div key={value.title}>
+                                    <div className="flex items-center gap-3">
+                                        <div className="rounded-full bg-primary/10 p-2 text-primary">
+                                        <CheckCircle className="h-5 w-5" />
+                                        </div>
+                                        <h3 className="text-lg font-semibold">{value.title}</h3>
+                                    </div>
+                                    <p className="mt-2 text-muted-foreground">{value.description}</p>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </aside>
+            </ScrollFadeIn>
+        </div>
+      </div>
     </div>
   );
 }

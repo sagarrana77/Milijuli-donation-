@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -71,7 +70,7 @@ export default function OperationalCostsPage() {
   );
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl space-y-8">
       <DonationDialog
         isOpen={isDonationOpen}
         onOpenChange={setIsDonationOpen}
