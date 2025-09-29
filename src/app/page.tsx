@@ -156,29 +156,6 @@ export default function DashboardPage() {
             </div>
         </section>
       </ScrollFadeIn>
-
-       <ScrollFadeIn>
-          <Card>
-            <CardHeader>
-              <CardTitle>Expense Breakdown</CardTitle>
-              <CardDescription>
-                How funds are being allocated across categories.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col items-center">
-              <ExpenseChart data={currentDashboardStats.spendingBreakdown} />
-               <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
-                  {currentDashboardStats.spendingBreakdown.map((entry) => (
-                      <div key={entry.name} className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1">
-                          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
-                          <span className="text-foreground">{entry.name}</span>
-                          <span className="font-mono text-xs text-muted-foreground">${entry.value.toLocaleString()}</span>
-                      </div>
-                  ))}
-              </div>
-            </CardContent>
-          </Card>
-        </ScrollFadeIn>
       
       <ScrollFadeIn asChild>
         <section>
@@ -218,6 +195,28 @@ export default function DashboardPage() {
         </section>
       </ScrollFadeIn>
 
+       <ScrollFadeIn>
+          <Card>
+            <CardHeader>
+              <CardTitle>Expense Breakdown</CardTitle>
+              <CardDescription>
+                How funds are being allocated across categories.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center">
+              <ExpenseChart data={currentDashboardStats.spendingBreakdown} />
+               <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+                  {currentDashboardStats.spendingBreakdown.map((entry) => (
+                      <div key={entry.name} className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1">
+                          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
+                          <span className="text-foreground">{entry.name}</span>
+                      </div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        </ScrollFadeIn>
+      
       <ScrollFadeIn asChild>
         <section>
             <div className="mb-4 flex items-center gap-3">
