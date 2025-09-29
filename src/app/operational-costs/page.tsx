@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -29,36 +30,23 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function OperationalCostsPage() {
   const [operationalCostsFund, setOperationalCostsFund] = useState(initialOperationalCostsFund);
-  const [raisedAmount, setRaisedAmount] = useState(
-    operationalCostsFund.raisedAmount
-  );
-  const [donors, setDonors] = useState(operationalCostsFund.donors);
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     setIsClient(true);
-    if (raisedAmount >= operationalCostsFund.targetAmount) {
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setRaisedAmount((prev) => {
-        const newAmount = prev + Math.floor(Math.random() * 5000) + 500;
-        return Math.min(newAmount, operationalCostsFund.targetAmount);
-      });
-      if (Math.random() > 0.7) {
-        setDonors((prev) => prev + 1);
-      }
-    }, 5000); // Simulate new donation every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [raisedAmount, operationalCostsFund.targetAmount]);
+    // This effect will re-sync the state if the underlying mock data changes (e.g., via admin actions)
+    setOperationalCostsFund(initialOperationalCostsFund);
+  }, [initialOperationalCostsFund.raisedAmount, initialOperationalCostsFund.donors]);
 
   const handleDonation = (amount: number) => {
-    setRaisedAmount((prev) => prev + amount);
-    setDonors((prev) => prev + 1);
+    // In a real app, this state update would come from a data refetch after mutation
+    setOperationalCostsFund(prev => ({
+        ...prev,
+        raisedAmount: prev.raisedAmount + amount,
+        donors: prev.donors + 1
+    }));
     toast({
       title: 'Thank You for Your Support!',
       description: `Your generous donation of Rs.${amount} will help us continue our mission.`,
@@ -67,7 +55,7 @@ export default function OperationalCostsPage() {
   };
 
   const percentage = Math.round(
-    (raisedAmount / operationalCostsFund.targetAmount) * 100
+    (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
   );
 
   return (
@@ -128,10 +116,10 @@ export default function OperationalCostsPage() {
                   />
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-muted-foreground">Raised</span>
+                      <span className="font-bold text-muted-foreground">Available</span>
                       <div>
                         <p className="font-bold">
-                          Rs.{raisedAmount.toLocaleString()}
+                          Rs.{operationalCostsFund.raisedAmount.toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -147,7 +135,7 @@ export default function OperationalCostsPage() {
                     <div className="flex items-center gap-2">
                       <Users className="h-4 w-4 text-muted-foreground" />
                       <div>
-                        <p className="font-bold">{donors.toLocaleString()}</p>
+                        <p className="font-bold">{operationalCostsFund.donors.toLocaleString()}</p>
                         <p className="text-muted-foreground">Donors</p>
                       </div>
                     </div>

@@ -45,7 +45,7 @@ import {
   Receipt,
   ShoppingCart,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
 import {
   DropdownMenu,
@@ -208,20 +208,19 @@ export default function AdminDashboardPage() {
   }
 
   const handleExpenseRecorded = (data: { project: string; item: string; amount: number }) => {
-    // Find the project associated with the expense
     const project = projects.find(p => p.name === data.project);
 
-    // If a project is found (and it's not Operational Costs), deduct the expense
-    if (project) {
+    if (data.project === 'Operational Costs') {
+        operationalCostsFund.raisedAmount -= data.amount;
+    } else if (project) {
         project.raisedAmount -= data.amount;
-
-        // Create a new update for the expense
+        // Create a new update for the project expense
         const newUpdate: Project['updates'][0] = {
             id: `update-expense-${Date.now()}`,
             title: 'Funds Utilized for Project Expense',
             description: `An amount of Rs.${data.amount.toLocaleString()} was spent on "${data.item}".`,
             date: new Date(),
-            isExpense: true, // Custom flag to identify expense updates
+            isExpense: true,
             expenseDetails: {
                 item: data.item,
                 amount: data.amount,
@@ -229,8 +228,7 @@ export default function AdminDashboardPage() {
         };
         project.updates.unshift(newUpdate);
     }
-    
-    // This part handles the overall financial stats, which is correct
+
     const categoryMap: { [key: string]: string } = {
         'Education for All Nepal': 'Education',
         'Clean Water Initiative': 'Health',
@@ -241,7 +239,7 @@ export default function AdminDashboardPage() {
 
     const categoryName = categoryMap[data.project] || 'Misc';
     const spendingCategory = dashboardStats.spendingBreakdown.find(c => c.name === categoryName);
-    
+
     if (spendingCategory) {
         spendingCategory.value += data.amount;
     } else {
@@ -253,38 +251,45 @@ export default function AdminDashboardPage() {
 
     toast({
         title: 'Expense Recorded!',
-        description: 'The expense has been logged, project funds updated, and a new update has been posted.',
+        description: 'The expense has been logged and relevant funds updated.',
     });
     setForceRender(c => c + 1);
-  }
+}
+
 
   const handleFundsTransferred = (data: { from: string; to: string; amount: number; reason: string }) => {
     const fromProject = projects.find(p => p.name === data.from);
     const toProject = projects.find(p => p.name === data.to);
 
-    if (fromProject) fromProject.raisedAmount -= data.amount;
-    if (toProject) toProject.raisedAmount += data.amount;
+    if (data.from === 'Operational Costs') {
+        operationalCostsFund.raisedAmount -= data.amount;
+    } else if (fromProject) {
+        fromProject.raisedAmount -= data.amount;
+        const fromUpdate = {
+            id: `update-transfer-from-${Date.now()}`,
+            title: 'Fund Transfer',
+            description: `An amount of Rs.${data.amount.toLocaleString()} was transferred from this project to "${data.to}". Reason: ${data.reason}`,
+            date: new Date(),
+            isTransfer: true,
+            transferDetails: { amount: data.amount, toProject: data.to }
+        };
+        fromProject.updates.unshift(fromUpdate);
+    }
     
-    // Create updates for both projects
-    const fromUpdate = {
-        id: `update-transfer-from-${Date.now()}`,
-        title: 'Fund Transfer',
-        description: `An amount of Rs.${data.amount.toLocaleString()} was transferred from this project to "${data.to}". Reason: ${data.reason}`,
-        date: new Date(),
-        isTransfer: true,
-        transferDetails: { amount: data.amount, toProject: data.to }
-    };
-     const toUpdate = {
-        id: `update-transfer-to-${Date.now()}`,
-        title: 'Funds Received',
-        description: `An amount of Rs.${data.amount.toLocaleString()} was received from "${data.from}". Reason: ${data.reason}`,
-        date: new Date(),
-        isTransfer: true,
-        transferDetails: { amount: data.amount, fromProject: data.from }
-    };
-    
-    if (fromProject) fromProject.updates.unshift(fromUpdate);
-    if (toProject) toProject.updates.unshift(toUpdate);
+    if (data.to === 'Operational Costs') {
+        operationalCostsFund.raisedAmount += data.amount;
+    } else if (toProject) {
+        toProject.raisedAmount += data.amount;
+        const toUpdate = {
+            id: `update-transfer-to-${Date.now()}`,
+            title: 'Funds Received',
+            description: `An amount of Rs.${data.amount.toLocaleString()} was received from "${data.from}". Reason: ${data.reason}`,
+            date: new Date(),
+            isTransfer: true,
+            transferDetails: { amount: data.amount, fromProject: data.from }
+        };
+        toProject.updates.unshift(toUpdate);
+    }
 
     toast({
         title: 'Funds Transferred',

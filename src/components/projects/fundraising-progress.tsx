@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import {
@@ -28,7 +29,7 @@ export function FundraisingProgress() {
             <Progress value={percentage} className="h-3" aria-label={`${percentage}% funded`} />
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-muted-foreground">Raised</span>
+                <span className="font-bold text-muted-foreground">Available</span>
                 <div>
                   <p className="font-bold">Rs.{raisedAmount.toLocaleString()}</p>
                 </div>
