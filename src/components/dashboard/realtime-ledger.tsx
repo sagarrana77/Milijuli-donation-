@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { recentDonations, projects, users, type Donor } from '@/lib/data';
-import { format } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
 const allDonors: Donor[] = users.map(({ id, name, avatarUrl, profileUrl, bio }) => ({
@@ -101,7 +101,7 @@ export function RealtimeLedger() {
                 </TableCell>
                 <TableCell>{donation.project}</TableCell>
                 <TableCell className="text-right">${donation.amount.toLocaleString()}</TableCell>
-                <TableCell className="text-right">{format(donation.date, 'PPp')}</TableCell>
+                <TableCell className="text-right">{isClient ? formatDistanceToNow(donation.date, { addSuffix: true }) : ''}</TableCell>
               </TableRow>
             ))}
           </TableBody>

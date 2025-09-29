@@ -82,7 +82,7 @@ export function InKindPledges() {
                         <span className="capitalize">{pledge.donationType.replace('-', ' ')}</span>
                     </Badge>
                 </TableCell>
-                <TableCell className="text-right">{formatDistanceToNow(pledge.date, { addSuffix: true })}</TableCell>
+                <TableCell className="text-right">{isClient ? formatDistanceToNow(pledge.date, { addSuffix: true }) : ''}</TableCell>
               </TableRow>
             ))}
           </TableBody>

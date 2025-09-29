@@ -31,7 +31,7 @@ import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
-import { InKindPledges } from '@/components/dashboard/in-kind-pledges';
+import { InKindDonationsSlider } from '@/components/dashboard/in-kind-donations-slider';
 
 export default function DashboardPage() {
     const [currentDashboardStats, setCurrentDashboardStats] = useState(dashboardStats);
@@ -133,7 +133,7 @@ export default function DashboardPage() {
           <RealtimeLedger />
         </ScrollFadeIn>
         <ScrollFadeIn>
-          <InKindPledges />
+          <InKindDonationsSlider />
         </ScrollFadeIn>
       </div>
 

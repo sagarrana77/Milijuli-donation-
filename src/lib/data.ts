@@ -780,9 +780,9 @@ let faqs: FAQ[] = [
   },
   {
     id: 'faq-3',
-    question: 'How does a project get a "Verified" badge?',
+    question: "How does a project get a 'Verified' badge?",
     answer:
-      'To earn a "Verified" badge, an organization must undergo our standard due diligence process. This badge indicates that the organization is legitimate and has been vetted by ClarityChain.\n\nHere is the standard checklist to become verified:\n1. Proof of legal registration as a non-profit or charitable organization.\n2. Publicly available information about the organization\'s mission and leadership.\n3. A clear and detailed project proposal with a specific budget.\n4. Identity verification for the project leaders.',
+      "A 'Verified' badge indicates that the organization has undergone a basic due diligence process by our team. This confirms that it is a legally registered entity with a stated mission. To become verified, organizations must provide proof of legal registration and identity verification for their leaders.",
   },
   {
     id: 'faq-4',
@@ -831,8 +831,3 @@ export let paymentGateways: Gateway[] = [
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
-
-
-
-
-
