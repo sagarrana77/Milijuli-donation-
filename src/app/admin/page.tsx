@@ -43,6 +43,7 @@ import {
   Wand2,
   Loader2,
   Receipt,
+  ShoppingCart,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -207,23 +208,43 @@ export default function AdminDashboardPage() {
   }
 
   const handleExpenseRecorded = (data: { project: string; item: string; amount: number }) => {
+    // Find the project associated with the expense
+    const project = projects.find(p => p.name === data.project);
+
+    // If a project is found (and it's not Operational Costs), deduct the expense
+    if (project) {
+        project.raisedAmount -= data.amount;
+
+        // Create a new update for the expense
+        const newUpdate: Project['updates'][0] = {
+            id: `update-expense-${Date.now()}`,
+            title: 'Funds Utilized for Project Expense',
+            description: `An amount of Rs.${data.amount.toLocaleString()} was spent on "${data.item}".`,
+            date: new Date(),
+            isExpense: true, // Custom flag to identify expense updates
+            expenseDetails: {
+                item: data.item,
+                amount: data.amount,
+            }
+        };
+        project.updates.unshift(newUpdate);
+    }
+    
+    // This part handles the overall financial stats, which is correct
     const categoryMap: { [key: string]: string } = {
         'Education for All Nepal': 'Education',
-        'Clean Water Initiative': 'Health', // Or a new 'Water' category
+        'Clean Water Initiative': 'Health',
         'Community Health Posts': 'Health',
         'Disaster Relief Fund': 'Relief',
         'Operational Costs': 'Operational'
     };
 
     const categoryName = categoryMap[data.project] || 'Misc';
-    
     const spendingCategory = dashboardStats.spendingBreakdown.find(c => c.name === categoryName);
     
     if (spendingCategory) {
         spendingCategory.value += data.amount;
     } else {
-        // If the category doesn't exist, you might want to add it.
-        // For this example, we assume it exists from the initial data.
         console.warn(`Category "${categoryName}" not found in spending breakdown.`);
     }
 
@@ -231,8 +252,8 @@ export default function AdminDashboardPage() {
     dashboardStats.fundsInHand -= data.amount;
 
     toast({
-        title: 'Expense Recorded',
-        description: 'The expense has been successfully logged and the dashboard updated.',
+        title: 'Expense Recorded!',
+        description: 'The expense has been logged, project funds updated, and a new update has been posted.',
     });
     setForceRender(c => c + 1);
   }
@@ -1066,3 +1087,4 @@ export default function AdminDashboardPage() {
 }
 
     
+

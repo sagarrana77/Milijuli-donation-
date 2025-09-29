@@ -34,7 +34,12 @@ export type Update = {
         donorName: string;
         itemName: string;
         quantity: number;
-    }
+    };
+    isExpense?: boolean;
+    expenseDetails?: {
+        item: string;
+        amount: number;
+    };
 };
 
 export type WishlistItem = {
