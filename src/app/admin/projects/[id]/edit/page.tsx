@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy } from 'lucide-react';
+import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy, Pin } from 'lucide-react';
 import Link from 'next/link';
 import { projects, type Project, currentUser } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -54,6 +54,7 @@ const updateSchema = z.object({
   date: z.date(),
   imageUrl: z.string().url("Image URL is required."),
   imageHint: z.string().min(1, "Image hint is required."),
+  pinned: z.boolean().optional(),
 });
 
 const projectSchema = z.object({
@@ -92,7 +93,7 @@ export default function EditProjectPage() {
     defaultValues: project ? {
       ...project,
       wishlist: project.wishlist?.map(item => ({...item, allowInKind: item.allowInKind || false})) || [],
-      updates: project.updates?.map(update => ({...update, date: new Date(update.date)})) || [],
+      updates: project.updates?.map(update => ({...update, date: new Date(update.date), pinned: update.pinned || false})) || [],
       metaDescription: project.metaDescription || '',
       keywords: project.keywords || [],
     } : undefined,
@@ -577,6 +578,26 @@ export default function EditProjectPage() {
                                             </FormItem>
                                         )}
                                     />
+                                    <FormField
+                                        control={form.control}
+                                        name={`updates.${index}.pinned`}
+                                        render={({ field }) => (
+                                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                            <div className="space-y-0.5">
+                                                <FormLabel className="flex items-center gap-2"><Pin className="h-4 w-4" /> Pin this update</FormLabel>
+                                                <FormDescription>
+                                                Pinned updates will appear at the top of the feed.
+                                                </FormDescription>
+                                            </div>
+                                            <FormControl>
+                                                <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                                />
+                                            </FormControl>
+                                            </FormItem>
+                                        )}
+                                        />
                                     <Button size="sm" variant="destructive" onClick={() => removeUpdate(index)} className="absolute top-2 right-2">
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -585,7 +606,7 @@ export default function EditProjectPage() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => appendUpdate({ id: `update-${Date.now()}`, title: '', description: '', date: new Date(), imageUrl: '', imageHint: '' })}
+                                onClick={() => appendUpdate({ id: `update-${Date.now()}`, title: '', description: '', date: new Date(), imageUrl: '', imageHint: '', pinned: false })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add New Update
                             </Button>

@@ -56,8 +56,7 @@ export function DonationDialogWrapper({
     setAllDonations(initialDonations.filter(d => d.project === project.name) || [])
 
     const initialCombinedUpdates = [...project.updates].sort((a, b) => {
-        if (a.isInKindDonation && !b.isInKindDonation) return -1;
-        if (!a.isInKindDonation && b.isInKindDonation) return 1;
+        // Complex sorting logic will be handled in useMemo
         return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
     setAllUpdates(initialCombinedUpdates);
@@ -195,9 +194,23 @@ export function DonationDialogWrapper({
   
   const sortedUpdates = useMemo(() => {
     return [...allUpdates].sort((a, b) => {
+        const aDate = new Date(a.date).getTime();
+        const bDate = new Date(b.date).getTime();
+
+        // Pinned updates first
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+
+        // Image updates second
+        if (a.imageUrl && !b.imageUrl) return -1;
+        if (!a.imageUrl && b.imageUrl) return 1;
+
+        // In-kind donations third
         if (a.isInKindDonation && !b.isInKindDonation) return -1;
         if (!a.isInKindDonation && b.isInKindDonation) return 1;
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
+
+        // Then sort by date
+        return bDate - aDate;
     });
   }, [allUpdates]);
 

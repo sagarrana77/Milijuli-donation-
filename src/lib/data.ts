@@ -23,6 +23,7 @@ export type Update = {
     date: string; // Use string to prevent timezone issues
     imageUrl?: string;
     imageHint?: string;
+    pinned?: boolean;
     isTransfer?: boolean; // To distinguish transfer updates
     transferDetails?: {
       amount: number;
