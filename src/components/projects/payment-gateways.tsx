@@ -25,9 +25,20 @@ interface PaymentGatewaysProps {
 export function PaymentGateways({ project }: PaymentGatewaysProps) {
   const [selectedGateway, setSelectedGateway] = useState<Gateway | null>(null);
 
-  const isAdminProject = !project.ownerId || project.ownerId === 'clarity-chain-admin';
-  const showUserGateways = !isAdminProject && platformSettings.userQrPaymentsEnabled && project.gateways && project.gateways.length > 0 && project.gateways.some(g => g.enabled);
+  // Determine if this is a platform-managed project or a user-created one.
+  const isUserCampaign = project.ownerId && project.ownerId !== 'clarity-chain-admin';
   
+  // Decide whether to show the user's custom gateways.
+  // This is only true if it's a user campaign, the admin has enabled the feature globally,
+  // the campaign has gateways configured, and at least one of them is enabled.
+  const showUserGateways = 
+    isUserCampaign &&
+    platformSettings.userQrPaymentsEnabled &&
+    project.gateways &&
+    project.gateways.length > 0 &&
+    project.gateways.some(g => g.enabled);
+
+  // Select the appropriate set of gateways to use.
   const availableGateways = showUserGateways ? project.gateways! : defaultPaymentGateways;
   const enabledGateways = availableGateways.filter((g) => g.enabled);
 
