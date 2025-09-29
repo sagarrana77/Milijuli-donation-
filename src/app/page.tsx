@@ -222,9 +222,9 @@ export default function DashboardPage() {
             <CardContent className="flex flex-col items-center">
               <ExpenseChart data={currentDashboardStats.spendingBreakdown} />
                <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
-                  {currentDashboardStats.spendingBreakdown.map((entry) => (
-                      <div key={entry.name} className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1">
-                          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: entry.fill }} />
+                  {currentDashboardStats.spendingBreakdown.map((entry, index) => (
+                      <div key={entry.name} className="flex items-center gap-2 rounded-full border bg-card px-3 py-1">
+                          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(var(--chart-${index + 1}))` }} />
                           <span className="text-foreground">{entry.name}</span>
                       </div>
                   ))}
