@@ -88,6 +88,7 @@ export default function NewProjectPage() {
 
    const handleGenerateSummary = async () => {
     const longDescription = form.getValues('longDescription');
+    const name = form.getValues('name');
     if (!longDescription || longDescription.length < 100) {
         toast({
             variant: 'destructive',
@@ -96,19 +97,18 @@ export default function NewProjectPage() {
         });
         return;
     }
+    if (!name) {
+        toast({
+            variant: 'destructive',
+            title: 'Project Name Required',
+            description: 'Please enter a project name before generating a summary.'
+        });
+        return;
+    }
 
     setIsGeneratingSummary(true);
     try {
-        // We pass a temporary ID; the real one is created on submit.
-        // The AI flow is designed to fetch content, so we create a temporary project.
-        const tempProject = { ...form.getValues(), id: 'temp-for-summary' };
-        projects.push(tempProject as any); // Add temp project for the tool to find
-
-        const result = await summarizeProject({ projectId: 'temp-for-summary' });
-        
-        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
-        if (projectIndex !== -1) projects.splice(projectIndex, 1); // Clean up temp project
-
+        const result = await summarizeProject({ name, longDescription });
         form.setValue('description', result.summary, { shouldValidate: true, shouldDirty: true });
         toast({
             title: "AI Summary Generated!",
@@ -116,8 +116,6 @@ export default function NewProjectPage() {
         });
     } catch (error) {
         console.error("Error generating summary:", error);
-        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
-        if (projectIndex !== -1) projects.splice(projectIndex, 1); // Ensure cleanup on error too
         toast({
             variant: 'destructive',
             title: 'Error Generating Summary',

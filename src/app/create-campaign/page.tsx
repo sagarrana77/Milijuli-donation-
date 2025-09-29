@@ -124,6 +124,7 @@ export default function CreateCampaignPage() {
 
   const handleGenerateSummary = async () => {
     const longDescription = form.getValues('longDescription');
+    const name = form.getValues('name');
     if (!longDescription || longDescription.length < 100) {
         toast({
             variant: 'destructive',
@@ -132,17 +133,18 @@ export default function CreateCampaignPage() {
         });
         return;
     }
+    if (!name) {
+        toast({
+            variant: 'destructive',
+            title: 'Campaign Name Required',
+            description: 'Please enter a campaign name before generating a summary.'
+        });
+        return;
+    }
 
     setIsGeneratingSummary(true);
     try {
-        const tempProject = { ...form.getValues(), id: 'temp-for-summary' };
-        projects.push(tempProject as any); 
-
-        const result = await summarizeProject({ projectId: 'temp-for-summary' });
-        
-        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
-        if (projectIndex !== -1) projects.splice(projectIndex, 1);
-
+        const result = await summarizeProject({ name, longDescription });
         form.setValue('description', result.summary, { shouldValidate: true, shouldDirty: true });
         toast({
             title: "AI Summary Generated!",
@@ -150,8 +152,6 @@ export default function CreateCampaignPage() {
         });
     } catch (error) {
         console.error("Error generating summary:", error);
-        const projectIndex = projects.findIndex(p => p.id === 'temp-for-summary');
-        if (projectIndex !== -1) projects.splice(projectIndex, 1);
         toast({
             variant: 'destructive',
             title: 'Error Generating Summary',

@@ -40,7 +40,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
         setIsGeneratingSummary(true);
         setSummary(null);
         try {
-            const result = await summarizeProject({ projectId: project.id });
+            const result = await summarizeProject({ name: project.name, longDescription: project.longDescription });
             setSummary(result);
         } catch (error) {
             console.error("Error generating summary:", error);

@@ -10,10 +10,10 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { projects } from '@/lib/data';
 
 const SummarizeProjectInputSchema = z.object({
-  projectId: z.string().describe('The ID of the project to summarize.'),
+  name: z.string().describe("The name of the project."),
+  longDescription: z.string().describe("The full description or story of the project to be summarized."),
 });
 export type SummarizeProjectInput = z.infer<typeof SummarizeProjectInputSchema>;
 
@@ -22,30 +22,6 @@ const SummarizeProjectOutputSchema = z.object({
 });
 export type SummarizeProjectOutput = z.infer<typeof SummarizeProjectOutputSchema>;
 
-// Tool to get project details for the summary
-const getProjectContentForSummary = ai.defineTool(
-  {
-    name: 'getProjectContentForSummary',
-    description: 'Returns the name and long description for a given project ID.',
-    inputSchema: z.object({
-      projectId: z.string().describe('The unique ID of the project.'),
-    }),
-    outputSchema: z.object({
-      name: z.string(),
-      longDescription: z.string(),
-    }),
-  },
-  async ({ projectId }) => {
-    const project = projects.find(p => p.id === projectId);
-    if (!project) {
-      throw new Error('Project not found');
-    }
-    return {
-      name: project.name,
-      longDescription: project.longDescription,
-    };
-  }
-);
 
 export async function summarizeProject(input: SummarizeProjectInput): Promise<SummarizeProjectOutput> {
   return summarizeProjectFlow(input);
@@ -55,10 +31,11 @@ const prompt = ai.definePrompt({
   name: 'summarizeProjectPrompt',
   input: {schema: SummarizeProjectInputSchema},
   output: {schema: SummarizeProjectOutputSchema},
-  tools: [getProjectContentForSummary],
-  prompt: `You are an expert copywriter for a non-profit. Your task is to summarize the project with ID '{{{projectId}}}' into a single, concise, and compelling paragraph for a potential donor.
+  prompt: `You are an expert copywriter for a non-profit. Your task is to summarize the following project description into a single, concise, and compelling paragraph for a potential donor.
 
-Use the getProjectContentForSummary tool to fetch the project's details.
+Project Name: "{{{name}}}"
+Full Description:
+"{{{longDescription}}}"
 
 The summary should:
 - Be easy to read and understand.
