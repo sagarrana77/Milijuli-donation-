@@ -18,6 +18,7 @@ import { FundraisingProgress } from '@/components/projects/fundraising-progress'
 import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
+import { InKindDonationsTab } from './in-kind-donations-tab';
 
 interface ProjectPageClientContentProps {
     project: Project;
@@ -55,6 +56,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                     <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                     <TabsTrigger value="spending">Spending</TabsTrigger>
                     <TabsTrigger value="donors">Donors</TabsTrigger>
+                    <TabsTrigger value="in-kind">In-Kind Donations</TabsTrigger>
                     <TabsTrigger value="discussion">Discussion</TabsTrigger>
                     </TabsList>
                     <TabsContent value="updates" className="mt-4">
@@ -113,6 +115,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                     </TabsContent>
                     <TabsContent value="donors" className="mt-4">
                         <DonorsList projectName={project.name} />
+                    </TabsContent>
+                    <TabsContent value="in-kind" className="mt-4">
+                        <InKindDonationsTab />
                     </TabsContent>
                     <TabsContent value="discussion" className="mt-4">
                     <DiscussionSection
