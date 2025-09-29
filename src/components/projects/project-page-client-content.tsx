@@ -21,7 +21,6 @@ import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
 import { ArrowRight, Gift } from 'lucide-react';
-import { useDonationContext } from './donation-dialog-wrapper';
 
 interface ProjectPageClientContentProps {
     project: Project;
@@ -157,8 +156,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
     )
 }
 
-const ProjectPageClientAside = () => {
-    const { project } = useDonationContext();
+export function ProjectPageClientAside({ project }: { project: Project }) {
      return (
         <aside className="space-y-8 lg:sticky lg:top-24 self-start">
             <ScrollFadeIn>
@@ -178,5 +176,3 @@ const ProjectPageClientAside = () => {
         </aside>
     )
 }
-
-ProjectPageClientContent.Aside = ProjectPageClientAside;

@@ -9,7 +9,7 @@ import {
 import { TransparencySealIcon } from '@/components/icons/transparency-seal';
 import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wrapper';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
-import { ProjectPageClientContent } from '@/components/projects/project-page-client-content';
+import { ProjectPageClientContent, ProjectPageClientAside } from '@/components/projects/project-page-client-content';
 
 
 function getProject(id: string): Project | undefined {
@@ -59,7 +59,7 @@ export default function ProjectDetailPage({
                     </Card>
                 </ScrollFadeIn>
             </div>
-            <ProjectPageClientContent.Aside />
+            <ProjectPageClientAside project={project} />
           </div>
       </DonationDialogWrapper>
     </div>
