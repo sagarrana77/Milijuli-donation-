@@ -142,7 +142,7 @@ export default function AdminDashboardPage() {
             id: `eq-${Date.now()}`, 
             item: newEquipment.item,
             cost: parseFloat(newEquipment.cost),
-            purchaseDate: new Date(newEquipment.purchaseDate),
+            purchaseDate: newEquipment.purchaseDate,
             vendor: newEquipment.vendor,
             imageUrl: newEquipment.imageUrl,
             imageHint: newEquipment.imageHint,
@@ -160,7 +160,7 @@ export default function AdminDashboardPage() {
               id: `misc-${Date.now()}`, 
               item: newMiscExpense.item,
               cost: parseFloat(newMiscExpense.cost),
-              purchaseDate: new Date(newMiscExpense.purchaseDate),
+              purchaseDate: newMiscExpense.purchaseDate,
               vendor: newMiscExpense.vendor
           };
         miscExpenses.push(newMisc);
@@ -189,7 +189,7 @@ export default function AdminDashboardPage() {
             quantity: parseInt(newInKindDonation.quantity, 10),
             donationType: 'received',
             status: 'Completed',
-            date: new Date(newInKindDonation.date),
+            date: newInKindDonation.date,
             comments: [],
           };
     
@@ -200,7 +200,7 @@ export default function AdminDashboardPage() {
             id: `update-inkind-${Date.now()}`,
             title: `New In-Kind Donation Received!`,
             description: `${newInKindDonation.donorName} generously donated ${newInKindDonation.quantity}x ${newInKindDonation.itemName}.`,
-            date: new Date(newInKindDonation.date),
+            date: newInKindDonation.date,
             isInKindDonation: true,
             inKindDonationDetails: {
               donorName: newInKindDonation.donorName,
@@ -253,7 +253,7 @@ export default function AdminDashboardPage() {
             id: `update-expense-${Date.now()}`,
             title: 'Funds Utilized for Project Expense',
             description: `An amount of Rs.${data.amount.toLocaleString()} was spent on "${data.item}".`,
-            date: new Date(),
+            date: new Date().toISOString(),
             isExpense: true,
             expenseDetails: {
                 item: data.item,
@@ -261,6 +261,14 @@ export default function AdminDashboardPage() {
             }
         };
         project.updates.unshift(newUpdate);
+         project.expenses.unshift({
+            id: `exp-${Date.now()}`,
+            item: data.item,
+            amount: data.amount,
+            date: new Date().toISOString(),
+            receiptUrl: 'https://placehold.co/600x400/EEE/31343C',
+            receiptHint: 'receipt scan'
+        });
     }
 
     const categoryMap: { [key: string]: string } = {
@@ -303,7 +311,7 @@ export default function AdminDashboardPage() {
             id: `update-transfer-from-${Date.now()}`,
             title: 'Fund Transfer',
             description: `An amount of Rs.${data.amount.toLocaleString()} was transferred from this project to "${data.to}". Reason: ${data.reason}`,
-            date: new Date(),
+            date: new Date().toISOString(),
             isTransfer: true,
             transferDetails: { amount: data.amount, toProject: data.to }
         };
@@ -318,7 +326,7 @@ export default function AdminDashboardPage() {
             id: `update-transfer-to-${Date.now()}`,
             title: 'Funds Received',
             description: `An amount of Rs.${data.amount.toLocaleString()} was received from "${data.from}". Reason: ${data.reason}`,
-            date: new Date(),
+            date: new Date().toISOString(),
             isTransfer: true,
             transferDetails: { amount: data.amount, fromProject: data.from }
         };
@@ -669,7 +677,7 @@ export default function AdminDashboardPage() {
                                 <TableBody>
                                     {paginatedDonations.map(donation => (
                                         <TableRow key={donation.id}>
-                                            <TableCell>{donation.date.toLocaleDateString()}</TableCell>
+                                            <TableCell>{new Date(donation.date).toLocaleDateString()}</TableCell>
                                             <TableCell>
                                                 <div className="font-medium">{donation.donorName}</div>
                                                 <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
@@ -840,7 +848,7 @@ export default function AdminDashboardPage() {
                                     <TableRow key={equip.id}>
                                     <TableCell>{equip.item}</TableCell>
                                     <TableCell>Rs.{equip.cost.toLocaleString()}</TableCell>
-                                    <TableCell>{equip.purchaseDate.toLocaleDateString()}</TableCell>
+                                    <TableCell>{new Date(equip.purchaseDate).toLocaleDateString()}</TableCell>
                                     <TableCell>{equip.vendor}</TableCell>
                                     <TableCell className="text-right">
                                         <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
@@ -878,7 +886,7 @@ export default function AdminDashboardPage() {
                                     <TableRow key={expense.id}>
                                         <TableCell>{expense.item}</TableCell>
                                         <TableCell>Rs.{expense.cost.toLocaleString()}</TableCell>
-                                        <TableCell>{expense.purchaseDate.toLocaleDateString()}</TableCell>
+                                        <TableCell>{new Date(expense.purchaseDate).toLocaleDateString()}</TableCell>
                                         <TableCell>{expense.vendor}</TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>

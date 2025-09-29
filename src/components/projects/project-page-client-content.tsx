@@ -135,7 +135,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                 }
                                 if (update.isExpense) {
                                     return (
-                                        <div key={update.id} className="flex items-start gap-4 rounded-md border bg-orange-500/10 p-4">
+                                        <div key={update.id} className="flex items-start gap-4 rounded-md border bg-card p-4">
                                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-600">
                                                 <ShoppingCart className="h-5 w-5" />
                                             </div>

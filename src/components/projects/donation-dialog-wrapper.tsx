@@ -47,9 +47,13 @@ export function DonationDialogWrapper({
 
   useEffect(() => {
     setIsClient(true);
+    // This effect re-syncs state when the underlying mutable mock data changes (e.g., from an admin action)
+    setRaisedAmount(project.raisedAmount);
+    setDonors(project.donors);
+
     // Simulate real-time donations
     const interval = setInterval(() => {
-      const isDonation = Math.random() > 0.3; // 70% chance of donation
+      const isDonation = Math.random() > 0.7; // 30% chance of donation
       if (isDonation && raisedAmount < project.targetAmount) {
         const newAmount = Math.floor(Math.random() * 150) + 20;
         setRaisedAmount((prev) => Math.min(prev + newAmount, project.targetAmount));
@@ -70,7 +74,7 @@ export function DonationDialogWrapper({
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [project.targetAmount, raisedAmount, project.name]);
+  }, [project.targetAmount, raisedAmount, project.name, project.raisedAmount, project.donors]);
 
 
   const handleDonation = async (amount: number, isAnonymous: boolean) => {
