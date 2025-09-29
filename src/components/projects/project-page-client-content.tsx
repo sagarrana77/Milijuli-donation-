@@ -200,7 +200,11 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                                     </div>
                                                 </div>
                                                 <div className="text-xs text-muted-foreground">
-                                                    {isClient ? format(new Date(update.date), 'PPp') : <Skeleton className="h-4 w-24" />}
+                                                  {isClient ? (
+                                                    format(new Date(update.date), 'PPp')
+                                                  ) : (
+                                                    <Skeleton className="h-4 w-24" />
+                                                  )}
                                                 </div>
                                             </div>
                                         </div>
