@@ -13,8 +13,8 @@ const progressIndicatorVariants = cva(
       variants: {
         variant: {
           default: "bg-primary",
-          amber: "bg-amber-500",
-          green: "bg-green-600",
+          amber: "bg-amber-400",
+          green: "bg-green-500",
         },
       },
       defaultVariants: {
