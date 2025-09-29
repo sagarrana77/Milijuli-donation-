@@ -3,7 +3,7 @@
 'use client';
 
 import { useState, useEffect, ReactNode, createContext, useContext, useMemo } from 'react';
-import type { Project, Update } from '@/lib/data';
+import type { Project, Update, Donation } from '@/lib/data';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { sendThankYouEmail } from '@/ai/flows/send-thank-you-email';
@@ -18,6 +18,7 @@ interface DonationContextType {
   setIsDonationOpen: (open: boolean) => void;
   project: Project;
   allUpdates: Update[];
+  donations: Donation[];
 }
 
 const DonationContext = createContext<DonationContextType | null>(null);
@@ -42,6 +43,7 @@ export function DonationDialogWrapper({
   const [raisedAmount, setRaisedAmount] = useState(project.raisedAmount);
   const [donors, setDonors] = useState(project.donors);
   const [allUpdates, setAllUpdates] = useState<Update[]>(() => [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+  const [allDonations, setAllDonations] = useState<Donation[]>(() => initialDonations.filter(d => d.project === project.name));
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
@@ -51,12 +53,14 @@ export function DonationDialogWrapper({
     // This effect re-syncs state when the underlying mutable mock data changes (e.g., from an admin action)
     setRaisedAmount(project.raisedAmount);
     setDonors(project.donors);
+    setAllDonations(initialDonations.filter(d => d.project === project.name))
 
     const initialCombinedUpdates = [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     setAllUpdates(initialCombinedUpdates);
     
     // The real-time simulation is now client-only
     const interval = setInterval(() => {
+      if(document.hidden) return;
       const isDonation = Math.random() > 0.7; // 30% chance of donation
       if (isDonation && raisedAmount < project.targetAmount) {
         const newAmount = Math.floor(Math.random() * 150) + 20;
@@ -82,6 +86,16 @@ export function DonationDialogWrapper({
         };
         
         setAllUpdates(prev => [newDonationUpdate, ...prev]);
+
+        const newDonationEntry: Donation = {
+            id: Date.now(),
+            donor: donor,
+            project: project.name,
+            amount: newAmount,
+            date: new Date().toISOString(),
+            isAnonymous: true,
+        }
+        setAllDonations(prev => [newDonationEntry, ...prev]);
       }
     }, 4000);
 
@@ -126,6 +140,18 @@ export function DonationDialogWrapper({
     project.raisedAmount = newRaisedAmount;
     project.donors = newDonorsCount;
     project.updates.unshift(newDonationUpdate);
+    
+    const newDonationEntry: Donation = {
+        id: Date.now(),
+        donor: donor,
+        project: project.name,
+        amount: amount,
+        date: new Date().toISOString(),
+        isAnonymous: isAnonymous,
+    }
+    initialDonations.unshift(newDonationEntry);
+    setAllDonations(prev => [newDonationEntry, ...prev]);
+
 
     toast({
       title: 'Thank You for Your Support!',
@@ -177,6 +203,7 @@ export function DonationDialogWrapper({
     setIsDonationOpen,
     project,
     allUpdates: sortedUpdates,
+    donations: allDonations,
   };
 
   return (
