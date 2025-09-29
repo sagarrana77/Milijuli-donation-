@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Image from 'next/image';
@@ -26,7 +25,7 @@ interface ProjectPageClientContentProps {
     project: Project;
 }
 
-function MainContent({ project }: ProjectPageClientContentProps) {
+export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
     const { openPhoto } = usePhotoDialog();
     return (
         <>
@@ -174,7 +173,7 @@ function MainContent({ project }: ProjectPageClientContentProps) {
     )
 }
 
-function Aside({ project }: { project: Project }) {
+export function ProjectPageClientAside({ project }: { project: Project }) {
      return (
         <aside className="space-y-8 lg:sticky lg:top-24 self-start">
             <ScrollFadeIn>
@@ -194,5 +193,3 @@ function Aside({ project }: { project: Project }) {
         </aside>
     )
 }
-
-export const ProjectPageClientContent = Object.assign(MainContent, { Aside });
