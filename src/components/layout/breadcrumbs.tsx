@@ -13,7 +13,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Home } from 'lucide-react';
-import { teamMembers, users } from '@/lib/data';
+import { projects, teamMembers, users } from '@/lib/data';
 
 
 // Helper function to capitalize the first letter of a string
@@ -31,7 +31,7 @@ const formatCrumb = (crumb: string) => {
     .join(' ');
 };
 
-const getNameForId = (id: string, type: 'team' | 'profile') => {
+const getNameForId = (id: string, type: 'team' | 'profile' | 'projects' | 'my-campaigns') => {
     if (type === 'team') {
         const member = teamMembers.find(m => m.id === id);
         return member ? member.name : formatCrumb(id);
@@ -39,6 +39,10 @@ const getNameForId = (id: string, type: 'team' | 'profile') => {
     if (type === 'profile') {
         const user = users.find(u => u.id === id);
         return user ? user.name : formatCrumb(id);
+    }
+     if (type === 'projects' || type === 'my-campaigns') {
+        const project = projects.find(p => p.id === id);
+        return project ? project.name : formatCrumb(id);
     }
     return formatCrumb(id);
 }
@@ -68,36 +72,35 @@ export function Breadcrumbs() {
           const isLast = index === pathSegments.length - 1;
           const href = '/' + pathSegments.slice(0, index + 1).join('/');
 
-          if (isLast) {
-              // Handle team member page
-              if (pathSegments[index - 1] === 'team') {
-                return (
-                  <React.Fragment key={href}>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbLink asChild>
-                        <Link href="/about">About</Link>
-                      </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>{getNameForId(segment, 'team')}</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </React.Fragment>
-                );
-              }
-               // Handle user profile page
-              if (pathSegments[index - 1] === 'profile') {
-                return (
-                  <React.Fragment key={href}>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>{getNameForId(segment, 'profile')}</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </React.Fragment>
-                );
-              }
-          }
+          // Special handling for dynamic routes
+            if (isLast) {
+                const prevSegment = pathSegments[index - 1];
+                if (['team', 'profile', 'projects', 'my-campaigns'].includes(prevSegment)) {
+                    let pageTitle = getNameForId(segment, prevSegment as any);
+                    if (pathSegments[index + 1] === 'edit') {
+                        // This case is handled by the next segment check
+                    } else {
+                        return (
+                             <React.Fragment key={href}>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>{pageTitle}</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </React.Fragment>
+                        )
+                    }
+                }
+                 if (segment === 'edit' && ['my-campaigns', 'admin/projects'].includes(pathSegments.slice(0, index - 1).join('/'))) {
+                    return (
+                        <React.Fragment key={href}>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                            <BreadcrumbPage>Edit</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </React.Fragment>
+                    );
+                }
+            }
 
 
           return (

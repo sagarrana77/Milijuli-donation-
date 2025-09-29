@@ -12,6 +12,9 @@ import {
   SidebarMenuButton,
   SidebarFooter,
   useSidebar,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -27,32 +30,41 @@ import {
   Package,
   Mail,
   PlusSquare,
+  BookOpen,
+  Edit,
+  ChevronDown,
 } from 'lucide-react';
 import { currentUser } from '@/lib/data';
 import { Button } from '../ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
+import { useState } from 'react';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/projects', label: 'Projects', icon: HeartHandshake },
+  { href: '/projects', label: 'All Projects', icon: HeartHandshake },
   { href: '/in-kind-donations', label: 'In-Kind Donations', icon: Package },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
   { href: '/about', label: 'About', icon: Users },
-  { href: '/admin', label: 'Admin', icon: Shield, adminOnly: true },
 ];
+
+const adminMenuItems = [
+    { href: '/admin', label: 'Admin Dashboard', icon: Shield },
+    { href: '/admin/setup-guide', label: 'Setup Guide', icon: BookOpen },
+    { href: '/admin/about', label: 'Edit About Page', icon: Edit },
+    { href: '/admin/careers', label: 'Manage Careers', icon: UserPlus },
+    { href: '/admin/help', label: 'Manage Help Page', icon: CircleHelp },
+]
 
 export function MainSidebar() {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
+  const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/admin'));
 
   const isActive = (href: string) => {
     if (href === '/') {
       return pathname === '/';
-    }
-    // For nested routes, we want to match the base path
-    if (href === '/my-campaigns') {
-      return pathname.startsWith('/my-campaigns');
     }
     return pathname.startsWith(href);
   };
@@ -98,25 +110,51 @@ export function MainSidebar() {
           <SidebarMenuItem className="my-2">
             <hr className="border-sidebar-border"/>
           </SidebarMenuItem>
-          {menuItems.map(({ href, label, icon: Icon, adminOnly }) => {
-            if (adminOnly && !currentUser?.isAdmin) {
-                return null;
-            }
-            return (
-                <SidebarMenuItem key={href}>
-                <SidebarMenuButton
-                    asChild
-                    isActive={isActive(href)}
-                    tooltip={{ children: label, side: 'right' }}
-                >
-                    <Link href={href} onClick={handleLinkClick}>
-                    <Icon />
-                    <span>{label}</span>
-                    </Link>
-                </SidebarMenuButton>
-                </SidebarMenuItem>
-            );
-          })}
+          {menuItems.map(({ href, label, icon: Icon }) => (
+            <SidebarMenuItem key={href}>
+            <SidebarMenuButton
+                asChild
+                isActive={isActive(href)}
+                tooltip={{ children: label, side: 'right' }}
+            >
+                <Link href={href} onClick={handleLinkClick}>
+                <Icon />
+                <span>{label}</span>
+                </Link>
+            </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+            {currentUser?.isAdmin && (
+                 <Collapsible open={isAdminOpen} onOpenChange={setIsAdminOpen} asChild>
+                    <SidebarMenuItem>
+                        <CollapsibleTrigger asChild>
+                             <SidebarMenuButton
+                                className="w-full"
+                                isActive={pathname.startsWith('/admin')}
+                                tooltip={{ children: 'Admin', side: 'right' }}
+                            >
+                                <Shield />
+                                <span>Admin</span>
+                                <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform ui-open:rotate-180" />
+                            </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent asChild>
+                            <SidebarMenuSub>
+                                {adminMenuItems.map(({ href, label, icon: Icon }) => (
+                                    <SidebarMenuSubItem key={href}>
+                                        <SidebarMenuSubButton asChild isActive={pathname === href}>
+                                            <Link href={href} onClick={handleLinkClick}>
+                                                <Icon />
+                                                <span>{label}</span>
+                                            </Link>
+                                        </SidebarMenuSubButton>
+                                    </SidebarMenuSubItem>
+                                ))}
+                            </SidebarMenuSub>
+                        </CollapsibleContent>
+                    </SidebarMenuItem>
+                 </Collapsible>
+            )}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="border-t">

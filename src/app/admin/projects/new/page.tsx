@@ -70,6 +70,7 @@ export default function NewProjectPage() {
       updates: [],
       expenses: [],
       discussion: [],
+      wishlist: [],
     };
     projects.unshift(newProject);
     toast({

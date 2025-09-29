@@ -34,13 +34,9 @@ import {
   MonitorSmartphone,
   ArrowDown,
   ArrowRight,
-  Edit,
-  UserPlus,
-  CircleHelp,
   Settings,
   List,
   Archive,
-  BookOpen,
   HandCoins,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings } from '@/lib/data';
@@ -244,28 +240,6 @@ export default function AdminDashboardPage() {
             Manage your platform settings and content.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-            <Button asChild>
-                <Link href="/admin/setup-guide">
-                    <BookOpen className="mr-2 h-4 w-4" /> View Setup Guide
-                </Link>
-            </Button>
-            <Button asChild variant="outline">
-                <Link href="/admin/about">
-                    <Edit className="mr-2 h-4 w-4" /> Edit About Page
-                </Link>
-            </Button>
-            <Button asChild variant="outline">
-                <Link href="/admin/careers">
-                    <UserPlus className="mr-2 h-4 w-4" /> Manage Careers
-                </Link>
-            </Button>
-            <Button asChild variant="outline">
-                <Link href="/admin/help">
-                    <CircleHelp className="mr-2 h-4 w-4" /> Manage Help Page
-                </Link>
-            </Button>
-        </div>
       </div>
 
        <Card>
@@ -304,178 +278,83 @@ export default function AdminDashboardPage() {
         </CardContent>
       </Card>
       
-      <Tabs defaultValue="settings">
+      <Tabs defaultValue="projects">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
+          <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
           <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> Donations</TabsTrigger>
           <TabsTrigger value="operational-costs"><Briefcase className="mr-2 h-4 w-4"/> Operational Costs</TabsTrigger>
-          <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
+          <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="settings" className="mt-6">
-            <div className="space-y-8">
-                <div className="grid gap-8 lg:grid-cols-2">
-                    <Card className="lg:col-span-2">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                            <CreditCard />
-                            Platform Payment Gateways
-                            </CardTitle>
-                            <CardDescription>
-                            Enable gateways and generate QR codes for platform-wide donations. These are the defaults.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="rounded-lg border p-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <Label htmlFor="user-qr-switch" className="text-lg font-medium">Enable User Campaign QR Codes</Label>
-                                        <p className="text-sm text-muted-foreground">Allow users to configure their own QR codes on their campaigns.</p>
-                                    </div>
-                                    <Switch id="user-qr-switch" checked={platformSettings.userQrPaymentsEnabled} onCheckedChange={handleUserQrToggle} />
-                                </div>
-                            </div>
-
-                            {paymentGateways.map((gateway, index) => (
-                                <div key={gateway.name} className="space-y-4 rounded-md border p-4">
-                                    <div className="flex items-center justify-between">
-                                        <Label htmlFor={`gateway-switch-${gateway.name}`} className="text-lg font-medium">{gateway.name}</Label>
-                                        <Switch id={`gateway-switch-${gateway.name}`} checked={gateway.enabled} onCheckedChange={() => handleGatewayToggle(gateway.name)} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor={`gateway-qr-input-${gateway.name}`} className="text-sm font-normal">Payment URL or ID</Label>
-                                        <div className="flex gap-2">
-                                            <Input 
-                                                id={`gateway-qr-input-${gateway.name}`}
-                                                placeholder={`Enter ${gateway.name} URL, username, or address`}
-                                                value={gateway.qrValue}
-                                                onChange={(e) => {
-                                                    gateway.qrValue = e.target.value;
-                                                    setForceRender(c => c + 1);
-                                                }}
-                                            />
-                                            <Button onClick={() => handleGenerateQr(gateway.name)}>Generate QR</Button>
-                                        </div>
-                                    </div>
-                                    {gateway.generatedQr && (
-                                        <div className="flex flex-col items-center gap-2 rounded-lg bg-muted p-3 sm:flex-row">
-                                            <Image
-                                                src={gateway.generatedQr}
-                                                alt={`${gateway.name} QR Code`}
-                                                width={150}
-                                                height={150}
-                                                data-ai-hint="qr code"
-                                            />
-                                            <p className="text-center text-xs text-muted-foreground break-all sm:text-left">
-                                                QR Code for: {gateway.qrValue}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </CardContent>
-                    </Card>
+        <TabsContent value="projects" className="mt-6">
+             <Card>
+                <CardHeader>
+                <CardTitle>Manage Projects</CardTitle>
+                <CardDescription>
+                    A list of all projects in the system. You can add, edit, or remove them.
+                </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="mb-4 flex justify-end">
+                        <Button asChild>
+                            <Link href="/admin/projects/new">
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add Project
+                            </Link>
+                        </Button>
+                    </div>
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                        <TableRow>
+                            <TableHead>Project Name</TableHead>
+                            <TableHead>Organization</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Raised</TableHead>
+                            <TableHead>Donors</TableHead>
+                            <TableHead>
+                            <span className="sr-only">Actions</span>
+                            </TableHead>
+                        </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                        {projects.map((project) => (
+                            <TableRow key={project.id}>
+                            <TableCell className="font-medium">{project.name}</TableCell>
+                            <TableCell>{project.organization}</TableCell>
+                            <TableCell>
+                                <Badge variant={project.verified ? 'default' : 'secondary'}>
+                                {project.verified ? 'Verified' : 'Unverified'}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>
+                                ${project.raisedAmount.toLocaleString()}
+                            </TableCell>
+                            <TableCell>{project.donors.toLocaleString()}</TableCell>
+                            <TableCell>
+                                <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                    aria-haspopup="true"
+                                    size="icon"
+                                    variant="ghost"
+                                    >
+                                    <MoreHorizontal className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                    <DropdownMenuItem asChild><Link href={`/admin/projects/${project.id}/edit`}>Edit</Link></DropdownMenuItem>
+                                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                                </DropdownMenuContent>
+                                </DropdownMenu>
+                            </TableCell>
+                            </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
                 </div>
-                 <div className="grid gap-8 lg:grid-cols-2">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                            <KeyRound />
-                            Gateway Credentials & Bank Information
-                            </CardTitle>
-                            <CardDescription>
-                            Enter and manage your API keys and bank account details. These are stored securely.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <Tabs defaultValue="stripe">
-                            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
-                                <TabsTrigger value="stripe">Stripe</TabsTrigger>
-                                <TabsTrigger value="paypal">PayPal</TabsTrigger>
-                                <TabsTrigger value="bank">Bank Account</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="stripe" className="mt-4">
-                                <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="stripe-pk">Publishable Key</Label>
-                                    <Input id="stripe-pk" placeholder="pk_live_..." />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="stripe-sk">Secret Key</Label>
-                                    <Input id="stripe-sk" type="password" placeholder="sk_live_..." />
-                                </div>
-                                <Button>Save Stripe Credentials</Button>
-                                </div>
-                            </TabsContent>
-                            <TabsContent value="paypal" className="mt-4">
-                                <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="paypal-client-id">Client ID</Label>
-                                    <Input id="paypal-client-id" placeholder="Your PayPal Client ID" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="paypal-secret">Secret</Label>
-                                    <Input id="paypal-secret" type="password" placeholder="Your PayPal Secret" />
-                                </div>
-                                <Button>Save PayPal Credentials</Button>
-                                </div>
-                            </TabsContent>
-                            <TabsContent value="bank" className="mt-4">
-                                <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="bank-name">Bank Name</Label>
-                                    <Input id="bank-name" placeholder="e.g., Bank of Example" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="account-holder">Account Holder Name</Label>
-                                    <Input id="account-holder" placeholder="e.g., John Doe" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="account-number">Account Number</Label>
-                                    <Input id="account-number" placeholder="Your account number" />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="routing-number">Routing Number / Swift Code</Label>
-                                    <Input id="routing-number" placeholder="Your routing number or SWIFT code" />
-                                </div>
-                                <Button>Save Bank Information</Button>
-                                </div>
-                            </TabsContent>
-                            </Tabs>
-                        </CardContent>
-                        </Card>
-
-                        <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                            <MessageSquare />
-                            Social & Contact Links
-                            </CardTitle>
-                            <CardDescription>
-                            Configure the links for the floating contact button.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="space-y-2">
-                            <Label htmlFor="whatsapp" className="flex items-center gap-2"><WhatsAppIcon className="h-5 w-5"/> WhatsApp Number</Label>
-                            <Input id="whatsapp" defaultValue={socialLinks.whatsapp} onChange={e => socialLinks.whatsapp = e.target.value} />
-                            </div>
-                            <div className="space-y-2">
-                            <Label htmlFor="viber" className="flex items-center gap-2"><ViberIcon className="h-5 w-5"/> Viber Number</Label>
-                            <Input id="viber" defaultValue={socialLinks.viber} onChange={e => socialLinks.viber = e.target.value} />
-                            </div>
-                            <div className="space-y-2">
-                            <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-5 w-5" stroke="currentColor"/> Instagram URL</Label>
-                            <Input id="instagram" defaultValue={socialLinks.instagram} onChange={e => socialLinks.instagram = e.target.value} />
-                            </div>
-                            <div className="space-y-2">
-                            <Label htmlFor="messenger" className="flex items-center gap-2"><MessengerIcon className="h-5 w-5"/> Messenger Username</Label>
-                            <Input id="messenger" defaultValue={socialLinks.messenger} onChange={e => socialLinks.messenger = e.target.value} />
-                            </div>
-                            <Button onClick={handleSaveSocialLinks}>Save Contact Links</Button>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </TabsContent>
          <TabsContent value="donations" className="mt-6">
             <Card>
@@ -680,89 +559,173 @@ export default function AdminDashboardPage() {
                 </CardContent>
             </Card>
         </TabsContent>
-        <TabsContent value="projects" className="mt-6">
-             <Card>
-                <CardHeader>
-                <CardTitle>Manage Projects</CardTitle>
-                <CardDescription>
-                    A list of all projects in the system. You can add, edit, or remove them.
-                </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="mb-4 flex justify-end">
-                        <Button asChild>
-                            <Link href="/admin/projects/new">
-                                <PlusCircle className="mr-2 h-4 w-4" /> Add Project
-                            </Link>
-                        </Button>
-                    </div>
-                <div className="overflow-x-auto">
-                    <Table>
-                        <TableHeader>
-                        <TableRow>
-                            <TableHead>Project Name</TableHead>
-                            <TableHead>Organization</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Raised</TableHead>
-                            <TableHead>Donors</TableHead>
-                            <TableHead>
-                            <span className="sr-only">Actions</span>
-                            </TableHead>
-                        </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                        {projects.map((project) => (
-                            <TableRow key={project.id}>
-                            <TableCell className="font-medium">{project.name}</TableCell>
-                            <TableCell>{project.organization}</TableCell>
-                            <TableCell>
-                                <Badge variant={project.verified ? 'default' : 'secondary'}>
-                                {project.verified ? 'Verified' : 'Unverified'}
-                                </Badge>
-                            </TableCell>
-                            <TableCell>
-                                ${project.raisedAmount.toLocaleString()}
-                            </TableCell>
-                            <TableCell>{project.donors.toLocaleString()}</TableCell>
-                            <TableCell>
-                                <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                    aria-haspopup="true"
-                                    size="icon"
-                                    variant="ghost"
-                                    >
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Toggle menu</span>
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem asChild><Link href={`/admin/projects/${project.id}/edit`}>Edit</Link></DropdownMenuItem>
-                                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                                </DropdownMenuContent>
-                                </DropdownMenu>
-                            </TableCell>
-                            </TableRow>
-                        ))}
-                        </TableBody>
-                    </Table>
+        <TabsContent value="settings" className="mt-6">
+            <div className="space-y-8">
+                <div className="grid gap-8 lg:grid-cols-2">
+                    <Card className="lg:col-span-2">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                            <CreditCard />
+                            Platform Payment Gateways
+                            </CardTitle>
+                            <CardDescription>
+                            Enable gateways and generate QR codes for platform-wide donations. These are the defaults.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <Label htmlFor="user-qr-switch" className="text-lg font-medium">Enable User Campaign QR Codes</Label>
+                                        <p className="text-sm text-muted-foreground">Allow users to configure their own QR codes on their campaigns.</p>
+                                    </div>
+                                    <Switch id="user-qr-switch" checked={platformSettings.userQrPaymentsEnabled} onCheckedChange={handleUserQrToggle} />
+                                </div>
+                            </div>
+
+                            {paymentGateways.map((gateway, index) => (
+                                <div key={gateway.name} className="space-y-4 rounded-md border p-4">
+                                    <div className="flex items-center justify-between">
+                                        <Label htmlFor={`gateway-switch-${gateway.name}`} className="text-lg font-medium">{gateway.name}</Label>
+                                        <Switch id={`gateway-switch-${gateway.name}`} checked={gateway.enabled} onCheckedChange={() => handleGatewayToggle(gateway.name)} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor={`gateway-qr-input-${gateway.name}`} className="text-sm font-normal">Payment URL or ID</Label>
+                                        <div className="flex gap-2">
+                                            <Input 
+                                                id={`gateway-qr-input-${gateway.name}`}
+                                                placeholder={`Enter ${gateway.name} URL, username, or address`}
+                                                value={gateway.qrValue}
+                                                onChange={(e) => {
+                                                    gateway.qrValue = e.target.value;
+                                                    setForceRender(c => c + 1);
+                                                }}
+                                            />
+                                            <Button onClick={() => handleGenerateQr(gateway.name)}>Generate QR</Button>
+                                        </div>
+                                    </div>
+                                    {gateway.generatedQr && (
+                                        <div className="flex flex-col items-center gap-2 rounded-lg bg-muted p-3 sm:flex-row">
+                                            <Image
+                                                src={gateway.generatedQr}
+                                                alt={`${gateway.name} QR Code`}
+                                                width={150}
+                                                height={150}
+                                                data-ai-hint="qr code"
+                                            />
+                                            <p className="text-center text-xs text-muted-foreground break-all sm:text-left">
+                                                QR Code for: {gateway.qrValue}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
                 </div>
-                </CardContent>
-            </Card>
+                 <div className="grid gap-8 lg:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                            <KeyRound />
+                            Gateway Credentials & Bank Information
+                            </CardTitle>
+                            <CardDescription>
+                            Enter and manage your API keys and bank account details. These are stored securely.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Tabs defaultValue="stripe">
+                            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3">
+                                <TabsTrigger value="stripe">Stripe</TabsTrigger>
+                                <TabsTrigger value="paypal">PayPal</TabsTrigger>
+                                <TabsTrigger value="bank">Bank Account</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="stripe" className="mt-4">
+                                <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="stripe-pk">Publishable Key</Label>
+                                    <Input id="stripe-pk" placeholder="pk_live_..." />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="stripe-sk">Secret Key</Label>
+                                    <Input id="stripe-sk" type="password" placeholder="sk_live_..." />
+                                </div>
+                                <Button>Save Stripe Credentials</Button>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="paypal" className="mt-4">
+                                <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="paypal-client-id">Client ID</Label>
+                                    <Input id="paypal-client-id" placeholder="Your PayPal Client ID" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="paypal-secret">Secret</Label>
+                                    <Input id="paypal-secret" type="password" placeholder="Your PayPal Secret" />
+                                </div>
+                                <Button>Save PayPal Credentials</Button>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="bank" className="mt-4">
+                                <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="bank-name">Bank Name</Label>
+                                    <Input id="bank-name" placeholder="e.g., Bank of Example" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="account-holder">Account Holder Name</Label>
+                                    <Input id="account-holder" placeholder="e.g., John Doe" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="account-number">Account Number</Label>
+                                    <Input id="account-number" placeholder="Your account number" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="routing-number">Routing Number / Swift Code</Label>
+                                    <Input id="routing-number" placeholder="Your routing number or SWIFT code" />
+                                </div>
+                                <Button>Save Bank Information</Button>
+                                </div>
+                            </TabsContent>
+                            </Tabs>
+                        </CardContent>
+                        </Card>
+
+                        <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                            <MessageSquare />
+                            Social & Contact Links
+                            </CardTitle>
+                            <CardDescription>
+                            Configure the links for the floating contact button.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                            <Label htmlFor="whatsapp" className="flex items-center gap-2"><WhatsAppIcon className="h-5 w-5"/> WhatsApp Number</Label>
+                            <Input id="whatsapp" defaultValue={socialLinks.whatsapp} onChange={e => socialLinks.whatsapp = e.target.value} />
+                            </div>
+                            <div className="space-y-2">
+                            <Label htmlFor="viber" className="flex items-center gap-2"><ViberIcon className="h-5 w-5"/> Viber Number</Label>
+                            <Input id="viber" defaultValue={socialLinks.viber} onChange={e => socialLinks.viber = e.target.value} />
+                            </div>
+                            <div className="space-y-2">
+                            <Label htmlFor="instagram" className="flex items-center gap-2"><InstagramIcon className="h-5 w-5" stroke="currentColor"/> Instagram URL</Label>
+                            <Input id="instagram" defaultValue={socialLinks.instagram} onChange={e => socialLinks.instagram = e.target.value} />
+                            </div>
+                            <div className="space-y-2">
+                            <Label htmlFor="messenger" className="flex items-center gap-2"><MessengerIcon className="h-5 w-5"/> Messenger Username</Label>
+                            <Input id="messenger" defaultValue={socialLinks.messenger} onChange={e => socialLinks.messenger = e.target.value} />
+                            </div>
+                            <Button onClick={handleSaveSocialLinks}>Save Contact Links</Button>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </TabsContent>
       </Tabs>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-    

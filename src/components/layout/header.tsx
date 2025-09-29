@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '../ui/button';
-import { Bell, User, HeartHandshake } from 'lucide-react';
+import { Bell, User } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,13 +29,13 @@ function getPageTitle(pathname: string): string {
     if (pathname.startsWith('/admin/projects/new')) {
     return 'Create New Project';
   }
-    if (pathname.startsWith('/admin/projects/')) {
+    if (pathname.startsWith('/admin/projects/') && pathname.endsWith('/edit')) {
     return 'Edit Project';
   }
-  if (pathname.startsWith('/projects/')) {
+    if (pathname.startsWith('/projects/')) {
     return 'Project Details';
   }
-   if (pathname.startsWith('/admin/')) {
+   if (pathname.startsWith('/admin')) {
     const parts = pathname.split('/');
     const lastPart = parts[parts.length - 1];
     if (lastPart === 'about') return 'Edit About Page';
@@ -50,7 +50,10 @@ function getPageTitle(pathname: string): string {
   if (pathname.startsWith('/team/')) {
     return 'Team Member Profile';
   }
-  if (pathname.startsWith('/my-campaigns')) {
+  if (pathname.startsWith('/my-campaigns') && pathname.endsWith('/edit')) {
+    return 'Edit Campaign';
+  }
+   if (pathname.startsWith('/my-campaigns')) {
     return 'My Campaigns';
   }
   if (pathname.startsWith('/create-campaign')) {
@@ -62,7 +65,7 @@ function getPageTitle(pathname: string): string {
     case '/':
       return 'Dashboard';
     case '/projects':
-      return 'Projects';
+      return 'All Projects';
     case '/in-kind-donations':
         return 'In-Kind Donations';
     case '/operational-costs':
@@ -75,6 +78,8 @@ function getPageTitle(pathname: string): string {
       return 'Careers';
     case '/help':
       return 'Help & Support';
+    case '/contact':
+        return 'Contact Us';
     case '/profile':
         return 'My Profile';
     case '/settings':
@@ -129,9 +134,6 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href="/profile/current-user">Profile</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/my-campaigns">My Campaigns</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">Settings</Link>
