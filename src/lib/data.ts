@@ -42,6 +42,7 @@ export type Project = {
   updates: {
     id: string;
     title: string;
+    description: string;
     date: Date;
     imageUrl: string;
     imageHint: string;
@@ -77,6 +78,7 @@ export let projects: Project[] = [
       {
         id: 'update-1',
         title: 'New textbooks arrived!',
+        description: 'The first batch of new textbooks has been delivered to the students. Their faces lit up with joy!',
         date: new Date('2023-10-15'),
         imageUrl: getImageUrl('update-photo-1'),
         imageHint: 'happy students',
@@ -84,6 +86,7 @@ export let projects: Project[] = [
       {
         id: 'update-2',
         title: 'Foundation for the new school building is complete.',
+        description: 'Construction is on schedule! The foundation has been laid, and we are ready for the next phase.',
         date: new Date('2023-09-20'),
         imageUrl: getImageUrl('update-photo-2'),
         imageHint: 'construction site',

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Image from 'next/image';
@@ -78,6 +79,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                 <div>
                                     <p className="font-semibold">{update.title}</p>
                                     <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
+                                    <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                 </div>
                                 </div>
                             ))}
