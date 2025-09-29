@@ -175,10 +175,12 @@ export default function OperationalCostsPage() {
             <CardContent className="space-y-4">
                  <div className="flex -space-x-2 overflow-hidden">
                     {teamMembers.map(member => (
-                        <Avatar key={member.id} className="inline-block h-12 w-12 rounded-full ring-2 ring-background">
-                            <AvatarImage src={member.avatarUrl} alt={member.name} />
-                            <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
+                       <Link key={member.id} href={`/team/${member.id}`} title={member.name}>
+                          <Avatar className="inline-block h-12 w-12 rounded-full ring-2 ring-background hover:ring-primary transition-all">
+                              <AvatarImage src={member.avatarUrl} alt={member.name} />
+                              <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                        </Link>
                     ))}
                 </div>
                 <p className="text-sm text-muted-foreground">Our dedicated team works tirelessly to ensure every donation makes a maximum impact.</p>
