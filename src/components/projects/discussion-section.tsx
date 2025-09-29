@@ -13,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { Card, CardContent } from '@/components/ui/card';
 import type { Project } from '@/lib/data';
 import Link from 'next/link';
+import { Reply } from 'lucide-react';
 
 type Comment = Project['discussion'][0];
 
@@ -77,7 +78,7 @@ export function DiscussionSection({
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        placeholder="Share your thoughts or ask a question..."
+                        placeholder="Share your thoughts or ask a question... Use @ to mention a user."
                         rows={3}
                         {...field}
                       />
@@ -114,6 +115,12 @@ export function DiscussionSection({
                       {formatDistanceToNow(comment.date, { addSuffix: true })}
                     </p>
                   </div>
+                    {comment.replyTo && (
+                        <p className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Reply className="h-3 w-3" />
+                            Replying to <span className="font-medium text-primary/80">@{comment.replyTo}</span>
+                        </p>
+                    )}
                   <p className="mt-1 text-foreground/90 whitespace-pre-wrap">{comment.text}</p>
                 </div>
               </div>

@@ -13,6 +13,7 @@ export type Comment = {
   profileUrl: string;
   date: Date;
   text: string;
+  replyTo?: string; // Author name of the comment being replied to
 };
 
 export type Update = {
@@ -152,6 +153,15 @@ export let projects: Project[] = [
         date: new Date('2023-10-19T09:00:00Z'),
         text:
           'I agree with Jane. The transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
+      },
+       {
+        id: 'comment-3',
+        author: 'Current User',
+        avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
+        profileUrl: '/profile/current-user',
+        date: new Date('2023-10-20T11:00:00Z'),
+        text: 'Hey @John Smith, great point! I was also wondering if there are plans to post updates on teacher training?',
+        replyTo: 'John Smith',
       },
     ],
     wishlist: [
@@ -699,9 +709,23 @@ export const notifications: Notification[] = [
     read: false,
   },
   {
+    id: 'notif-5',
+    title: 'You were mentioned',
+    description: 'Current User mentioned you in a comment on "Education for All Nepal".',
+    date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
+    read: false,
+  },
+  {
+    id: 'notif-6',
+    title: 'New Reply',
+    description: 'Current User replied to your comment on "Education for All Nepal".',
+    date: new Date(Date.now() - 1000 * 60 * 60 * 8), // 8 hours ago
+    read: true,
+  },
+  {
     id: 'notif-3',
     title: 'New Team Member',
-    description: 'Sam Chen has joined the team as Lead Blockchain Developer.',
+    description: 'Sam Chen has joined the team as Lead Full-Stack Developer.',
     date: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
     read: true,
   },
