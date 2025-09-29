@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { allDonations } from '@/lib/data';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
@@ -15,13 +14,8 @@ import { Pagination } from '../ui/pagination';
 const ITEMS_PER_PAGE = 5;
 
 export function DonorsList() {
-  const { project } = useDonationContext();
+  const { project, donations: projectDonations } = useDonationContext();
   const [currentPage, setCurrentPage] = useState(1);
-
-  // In a real app, this data would be fetched, but for now, we simulate real-time updates from context
-  const projectDonations = allDonations.filter(
-    (donation) => donation.project === project.name
-  );
 
   const totalPages = Math.ceil(projectDonations.length / ITEMS_PER_PAGE);
   const paginatedDonations = projectDonations.slice(
@@ -32,7 +26,7 @@ export function DonorsList() {
   return (
     <Card className="bg-blue-500/5 border-blue-500/10">
         <CardHeader>
-            <CardTitle>Recent Donors</CardTitle>
+            <CardTitle>All Donors</CardTitle>
         </CardHeader>
         <CardContent>
             {paginatedDonations.length > 0 ? (
@@ -69,7 +63,7 @@ export function DonorsList() {
             </ul>
             ) : (
             <p className="text-center text-muted-foreground">
-                No recent donations for this project yet.
+                No donations for this project yet. Be the first!
             </p>
             )}
         </CardContent>
