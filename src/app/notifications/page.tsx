@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { BellRing, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications } from '@/context/notification-provider';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function NotificationsPage() {
   const { notifications, markAllAsRead, markAsRead } = useNotifications();
@@ -50,9 +51,13 @@ export default function NotificationsPage() {
                     <p className="text-sm text-muted-foreground">
                       {notification.description}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {isClient ? formatDistanceToNow(new Date(notification.date), { addSuffix: true }) : ''}
-                    </p>
+                     {isClient ? (
+                        <p className="text-xs text-muted-foreground">
+                            {formatDistanceToNow(new Date(notification.date), { addSuffix: true })}
+                        </p>
+                     ) : (
+                        <Skeleton className="h-3 w-20" />
+                     )}
                   </div>
                   {!notification.read && (
                     <div className="mt-1 h-2.5 w-2.5 rounded-full bg-primary" title="Unread" />

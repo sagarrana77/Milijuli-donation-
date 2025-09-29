@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { DollarSign, Users, Target } from 'lucide-react';
 import { useDonationContext } from '@/components/projects/donation-dialog-wrapper';
+import { Skeleton } from '../ui/skeleton';
 
 
 export function FundraisingProgress() {
@@ -51,11 +52,20 @@ export function FundraisingProgress() {
           </>
         ) : (
           <div className="space-y-4">
-            <div className="h-3 rounded-full bg-muted animate-pulse"></div>
+            <Skeleton className="h-3 w-full" />
             <div className="grid grid-cols-2 gap-4">
-              <div className="h-8 rounded-md bg-muted animate-pulse"></div>
-              <div className="h-8 rounded-md bg-muted animate-pulse"></div>
-              <div className="h-8 rounded-md bg-muted animate-pulse"></div>
+              <div className="space-y-1">
+                  <Skeleton className="h-4 w-12"/>
+                  <Skeleton className="h-4 w-16"/>
+              </div>
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-12"/>
+                  <Skeleton className="h-4 w-20"/>
+              </div>
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-8"/>
+                  <Skeleton className="h-4 w-12"/>
+              </div>
             </div>
           </div>
         )}

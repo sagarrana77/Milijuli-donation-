@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { recentDonations, projects, users, type Donor } from '@/lib/data';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
+import { Skeleton } from '../ui/skeleton';
 
 const allDonors: Donor[] = users.map(({ id, name, avatarUrl, profileUrl, bio }) => ({
     id, name, avatarUrl, profileUrl, bio
