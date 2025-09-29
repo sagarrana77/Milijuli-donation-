@@ -1,4 +1,5 @@
 
+
 import { notFound } from 'next/navigation';
 import { getTeamMember } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -8,7 +9,8 @@ import Link from 'next/link';
 import TwitterIcon from '@/components/icons/TwitterIcon';
 import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { Badge } from '@/components/ui/badge';
-import { Briefcase, GraduationCap, Star } from 'lucide-react';
+import { Briefcase, GraduationCap, Star, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function TeamMemberPage({ params }: { params: { id: string } }) {
   const member = getTeamMember(params.id);
@@ -32,14 +34,14 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
                {member.socials.twitter && (
                 <Button variant="ghost" size="icon" asChild>
                     <Link href={member.socials.twitter} target="_blank">
-                        <TwitterIcon className="h-5 w-5" />
+                        <TwitterIcon className="h-5 w-5 text-sky-500" />
                     </Link>
                 </Button>
                )}
                 {member.socials.linkedin && (
                 <Button variant="ghost" size="icon" asChild>
                     <Link href={member.socials.linkedin} target="_blank">
-                        <LinkedInIcon className="h-5 w-5" />
+                        <LinkedInIcon className="h-5 w-5 text-blue-700" />
                     </Link>
                 </Button>
                )}
@@ -52,7 +54,7 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
         <div className="space-y-8 lg:col-span-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>About {member.name.split(' ')[0]}</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-red-600"><User className="h-5 w-5" />About {member.name.split(' ')[0]}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p className="whitespace-pre-wrap text-base text-muted-foreground">{member.bio}</p>
@@ -61,12 +63,12 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Briefcase className="h-5 w-5 text-primary" /> Experience</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-blue-700"><Briefcase className="h-5 w-5" /> Experience</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {member.experience.map((exp, index) => (
                         <div key={index} className="flex gap-4">
-                            <div className="mt-1 h-2 w-2 rounded-full bg-primary" />
+                            <div className="mt-1 h-2 w-2 rounded-full bg-blue-700" />
                             <div>
                                 <h3 className="font-semibold">{exp.role}</h3>
                                 <p className="text-muted-foreground">{exp.company}</p>
@@ -79,12 +81,12 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><GraduationCap className="h-5 w-5 text-primary" /> Education</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-orange-600"><GraduationCap className="h-5 w-5" /> Education</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                      {member.education.map((edu, index) => (
                         <div key={index} className="flex gap-4">
-                           <div className="mt-1 h-2 w-2 rounded-full bg-primary" />
+                           <div className="mt-1 h-2 w-2 rounded-full bg-orange-600" />
                             <div>
                                 <h3 className="font-semibold">{edu.degree}</h3>
                                 <p className="text-muted-foreground">{edu.institution}</p>
@@ -99,11 +101,11 @@ export default function TeamMemberPage({ params }: { params: { id: string } }) {
         <aside className="lg:col-span-1 lg:sticky top-24 self-start">
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><Star className="h-5 w-5 text-primary" /> Key Skills</CardTitle>
+                    <CardTitle className="flex items-center gap-2 text-amber-600"><Star className="h-5 w-5" /> Key Skills</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-wrap gap-2">
                     {member.skills.map(skill => (
-                        <Badge key={skill} variant="secondary">{skill}</Badge>
+                        <Badge key={skill} variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200">{skill}</Badge>
                     ))}
                 </CardContent>
             </Card>
