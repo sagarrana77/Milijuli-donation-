@@ -29,12 +29,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
   
   const isFunded = percentage >= 100;
 
-  const getProgressColor = (p: number) => {
-    if (p >= 100) return 'green';
-    if (p > 70) return 'default';
-    return 'amber';
-  }
-
   return (
     <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="relative p-0">
@@ -73,7 +67,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </span>
             <span>{percentage}%</span>
           </div>
-          <Progress value={percentage} variant={getProgressColor(percentage)} aria-label={`${percentage}% funded`} />
+          <Progress value={percentage} aria-label={`${percentage}% funded`} />
         </div>
         <Button asChild className="w-full" variant={isFunded ? 'secondary' : 'default'}>
             <Link href={`/projects/${project.id}`}>
