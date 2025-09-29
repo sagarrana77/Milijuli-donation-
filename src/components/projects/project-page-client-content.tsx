@@ -209,7 +209,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                                   {isClient ? (
                                                     format(new Date(update.date), 'PPp')
                                                   ) : (
-                                                    <Skeleton className="h-4 w-24" />
+                                                    <div className="h-4 w-24"><Skeleton /></div>
                                                   )}
                                                 </div>
                                             </div>
