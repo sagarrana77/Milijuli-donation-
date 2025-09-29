@@ -76,6 +76,7 @@ import { generateSocialMediaPost, GenerateSocialMediaPostOutput } from '@/ai/flo
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Pagination } from '@/components/ui/pagination';
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 
 const ITEMS_PER_PAGE = 5;
@@ -565,14 +566,16 @@ export default function AdminDashboardPage() {
       </Card>
       
       <Tabs defaultValue="projects">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-6">
-          <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
-          <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> In-Kind Donations</TabsTrigger>
-          <TabsTrigger value="operational-costs"><Briefcase className="mr-2 h-4 w-4"/> Operational Costs</TabsTrigger>
-          <TabsTrigger value="user-management"><Users className="mr-2 h-4 w-4"/> User Management</TabsTrigger>
-          <TabsTrigger value="ai-tools"><Wand2 className="mr-2 h-4 w-4" /> AI Tools</TabsTrigger>
-          <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
-        </TabsList>
+        <TooltipProvider>
+            <TabsList className="grid w-full grid-cols-6">
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="projects"><List className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Projects</span></TabsTrigger></TooltipTrigger><TooltipContent>Projects</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="donations"><HandCoins className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">In-Kind Donations</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind Donations</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="operational-costs"><Briefcase className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Operational Costs</span></TabsTrigger></TooltipTrigger><TooltipContent>Operational Costs</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="user-management"><Users className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">User Management</span></TabsTrigger></TooltipTrigger><TooltipContent>User Management</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="ai-tools"><Wand2 className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">AI Tools</span></TabsTrigger></TooltipTrigger><TooltipContent>AI Tools</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="settings"><Settings className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Settings</span></TabsTrigger></TooltipTrigger><TooltipContent>Platform Settings</TooltipContent></Tooltip>
+            </TabsList>
+        </TooltipProvider>
         <TabsContent value="projects" className="mt-6">
              <Card>
                 <CardHeader>
