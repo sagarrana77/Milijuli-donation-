@@ -36,11 +36,12 @@ import {
   ChevronDown,
   Sparkles
 } from 'lucide-react';
-import { currentUser, platformSettings, projects, physicalDonations } from '@/lib/data';
+import { platformSettings, projects, physicalDonations } from '@/lib/data';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { useState } from 'react';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { useAuth } from '@/context/auth-provider';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -65,8 +66,9 @@ export function MainSidebar() {
   const { setOpenMobile } = useSidebar();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/admin'));
   const { openDialog } = usePricingDialog();
+  const { user } = useAuth();
 
-  const canCreateCampaigns = currentUser?.isAdmin || (platformSettings.campaignCreationEnabled && currentUser?.canCreateCampaigns);
+  const canCreateCampaigns = user?.isAdmin || (platformSettings.campaignCreationEnabled && user?.canCreateCampaigns);
 
   // Calculate number of pending admin tasks
   const pendingCampaigns = projects.filter(p => !p.verified && p.ownerId !== 'clarity-chain-admin').length;
@@ -97,7 +99,7 @@ export function MainSidebar() {
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarMenu>
-          {canCreateCampaigns && (
+          {user && canCreateCampaigns && (
             <SidebarMenuItem>
                 <Button asChild className="w-full justify-start text-base" size="lg">
                 <Link href="/create-campaign" onClick={handleLinkClick}>
@@ -107,7 +109,7 @@ export function MainSidebar() {
                 </Button>
             </SidebarMenuItem>
           )}
-          {currentUser && (
+          {user && (
             <>
             <SidebarMenuItem>
               <SidebarMenuButton
@@ -161,7 +163,7 @@ export function MainSidebar() {
                   <span>Pricing</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            {currentUser?.isAdmin && (
+            {user?.isAdmin && (
                  <Collapsible open={isAdminOpen} onOpenChange={setIsAdminOpen} asChild>
                     <SidebarMenuItem>
                         <CollapsibleTrigger asChild>
@@ -213,14 +215,16 @@ export function MainSidebar() {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }} isActive={isActive('/settings')}>
-              <Link href="/settings" onClick={handleLinkClick}>
-                <Settings />
-                <span>Settings</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {user && (
+            <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }} isActive={isActive('/settings')}>
+                <Link href="/settings" onClick={handleLinkClick}>
+                    <Settings />
+                    <span>Settings</span>
+                </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>

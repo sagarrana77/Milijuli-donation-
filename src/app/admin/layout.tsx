@@ -1,14 +1,24 @@
 
-import { redirect } from 'next/navigation';
-import { currentUser } from '@/lib/data';
+'use client';
+
+import { useAuth } from '@/context/auth-provider';
+import { useRouter } from 'next/navigation';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  if (!currentUser?.isAdmin) {
-    redirect('/');
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a proper skeleton loader
+  }
+
+  if (!user?.isAdmin) {
+    router.replace('/');
+    return null;
   }
 
   return <div className="mx-auto max-w-7xl w-full">{children}</div>;

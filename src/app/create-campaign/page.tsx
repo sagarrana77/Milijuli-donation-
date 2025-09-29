@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -28,14 +27,15 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { PlusCircle, CreditCard, Wand2, Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { projects, currentUser, paymentGateways as defaultGateways } from '@/lib/data';
+import { projects, paymentGateways as defaultGateways, platformSettings } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { summarizeProject } from '@/ai/flows/summarize-project';
 import { generateCampaignStory } from '@/ai/flows/generate-campaign-story';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { useAuth } from '@/context/auth-provider';
 
 const gatewaySchema = z.object({
     name: z.string(),
@@ -60,10 +60,31 @@ type ProjectFormData = z.infer<typeof projectSchema>;
 export default function CreateCampaignPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const { openDialog } = usePricingDialog();
+  const { openDialog, onPurchase } = usePricingDialog();
+  const { user, loading } = useAuth();
+
   const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const [isGeneratingStory, setIsGeneratingStory] = useState(false);
-  const [credits, setCredits] = useState(currentUser?.aiCredits ?? 0);
+  const [credits, setCredits] = useState(user?.aiCredits ?? 0);
+  
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        router.push('/login');
+      } else if (!user.canCreateCampaigns && !user.isAdmin) {
+         toast({
+            title: 'Permission Denied',
+            description: 'You do not have permission to create a campaign.',
+            variant: 'destructive',
+        });
+        router.push('/');
+      }
+    }
+  }, [user, loading, router, toast]);
+
+  useEffect(() => {
+    setCredits(user?.aiCredits ?? 0);
+  }, [user?.aiCredits, onPurchase]);
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -85,15 +106,16 @@ export default function CreateCampaignPage() {
   });
 
   const handleCreditUsage = () => {
-    if (!currentUser) return false;
+    if (!user) return false;
 
-    if (currentUser.aiCredits !== undefined && currentUser.aiCredits > 0) {
-        currentUser.aiCredits -= 1;
-        setCredits(currentUser.aiCredits); // Update local state to re-render
-        if (currentUser.aiCredits < 10) {
+    if (user.aiCredits !== undefined && user.aiCredits > 0) {
+        // This is a mock update. In a real app, this would be an API call.
+        user.aiCredits -= 1;
+        setCredits(user.aiCredits);
+        if (user.aiCredits < 10) {
             toast({
                 title: 'Low AI Credits',
-                description: `You have ${currentUser.aiCredits} credits remaining. Purchase more to continue using AI features.`,
+                description: `You have ${user.aiCredits} credits remaining. Purchase more to continue using AI features.`,
                 variant: 'destructive',
             });
         }
@@ -110,7 +132,7 @@ export default function CreateCampaignPage() {
   }
 
   function onSubmit(data: ProjectFormData) {
-    if (!currentUser) {
+    if (!user) {
         toast({
             variant: "destructive",
             title: "Authentication Error",
@@ -125,7 +147,7 @@ export default function CreateCampaignPage() {
       raisedAmount: 0,
       donors: 0,
       verified: false, // User-created projects are unverified by default
-      ownerId: currentUser.id,
+      ownerId: user.uid,
       updates: [],
       expenses: [],
       discussion: [],
@@ -225,6 +247,10 @@ export default function CreateCampaignPage() {
         setIsGeneratingStory(false);
     }
   };
+
+  if (loading || !user) {
+    return <div>Loading...</div>; // Or a skeleton loader
+  }
 
 
   return (

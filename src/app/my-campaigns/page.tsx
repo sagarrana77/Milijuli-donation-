@@ -27,25 +27,33 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
-import { projects, currentUser, platformSettings } from '@/lib/data';
+import { projects, platformSettings } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 import { Pagination } from '@/components/ui/pagination';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/auth-provider';
 
 const ITEMS_PER_PAGE = 5;
 
 export default function MyCampaignsPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
 
-  if (!currentUser) {
-    router.push('/');
-    return null;
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+
+  if (loading || !user) {
+    return <div>Loading...</div>; // Or a skeleton loader
   }
 
-  const userProjects = projects.filter(p => p.ownerId === currentUser.id);
-  const canCreateCampaigns = currentUser?.isAdmin || (platformSettings.campaignCreationEnabled && currentUser?.canCreateCampaigns);
+  const userProjects = projects.filter(p => p.ownerId === user.uid);
+  const canCreateCampaigns = user?.isAdmin || (platformSettings.campaignCreationEnabled && user?.canCreateCampaigns);
 
   const totalPages = Math.ceil(userProjects.length / ITEMS_PER_PAGE);
   const paginatedProjects = userProjects.slice(

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -18,10 +17,12 @@ import { CreditCard, Landmark, Save, Sparkles } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { currentUser } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { useAuth } from '@/context/auth-provider';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 
 const profileSchema = z.object({
@@ -53,14 +54,29 @@ const bankAccountSchema = z.object({
 
 export default function SettingsPage() {
     const { toast } = useToast();
-    const { openDialog } = usePricingDialog();
+    const { openDialog, onPurchase } = usePricingDialog();
+    const { user, loading } = useAuth();
+    const router = useRouter();
+    const [credits, setCredits] = useState(user?.aiCredits ?? 0);
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push('/login');
+        }
+    }, [user, loading, router]);
+    
+    useEffect(() => {
+        if (user) {
+            setCredits(user.aiCredits ?? 0);
+        }
+    }, [user, onPurchase]);
 
     const profileForm = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
-        defaultValues: {
-            name: currentUser?.name,
-            email: currentUser?.email,
-            bio: currentUser?.bio
+        values: {
+            name: user?.displayName || '',
+            email: user?.email || '',
+            bio: user?.bio || ''
         }
     });
 
@@ -101,6 +117,10 @@ export default function SettingsPage() {
         bankForm.reset();
     };
 
+    if (loading || !user) {
+        return <div>Loading...</div>; // Or a skeleton loader
+    }
+
 
   return (
     <div className="space-y-8">
@@ -122,7 +142,7 @@ export default function SettingsPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border p-4">
                 <div className="space-y-1">
                     <p className="font-medium">Your Status</p>
-                    {currentUser?.isProMember ? (
+                    {user?.isProMember ? (
                         <Badge>
                             <Sparkles className="mr-2 h-4 w-4" /> Pro Member
                         </Badge>
@@ -132,7 +152,7 @@ export default function SettingsPage() {
                 </div>
                  <div className="space-y-1 mt-4 sm:mt-0 text-left sm:text-right">
                     <p className="font-medium">AI Credits Remaining</p>
-                    <p className="text-2xl font-bold">{currentUser?.aiCredits ?? 0}</p>
+                    <p className="text-2xl font-bold">{credits}</p>
                     <p className="text-xs text-muted-foreground">
                         (1 credit = 1 AI generation)
                     </p>
