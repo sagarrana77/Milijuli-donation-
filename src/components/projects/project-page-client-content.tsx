@@ -17,14 +17,14 @@ import { WishlistTab } from '@/components/projects/wishlist-tab';
 import { FundraisingProgress } from '@/components/projects/fundraising-progress';
 import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle } from '../ui/card';
-import { useImageDialog } from '@/context/image-dialog-provider';
+import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 interface ProjectPageClientContentProps {
     project: Project;
 }
 
 export function ProjectPageClientContent({ project }: ProjectPageClientContentProps) {
-    const { openImage } = useImageDialog();
+    const { openPhoto } = usePhotoDialog();
     return (
          <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
@@ -37,7 +37,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                         height={675}
                         className="aspect-video w-full object-cover cursor-pointer"
                         data-ai-hint={project.imageHint}
-                        onClick={() => openImage(project.imageUrl, project.name)}
+                        onClick={() => openPhoto({ imageUrl: project.imageUrl, title: project.name })}
                         priority
                     />
                     <CardContent className="p-6">
@@ -71,7 +71,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                     height={150} 
                                     className="aspect-video w-full rounded-md object-cover sm:w-48 cursor-pointer" 
                                     data-ai-hint={update.imageHint} 
-                                    onClick={() => openImage(update.imageUrl, update.title)}
+                                    onClick={() => openPhoto({ imageUrl: update.imageUrl, title: update.title })}
                                 />
                                 <div>
                                     <p className="font-semibold">{update.title}</p>

@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -12,14 +11,14 @@ import type { WishlistItem } from '@/lib/data';
 import { InKindDonationDialog } from './in-kind-donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { physicalDonations } from '@/lib/data';
-import { useImageDialog } from '@/context/image-dialog-provider';
+import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 
 export function WishlistTab() {
   const { project, setIsDonationOpen } = useDonationContext();
   const [selectedItem, setSelectedItem] = useState<WishlistItem | null>(null);
   const { toast } = useToast();
-  const { openImage } = useImageDialog();
+  const { openPhoto } = usePhotoDialog();
 
   const handleInKindSubmit = (data: { donationType: 'drop-off' | 'pickup', quantity: number, address?: string }) => {
     if (!selectedItem) return;
@@ -36,6 +35,7 @@ export function WishlistTab() {
         address: data.address,
         status: 'Pending',
         date: new Date(),
+        comments: [],
     });
 
     toast({
@@ -82,7 +82,7 @@ export function WishlistTab() {
                       height={300}
                       className="aspect-video w-full object-cover rounded-t-lg cursor-pointer"
                       data-ai-hint={item.imageHint}
-                      onClick={() => openImage(item.imageUrl!, item.name)}
+                      onClick={() => openPhoto({ imageUrl: item.imageUrl!, title: item.name })}
                   />
               )}
               <CardHeader>

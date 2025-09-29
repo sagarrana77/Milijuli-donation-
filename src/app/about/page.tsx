@@ -15,7 +15,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
-import { useImageDialog } from '@/context/image-dialog-provider';
+import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -45,7 +45,7 @@ const features: { title: string; description: string; icon: LucideIcon }[] = [
 ];
 
 export default function AboutPage() {
-  const { openImage } = useImageDialog();
+  const { openPhoto } = usePhotoDialog();
   const teamPhotoUrl = getImageUrl('team-photo');
 
   return (
@@ -58,7 +58,7 @@ export default function AboutPage() {
             fill
             objectFit="cover"
             className="brightness-75 cursor-pointer"
-            onClick={() => openImage(teamPhotoUrl, 'Our Team')}
+            onClick={() => openPhoto({ imageUrl: teamPhotoUrl, title: 'Our Team' })}
             data-ai-hint="team photo"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">

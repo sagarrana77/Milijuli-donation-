@@ -8,10 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { physicalDonations, projects, users } from '@/lib/data';
 import { Package } from 'lucide-react';
-import { useImageDialog } from '@/context/image-dialog-provider';
+import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 export default function InKindDonationsPage() {
-  const { openImage } = useImageDialog();
+  const { openPhoto } = usePhotoDialog();
   const completedDonations = physicalDonations.filter(
     (d) => d.status === 'Completed'
   );
@@ -70,20 +70,31 @@ export default function InKindDonationsPage() {
                             key={donation.id}
                             className="overflow-hidden transition-shadow hover:shadow-lg"
                           >
-                            <Image
-                              src={imageUrl}
-                              alt={wishlistItem.name}
-                              width={400}
-                              height={300}
-                              className="aspect-video w-full object-cover cursor-pointer"
-                              data-ai-hint={wishlistItem.imageHint}
-                              onClick={() => openImage(imageUrl, wishlistItem.name)}
-                            />
-                            <CardContent className="p-4">
-                              <p className="font-semibold">
-                                {donation.quantity}x {donation.itemName}
-                              </p>
-                            </CardContent>
+                            <div
+                                className="cursor-pointer"
+                                onClick={() => openPhoto({
+                                    imageUrl,
+                                    imageAlt: wishlistItem.name,
+                                    title: `${donation.quantity}x ${donation.itemName}`,
+                                    donor,
+                                    project,
+                                    comments: donation.comments,
+                                })}
+                            >
+                                <Image
+                                src={imageUrl}
+                                alt={wishlistItem.name}
+                                width={400}
+                                height={300}
+                                className="aspect-video w-full object-cover"
+                                data-ai-hint={wishlistItem.imageHint}
+                                />
+                                <CardContent className="p-4">
+                                <p className="font-semibold">
+                                    {donation.quantity}x {donation.itemName}
+                                </p>
+                                </CardContent>
+                            </div>
                             <CardFooter className="p-4 pt-0">
                               <Link
                                 href={donor.profileUrl}

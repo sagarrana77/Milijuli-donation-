@@ -1,5 +1,4 @@
 
-
 'use client';
 import {
   Card,
@@ -18,7 +17,7 @@ import {
 import type { equipment as EquipmentType } from '@/lib/data';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import { useImageDialog } from '@/context/image-dialog-provider';
+import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 interface EquipmentShowcaseProps {
     equipment: typeof EquipmentType
@@ -26,7 +25,7 @@ interface EquipmentShowcaseProps {
 
 export function EquipmentShowcase({ equipment }: EquipmentShowcaseProps) {
   const purchasedEquipment = equipment.filter(e => e.imageUrl);
-  const { openImage } = useImageDialog();
+  const { openPhoto } = usePhotoDialog();
 
   return (
     <Card>
@@ -57,7 +56,7 @@ export function EquipmentShowcase({ equipment }: EquipmentShowcaseProps) {
                         height={225}
                         className="rounded-t-lg object-cover w-full h-auto aspect-[16/9] cursor-pointer"
                         data-ai-hint={item.imageHint}
-                        onClick={() => openImage(item.imageUrl!, item.item)}
+                        onClick={() => openPhoto({ imageUrl: item.imageUrl!, title: item.item })}
                       />
                     </CardContent>
                      <div className="p-4 flex flex-col flex-grow">

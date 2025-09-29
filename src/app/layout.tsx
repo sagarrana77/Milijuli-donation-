@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { NotificationProvider } from '@/context/notification-provider';
-import { ImageDialogProvider } from '@/context/image-dialog-provider';
+import { PhotoDialogProvider } from '@/context/image-dialog-provider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -22,11 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-body antialiased`}>
-        <ImageDialogProvider>
+        <PhotoDialogProvider>
           <NotificationProvider>
             <AppShell>{children}</AppShell>
           </NotificationProvider>
-        </ImageDialogProvider>
+        </PhotoDialogProvider>
         <Toaster />
       </body>
     </html>

@@ -1,27 +1,35 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, from 'react';
+import type { ReactNode } from 'react';
 import { ImageDialog } from '@/components/ui/image-dialog';
+import type { Donor, Project, Comment } from '@/lib/data';
 
-interface ImageDialogContextType {
+export interface PhotoData {
+  imageUrl: string;
+  imageAlt?: string;
+  title: string;
+  donor?: Donor;
+  project?: Pick<Project, 'id' | 'name'>;
+  comments?: Comment[];
+}
+
+interface PhotoDialogContextType {
   isOpen: boolean;
-  imageUrl: string | null;
-  imageAlt: string | null;
-  openImage: (url: string, alt?: string) => void;
+  photoData: PhotoData | null;
+  openPhoto: (data: PhotoData) => void;
   closeImage: () => void;
 }
 
-const ImageDialogContext = createContext<ImageDialogContextType | undefined>(undefined);
+const PhotoDialogContext = React.createContext<PhotoDialogContextType | undefined>(undefined);
 
-export function ImageDialogProvider({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [imageAlt, setImageAlt] = useState<string | null>(null);
+export function PhotoDialogProvider({ children }: { children: ReactNode }) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [photoData, setPhotoData] = React.useState<PhotoData | null>(null);
 
-  const openImage = (url: string, alt: string = '') => {
-    setImageUrl(url);
-    setImageAlt(alt);
+  const openPhoto = (data: PhotoData) => {
+    setPhotoData(data);
     setIsOpen(true);
   };
 
@@ -29,31 +37,29 @@ export function ImageDialogProvider({ children }: { children: ReactNode }) {
     setIsOpen(false);
     // Delay clearing the image to prevent flickering during closing animation
     setTimeout(() => {
-        setImageUrl(null);
-        setImageAlt(null);
+        setPhotoData(null);
     }, 300);
   };
 
   const value = {
     isOpen,
-    imageUrl,
-    imageAlt,
-    openImage,
+    photoData,
+    openPhoto,
     closeImage,
   };
 
   return (
-    <ImageDialogContext.Provider value={value}>
+    <PhotoDialogContext.Provider value={value}>
       {children}
       <ImageDialog />
-    </ImageDialogContext.Provider>
+    </PhotoDialogContext.Provider>
   );
 }
 
-export function useImageDialog() {
-  const context = useContext(ImageDialogContext);
+export function usePhotoDialog() {
+  const context = React.useContext(PhotoDialogContext);
   if (context === undefined) {
-    throw new Error('useImageDialog must be used within an ImageDialogProvider');
+    throw new Error('usePhotoDialog must be used within a PhotoDialogProvider');
   }
   return context;
 }

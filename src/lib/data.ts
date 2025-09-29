@@ -6,6 +6,15 @@ function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
 }
 
+export type Comment = {
+  id: string;
+  author: string;
+  avatarUrl: string;
+  profileUrl: string;
+  date: Date;
+  text: string;
+};
+
 export type WishlistItem = {
   id: string;
   name: string;
@@ -45,14 +54,7 @@ export type Project = {
     receiptUrl: string;
     receiptHint: string;
   }[];
-  discussion: {
-    id:string;
-    author: string;
-    avatarUrl: string;
-    profileUrl: string;
-    date: Date;
-    text: string;
-  }[];
+  discussion: Comment[];
   wishlist: WishlistItem[];
 };
 
@@ -518,6 +520,7 @@ export type PhysicalDonation = {
     address?: string;
     status: 'Pending' | 'Completed' | 'Cancelled';
     date: Date;
+    comments: Comment[];
 };
   
 export let physicalDonations: PhysicalDonation[] = [
@@ -531,6 +534,24 @@ export let physicalDonations: PhysicalDonation[] = [
         donationType: 'drop-off',
         status: 'Completed',
         date: new Date('2023-11-10'),
+        comments: [
+            {
+                id: 'pdc-1',
+                author: 'Alex Johnson',
+                avatarUrl: getImageUrl('avatar-alex-johnson'),
+                profileUrl: '/team/alex-johnson',
+                date: new Date('2023-11-11T10:00:00Z'),
+                text: 'Thank you so much for your generous donation, Jane! These textbooks will make a huge difference.'
+            },
+            {
+                id: 'pdc-2',
+                author: 'Jane Doe',
+                avatarUrl: getImageUrl('avatar-jane-doe'),
+                profileUrl: '/profile/user-jane-doe',
+                date: new Date('2023-11-11T12:30:00Z'),
+                text: "You're very welcome! Happy to help."
+            }
+        ]
     },
     {
         id: 'pd-2',
@@ -543,6 +564,7 @@ export let physicalDonations: PhysicalDonation[] = [
         address: '456 Oak Avenue, Springfield',
         status: 'Pending',
         date: new Date('2023-11-12'),
+        comments: []
     }
 ];
 

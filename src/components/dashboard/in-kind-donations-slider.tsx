@@ -22,11 +22,11 @@ import { physicalDonations, projects, users } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { ArrowRight } from 'lucide-react';
-import { useImageDialog } from '@/context/image-dialog-provider';
+import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 export function InKindDonationsSlider() {
   const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
-  const { openImage } = useImageDialog();
+  const { openPhoto } = usePhotoDialog();
 
   if (completedDonations.length === 0) {
     return (
@@ -77,7 +77,14 @@ export function InKindDonationsSlider() {
                                 height={225}
                                 className="rounded-t-lg object-cover w-full h-auto aspect-[16/9] cursor-pointer"
                                 data-ai-hint={wishlistItem.imageHint}
-                                onClick={() => openImage(imageUrl, wishlistItem.name)}
+                                onClick={() => openPhoto({
+                                    imageUrl,
+                                    imageAlt: wishlistItem.name,
+                                    title: `${donation.quantity}x ${donation.itemName}`,
+                                    donor,
+                                    project,
+                                    comments: donation.comments,
+                                })}
                             />
                             <CardContent className="p-4 flex-grow">
                                 <p className="font-semibold text-lg">{donation.quantity}x {donation.itemName}</p>

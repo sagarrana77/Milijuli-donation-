@@ -15,14 +15,14 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { TransparencySealIcon } from '@/components/icons/transparency-seal';
-import { useImageDialog } from '@/context/image-dialog-provider';
+import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const { openImage } = useImageDialog();
+  const { openPhoto } = usePhotoDialog();
   const percentage = Math.round(
     (project.raisedAmount / project.targetAmount) * 100
   );
@@ -32,7 +32,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="relative p-0">
-        <div onClick={() => openImage(project.imageUrl, project.name)} className="cursor-pointer">
+        <div onClick={() => openPhoto({ imageUrl: project.imageUrl, title: project.name })} className="cursor-pointer">
           <Image
             src={project.imageUrl}
             alt={project.name}
