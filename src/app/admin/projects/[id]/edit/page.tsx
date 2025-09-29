@@ -76,6 +76,7 @@ export default function EditProjectPage() {
 
   const project = projects.find(p => p.id === projectId);
 
+  // Authorization check
   if (!project || !currentUser?.isAdmin) {
     notFound();
   }
@@ -84,8 +85,8 @@ export default function EditProjectPage() {
     resolver: zodResolver(projectSchema),
     defaultValues: project ? {
       ...project,
-      wishlist: project.wishlist.map(item => ({...item, allowInKind: item.allowInKind || false})),
-      updates: project.updates.map(update => ({...update, date: new Date(update.date)}))
+      wishlist: project.wishlist?.map(item => ({...item, allowInKind: item.allowInKind || false})) || [],
+      updates: project.updates?.map(update => ({...update, date: new Date(update.date)})) || []
     } : undefined,
   });
 

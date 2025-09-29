@@ -281,7 +281,7 @@ export default function AdminDashboardPage() {
       <Tabs defaultValue="projects">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="projects"><List className="mr-2 h-4 w-4"/> Projects</TabsTrigger>
-          <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> Donations</TabsTrigger>
+          <TabsTrigger value="donations"><HandCoins className="mr-2 h-4 w-4"/> In-Kind Donation Pledges</TabsTrigger>
           <TabsTrigger value="operational-costs"><Briefcase className="mr-2 h-4 w-4"/> Operational Costs</TabsTrigger>
           <TabsTrigger value="settings"><Settings className="mr-2 h-4 w-4" /> Platform Settings</TabsTrigger>
         </TabsList>
