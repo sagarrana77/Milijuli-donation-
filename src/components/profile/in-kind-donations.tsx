@@ -1,25 +1,26 @@
-
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { projects, type PhysicalDonation, users } from '@/lib/data';
+import { Card, CardContent } from '@/components/ui/card';
+import type { PhysicalDonation, Project, User } from '@/lib/data';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 
 interface ProfileInKindDonationsProps {
   donations: PhysicalDonation[];
+  projects: Project[];
+  users: User[];
 }
 
-export function ProfileInKindDonations({ donations }: ProfileInKindDonationsProps) {
+export function ProfileInKindDonations({ donations, projects, users }: ProfileInKindDonationsProps) {
   const { openPhoto } = usePhotoDialog();
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {donations.map((donation) => {
-        const project = projects.find(p => p.name === donation.projectName);
+        const project = projects.find(p => p.id === donation.projectId);
         const wishlistItem = project?.wishlist.find(w => w.name === donation.itemName);
-        const donor = users.find(u => u.name === donation.donorName);
+        const donor = users.find(u => u.id === donation.donorId);
 
         if (!wishlistItem || !project || !donor) return null;
 
@@ -35,7 +36,7 @@ export function ProfileInKindDonations({ donations }: ProfileInKindDonationsProp
                     title: `${donation.quantity}x ${donation.itemName}`,
                     donor,
                     project,
-                    comments: donation.comments,
+                    comments: [],
                 })}
             >
                 <Image

@@ -4,7 +4,7 @@
 'use server';
 
 import { db } from '@/lib/firebase';
-import { collection, getDocs, doc, getDoc, query, where, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, query, where, orderBy,getCountFromServer } from 'firebase/firestore';
 import type { Project } from '@/lib/data';
 
 /**
@@ -47,4 +47,25 @@ export async function getProject(id: string): Promise<Project | undefined> {
     console.error("Error fetching project: ", error);
     return undefined;
   }
+}
+
+
+/**
+ * Fetches the count of pending (unverified) projects.
+ * @returns A promise that resolves to the number of pending projects.
+ */
+export async function getPendingCampaignsCount(): Promise<number> {
+    try {
+        const projectsCollection = collection(db, 'projects');
+        const q = query(
+            projectsCollection, 
+            where('verified', '==', false),
+            where('ownerId', '!=', 'milijuli-sewa-admin')
+        );
+        const snapshot = await getCountFromServer(q);
+        return snapshot.data().count;
+    } catch (error) {
+        console.error("Error fetching pending campaigns count: ", error);
+        return 0;
+    }
 }

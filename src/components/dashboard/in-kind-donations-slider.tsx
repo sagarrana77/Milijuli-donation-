@@ -1,4 +1,4 @@
-'use client';
+'use server';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,19 +17,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { physicalDonations, type Project, users } from '@/lib/data';
+import type { Project } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { ArrowRight } from 'lucide-react';
-import { usePhotoDialog } from '@/context/image-dialog-provider';
+import { getInKindDonations, getUsers } from '@/services/donations-service';
+import { InKindDonationsSliderClient } from './in-kind-donations-slider-client';
 
 interface InKindDonationsSliderProps {
     allProjects: Project[];
 }
 
-export function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProps) {
+export async function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProps) {
+  const physicalDonations = await getInKindDonations();
+  const users = await getUsers();
   const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
-  const { openPhoto } = usePhotoDialog();
 
   if (completedDonations.length === 0) {
     return (
@@ -52,72 +54,7 @@ export function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProp
         <CardDescription>A showcase of successfully donated physical items.</CardDescription>
       </CardHeader>
       <CardContent>
-        <Carousel
-          opts={{
-            align: 'start',
-            loop: true,
-          }}
-          className="w-full"
-        >
-          <CarouselContent>
-            {completedDonations.map((donation) => {
-                const project = allProjects.find(p => p.name === donation.projectName);
-                const wishlistItem = project?.wishlist?.find(w => w.name === donation.itemName);
-                const donor = users.find(u => u.name === donation.donorName);
-                
-                if (!wishlistItem || !donor || !project) return null;
-
-                const imageUrl = wishlistItem.imageUrl || 'https://picsum.photos/seed/placeholder/400/225';
-
-                return (
-                    <CarouselItem key={donation.id} className="md:basis-1/2">
-                        <div className="p-1 h-full">
-                        <Card className="flex flex-col h-full overflow-hidden">
-                             <Image
-                                src={imageUrl}
-                                alt={wishlistItem.name}
-                                width={400}
-                                height={225}
-                                className="rounded-t-lg object-cover w-full h-auto aspect-[16/9] cursor-pointer"
-                                data-ai-hint={wishlistItem.imageHint}
-                                onClick={() => openPhoto({
-                                    imageUrl,
-                                    imageAlt: wishlistItem.name,
-                                    title: `${donation.quantity}x ${donation.itemName}`,
-                                    donor,
-                                    project,
-                                    comments: donation.comments,
-                                })}
-                            />
-                            <CardContent className="p-4 flex-grow">
-                                <p className="font-semibold text-lg">{donation.quantity}x {donation.itemName}</p>
-                                <p className="text-sm text-muted-foreground">
-                                    for <Link href={`/projects/${project?.id}`} className="text-primary hover:underline">{project?.name}</Link>
-                                </p>
-                            </CardContent>
-                            <CardFooter className="p-4 pt-0">
-                                <Link href={donor.profileUrl} className="flex items-center gap-3 w-full">
-                                    <Avatar className="h-9 w-9 border">
-                                        <AvatarImage
-                                        src={donor.avatarUrl}
-                                        alt={donor.name}
-                                        />
-                                        <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <div className="font-medium text-sm">Donated by {donor.name}</div>
-                                    </div>
-                                </Link>
-                            </CardFooter>
-                        </Card>
-                        </div>
-                    </CarouselItem>
-                )
-            })}
-          </CarouselContent>
-          <CarouselPrevious className="ml-12" />
-          <CarouselNext className="mr-12" />
-        </Carousel>
+        <InKindDonationsSliderClient completedDonations={completedDonations} allProjects={allProjects} users={users} />
       </CardContent>
        <CardFooter>
             <Button asChild variant="outline" className="w-full">

@@ -37,13 +37,14 @@ import {
   ChevronDown,
   Sparkles
 } from 'lucide-react';
-import { platformSettings, projects, physicalDonations } from '@/lib/data';
+import { platformSettings } from '@/lib/data';
 import { Button } from '../ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 import { useState } from 'react';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
 import { useAuth } from '@/context/auth-provider';
 import Image from 'next/image';
+import { AdminNotificationBadge } from './admin-notification-badge';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -71,11 +72,6 @@ export function MainSidebar() {
   const { user } = useAuth();
 
   const canCreateCampaigns = user?.isAdmin || (platformSettings.campaignCreationEnabled && user?.canCreateCampaigns);
-
-  // Calculate number of pending admin tasks
-  const pendingCampaigns = projects.filter(p => !p.verified && p.ownerId !== 'milijuli-sewa-admin').length;
-  const pendingDonations = physicalDonations.filter(d => d.status === 'Pending').length;
-  const adminNotificationCount = pendingCampaigns + pendingDonations;
 
 
   const isActive = (href: string) => {
@@ -180,7 +176,7 @@ export function MainSidebar() {
                             >
                                 <Shield />
                                 <span>Admin</span>
-                                {adminNotificationCount > 0 && <SidebarMenuBadge>{adminNotificationCount}</SidebarMenuBadge>}
+                                <AdminNotificationBadge />
                                 <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform ui-open:rotate-180" />
                             </SidebarMenuButton>
                         </CollapsibleTrigger>

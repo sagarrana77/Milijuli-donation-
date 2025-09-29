@@ -13,7 +13,9 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Home } from 'lucide-react';
-import { projects, teamMembers, users } from '@/lib/data';
+import { teamMembers } from '@/lib/data';
+import { getProject } from '@/services/projects-service';
+import { getUser } from '@/services/donations-service';
 
 
 // Helper function to capitalize the first letter of a string
@@ -31,20 +33,63 @@ const formatCrumb = (crumb: string) => {
     .join(' ');
 };
 
-const getNameForId = (id: string, type: string) => {
-    if (type === 'team') {
-        const member = teamMembers.find(m => m.id === id);
-        return member ? member.name : formatCrumb(id);
+const nameCache = new Map<string, string>();
+
+async function getNameForId(id: string, type: string): Promise<string> {
+    const cacheKey = `${type}-${id}`;
+    if (nameCache.has(cacheKey)) {
+        return nameCache.get(cacheKey)!;
     }
-    if (type === 'profile') {
-        const user = users.find(u => u.id === id);
-        return user ? user.name : formatCrumb(id);
+
+    let name = formatCrumb(id);
+    try {
+        if (type === 'team') {
+            const member = teamMembers.find(m => m.id === id);
+            if (member) name = member.name;
+        }
+        if (type === 'profile') {
+            const user = await getUser(id);
+            if (user) name = user.name;
+        }
+        if (type === 'projects' || type === 'my-campaigns') {
+            const project = await getProject(id);
+            if (project) name = project.name;
+        }
+    } catch (error) {
+        console.error(`Failed to fetch name for ${type} with id ${id}`, error);
     }
-     if (type === 'projects' || type === 'my-campaigns') {
-        const project = projects.find(p => p.id === id);
-        return project ? project.name : formatCrumb(id);
+    
+    nameCache.set(cacheKey, name);
+    return name;
+}
+
+function Crumb({ segment, href, isLast }: { segment: string, href: string, isLast: boolean }) {
+    const [label, setLabel] = React.useState(formatCrumb(segment));
+
+    React.useEffect(() => {
+        const pathSegments = href.split('/').filter(Boolean);
+        const currentSegment = pathSegments[pathSegments.length - 1];
+        const prevSegment = pathSegments.length > 1 ? pathSegments[pathSegments.length - 2] : '';
+
+        if (['team', 'profile', 'projects', 'my-campaigns'].includes(prevSegment)) {
+            getNameForId(currentSegment, prevSegment).then(setLabel);
+        } else if (prevSegment === 'admin' && currentSegment === 'projects') {
+            setLabel('Projects');
+        } else {
+            setLabel(formatCrumb(segment));
+        }
+    }, [segment, href]);
+
+
+    if (isLast) {
+        return <BreadcrumbPage>{label}</BreadcrumbPage>;
     }
-    return formatCrumb(id);
+
+    return (
+        <BreadcrumbLink asChild>
+            <Link href={href}>{label}</Link>
+        </BreadcrumbLink>
+    );
 }
 
 
@@ -72,30 +117,11 @@ export function Breadcrumbs() {
           const isLast = index === pathSegments.length - 1;
           const href = '/' + pathSegments.slice(0, index + 1).join('/');
 
-          let segmentLabel = formatCrumb(segment);
-          const prevSegment = pathSegments[index - 1];
-
-          // Special handling for dynamic routes to get a user-friendly name
-          if (['team', 'profile', 'projects', 'my-campaigns'].includes(prevSegment)) {
-              segmentLabel = getNameForId(segment, prevSegment);
-          }
-          
-          if(prevSegment === 'admin' && segment === 'projects') {
-              segmentLabel = 'Projects'; // Don't format this one
-          }
-
-
           return (
             <React.Fragment key={href}>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage>{segmentLabel}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link href={href}>{segmentLabel}</Link>
-                  </BreadcrumbLink>
-                )}
+                <Crumb segment={segment} href={href} isLast={isLast} />
               </BreadcrumbItem>
             </React.Fragment>
           );

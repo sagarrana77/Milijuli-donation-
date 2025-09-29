@@ -1,37 +1,30 @@
-
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useDonationContext } from '@/components/projects/donation-dialog-wrapper';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
+import type { Project, PhysicalDonation, User } from '@/lib/data';
 
-// This component is now client-side only and receives all data via context.
-export function InKindDonationsTab() {
-  const { project, physicalDonations, users } = useDonationContext();
+interface InKindDonationsClientProps {
+  project: Project;
+  donations: PhysicalDonation[];
+  users: User[];
+}
+
+export function InKindDonationsClient({
+  project,
+  donations,
+  users,
+}: InKindDonationsClientProps) {
   const { openPhoto } = usePhotoDialog();
 
-  const completedDonations = physicalDonations.filter(
-    (d) => d.projectId === project.id && d.status === 'Completed'
-  );
-
-  if (completedDonations.length === 0) {
-    return (
-      <Card className="bg-green-500/5 border-green-500/10">
-        <CardContent className="p-6 text-center text-muted-foreground">
-          This project has not received any in-kind donations yet.
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <Card className="bg-green-500/5 border-green-500/10">
+    <Card>
       <CardContent className="p-4 md:p-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {completedDonations.map((donation) => {
+          {donations.map((donation) => {
             const wishlistItem = project.wishlist.find(
               (w) => w.name === donation.itemName
             );
@@ -75,7 +68,7 @@ export function InKindDonationsTab() {
                     </p>
                   </CardContent>
                 </div>
-                <div className="border-t p-4">
+                <CardFooter className="p-4 pt-0">
                   <Link
                     href={donor.profileUrl}
                     className="flex w-full items-center gap-3"
@@ -90,7 +83,7 @@ export function InKindDonationsTab() {
                       </div>
                     </div>
                   </Link>
-                </div>
+                </CardFooter>
               </Card>
             );
           })}

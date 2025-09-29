@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,7 +13,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { type Project, type Update, users } from '@/lib/data';
+import type { Project, Update, User } from '@/lib/data';
+import { getUsers } from '@/services/donations-service';
 import { Skeleton } from '../ui/skeleton';
 import { ArrowRight, Gift, ShoppingCart } from 'lucide-react';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
@@ -29,9 +31,16 @@ interface AllUpdatesFeedProps {
 export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
   const [allUpdates, setAllUpdates] = useState<UpdateWithProject[]>([]);
   const [isClient, setIsClient] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
   const { openPhoto } = usePhotoDialog();
 
   useEffect(() => {
+    async function loadUsers() {
+        const fetchedUsers = await getUsers();
+        setUsers(fetchedUsers);
+    }
+    loadUsers();
+
     // Aggregate updates from all projects
     const updates = allProjects.flatMap(project =>
       (project.updates || []).map(update => ({
@@ -45,6 +54,11 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
     setAllUpdates(updates);
     setIsClient(true);
     
+  }, [allProjects]);
+
+  useEffect(() => {
+    if (users.length === 0) return;
+
     // Simulate real-time updates
     const interval = setInterval(() => {
         if (document.hidden || allProjects.length === 0) return; // Don't update if tab is not visible or no projects exist
@@ -53,7 +67,7 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
         const randomDonor = users.find(u => u.id === 'user-anonymous')!;
         const randomAmount = Math.floor(Math.random() * (5000 - 100 + 1)) + 100;
         
-        if (!randomProject) return;
+        if (!randomProject || !randomDonor) return;
 
         const newDonationUpdate: UpdateWithProject = {
             id: `rt-donation-${Date.now()}`,
@@ -76,8 +90,7 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
     }, 5000); // Add a new donation every 5 seconds
 
     return () => clearInterval(interval);
-
-  }, [allProjects]);
+  }, [allProjects, users]);
 
   if (!isClient) {
     return (
