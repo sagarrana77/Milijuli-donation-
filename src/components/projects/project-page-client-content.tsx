@@ -139,16 +139,24 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                 </Card>
                 </TabsContent>
                 <TabsContent value="donors" className="mt-4">
-                    <DonorsList projectName={project.name} />
+                    <Card className="bg-blue-500/5 border-blue-500/10">
+                        <CardContent className="p-0">
+                            <DonorsList projectName={project.name} />
+                        </CardContent>
+                    </Card>
                 </TabsContent>
                 <TabsContent value="in-kind" className="mt-4">
                     <InKindDonationsTab />
                 </TabsContent>
                 <TabsContent value="discussion" className="mt-4">
-                <DiscussionSection
-                    comments={project.discussion}
-                    projectId={project.id}
-                />
+                <Card>
+                    <CardContent className="p-0">
+                        <DiscussionSection
+                            comments={project.discussion}
+                            projectId={project.id}
+                        />
+                    </CardContent>
+                </Card>
                 </TabsContent>
             </Tabs>
             </ScrollFadeIn>
