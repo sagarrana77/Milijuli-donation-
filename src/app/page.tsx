@@ -159,6 +159,22 @@ export default function DashboardPage() {
       
       <ScrollFadeIn asChild>
         <section>
+            <div className="mb-4 flex items-center gap-3">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+                <h2 className="text-2xl font-bold">Successfully Funded</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {finishedProjects.map((project, index) => (
+                <ScrollFadeIn key={project.id} delay={index * 100}>
+                    <ProjectCard project={project} />
+                </ScrollFadeIn>
+            ))}
+            </div>
+        </section>
+      </ScrollFadeIn>
+
+      <ScrollFadeIn asChild>
+        <section>
             <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
                 <UserPlus className="h-6 w-6 text-primary" />
@@ -216,22 +232,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </ScrollFadeIn>
-      
-      <ScrollFadeIn asChild>
-        <section>
-            <div className="mb-4 flex items-center gap-3">
-                <CheckCircle className="h-6 w-6 text-green-600" />
-                <h2 className="text-2xl font-bold">Successfully Funded</h2>
-            </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {finishedProjects.map((project, index) => (
-                <ScrollFadeIn key={project.id} delay={index * 100}>
-                    <ProjectCard project={project} />
-                </ScrollFadeIn>
-            ))}
-            </div>
-        </section>
-      </ScrollFadeIn>
 
     </div>
   );
