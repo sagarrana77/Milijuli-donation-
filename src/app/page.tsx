@@ -200,7 +200,7 @@ export default function DashboardPage() {
                     </Badge>
                     </CardContent>
                     <CardFooter>
-                    <Button asChild variant="secondary" className="w-full">
+                    <Button asChild variant="default" className="w-full">
                         <Link href="/careers">Learn More</Link>
                     </Button>
                     </CardFooter>
