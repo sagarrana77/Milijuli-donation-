@@ -44,6 +44,7 @@ import {
   Loader2,
   Receipt,
   ShoppingCart,
+  Copy,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund } from '@/lib/data';
 import type { PhysicalDonation, Project, User } from '@/lib/data';
@@ -68,6 +69,7 @@ import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { generateWish, GenerateWishOutput } from '@/ai/flows/generate-wishes';
+import { generateSocialMediaPost, GenerateSocialMediaPostOutput } from '@/ai/flows/generate-social-media-post';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -91,6 +93,11 @@ export default function AdminDashboardPage() {
   const [wishOccasion, setWishOccasion] = useState('');
   const [generatedWish, setGeneratedWish] = useState<GenerateWishOutput | null>(null);
   const [isGeneratingWish, setIsGeneratingWish] = useState(false);
+  
+  const [socialPostProjectId, setSocialPostProjectId] = useState('');
+  const [socialPostPlatform, setSocialPostPlatform] = useState('Twitter');
+  const [generatedSocialPost, setGeneratedSocialPost] = useState<GenerateSocialMediaPostOutput | null>(null);
+  const [isGeneratingSocialPost, setIsGeneratingSocialPost] = useState(false);
 
 
   const handleAddSalary = () => {
@@ -410,6 +417,36 @@ export default function AdminDashboardPage() {
         description: `Operational cost total is now ${enabled ? 'visible' : 'hidden'} to users.`
     });
   }
+  
+  const handleGenerateSocialPost = async () => {
+    if (!socialPostProjectId) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Please select a project.' });
+      return;
+    }
+    setIsGeneratingSocialPost(true);
+    setGeneratedSocialPost(null);
+    try {
+      const result = await generateSocialMediaPost({
+        projectId: socialPostProjectId,
+        platform: socialPostPlatform as 'Twitter' | 'Facebook',
+      });
+      setGeneratedSocialPost(result);
+    } catch (error) {
+      console.error('Error generating social post:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error Generating Post',
+        description: 'There was a problem communicating with the AI. Please try again.',
+      });
+    } finally {
+      setIsGeneratingSocialPost(false);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: "Copied to Clipboard!" });
+  };
 
 
   return (
@@ -851,56 +888,133 @@ export default function AdminDashboardPage() {
             </Card>
         </TabsContent>
         <TabsContent value="ai-tools" className="mt-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>AI Wish Generator</CardTitle>
-                    <CardDescription>
-                        Create professional, occasion-based wishes to send to all your users.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="wish-occasion">Occasion</Label>
-                        <Input
-                        id="wish-occasion"
-                        placeholder="e.g., New Year, Holiday Season, Platform Anniversary"
-                        value={wishOccasion}
-                        onChange={(e) => setWishOccasion(e.target.value)}
-                        />
-                    </div>
-                    <Button onClick={handleGenerateWish} disabled={isGeneratingWish}>
-                        {isGeneratingWish ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                        <Wand2 className="mr-2 h-4 w-4" />
-                        )}
-                        Generate Wish
-                    </Button>
-
-                    {(isGeneratingWish || generatedWish) && (
-                        <div className="space-y-2 rounded-md border bg-muted p-4">
-                            <Label>Generated Message</Label>
-                            {isGeneratingWish ? (
-                                <div className="space-y-2">
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-3/4" />
-                                </div>
-                            ) : (
-                            <>
-                                <Textarea
-                                    readOnly
-                                    value={generatedWish?.wish}
-                                    rows={8}
-                                    className="bg-background"
-                                />
-                                <Button onClick={handleSendWish}>Send to All Users</Button>
-                            </>
-                            )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>AI Wish Generator</CardTitle>
+                        <CardDescription>
+                            Create professional, occasion-based wishes to send to all your users.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="wish-occasion">Occasion</Label>
+                            <Input
+                            id="wish-occasion"
+                            placeholder="e.g., New Year, Holiday Season"
+                            value={wishOccasion}
+                            onChange={(e) => setWishOccasion(e.target.value)}
+                            />
                         </div>
-                    )}
-                </CardContent>
-            </Card>
+                        <Button onClick={handleGenerateWish} disabled={isGeneratingWish}>
+                            {isGeneratingWish ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                            <Wand2 className="mr-2 h-4 w-4" />
+                            )}
+                            Generate Wish
+                        </Button>
+
+                        {(isGeneratingWish || generatedWish) && (
+                            <div className="space-y-2 rounded-md border bg-muted p-4">
+                                <Label>Generated Message</Label>
+                                {isGeneratingWish ? (
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-3/4" />
+                                    </div>
+                                ) : (
+                                <>
+                                    <Textarea
+                                        readOnly
+                                        value={generatedWish?.wish}
+                                        rows={8}
+                                        className="bg-background"
+                                    />
+                                    <Button onClick={handleSendWish}>Send to All Users</Button>
+                                </>
+                                )}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Social Media Post Generator</CardTitle>
+                        <CardDescription>
+                            Create engaging social media posts to promote your campaigns.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="social-project">Project</Label>
+                                <Select onValueChange={setSocialPostProjectId} value={socialPostProjectId}>
+                                    <SelectTrigger id="social-project">
+                                        <SelectValue placeholder="Select a project" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {projects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="social-platform">Platform</Label>
+                                <Select onValueChange={setSocialPostPlatform} value={socialPostPlatform}>
+                                    <SelectTrigger id="social-platform">
+                                        <SelectValue placeholder="Select a platform" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="Twitter">Twitter / X</SelectItem>
+                                        <SelectItem value="Facebook">Facebook</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <Button onClick={handleGenerateSocialPost} disabled={isGeneratingSocialPost}>
+                            {isGeneratingSocialPost ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                            <Wand2 className="mr-2 h-4 w-4" />
+                            )}
+                            Generate Post
+                        </Button>
+
+                        {(isGeneratingSocialPost || generatedSocialPost) && (
+                            <div className="space-y-2 rounded-md border bg-muted p-4">
+                                <Label>Generated Post for {socialPostPlatform}</Label>
+                                {isGeneratingSocialPost ? (
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-full" />
+                                        <Skeleton className="h-4 w-3/4" />
+                                    </div>
+                                ) : (
+                                <>
+                                    <div className="relative">
+                                        <Textarea
+                                            readOnly
+                                            value={generatedSocialPost?.post}
+                                            rows={8}
+                                            className="bg-background pr-10"
+                                        />
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="absolute top-2 right-2 h-7 w-7"
+                                            onClick={() => copyToClipboard(generatedSocialPost?.post || '')}
+                                        >
+                                            <Copy className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </>
+                                )}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
         </TabsContent>
         <TabsContent value="settings" className="mt-6">
             <div className="space-y-8">
