@@ -21,6 +21,7 @@ import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
 import { ArrowRight, Gift, PackageCheck } from 'lucide-react';
+import { useDonationContext } from './donation-dialog-wrapper';
 
 interface ProjectPageClientContentProps {
     project: Project;
@@ -37,7 +38,7 @@ const ProjectPageClientMainContent = ({ project }: ProjectPageClientContentProps
                 height={675}
                 className="aspect-video w-full object-cover cursor-pointer"
                 data-ai-hint={project.imageHint}
-                onClick={() => openPhoto({ imageUrl: project.imageUrl, title: project.name })}
+                onClick={() => openPhoto({ imageUrl: project.imageUrl, title: project.name, comments: project.discussion })}
                 priority
             />
             
@@ -65,7 +66,7 @@ const ProjectPageClientMainContent = ({ project }: ProjectPageClientContentProps
                                         </div>
                                         <div>
                                             <p className="font-semibold">{update.title}</p>
-                                            <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
+                                            <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
                                             <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                         </div>
                                     </div>
@@ -79,7 +80,7 @@ const ProjectPageClientMainContent = ({ project }: ProjectPageClientContentProps
                                             </div>
                                             <div>
                                                 <p className="font-semibold">{update.title}</p>
-                                                <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
+                                                <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
                                                 <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                             </div>
                                         </div>
@@ -100,7 +101,7 @@ const ProjectPageClientMainContent = ({ project }: ProjectPageClientContentProps
                                 )}
                                 <div>
                                     <p className="font-semibold">{update.title}</p>
-                                    <p className="text-sm text-muted-foreground">{format(update.date, 'PPP')}</p>
+                                    <p className="text-sm text-muted-foreground">{format(new Date(update.date), 'PPP')}</p>
                                     <p className="mt-2 text-sm text-foreground/80">{update.description}</p>
                                 </div>
                                 </div>
@@ -126,7 +127,7 @@ const ProjectPageClientMainContent = ({ project }: ProjectPageClientContentProps
                                 <p className="text-sm text-muted-foreground">{format(expense.date, 'PP')}</p>
                             </div>
                             <div className="flex items-center gap-4">
-                                <p className="font-semibold">${expense.amount.toLocaleString()}</p>
+                                <p className="font-semibold">Rs.{expense.amount.toLocaleString()}</p>
                                 <a href={expense.receiptUrl} target="_blank" rel="noopener noreferrer">
                                 <Button variant="outline" size="sm">View Receipt</Button>
                                 </a>
@@ -157,6 +158,7 @@ const ProjectPageClientMainContent = ({ project }: ProjectPageClientContentProps
 }
 
 const ProjectPageClientAside = () => {
+    const { project } = useDonationContext();
      return (
         <aside className="space-y-8 lg:sticky lg:top-24 self-start">
             <ScrollFadeIn>
@@ -169,7 +171,7 @@ const ProjectPageClientAside = () => {
                     <CardTitle>Donate via QR</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center gap-4">
-                    <PaymentGateways />
+                    <PaymentGateways project={project} />
                 </CardContent>
             </Card>
             </ScrollFadeIn>
