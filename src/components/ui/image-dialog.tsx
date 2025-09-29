@@ -35,8 +35,8 @@ export function ImageDialog() {
         <DialogHeader className="p-4 border-b shrink-0">
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
-        <div className="grid md:grid-cols-2 min-h-0">
-          <div className="relative bg-black flex items-center justify-center min-h-0">
+        <div className="grid md:grid-cols-2 min-h-0 flex-1">
+          <div className="relative bg-black flex items-center justify-center min-h-[400px] md:min-h-0">
             <Image
               src={imageUrl}
               alt={imageAlt || title}
