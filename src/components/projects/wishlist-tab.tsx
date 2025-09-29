@@ -13,6 +13,7 @@ import { InKindDonationDialog } from './in-kind-donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { physicalDonations, currentUser } from '@/lib/data';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
+import { cn } from '@/lib/utils';
 
 
 export function WishlistTab() {
@@ -113,8 +114,7 @@ export function WishlistTab() {
                   {isFulfilled ? 'Fully Funded' : 'Donate Money'}
                 </Button>
                  <Button
-                  variant="secondary"
-                  className="w-full"
+                  className={cn("w-full", isFulfilled ? "bg-muted text-muted-foreground" : "bg-teal-600 hover:bg-teal-700 text-white")}
                   onClick={() => setSelectedItem(item)}
                   disabled={!item.allowInKind || isFulfilled}
                 >

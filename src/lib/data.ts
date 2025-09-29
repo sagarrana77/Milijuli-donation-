@@ -721,6 +721,7 @@ export let physicalDonations: PhysicalDonation[] = [
         donationType: 'drop-off',
         status: 'Completed',
         date: '2023-11-10T10:00:00Z',
+        address: '123 Transparency Lane\nKathmandu, Nepal',
         comments: [
             {
                 id: 'pdc-1',

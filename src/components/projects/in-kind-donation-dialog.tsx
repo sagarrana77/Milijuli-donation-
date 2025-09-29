@@ -31,6 +31,8 @@ import {
 } from '@/components/ui/radio-group';
 import type { WishlistItem } from '@/lib/data';
 import { Truck, Package, PackageCheck } from 'lucide-react';
+import { contactInfo } from '@/lib/data';
+import { AnimatePresence, motion } from 'framer-motion';
 
 
 const inKindSchema = z.object({
@@ -73,6 +75,7 @@ export function InKindDonationDialog({
   });
 
   const donationType = form.watch('donationType');
+  const pickupAddress = form.watch('address');
 
   const handleFormSubmit = (data: InKindFormData) => {
     onSubmit(data);
@@ -81,6 +84,8 @@ export function InKindDonationDialog({
   };
 
   if (!item) return null;
+
+  const dropoffAddress = contactInfo.address;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -140,8 +145,17 @@ export function InKindDonationDialog({
                 </FormItem>
               )}
             />
-            {donationType === 'pickup' && (
-                 <FormField
+            
+            <AnimatePresence>
+              {donationType === 'pickup' && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <FormField
                     control={form.control}
                     name="address"
                     render={({ field }) => (
@@ -153,8 +167,49 @@ export function InKindDonationDialog({
                             <FormMessage />
                         </FormItem>
                     )}
-                />
-            )}
+                  />
+                  {pickupAddress && pickupAddress.length > 10 && (
+                     <div className="mt-4 rounded-lg overflow-hidden border">
+                         <iframe
+                            width="100%"
+                            height="200"
+                            loading="lazy"
+                            allowFullScreen
+                            src={`https://www.openstreetmap.org/export/embed.html?layer=mapnik&q=${encodeURIComponent(pickupAddress)}`}
+                          ></iframe>
+                     </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+             <AnimatePresence>
+                {donationType === 'drop-off' && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden space-y-2"
+                    >
+                        <div>
+                            <FormLabel>Drop-off Location</FormLabel>
+                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{dropoffAddress}</p>
+                        </div>
+                         <div className="rounded-lg overflow-hidden border">
+                             <iframe
+                                width="100%"
+                                height="200"
+                                loading="lazy"
+                                allowFullScreen
+                                src={`https://www.openstreetmap.org/export/embed.html?layer=mapnik&q=${encodeURIComponent(dropoffAddress)}`}
+                              ></iframe>
+                         </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+
             <DialogFooter className="pt-4">
               <DialogClose asChild>
                 <Button type="button" variant="secondary">
