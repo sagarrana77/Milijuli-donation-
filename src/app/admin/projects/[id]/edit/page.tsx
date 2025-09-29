@@ -27,10 +27,13 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Trash2, Save } from 'lucide-react';
+import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { projects, type Project, currentUser } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { generateSeoSuggestions, GenerateSeoSuggestionsOutput } from '@/ai/flows/generate-seo-suggestions';
+import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
 
 const wishlistItemSchema = z.object({
   id: z.string(),
@@ -64,6 +67,8 @@ const projectSchema = z.object({
   verified: z.boolean(),
   wishlist: z.array(wishlistItemSchema),
   updates: z.array(updateSchema),
+  metaDescription: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
 });
 
 type ProjectFormData = z.infer<typeof projectSchema>;
@@ -73,6 +78,7 @@ export default function EditProjectPage() {
   const router = useRouter();
   const params = useParams();
   const projectId = params.id as string;
+  const [isGeneratingSeo, setIsGeneratingSeo] = useState(false);
 
   const project = projects.find(p => p.id === projectId);
 
@@ -86,7 +92,9 @@ export default function EditProjectPage() {
     defaultValues: project ? {
       ...project,
       wishlist: project.wishlist?.map(item => ({...item, allowInKind: item.allowInKind || false})) || [],
-      updates: project.updates?.map(update => ({...update, date: new Date(update.date)})) || []
+      updates: project.updates?.map(update => ({...update, date: new Date(update.date)})) || [],
+      metaDescription: project.metaDescription || '',
+      keywords: project.keywords || [],
     } : undefined,
   });
 
@@ -103,7 +111,8 @@ export default function EditProjectPage() {
   function onSubmit(data: ProjectFormData) {
     const projectIndex = projects.findIndex(p => p.id === projectId);
     if (projectIndex !== -1) {
-        projects[projectIndex] = { ...projects[projectIndex], ...data };
+        const updatedProject = { ...projects[projectIndex], ...data };
+        projects[projectIndex] = updatedProject;
     }
     
     toast({
@@ -112,6 +121,33 @@ export default function EditProjectPage() {
     });
     router.push('/admin');
   }
+
+  const handleGenerateSeo = async () => {
+    setIsGeneratingSeo(true);
+    try {
+        const result = await generateSeoSuggestions({ projectId });
+        form.setValue('metaDescription', result.metaDescription, { shouldDirty: true });
+        form.setValue('keywords', result.keywords, { shouldDirty: true });
+        toast({
+            title: "SEO Suggestions Generated!",
+            description: "The AI has generated a meta description and keywords for your project."
+        })
+    } catch (error) {
+        console.error("Error generating SEO suggestions:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Could not generate SEO suggestions. Please try again.'
+        })
+    } finally {
+        setIsGeneratingSeo(false);
+    }
+  }
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: "Copied to Clipboard!" });
+  };
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -250,6 +286,66 @@ export default function EditProjectPage() {
                             </FormItem>
                             )}
                         />
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>SEO Suggestions</CardTitle>
+                            <CardDescription>Generate AI-powered keywords and meta descriptions to improve search visibility.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <Button type="button" onClick={handleGenerateSeo} disabled={isGeneratingSeo}>
+                                {isGeneratingSeo ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                Generate SEO Suggestions
+                            </Button>
+                            <FormField
+                                control={form.control}
+                                name="metaDescription"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Meta Description</FormLabel>
+                                    <FormControl>
+                                    <div className="relative">
+                                        <Textarea {...field} rows={3} />
+                                        <Button type="button" variant="ghost" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => copyToClipboard(field.value || '')} disabled={!field.value}>
+                                            <Copy className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="keywords"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Keywords</FormLabel>
+                                    <FormControl>
+                                        <div className="rounded-md border p-4 space-y-2">
+                                             <div className="relative">
+                                                <Input
+                                                    value={field.value?.join(', ')}
+                                                    onChange={(e) => form.setValue('keywords', e.target.value.split(',').map(k => k.trim()))}
+                                                    placeholder="Keywords will appear here..."
+                                                />
+                                                <Button type="button" variant="ghost" size="icon" className="absolute top-1/2 right-2 h-7 w-7 -translate-y-1/2" onClick={() => copyToClipboard(field.value?.join(', ') || '')} disabled={!field.value || field.value.length === 0}>
+                                                    <Copy className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                            <div className="flex flex-wrap gap-2">
+                                                {field.value?.map((keyword) => (
+                                                    <Badge key={keyword} variant="secondary">{keyword}</Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
                         </CardContent>
                     </Card>
 

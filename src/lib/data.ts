@@ -86,6 +86,8 @@ export type Project = {
   discussion: Comment[];
   wishlist: WishlistItem[];
   gateways?: Gateway[];
+  metaDescription?: string;
+  keywords?: string[];
 };
 
 export let projects: Project[] = [
@@ -104,6 +106,8 @@ export let projects: Project[] = [
     raisedAmount: 3250000,
     donors: 450,
     verified: true,
+    metaDescription: 'Support our mission to provide quality education to underprivileged children in rural Nepal. Help us build schools, fund teacher salaries, and supply learning materials. Donate to Education for All Nepal today and make a lasting impact.',
+    keywords: ['education', 'Nepal', 'charity', 'underprivileged children', 'school construction', 'donate', 'non-profit'],
     updates: [
        {
         id: 'update-notif-1',
