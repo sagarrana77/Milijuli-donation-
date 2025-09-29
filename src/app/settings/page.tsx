@@ -17,6 +17,7 @@ import { CreditCard, Landmark, Save } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
+import { currentUser } from '@/lib/data';
 
 
 const profileSchema = z.object({
@@ -52,9 +53,9 @@ export default function SettingsPage() {
     const profileForm = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            name: "Current User",
-            email: "donor@example.com",
-            bio: "A passionate supporter of community-driven projects and a firm believer in the power of transparent giving."
+            name: currentUser?.name,
+            email: currentUser?.email,
+            bio: currentUser?.bio
         }
     });
 

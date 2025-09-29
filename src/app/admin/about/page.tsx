@@ -28,6 +28,7 @@ import {
 } from '@/lib/data';
 import { MoreHorizontal, PlusCircle, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 export default function AdminAboutPage() {
   const { toast } = useToast();
@@ -127,7 +128,7 @@ export default function AdminAboutPage() {
             <TableBody>
               {teamMembers.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium">{member.name}</TableCell>
+                  <TableCell className="font-medium"><Link href={`/team/${member.id}`} className="hover:underline text-primary">{member.name}</Link></TableCell>
                   <TableCell>{member.role}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="icon">

@@ -15,7 +15,6 @@ export function DonorsList({ projectName }: DonorsListProps) {
   );
 
   return (
-    <Card className="bg-blue-500/5 border-blue-500/10">
       <CardContent className="p-6">
         {projectDonations.length > 0 ? (
           <ul className="space-y-4">
@@ -41,6 +40,5 @@ export function DonorsList({ projectName }: DonorsListProps) {
           </p>
         )}
       </CardContent>
-    </Card>
   );
 }

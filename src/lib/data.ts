@@ -103,7 +103,7 @@ export let projects: Project[] = [
        {
         id: 'update-notif-1',
         title: 'New Donation Received!',
-        description: 'Jane Doe just donated NPR 5,000. Thank you for your support!',
+        description: 'Sita Rai just donated NPR 5,000. Thank you for your support!',
         date: new Date(Date.now() - 1000 * 60 * 5),
       },
       {
@@ -144,21 +144,21 @@ export let projects: Project[] = [
     discussion: [
       {
         id: 'comment-1',
-        author: 'Jane Doe',
+        author: 'Sita Rai',
         avatarUrl: getImageUrl('avatar-jane-doe'),
-        profileUrl: '/profile/user-jane-doe',
+        profileUrl: '/profile/user-sita-rai',
         date: new Date('2023-10-18T14:30:00Z'),
         text:
           "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work.",
       },
       {
         id: 'comment-2',
-        author: 'John Smith',
+        author: 'Hari Thapa',
         avatarUrl: getImageUrl('avatar-john-smith'),
-        profileUrl: '/profile/user-john-smith',
+        profileUrl: '/profile/user-hari-thapa',
         date: new Date('2023-10-19T09:00:00Z'),
         text:
-          'I agree with Jane. The transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
+          'I agree with Sita. The transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
       },
        {
         id: 'comment-3',
@@ -166,8 +166,8 @@ export let projects: Project[] = [
         avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
         profileUrl: '/profile/current-user',
         date: new Date('2023-10-20T11:00:00Z'),
-        text: 'Hey @John Smith, great point! I was also wondering if there are plans to post updates on teacher training?',
-        replyTo: 'John Smith',
+        text: 'Hey @Hari Thapa, great point! I was also wondering if there are plans to post updates on teacher training?',
+        replyTo: 'Hari Thapa',
       },
     ],
     wishlist: [
@@ -338,21 +338,21 @@ export let salaries: {
 }[] = [
   {
     id: 'sal-1',
-    employee: 'Alex Johnson',
+    employee: 'Aayush KC',
     role: 'Founder & CEO',
     salary: 4000,
     currency: 'USD',
   },
   {
     id: 'sal-2',
-    employee: 'Maria Garcia',
+    employee: 'Priya Adhikari',
     role: 'Head of Operations (Nepal)',
     salary: 150000,
     currency: 'NPR',
   },
   {
     id: 'sal-3',
-    employee: 'Sam Chen',
+    employee: 'Rohan Maharjan',
     role: 'Lead Full-Stack Developer',
     salary: 3500,
     currency: 'USD',
@@ -514,39 +514,39 @@ export let users: User[] = [
         isAdmin: true,
     },
     { 
-        id: 'user-jane-doe', 
-        name: 'Jane Doe', 
-        email: 'jane.doe@example.com',
+        id: 'user-sita-rai', 
+        name: 'Sita Rai', 
+        email: 'sita.rai@example.com',
         avatarUrl: getImageUrl('avatar-jane-doe'), 
-        profileUrl: '/profile/user-jane-doe',
+        profileUrl: '/profile/user-sita-rai',
         bio: 'Loves to contribute to educational projects. Believes in the power of knowledge.',
         hasPaymentMethod: true,
         canCreateCampaigns: true,
     },
     { 
-        id: 'user-john-smith', 
-        name: 'John Smith', 
-        email: 'john.smith@example.com',
+        id: 'user-hari-thapa', 
+        name: 'Hari Thapa', 
+        email: 'hari.thapa@example.com',
         avatarUrl: getImageUrl('avatar-john-smith'), 
-        profileUrl: '/profile/user-john-smith',
+        profileUrl: '/profile/user-hari-thapa',
         bio: 'Focused on environmental causes and clean water initiatives.',
         hasPaymentMethod: true,
     },
     { 
-        id: 'user-ai-chan', 
-        name: 'Ai Chan', 
-        email: 'ai.chan@example.com',
+        id: 'user-maya-gurung', 
+        name: 'Maya Gurung', 
+        email: 'maya.gurung@example.com',
         avatarUrl: getImageUrl('avatar-ai-chan'), 
-        profileUrl: '/profile/user-ai-chan',
+        profileUrl: '/profile/user-maya-gurung',
         bio: 'Supports disaster relief and emergency response efforts.',
         hasPaymentMethod: true,
     },
     { 
-        id: 'user-raj-patel', 
-        name: 'Raj Patel',
-        email: 'raj.patel@example.com',
+        id: 'user-bikram-shah', 
+        name: 'Bikram Shah',
+        email: 'bikram.shah@example.com',
         avatarUrl: getImageUrl('avatar-raj-patel'), 
-        profileUrl: '/profile/user-raj-patel',
+        profileUrl: '/profile/user-bikram-shah',
         bio: 'Interested in community health and wellness projects.',
         hasPaymentMethod: false,
     },
@@ -591,28 +591,28 @@ export const recentDonations: {
 }[] = [
   {
     id: 1,
-    donor: users.find(u => u.id === 'user-jane-doe')!,
+    donor: users.find(u => u.id === 'user-sita-rai')!,
     project: 'Education for All Nepal',
     amount: 5000,
     date: new Date('2023-10-29T10:00:00Z'),
   },
   {
     id: 2,
-    donor: users.find(u => u.id === 'user-john-smith')!,
+    donor: users.find(u => u.id === 'user-hari-thapa')!,
     project: 'Clean Water Initiative',
     amount: 10000,
     date: new Date('2023-10-29T09:30:00Z'),
   },
   {
     id: 3,
-    donor: users.find(u => u.id === 'user-ai-chan')!,
+    donor: users.find(u => u.id === 'user-maya-gurung')!,
     project: 'Disaster Relief Fund',
     amount: 25000,
     date: new Date('2023-10-28T15:00:00Z'),
   },
   {
     id: 4,
-    donor: users.find(u => u.id === 'user-raj-patel')!,
+    donor: users.find(u => u.id === 'user-bikram-shah')!,
     project: 'Community Health Posts',
     amount: 7500,
     date: new Date('2023-10-28T12:45:00Z'),
@@ -626,14 +626,14 @@ export const recentDonations: {
   },
   {
     id: 6,
-    donor: users.find(u => u.id === 'user-jane-doe')!,
+    donor: users.find(u => u.id === 'user-sita-rai')!,
     project: 'Operational Costs',
     amount: 2500,
     date: new Date('2023-10-26T11:00:00Z'),
   },
     {
     id: 7,
-    donor: users.find(u => u.id === 'user-raj-patel')!,
+    donor: users.find(u => u.id === 'user-bikram-shah')!,
     project: 'Operational Costs',
     amount: 5000,
     date: new Date('2023-10-25T14:00:00Z'),
@@ -657,8 +657,8 @@ export type PhysicalDonation = {
 export let physicalDonations: PhysicalDonation[] = [
     {
         id: 'pd-1',
-        donorName: 'Jane Doe',
-        donorEmail: 'jane.doe@example.com',
+        donorName: 'Sita Rai',
+        donorEmail: 'sita.rai@example.com',
         projectName: 'Education for All Nepal',
         itemName: 'Set of Textbooks for a Child',
         quantity: 5,
@@ -668,17 +668,17 @@ export let physicalDonations: PhysicalDonation[] = [
         comments: [
             {
                 id: 'pdc-1',
-                author: 'Alex Johnson',
+                author: 'Aayush KC',
                 avatarUrl: getImageUrl('avatar-alex-johnson'),
-                profileUrl: '/team/alex-johnson',
+                profileUrl: '/team/aayush-kc',
                 date: new Date('2023-11-11T10:00:00Z'),
-                text: 'Thank you so much for your generous donation, Jane! These textbooks will make a huge difference.'
+                text: 'Thank you so much for your generous donation, Sita! These textbooks will make a huge difference.'
             },
             {
                 id: 'pdc-2',
-                author: 'Jane Doe',
+                author: 'Sita Rai',
                 avatarUrl: getImageUrl('avatar-jane-doe'),
-                profileUrl: '/profile/user-jane-doe',
+                profileUrl: '/profile/user-sita-rai',
                 date: new Date('2023-11-11T12:30:00Z'),
                 text: "You're very welcome! Happy to help."
             }
@@ -686,8 +686,8 @@ export let physicalDonations: PhysicalDonation[] = [
     },
     {
         id: 'pd-2',
-        donorName: 'Raj Patel',
-        donorEmail: 'raj.patel@example.com',
+        donorName: 'Bikram Shah',
+        donorEmail: 'bikram.shah@example.com',
         projectName: 'Education for All Nepal',
         itemName: 'Set of Textbooks for a Child',
         quantity: 10,
@@ -744,10 +744,10 @@ export const notifications: Notification[] = [
   {
     id: 'notif-3',
     title: 'New Team Member',
-    description: 'Sam Chen has joined the team as Lead Full-Stack Developer.',
+    description: 'Rohan Maharjan has joined the team as Lead Full-Stack Developer.',
     date: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
     read: true,
-    href: '/team/sam-chen',
+    href: '/team/rohan-maharjan',
   },
   {
     id: 'notif-4',
@@ -785,15 +785,15 @@ export type TeamMember = {
 
 export let teamMembers: TeamMember[] = [
   {
-    id: 'alex-johnson',
-    name: 'Alex Johnson',
+    id: 'aayush-kc',
+    name: 'Aayush KC',
     role: 'Founder & CEO',
     avatarUrl: getImageUrl('avatar-alex-johnson'),
     bio:
-      'Alex is a passionate social entrepreneur dedicated to leveraging technology for good. With a background in computer science and a heart for philanthropy, he founded ClarityChain to bring trust, transparency, and efficiency back to the non-profit sector. He believes that by showing donors exactly where their money goes, we can inspire a new wave of giving.',
+      'Aayush is a passionate social entrepreneur dedicated to leveraging technology for good. With a background in computer science and a heart for philanthropy, he founded ClarityChain to bring trust, transparency, and efficiency back to the non-profit sector. He believes that by showing donors exactly where their money goes, we can inspire a new wave of giving.',
     socials: {
-        twitter: 'https://twitter.com/alexjohnson',
-        linkedin: 'https://linkedin.com/in/alexjohnson'
+        twitter: 'https://twitter.com/aayushkc',
+        linkedin: 'https://linkedin.com/in/aayushkc'
     },
     experience: [
         { role: 'Founder & CEO', company: 'ClarityChain', duration: '2022 - Present' },
@@ -807,15 +807,15 @@ export let teamMembers: TeamMember[] = [
     skills: ['Social Entrepreneurship', 'Blockchain', 'Full-Stack Development', 'Strategic Planning', 'Fundraising'],
   },
   {
-    id: 'maria-garcia',
-    name: 'Maria Garcia',
+    id: 'priya-adhikari',
+    name: 'Priya Adhikari',
     role: 'Head of Operations (Nepal)',
     avatarUrl: getImageUrl('avatar-maria-garcia'),
     bio:
-      "Maria ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Maria's dedication is the driving force behind our operational excellence.",
+      "Priya ensures that all our projects run smoothly and efficiently, from initial planning to final impact reporting. With over a decade of experience in non-profit management and on-the-ground fieldwork in Nepal, she is an expert in logistics, community engagement, and sustainable development. Priya's dedication is the driving force behind our operational excellence.",
     socials: {
-        twitter: 'https://twitter.com/mariagarcia',
-        linkedin: 'https://linkedin.com/in/mariagarcia'
+        twitter: 'https://twitter.com/priyaadhikari',
+        linkedin: 'https://linkedin.com/in/priyaadhikari'
     },
     experience: [
         { role: 'Head of Operations (Nepal)', company: 'ClarityChain', duration: '2022 - Present' },
@@ -829,15 +829,15 @@ export let teamMembers: TeamMember[] = [
     skills: ['Non-Profit Management', 'Project Coordination', 'Community Outreach', 'Logistics (Nepal)', 'Grant Management'],
   },
   {
-    id: 'sam-chen',
-    name: 'Sam Chen',
+    id: 'rohan-maharjan',
+    name: 'Rohan Maharjan',
     role: 'Lead Full-Stack Developer',
     avatarUrl: getImageUrl('avatar-sam-chen'),
     bio:
-      "Sam is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Sam built the core of ClarityChain to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
+      "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of ClarityChain to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
     socials: {
-        twitter: 'https://twitter.com/samchen',
-        linkedin: 'https://linkedin.com/in/samchen'
+        twitter: 'https://twitter.com/rohanmaharjan',
+        linkedin: 'https://linkedin.com/in/rohanmaharjan'
     },
     experience: [
         { role: 'Lead Full-Stack Developer', company: 'ClarityChain', duration: '2022 - Present' },
