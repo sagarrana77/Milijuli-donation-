@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { dashboardStats, operationalCostsFund, projects, jobOpenings, salaries, equipment, miscExpenses } from '@/lib/data';
+import { dashboardStats, operationalCostsFund, projects, jobOpenings, salaries, equipment, miscExpenses, teamMembers } from '@/lib/data';
 import { RealtimeLedger } from '@/components/dashboard/realtime-ledger';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
@@ -130,7 +130,7 @@ export default function DashboardPage() {
       </div>
       
       <ScrollFadeIn>
-        <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} />
+        <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} teamMembers={teamMembers} />
       </ScrollFadeIn>
       
       <ScrollFadeIn>

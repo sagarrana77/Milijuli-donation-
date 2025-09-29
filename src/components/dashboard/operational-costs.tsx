@@ -1,6 +1,5 @@
 
 
-
 import {
   Card,
   CardContent,
@@ -17,17 +16,23 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { salaries as SalariesType, equipment as EquipmentType, miscExpenses as MiscExpensesType } from '@/lib/data';
+import type { salaries as SalariesType, equipment as EquipmentType, miscExpenses as MiscExpensesType, teamMembers as TeamMembersType } from '@/lib/data';
 import { Briefcase, MonitorSmartphone, Archive } from 'lucide-react';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 interface OperationalCostsProps {
-    salaries: typeof SalariesType;
-    equipment: typeof EquipmentType;
-    miscExpenses: typeof MiscExpensesType;
+    salaries: SalariesType;
+    equipment: EquipmentType;
+    miscExpenses: MiscExpensesType;
+    teamMembers: TeamMembersType;
 }
 
-export function OperationalCosts({ salaries, equipment, miscExpenses }: OperationalCostsProps) {
+export function OperationalCosts({ salaries, equipment, miscExpenses, teamMembers }: OperationalCostsProps) {
+    const findTeamMemberId = (employeeName: string) => {
+        const member = teamMembers.find(m => m.name === employeeName);
+        return member ? member.id : null;
+    }
   return (
     <Card>
       <CardHeader>
@@ -59,17 +64,26 @@ export function OperationalCosts({ salaries, equipment, miscExpenses }: Operatio
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {salaries.map((salary) => (
-                  <TableRow key={salary.id}>
-                    <TableCell className="font-medium">
-                      {salary.employee}
-                    </TableCell>
-                    <TableCell>{salary.role}</TableCell>
-                    <TableCell className="text-right">
-                      ${salary.salary.toLocaleString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {salaries.map((salary) => {
+                  const memberId = findTeamMemberId(salary.employee);
+                  return (
+                    <TableRow key={salary.id}>
+                      <TableCell className="font-medium">
+                        {memberId ? (
+                            <Link href={`/team/${memberId}`} className="hover:underline text-primary">
+                                {salary.employee}
+                            </Link>
+                        ) : (
+                            salary.employee
+                        )}
+                      </TableCell>
+                      <TableCell>{salary.role}</TableCell>
+                      <TableCell className="text-right">
+                        ${salary.salary.toLocaleString()}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TabsContent>
