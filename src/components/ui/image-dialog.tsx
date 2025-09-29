@@ -11,7 +11,7 @@ import {
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader } from './card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
 import { ScrollArea } from './scroll-area';
 import { DiscussionSection } from '../projects/discussion-section';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
@@ -32,11 +32,11 @@ export function ImageDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={closeImage}>
       <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0 gap-0">
-        <DialogHeader className="p-4 border-b sr-only">
+        <DialogHeader className="p-4 border-b">
           <DialogTitle>Image Viewer: {title}</DialogTitle>
         </DialogHeader>
         <div className="grid md:grid-cols-2 h-full overflow-hidden">
-          <div className="relative bg-black flex items-center justify-center">
+          <div className="relative bg-black flex items-center justify-center order-last md:order-first">
             <Image
               src={imageUrl}
               alt={imageAlt || title}
@@ -98,3 +98,4 @@ export function ImageDialog() {
     </Dialog>
   );
 }
+
