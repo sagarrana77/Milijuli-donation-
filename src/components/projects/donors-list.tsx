@@ -1,22 +1,18 @@
 
 'use client';
 
-import { useState } from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { useDonationContext } from './donation-dialog-wrapper';
-import { Pagination } from '../ui/pagination';
 import type { Donation } from '@/lib/data';
 
 interface DonorsListProps {
     donations?: Donation[];
 }
-
-const ITEMS_PER_PAGE = 5;
 
 // A small helper hook to safely use the context.
 const useSafeDonationContext = () => {
@@ -32,23 +28,15 @@ export function DonorsList({ donations: donationsProp }: DonorsListProps) {
   // Use donations from props if provided, otherwise fall back to context
   const donations = donationsProp || context?.donations || [];
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = Math.ceil(donations.length / ITEMS_PER_PAGE);
-  const paginatedDonations = donations.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
   return (
     <Card className="bg-blue-500/5 border-blue-500/10">
         <CardHeader>
             <CardTitle>All Donors</CardTitle>
         </CardHeader>
         <CardContent>
-            {paginatedDonations.length > 0 ? (
+            {donations.length > 0 ? (
             <ul className="space-y-4">
-                {paginatedDonations.map((donation) => (
+                {donations.map((donation) => (
                 <li key={donation.id} className="flex items-center justify-between gap-4 rounded-md border bg-card p-3">
                     <Link href={donation.donor.profileUrl} className="flex items-center gap-3">
                         <Avatar className="h-10 w-10 border">
@@ -84,15 +72,6 @@ export function DonorsList({ donations: donationsProp }: DonorsListProps) {
             </p>
             )}
         </CardContent>
-        {totalPages > 1 && (
-            <CardFooter>
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                />
-            </CardFooter>
-        )}
     </Card>
   );
 }
