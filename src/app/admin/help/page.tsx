@@ -21,11 +21,11 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { faqs, contactInfo } from '@/lib/data';
+import { getFaqs, setFaqs, contactInfo } from '@/lib/data';
 import type { FAQ } from '@/lib/data';
 
 export default function AdminHelpPage() {
-  const [_, setForceRender] = useState(0);
+  const [faqs, setFaqsState] = useState(getFaqs());
   const { toast } = useToast();
 
   const handleAddFaq = () => {
@@ -34,26 +34,26 @@ export default function AdminHelpPage() {
         question: 'New Question',
         answer: 'New answer. Please edit me.'
     }
-    faqs.push(newFaq);
-    setForceRender(c => c + 1);
+    setFaqsState(prev => [...prev, newFaq]);
   }
 
   const handleDeleteFaq = (id: string) => {
-    const index = faqs.findIndex(faq => faq.id === id);
-    if (index !== -1) {
-        faqs.splice(index, 1);
-        setForceRender(c => c + 1);
-    }
+    setFaqsState(prev => prev.filter(faq => faq.id !== id));
+  }
+
+  const handleFaqChange = (id: string, field: 'question' | 'answer', value: string) => {
+    setFaqsState(prev => prev.map(faq => faq.id === id ? { ...faq, [field]: value } : faq));
   }
 
   const handleSaveFaqs = () => {
+      setFaqs(faqs);
       toast({ title: "FAQs Saved!", description: "Your changes have been saved."});
-      setForceRender(c => c + 1);
   }
   
   const handleSaveContact = () => {
+      // In a real app, you'd save this to a backend.
+      // For this demo, we can just show a toast.
       toast({ title: "Contact Info Saved!", description: "Your changes have been saved."});
-      setForceRender(c => c + 1);
   }
 
   return (
@@ -82,9 +82,9 @@ export default function AdminHelpPage() {
                     <Label htmlFor={`faq-q-${index}`}>Question</Label>
                     <Input
                       id={`faq-q-${index}`}
-                      defaultValue={faq.question}
+                      value={faq.question}
                       onChange={(e) => {
-                        faq.question = e.target.value;
+                        handleFaqChange(faq.id, 'question', e.target.value);
                       }}
                     />
                   </div>
@@ -92,10 +92,10 @@ export default function AdminHelpPage() {
                     <Label htmlFor={`faq-a-${index}`}>Answer</Label>
                     <Textarea
                       id={`faq-a-${index}`}
-                      defaultValue={faq.answer}
+                      value={faq.answer}
                       rows={4}
                        onChange={(e) => {
-                        faq.answer = e.target.value;
+                         handleFaqChange(faq.id, 'answer', e.target.value);
                       }}
                     />
                   </div>

@@ -765,7 +765,7 @@ export type FAQ = {
   answer: string;
 };
 
-export let faqs: FAQ[] = [
+let faqs: FAQ[] = [
   {
     id: 'faq-1',
     question: 'How do I know my donation is secure?',
@@ -774,23 +774,31 @@ export let faqs: FAQ[] = [
   },
   {
     id: 'faq-2',
-    question: 'What does the "Verified Transparent" badge mean?',
+    question: 'Can I get a refund for my donation?',
     answer:
-      'This is our highest standard. A project with this badge has committed to full on-chain transparency. This means every donation, expense, and transfer of funds is recorded on a public blockchain, which is cryptographically secured and cannot be altered. Donors can independently audit all financial activity from start to finish, ensuring the highest level of accountability.',
+      'Donations are generally non-refundable. However, in exceptional circumstances, such as a project failing to start, we will work to reallocate the funds to a similar project or offer credits. Please contact support for any specific issues.',
   },
   {
-    id: 'faq-4',
+    id: 'faq-3',
     question: 'How does a project get a "Verified" badge?',
     answer:
       'To get a "Verified" badge, an organization must pass our standard due diligence process. We check their legal registration, and track record, and confirm their identity. This badge indicates that the organization is legitimate and has been vetted by ClarityChain, but it does not require them to use our on-chain financial tracking for full transparency. It serves as a baseline level of trust.',
   },
   {
-    id: 'faq-3',
-    question: 'Can I get a refund for my donation?',
+    id: 'faq-4',
+    question: 'What does the "Verified Transparent" badge mean?',
     answer:
-      'Donations are generally non-refundable. However, in exceptional circumstances, such as a project failing to start, we will work to reallocate the funds to a similar project or offer credits. Please contact support for any specific issues.',
+      'This is our highest standard. A project with this badge has committed to full on-chain transparency. This means every donation, expense, and transfer of funds is recorded on a public blockchain, which is cryptographically secured and cannot be altered. Donors can independently audit all financial activity from start to finish, ensuring the highest level of accountability.',
   },
 ];
+
+// In-memory store for FAQs to allow for mutation on the admin page.
+// In a real app, this would be a database.
+let faqStore = [...faqs];
+export const getFaqs = () => [...faqStore];
+export const setFaqs = (newFaqs: FAQ[]) => {
+  faqStore = newFaqs;
+}
 
 
 export let contactInfo = {
@@ -823,6 +831,7 @@ export let paymentGateways: Gateway[] = [
     { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
 ];
     
+
 
 
 

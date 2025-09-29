@@ -13,7 +13,9 @@ import Link from 'next/link';
 import { InfoIcon } from '@/components/icons/InfoIcon';
 import { MailIcon } from '@/components/icons/MailIcon';
 import { PhoneIcon } from '@/components/icons/PhoneIcon';
-import { faqs, contactInfo } from '@/lib/data';
+import { getFaqs, contactInfo } from '@/lib/data';
+
+const faqs = getFaqs();
 
 export default function HelpPage() {
   return (
