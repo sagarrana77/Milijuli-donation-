@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-  SidebarClose,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -27,8 +27,6 @@ import {
   Package,
   Mail,
 } from 'lucide-react';
-import { Button } from '../ui/button';
-import { X } from 'lucide-react';
 import { currentUser } from '@/lib/data';
 
 const menuItems = [
@@ -44,6 +42,7 @@ const menuItems = [
 
 export function MainSidebar() {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -51,6 +50,10 @@ export function MainSidebar() {
     }
     return pathname.startsWith(href);
   };
+  
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  }
 
   return (
     <Sidebar>
@@ -59,13 +62,6 @@ export function MainSidebar() {
           <div className="flex items-center gap-2">
             <Logo className="h-8 w-8 text-primary" />
             <span className="text-lg font-semibold">ClarityChain</span>
-          </div>
-          <div className='md:hidden'>
-             <SidebarClose asChild>
-              <Button variant="ghost" size="icon">
-                <X className="h-5 w-5" />
-              </Button>
-            </SidebarClose>
           </div>
         </div>
       </SidebarHeader>
@@ -82,7 +78,7 @@ export function MainSidebar() {
                     isActive={isActive(href)}
                     tooltip={{ children: label, side: 'right' }}
                 >
-                    <Link href={href}>
+                    <Link href={href} onClick={handleLinkClick}>
                     <Icon />
                     <span>{label}</span>
                     </Link>
@@ -96,7 +92,7 @@ export function MainSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip={{ children: 'Contact', side: 'right' }} isActive={isActive('/contact')}>
-              <Link href="/contact">
+              <Link href="/contact" onClick={handleLinkClick}>
                 <Mail />
                 <span>Contact</span>
               </Link>
@@ -104,7 +100,7 @@ export function MainSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip={{ children: 'Help', side: 'right' }} isActive={isActive('/help')}>
-              <Link href="/help">
+              <Link href="/help" onClick={handleLinkClick}>
                 <CircleHelp />
                 <span>Help</span>
               </Link>
@@ -112,7 +108,7 @@ export function MainSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }} isActive={isActive('/settings')}>
-              <Link href="/settings">
+              <Link href="/settings" onClick={handleLinkClick}>
                 <Settings />
                 <span>Settings</span>
               </Link>
