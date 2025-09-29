@@ -659,35 +659,40 @@ function mulberry32(a: number) {
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   }
 }
-const random = mulberry32(12345);
 
+function createDonationData() {
+    const random = mulberry32(12345); // Seed the generator
+    const donations: Donation[] = [];
 
-// This represents a larger, more complete list of donations for the whole platform
-export const allDonations: Donation[] = [
-    ...projects.flatMap((project, projectIndex) => 
-        Array.from({ length: project.donors }).map((_, i) => {
-            const donorUser = users[Math.floor(random() * (users.length -1))]; // Cycle through users, skip admin
-            return {
+    projects.forEach((project, projectIndex) => {
+        for (let i = 0; i < project.donors; i++) {
+            const donorUser = users[Math.floor(random() * (users.length - 1))];
+            donations.push({
                 id: projectIndex * 10000 + i,
                 donor: donorUser,
                 project: project.name,
-                amount: Math.floor(random() * (project.targetAmount / project.donors * 2)) + 100, // Random-ish amount
-                date: new Date(Date.now() - Math.floor(random() * 30) * 24 * 60 * 60 * 1000), // Random date in last 30 days
-            };
-        })
-    ),
-    // Add operational cost donations
-    ...Array.from({ length: operationalCostsFund.donors }).map((_, i) => {
-         const donorUser = users[Math.floor(random() * (users.length -1))];
-         return {
+                amount: Math.floor(random() * (project.targetAmount / project.donors * 2)) + 100,
+                date: new Date(Date.now() - Math.floor(random() * 30) * 24 * 60 * 60 * 1000),
+            });
+        }
+    });
+
+    for (let i = 0; i < operationalCostsFund.donors; i++) {
+        const donorUser = users[Math.floor(random() * (users.length - 1))];
+        donations.push({
             id: 900000 + i,
             donor: donorUser,
             project: 'Operational Costs',
             amount: Math.floor(random() * 20000) + 1000,
             date: new Date(Date.now() - Math.floor(random() * 30) * 24 * 60 * 60 * 1000),
-        }
-    })
-].sort((a, b) => b.date.getTime() - a.date.getTime());
+        });
+    }
+
+    return donations.sort((a, b) => b.date.getTime() - a.date.getTime());
+}
+
+// This represents a larger, more complete list of donations for the whole platform
+export const allDonations: Donation[] = createDonationData();
 
 
 // This represents a small, "live" feed of the most recent donations
