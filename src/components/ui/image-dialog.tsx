@@ -28,7 +28,7 @@ export function ImageDialog() {
 
   const { imageUrl, imageAlt, title, donor, project, comments } = photoData;
 
-  const hasInteractionTabs = donor && project;
+  const hasDonorInfo = donor && project;
 
   return (
     <Dialog open={isOpen} onOpenChange={closeImage}>
@@ -46,51 +46,45 @@ export function ImageDialog() {
             />
           </div>
           <div className="flex flex-col h-full overflow-y-auto border-t md:border-t-0 md:border-l">
-             <ScrollArea className="h-full">
+            <ScrollArea className="h-full">
                 <div className="p-4 space-y-4">
-                  {hasInteractionTabs ? (
-                    <Tabs defaultValue="donor">
-                       <TabsList className="grid w-full grid-cols-2">
-                          <TabsTrigger value="donor">Donor Info</TabsTrigger>
+                  <Tabs defaultValue={hasDonorInfo ? "donor" : "discussion"}>
+                      <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="donor" disabled={!hasDonorInfo}>Donor Info</TabsTrigger>
                           <TabsTrigger value="discussion">Discussion</TabsTrigger>
                       </TabsList>
-                      <TabsContent value="donor" className="mt-4">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>{title}</CardTitle>
-                                <CardDescription>A generous contribution to the <Link href={`/projects/${project.id}`} className="text-primary hover:underline">{project.name}</Link> project.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex items-center gap-4 rounded-lg border p-4">
-                                     <Avatar className="h-16 w-16 border">
-                                        <AvatarImage
-                                        src={donor.avatarUrl}
-                                        alt={donor.name}
-                                        />
-                                        <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex-1">
-                                        <div className="font-bold text-lg">Donated by {donor.name}</div>
-                                        <p className="text-sm text-muted-foreground line-clamp-2">{donor.bio}</p>
-                                    </div>
-                                </div>
-                                <Button asChild variant="outline" className="w-full">
-                                    <Link href={donor.profileUrl}>View Donor's Profile <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                                </Button>
-                            </CardContent>
-                        </Card>
-                      </TabsContent>
+                      {hasDonorInfo && (
+                        <TabsContent value="donor" className="mt-4">
+                          <Card>
+                              <CardHeader>
+                                  <CardTitle>{title}</CardTitle>
+                                  <CardDescription>A generous contribution to the <Link href={`/projects/${project.id}`} className="text-primary hover:underline">{project.name}</Link> project.</CardDescription>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                  <div className="flex items-center gap-4 rounded-lg border p-4">
+                                       <Avatar className="h-16 w-16 border">
+                                          <AvatarImage
+                                          src={donor.avatarUrl}
+                                          alt={donor.name}
+                                          />
+                                          <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1">
+                                          <div className="font-bold text-lg">Donated by {donor.name}</div>
+                                          <p className="text-sm text-muted-foreground line-clamp-2">{donor.bio}</p>
+                                      </div>
+                                  </div>
+                                  <Button asChild variant="outline" className="w-full">
+                                      <Link href={donor.profileUrl}>View Donor's Profile <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                                  </Button>
+                              </CardContent>
+                          </Card>
+                        </TabsContent>
+                      )}
                        <TabsContent value="discussion" className="mt-4">
                             <DiscussionSection comments={comments || []} projectId="photo-dialog" />
                        </TabsContent>
                     </Tabs>
-                  ) : (
-                    <Card>
-                      <CardHeader>
-                          <CardTitle>{title}</CardTitle>
-                      </CardHeader>
-                    </Card>
-                  )}
                 </div>
             </ScrollArea>
           </div>
