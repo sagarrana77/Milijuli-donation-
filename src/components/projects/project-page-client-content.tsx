@@ -62,14 +62,14 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                     <TabsTrigger value="discussion">Discussion</TabsTrigger>
                     </TabsList>
                     <TabsContent value="updates" className="mt-4">
-                        <Card>
+                        <Card className="bg-primary/5 border-primary/10">
                             <CardContent className="p-6">
                             {project.updates.length > 0 ? (
                                 <div className="space-y-6">
                                 {project.updates.map(update => {
                                     if (update.isTransfer) {
                                     return (
-                                        <div key={update.id} className="flex items-start gap-4 rounded-md border bg-muted/50 p-4">
+                                        <div key={update.id} className="flex items-start gap-4 rounded-md border bg-card p-4">
                                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
                                                 <ArrowRight className="h-5 w-5" />
                                             </div>
@@ -96,7 +96,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         )
                                     }
                                     return (
-                                    <div key={update.id} className="flex flex-col gap-4 sm:flex-row">
+                                    <div key={update.id} className="flex flex-col gap-4 sm:flex-row rounded-md border bg-card p-4">
                                     {update.imageUrl && (
                                         <Image 
                                             src={update.imageUrl} 
@@ -125,12 +125,12 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                         <WishlistTab />
                     </TabsContent>
                     <TabsContent value="spending" className="mt-4">
-                    <Card>
+                    <Card className="bg-red-500/5 border-red-500/10">
                         <CardContent className="p-6">
                         {project.expenses.length > 0 ? (
                             <ul className="space-y-4">
                             {project.expenses.map(expense => (
-                                <li key={expense.id} className="flex items-center justify-between gap-4">
+                                <li key={expense.id} className="flex items-center justify-between gap-4 rounded-md border bg-card p-3">
                                 <div>
                                     <p className="font-medium">{expense.item}</p>
                                     <p className="text-sm text-muted-foreground">{format(expense.date, 'PP')}</p>

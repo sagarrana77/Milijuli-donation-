@@ -15,12 +15,12 @@ export function DonorsList({ projectName }: DonorsListProps) {
   );
 
   return (
-    <Card>
+    <Card className="bg-blue-500/5 border-blue-500/10">
       <CardContent className="p-6">
         {projectDonations.length > 0 ? (
           <ul className="space-y-4">
             {projectDonations.map((donation) => (
-              <li key={donation.id} className="flex items-center justify-between gap-4">
+              <li key={donation.id} className="flex items-center justify-between gap-4 rounded-md border bg-card p-3">
                 <Link href={donation.donor.profileUrl} className="flex items-center gap-3">
                     <Avatar className="h-10 w-10 border">
                         <AvatarImage src={donation.donor.avatarUrl} alt={donation.donor.name} />

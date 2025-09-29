@@ -19,7 +19,7 @@ export function InKindDonationsTab() {
 
   if (completedDonations.length === 0) {
     return (
-      <Card>
+      <Card className="bg-green-500/5 border-green-500/10">
         <CardContent className="p-6 text-center text-muted-foreground">
           This project has not received any in-kind donations yet.
         </CardContent>
@@ -28,7 +28,7 @@ export function InKindDonationsTab() {
   }
 
   return (
-    <Card>
+    <Card className="bg-green-500/5 border-green-500/10">
       <CardContent className="p-4 md:p-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {completedDonations.map((donation) => {
