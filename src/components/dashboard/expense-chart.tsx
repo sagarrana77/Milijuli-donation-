@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell as RechartsPrimitive } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
@@ -67,10 +67,12 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
             hideLabel
             />}
         />
-        <Bar dataKey="value" radius={5} />
+        <Bar dataKey="value" radius={5}>
+          {data.map((entry) => (
+            <RechartsPrimitive key={`cell-${entry.key}`} fill={`hsl(var(--chart-${Object.keys(chartConfig).indexOf(entry.name) + 1}))`}/>
+          ))}
+        </Bar>
       </BarChart>
     </ChartContainer>
   );
 }
-
-    
