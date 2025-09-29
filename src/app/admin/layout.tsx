@@ -3,6 +3,7 @@
 
 import { useAuth } from '@/context/auth-provider';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AdminLayout({
   children,
@@ -12,13 +13,14 @@ export default function AdminLayout({
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  if (loading) {
-    return <div>Loading...</div>; // Or a proper skeleton loader
-  }
+  useEffect(() => {
+    if (!loading && !user?.isAdmin) {
+      router.replace('/');
+    }
+  }, [loading, user, router]);
 
-  if (!user?.isAdmin) {
-    router.replace('/');
-    return null;
+  if (loading || !user?.isAdmin) {
+    return <div>Loading...</div>; // Or a proper skeleton loader
   }
 
   return <div className="mx-auto max-w-7xl w-full">{children}</div>;
