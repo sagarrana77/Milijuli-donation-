@@ -32,14 +32,14 @@ const prompt = ai.definePrompt({
   name: 'generateWishPrompt',
   input: {schema: GenerateWishInputSchema},
   output: {schema: GenerateWishOutputSchema},
-  prompt: `You are a communications expert for a non-profit organization called ClarityChain. Your task is to write a professional and heartfelt wish for all users of the platform for the following occasion: {{{occasion}}}.
+  prompt: `You are a communications expert for a non-profit organization called milijuli sewa. Your task is to write a professional and heartfelt wish for all users of the platform for the following occasion: {{{occasion}}}.
 
 The message should:
 1.  Be warm, sincere, and inclusive.
 2.  Briefly thank the users for their continued support and belief in the mission of transparency.
 3.  Be general enough to be sent to all users (donors, project creators, etc.).
 4.  Do not include a specific year unless it's part of the occasion (e.g., "Happy New Year 2024").
-5.  End with a warm closing from "The ClarityChain Team".
+5.  End with a warm closing from "The milijuli sewa Team".
 6.  The entire response should be contained within the 'wish' field.`,
 });
 

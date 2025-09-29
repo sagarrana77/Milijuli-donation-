@@ -123,7 +123,7 @@ export default function AdminDashboardPage() {
   );
   const totalDonationPages = Math.ceil(physicalDonations.length / ITEMS_PER_PAGE);
 
-  const nonAdminUsers = users.filter(u => u.id !== 'clarity-chain-admin');
+  const nonAdminUsers = users.filter(u => u.id !== 'milijuli-sewa-admin');
   const paginatedUsers = nonAdminUsers.slice(
     (userPage - 1) * ITEMS_PER_PAGE,
     userPage * ITEMS_PER_PAGE
@@ -534,6 +534,15 @@ export default function AdminDashboardPage() {
         description: `Public AI summary generation has been ${enabled ? 'enabled' : 'disabled'}.`
     });
   }
+  
+  const handleAppNameChange = () => {
+    toast({
+        title: 'App Name Updated!',
+        description: 'The application name has been saved.',
+    });
+    // This forces a re-render to reflect the change in the sidebar
+    setForceRender(c => c + 1);
+  }
 
 
   return (
@@ -595,7 +604,7 @@ export default function AdminDashboardPage() {
       
       <Tabs defaultValue="projects">
         <TooltipProvider>
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="projects"><List className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Projects</span></TabsTrigger></TooltipTrigger><TooltipContent>Projects</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="donations"><HandCoins className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">In-Kind Donations</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind Donations</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="operational-costs"><Briefcase className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Operational Costs</span></TabsTrigger></TooltipTrigger><TooltipContent>Operational Costs</TooltipContent></Tooltip>
@@ -695,65 +704,67 @@ export default function AdminDashboardPage() {
                             <TabsTrigger value="post-received"><Package className="mr-2 h-4 w-4"/> Post Received Donation</TabsTrigger>
                         </TabsList>
                         <TabsContent value="pledges" className="mt-4">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Donor</TableHead>
-                                        <TableHead>Item</TableHead>
-                                        <TableHead>Project</TableHead>
-                                        <TableHead>Type</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead><span className="sr-only">Actions</span></TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {paginatedDonations.map(donation => (
-                                        <TableRow key={donation.id}>
-                                            <TableCell>{new Date(donation.date).toLocaleDateString()}</TableCell>
-                                            <TableCell>
-                                                <div className="font-medium">{donation.donorName}</div>
-                                                <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
-                                            </TableCell>
-                                            <TableCell>{donation.itemName} (x{donation.quantity})</TableCell>
-                                            <TableCell>{donation.projectName}</TableCell>
-                                            <TableCell>
-                                                <Badge variant={donation.donationType === 'pickup' ? 'default' : 'secondary'}>
-                                                    {donation.donationType}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Badge variant={
-                                                    donation.status === 'Completed' ? 'default' : 
-                                                    donation.status === 'Cancelled' ? 'destructive' : 'secondary'
-                                                }>
-                                                    {donation.status}
-                                                </Badge>
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuLabel>Change Status</DropdownMenuLabel>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Pending')}>
-                                                            Mark as Pending
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Completed')}>
-                                                            Mark as Completed
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Cancelled')} className="text-destructive">
-                                                            Mark as Cancelled
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </TableCell>
+                            <div className="overflow-x-auto">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Date</TableHead>
+                                            <TableHead>Donor</TableHead>
+                                            <TableHead>Item</TableHead>
+                                            <TableHead>Project</TableHead>
+                                            <TableHead>Type</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead><span className="sr-only">Actions</span></TableHead>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {paginatedDonations.map(donation => (
+                                            <TableRow key={donation.id}>
+                                                <TableCell>{new Date(donation.date).toLocaleDateString()}</TableCell>
+                                                <TableCell>
+                                                    <div className="font-medium">{donation.donorName}</div>
+                                                    <div className="text-sm text-muted-foreground">{donation.donorEmail}</div>
+                                                </TableCell>
+                                                <TableCell>{donation.itemName} (x{donation.quantity})</TableCell>
+                                                <TableCell>{donation.projectName}</TableCell>
+                                                <TableCell>
+                                                    <Badge variant={donation.donationType === 'pickup' ? 'default' : 'secondary'}>
+                                                        {donation.donationType}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge variant={
+                                                        donation.status === 'Completed' ? 'default' : 
+                                                        donation.status === 'Cancelled' ? 'destructive' : 'secondary'
+                                                    }>
+                                                        {donation.status}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell className="text-right">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" size="icon"><MoreHorizontal className="h-4 w-4" /></Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Pending')}>
+                                                                Mark as Pending
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Completed')}>
+                                                                Mark as Completed
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem onClick={() => handleStatusChange(donation.id, 'Cancelled')} className="text-destructive">
+                                                                Mark as Cancelled
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
                              {totalDonationPages > 1 && (
                                 <div className="mt-4">
                                    <Pagination currentPage={donationPage} totalPages={totalDonationPages} onPageChange={setDonationPage} />
@@ -1185,6 +1196,18 @@ export default function AdminDashboardPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
+                            <div className="rounded-lg border p-4 space-y-2">
+                                <Label htmlFor="app-name-input" className="text-base font-medium">Application Name</Label>
+                                <div className="flex gap-2">
+                                    <Input 
+                                        id="app-name-input"
+                                        defaultValue={platformSettings.appName}
+                                        onChange={(e) => platformSettings.appName = e.target.value}
+                                    />
+                                    <Button onClick={handleAppNameChange}>Save</Button>
+                                </div>
+                                <p className="text-sm text-muted-foreground">This name will be displayed in the sidebar and other places across the app.</p>
+                            </div>
                              <div className="rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div>

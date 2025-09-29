@@ -76,7 +76,7 @@ export default function LoginPage() {
     <div className="flex h-full items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Welcome to ClarityChain</CardTitle>
+          <CardTitle className="text-2xl">Welcome to milijuli sewa</CardTitle>
           <CardDescription>Sign in or create an account to continue</CardDescription>
         </CardHeader>
         <CardContent>

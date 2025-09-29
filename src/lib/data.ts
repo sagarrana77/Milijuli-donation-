@@ -98,260 +98,8 @@ export type Project = {
   keywords?: string[];
 };
 
-export let projects: Project[] = [
-  {
-    id: 'education-for-all-nepal',
-    name: 'Education for All Nepal',
-    organization: 'Hope Foundation',
-    ownerId: 'clarity-chain-admin',
-    description:
-      'Providing quality education to underprivileged children in rural Nepal.',
-    longDescription:
-      'This project aims to build and equip schools in remote areas of Nepal, providing access to quality education for children who would otherwise be left behind. Funds will be used for school construction, teacher salaries, and learning materials.',
-    imageUrl: getImageUrl('project-education-nepal'),
-    imageHint: 'nepal classroom',
-    targetAmount: 5000000,
-    raisedAmount: 3250000,
-    donors: 450,
-    verified: true,
-    metaDescription: 'Support our mission to provide quality education to underprivileged children in rural Nepal. Help us build schools, fund teacher salaries, and supply learning materials. Donate to Education for All Nepal today and make a lasting impact.',
-    keywords: ['education', 'Nepal', 'charity', 'underprivileged children', 'school construction', 'donate', 'non-profit'],
-    updates: [
-       {
-        id: 'update-notif-1',
-        title: 'New Donation Received!',
-        description: 'Sita Rai just donated NPR 5,000. Thank you for your support!',
-        date: '2024-05-20T10:00:00Z',
-        isMonetaryDonation: true,
-        monetaryDonationDetails: {
-            donorName: 'Sita Rai',
-            donorAvatarUrl: getImageUrl('avatar-jane-doe'),
-            donorProfileUrl: '/profile/user-sita-rai',
-            amount: 5000,
-        }
-      },
-      {
-        id: 'update-1',
-        title: 'New textbooks arrived!',
-        description: 'The first batch of new textbooks has been delivered to the students. Their faces lit up with joy!',
-        date: '2023-10-15T10:00:00Z',
-        imageUrl: getImageUrl('update-photo-1'),
-        imageHint: 'happy students',
-      },
-      {
-        id: 'update-2',
-        title: 'Foundation for the new school building is complete.',
-        description: 'Construction is on schedule! The foundation has been laid, and we are ready for the next phase.',
-        date: '2023-09-20T10:00:00Z',
-        imageUrl: getImageUrl('update-photo-2'),
-        imageHint: 'construction site',
-      },
-    ],
-    expenses: [
-      {
-        id: 'exp-1',
-        item: 'School Textbooks Batch 1',
-        amount: 120000,
-        date: '2023-10-12T10:00:00Z',
-        receiptUrl: getImageUrl('receipt-1'),
-        receiptHint: 'receipt scan',
-      },
-      {
-        id: 'exp-2',
-        item: 'Cement and Bricks',
-        amount: 350000,
-        date: '2023-09-15T10:00:00Z',
-        receiptUrl: getImageUrl('receipt-2'),
-        receiptHint: 'invoice document',
-      },
-    ],
-    discussion: [
-      {
-        id: 'comment-1',
-        author: 'Sita Rai',
-        avatarUrl: getImageUrl('avatar-jane-doe'),
-        profileUrl: '/profile/user-sita-rai',
-        date: '2023-10-18T14:30:00Z',
-        text:
-          "This is such a wonderful project! It's great to see the progress with the new school building. Keep up the amazing work.",
-      },
-      {
-        id: 'comment-2',
-        author: 'Hari Thapa',
-        avatarUrl: getImageUrl('avatar-john-smith'),
-        profileUrl: '/profile/user-hari-thapa',
-        date: '2023-10-19T09:00:00Z',
-        text:
-          'I agree with Sita. The transparency is key, and seeing the expense receipts for the textbooks and materials builds a lot of trust. Happy to be a donor!',
-      },
-       {
-        id: 'comment-3',
-        author: 'Current User',
-        avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
-        profileUrl: '/profile/current-user',
-        date: '2023-10-20T11:00:00Z',
-        text: 'Hey @Hari Thapa, great point! I was also wondering if there are plans to post updates on teacher training?',
-        replyTo: 'Hari Thapa',
-      },
-    ],
-    wishlist: [
-      {
-        id: 'wish-edu-1',
-        name: 'Set of Textbooks for a Child',
-        description: 'Provides a full set of required textbooks for one primary school student for a year.',
-        quantityNeeded: 200,
-        quantityDonated: 5,
-        costPerItem: 2500,
-        imageUrl: getImageUrl('update-photo-1'),
-        imageHint: 'school books',
-        allowInKind: true,
-      },
-      {
-        id: 'wish-edu-2',
-        name: 'School Desk and Chair',
-        description: 'A sturdy desk and chair for a student to learn comfortably.',
-        quantityNeeded: 100,
-        quantityDonated: 20,
-        costPerItem: 4000,
-        imageUrl: 'https://picsum.photos/seed/wishlist-desk/400/300',
-        imageHint: 'student desk',
-        allowInKind: false,
-      },
-    ],
-  },
-  {
-    id: 'clean-water-initiative',
-    name: 'Clean Water Initiative',
-    organization: 'AquaLife',
-    ownerId: 'clarity-chain-admin',
-    description:
-      'Building wells to provide access to clean and safe drinking water.',
-    longDescription:
-      'Access to clean water is a fundamental human right. This project focuses on drilling wells and installing water purification systems in communities that lack safe drinking water, reducing disease and improving overall health.',
-    imageUrl: getImageUrl('project-clean-water'),
-    imageHint: 'water well',
-    targetAmount: 7500000,
-    raisedAmount: 8000000,
-    donors: 1250,
-    verified: true,
-    updates: [],
-    expenses: [
-        {
-            id: 'exp-cw-1',
-            item: 'Well Drilling Equipment',
-            amount: 1500000,
-            date: '2023-11-01T10:00:00Z',
-            receiptUrl: getImageUrl('receipt-1'),
-            receiptHint: 'receipt scan',
-        }
-    ],
-    discussion: [],
-    wishlist: [],
-  },
-  {
-    id: 'community-health-posts',
-    name: 'Community Health Posts',
-    organization: 'Health for All',
-    ownerId: 'clarity-chain-admin',
-    description:
-      'Establishing health posts to offer basic medical services in remote villages.',
-    longDescription:
-      'We are setting up community health posts staffed by trained professionals to provide essential healthcare services, including maternal care, vaccinations, and treatment for common illnesses, directly within remote communities.',
-    imageUrl: getImageUrl('project-community-health'),
-    imageHint: 'community health',
-    targetAmount: 12000000,
-    raisedAmount: 4500000,
-    donors: 800,
-    verified: false,
-    updates: [],
-    expenses: [
-         {
-            id: 'exp-chp-1',
-            item: 'Medical Supplies',
-            amount: 800000,
-            date: '2023-11-05T10:00:00Z',
-            receiptUrl: getImageUrl('receipt-2'),
-            receiptHint: 'invoice document',
-        }
-    ],
-    discussion: [],
-    wishlist: [],
-  },
-  {
-    id: 'disaster-relief-fund',
-    name: 'Disaster Relief Fund',
-    organization: 'Rapid Response Team',
-    ownerId: 'clarity-chain-admin',
-    description:
-      'Providing immediate aid and support to areas affected by natural disasters.',
-    longDescription:
-      'This fund is dedicated to providing swift and effective relief in the aftermath of natural disasters. Donations help us deliver food, shelter, medical supplies, and other critical aid to those in desperate need.',
-    imageUrl: getImageUrl('project-disaster-relief'),
-    imageHint: 'disaster relief',
-    targetAmount: 25000000,
-    raisedAmount: 18000000,
-    donors: 2500,
-    verified: true,
-    updates: [],
-    expenses: [
-        {
-            id: 'exp-drf-1',
-            item: 'Emergency Food Supplies',
-            amount: 2500000,
-            date: '2023-10-20T10:00:00Z',
-            receiptUrl: getImageUrl('receipt-1'),
-            receiptHint: 'receipt scan',
-        }
-    ],
-    discussion: [],
-    wishlist: [],
-  },
-   {
-    id: 'rebuild-the-local-library',
-    name: 'Rebuild the Local Library',
-    organization: 'Current User',
-    ownerId: 'current-user',
-    description: 'Help us rebuild our beloved community library after the recent fire.',
-    longDescription: 'Our community library was a cornerstone of our town, offering a safe space for learning and discovery for all ages. After a tragic fire, we are fundraising to rebuild it from the ground up, with modern amenities and a larger collection of books. Your support will help us bring back this vital community hub.',
-    imageUrl: 'https://picsum.photos/seed/library-fire/600/400',
-    imageHint: 'library books',
-    targetAmount: 8500000,
-    raisedAmount: 1200000,
-    donors: 150,
-    verified: false,
-    updates: [],
-    expenses: [],
-    discussion: [],
-    wishlist: [],
-    gateways: [
-        { name: 'Esewa', enabled: true, qrValue: 'my-esewa-id', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=my-esewa-id' },
-        { name: 'Khalti', enabled: false, qrValue: '', generatedQr: '' },
-        { name: 'FonePay', enabled: false, qrValue: '', generatedQr: '' },
-        { name: 'PayPal', enabled: true, qrValue: 'paypal.me/my-campaign', generatedQr: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=paypal.me%2Fmy-campaign' },
-        { name: 'Stripe', enabled: false, qrValue: '', generatedQr: '' },
-        { name: 'Crypto', enabled: false, qrValue: '', generatedQr: '' },
-    ]
-  },
-  {
-    id: 'stray-animal-shelter-expansion',
-    name: 'Stray Animal Shelter Expansion',
-    organization: 'Current User',
-    ownerId: 'current-user',
-    description: 'Help us expand our shelter to care for more stray animals in our city.',
-    longDescription: 'Our current stray animal shelter is at full capacity, and we are forced to turn away animals in need every day. This campaign will fund the construction of a new wing, allowing us to rescue, treat, and re-home dozens more stray dogs and cats. Every dollar brings us closer to giving these animals a second chance.',
-    imageUrl: 'https://picsum.photos/seed/stray-dog/600/400',
-    imageHint: 'stray dog',
-    targetAmount: 4000000,
-    raisedAmount: 3800000,
-    donors: 600,
-    verified: true,
-    updates: [],
-    expenses: [],
-    discussion: [],
-    wishlist: [],
-    gateways: []
-  },
-];
+export let projects: Project[] = [];
+
 
 export let salaries: {
     id: string;
@@ -611,13 +359,13 @@ export let users: User[] = [
         isProMember: false,
     },
      { 
-        id: 'clarity-chain-admin',
-        uid: 'clarity-chain-admin',
-        name: 'ClarityChain Admin', 
-        email: 'admin@claritychain.com',
-        avatarUrl: getImageUrl('logo-clarity-chain'), 
-        profileUrl: '/profile/clarity-chain-admin',
-        bio: 'The official account for the ClarityChain organization.',
+        id: 'milijuli-sewa-admin',
+        uid: 'milijuli-sewa-admin',
+        name: 'milijuli sewa Admin', 
+        email: 'admin@milijulisewa.com',
+        avatarUrl: getImageUrl('logo-milijuli-sewa'), 
+        profileUrl: '/profile/milijuli-sewa-admin',
+        bio: 'The official account for the milijuli sewa organization.',
         hasPaymentMethod: true,
         isAdmin: true,
         friends: [],
@@ -643,7 +391,7 @@ export let users: User[] = [
         avatarUrl: getImageUrl('avatar-sam-chen'),
         profileUrl: '/team/rohan-maharjan',
         bio:
-        "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of ClarityChain to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
+        "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of milijuli sewa to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
         friends: [],
         aiCredits: 10,
         isProMember: false,
@@ -677,7 +425,7 @@ export type Donation = {
 
 // This represents a larger, more complete list of donations for the whole platform
 function createDonationData(): Donation[] {
-    const donorPool = users.filter(u => u.id !== 'clarity-chain-admin');
+    const donorPool = users.filter(u => u.id !== 'milijuli-sewa-admin');
     
     // Create a static, deterministic list of donations
     const staticDonations: Omit<Donation, 'donor'|'id'>[] = [
@@ -857,13 +605,13 @@ export let teamMembers: TeamMember[] = [
     role: 'Founder & CEO',
     avatarUrl: getImageUrl('avatar-alex-johnson'),
     bio:
-      'Aayush is a passionate social entrepreneur dedicated to leveraging technology for good. With a background in computer science and a heart for philanthropy, he founded ClarityChain to bring trust, transparency, and efficiency back to the non-profit sector. He believes that by showing donors exactly where their money goes, we can inspire a new wave of giving.',
+      'Aayush is a passionate social entrepreneur dedicated to leveraging technology for good. With a background in computer science and a heart for philanthropy, he founded milijuli sewa to bring trust, transparency, and efficiency back to the non-profit sector. He believes that by showing donors exactly where their money goes, we can inspire a new wave of giving.',
     socials: {
         twitter: 'https://twitter.com/aayushkc',
         linkedin: 'https://linkedin.com/in/aayushkc'
     },
     experience: [
-        { role: 'Founder & CEO', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Founder & CEO', company: 'milijuli sewa', duration: '2022 - Present' },
         { role: 'Senior Software Engineer', company: 'Tech for Good Inc.', duration: '2018 - 2022' },
         { role: 'Software Engineer', company: 'Innovate Solutions', duration: '2015 - 2018' },
     ],
@@ -885,7 +633,7 @@ export let teamMembers: TeamMember[] = [
         linkedin: 'https://linkedin.com/in/priyaadhikari'
     },
     experience: [
-        { role: 'Head of Operations (Nepal)', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Head of Operations (Nepal)', company: 'milijuli sewa', duration: '2022 - Present' },
         { role: 'Program Director', company: 'Himalayan Aid', duration: '2015 - 2022' },
         { role: 'Field Coordinator', company: 'Hope International, Nepal', duration: '2010 - 2015' },
     ],
@@ -901,13 +649,13 @@ export let teamMembers: TeamMember[] = [
     role: 'Lead Full-Stack Developer',
     avatarUrl: getImageUrl('avatar-sam-chen'),
     bio:
-      "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of ClarityChain to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
+      "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of milijuli sewa to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
     socials: {
         twitter: 'https://twitter.com/rohanmaharjan',
         linkedin: 'https://linkedin.com/in/rohanmaharjan'
     },
     experience: [
-        { role: 'Lead Full-Stack Developer', company: 'ClarityChain', duration: '2022 - Present' },
+        { role: 'Lead Full-Stack Developer', company: 'milijuli sewa', duration: '2022 - Present' },
         { role: 'Senior Software Engineer', company: 'ConnectSphere', duration: '2019 - 2022' },
         { role: 'Backend Engineer', company: 'Fintech Innovations', duration: '2017 - 2019' },
     ],
@@ -922,13 +670,13 @@ export let teamMembers: TeamMember[] = [
     role: 'Community Manager (Nepal)',
     avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
     bio:
-      'Sunita is the voice of ClarityChain in Nepal. She works directly with our local project partners and user community, providing support, gathering feedback, and sharing their stories. Her passion for community building and her deep understanding of the local context are invaluable to our mission.',
+      'Sunita is the voice of milijuli sewa in Nepal. She works directly with our local project partners and user community, providing support, gathering feedback, and sharing their stories. Her passion for community building and her deep understanding of the local context are invaluable to our mission.',
     socials: {
         twitter: 'https://twitter.com/sunitasharma',
         linkedin: 'https://linkedin.com/in/sunitasharma'
     },
     experience: [
-        { role: 'Community Manager (Nepal)', company: 'ClarityChain', duration: '2023 - Present' },
+        { role: 'Community Manager (Nepal)', company: 'milijuli sewa', duration: '2023 - Present' },
         { role: 'Social Media Coordinator', company: 'SastoDeal', duration: '2020 - 2023' },
         { role: 'Communications Intern', company: 'UNESCO Nepal', duration: '2019 - 2020' },
     ],
@@ -963,7 +711,7 @@ export let values = [
 ];
 
 export let aboutContent = {
-    mission: `Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. ClarityChain provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.`,
+    mission: `Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. milijuli sewa provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.`,
     tagline: 'Driving transparency and trust in charitable giving through technology.',
 }
 
@@ -983,7 +731,7 @@ export let jobOpenings: JobOpening[] = [
     title: 'Community Manager',
     type: 'Full-time',
     location: 'Kathmandu, Nepal',
-    description: 'We are looking for a passionate Community Manager to engage with our users, manage our social media presence, and build a strong, supportive community around ClarityChain. You will be the voice of our organization.',
+    description: 'We are looking for a passionate Community Manager to engage with our users, manage our social media presence, and build a strong, supportive community around milijuli sewa. You will be the voice of our organization.',
     requirements: [
         '2+ years of experience in community management or social media marketing.',
         'Excellent written and verbal communication skills in English and Nepali.',
@@ -1011,7 +759,7 @@ export let jobOpenings: JobOpening[] = [
     title: 'Frontend Developer',
     type: 'Part-time',
     location: 'Remote',
-    description: 'We are seeking a talented Frontend Developer to help us improve our platform\'s user experience. You will work on building new features, optimizing performance, and ensuring our UI is intuitive and accessible.',
+    description: "We are seeking a talented Frontend Developer to help us improve our platform's user experience. You will work on building new features, optimizing performance, and ensuring our UI is intuitive and accessible.",
     requirements: [
         'Proficient in React, Next.js, and TypeScript.',
         'Experience with Tailwind CSS and modern styling practices.',
@@ -1065,7 +813,7 @@ export const setFaqs = (newFaqs: FAQ[]) => {
 
 
 export let contactInfo = {
-    email: 'support@claritychain.com',
+    email: 'support@milijulisewa.com',
     phone: '+1234567890',
     address: '123 Transparency Lane\nKathmandu, Nepal',
 };
@@ -1088,6 +836,7 @@ export let paymentGateways: Gateway[] = [
 ];
 
 export let platformSettings = {
+    appName: 'milijuli sewa',
     userQrPaymentsEnabled: true,
     campaignCreationEnabled: true,
     showOperationalCostsTotal: true,

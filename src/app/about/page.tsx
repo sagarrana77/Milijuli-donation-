@@ -72,7 +72,7 @@ export default function AboutPage() {
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
             <div className="text-center text-white">
-              <h1 className="text-4xl font-bold md:text-5xl">About ClarityChain</h1>
+              <h1 className="text-4xl font-bold md:text-5xl">About milijuli sewa</h1>
               <p className="mt-4 max-w-2xl text-base md:text-lg">
                 {aboutContent.tagline}
               </p>
@@ -140,7 +140,7 @@ export default function AboutPage() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <p className="text-muted-foreground">
-                                While ClarityChain is free to use, our Pro Membership and AI credits provide powerful tools to enhance your campaigns. Pro members get exclusive benefits, and AI credits can be used to generate compelling stories, summaries, and social media posts.
+                                While milijuli sewa is free to use, our Pro Membership and AI credits provide powerful tools to enhance your campaigns. Pro members get exclusive benefits, and AI credits can be used to generate compelling stories, summaries, and social media posts.
                             </p>
                             <Button onClick={openPricingDialog}>View Pricing & Benefits</Button>
                         </CardContent>

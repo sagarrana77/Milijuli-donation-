@@ -71,7 +71,7 @@ export default function ContactPage() {
           Feature Your Campaign
         </h1>
         <p className="mt-2 text-base md:text-lg text-muted-foreground">
-          Interested in showcasing your fundraising campaign on ClarityChain?
+          Interested in showcasing your fundraising campaign on milijuli sewa?
           Fill out the form below to get in touch with our team.
         </p>
       </div>

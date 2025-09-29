@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -71,7 +72,7 @@ export function MainSidebar() {
   const canCreateCampaigns = user?.isAdmin || (platformSettings.campaignCreationEnabled && user?.canCreateCampaigns);
 
   // Calculate number of pending admin tasks
-  const pendingCampaigns = projects.filter(p => !p.verified && p.ownerId !== 'clarity-chain-admin').length;
+  const pendingCampaigns = projects.filter(p => !p.verified && p.ownerId !== 'milijuli-sewa-admin').length;
   const pendingDonations = physicalDonations.filter(d => d.status === 'Pending').length;
   const adminNotificationCount = pendingCampaigns + pendingDonations;
 
@@ -93,7 +94,7 @@ export function MainSidebar() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Logo className="h-8 w-8 text-primary" />
-            <span className="text-lg font-semibold">ClarityChain</span>
+            <span className="text-lg font-semibold">{platformSettings.appName}</span>
           </div>
         </div>
       </SidebarHeader>
