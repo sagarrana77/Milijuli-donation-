@@ -25,6 +25,7 @@ import {
   Briefcase,
   UserPlus,
   Package,
+  Mail,
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { X } from 'lucide-react';
@@ -94,7 +95,15 @@ export function MainSidebar() {
       <SidebarFooter className="border-t">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip={{ children: 'Help', side: 'right' }}>
+            <SidebarMenuButton asChild tooltip={{ children: 'Contact', side: 'right' }} isActive={isActive('/contact')}>
+              <Link href="/contact">
+                <Mail />
+                <span>Contact</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip={{ children: 'Help', side: 'right' }} isActive={isActive('/help')}>
               <Link href="/help">
                 <CircleHelp />
                 <span>Help</span>
@@ -102,7 +111,7 @@ export function MainSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }}>
+            <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }} isActive={isActive('/settings')}>
               <Link href="/settings">
                 <Settings />
                 <span>Settings</span>
