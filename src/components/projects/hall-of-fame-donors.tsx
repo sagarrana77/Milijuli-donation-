@@ -1,9 +1,8 @@
-
 'use client';
 
 import { useMemo } from 'react';
 import type { Donation, Donor } from '@/lib/data';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '../ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';
 import Link from 'next/link';
