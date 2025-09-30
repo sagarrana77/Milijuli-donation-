@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
@@ -87,7 +88,10 @@ export function DiscussionSection({
     await addComment(projectId, newCommentData);
     
     // Optimistically update only if the current user is an admin, otherwise it goes to pending.
-    if(currentUser.isAdmin) {
+    const isDonor = allDonations.some(donation => donation.donor.id === currentUser.id);
+    const shouldAutoApprove = currentUser.isAdmin || currentUser.isProMember || isDonor;
+
+    if (shouldAutoApprove) {
         const newComment: Comment = {
           id: `comment-${Date.now()}`,
           author: currentUser.name,
