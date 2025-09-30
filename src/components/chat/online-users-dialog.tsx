@@ -1,29 +1,40 @@
+
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
-import { UserPlus } from 'lucide-react';
+import { UserPlus, UserCheck } from 'lucide-react';
 import type { User as AppUser, AuthUser } from '@/context/auth-provider';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import { users } from '@/lib/data';
 
-interface OnlineUsersDialogProps {
-    isOpen: boolean;
-    onOpenChange: (open: boolean) => void;
-    onlineUsers: AppUser[];
+interface UserListProps {
+    users: AppUser[];
     currentUser: AuthUser | null;
+    friends: string[];
+    onToggleFriend: (userId: string) => void;
 }
 
-function UserList({ users }: { users: AppUser[] }) {
+
+function UserList({ users, currentUser, friends, onToggleFriend }: UserListProps) {
     if (users.length === 0) {
         return <p className="text-center text-muted-foreground py-8">No users in this category are online.</p>
     }
     return (
         <div className="space-y-2">
-            {users.map(user => (
+            {users.map(user => {
+                 const isFriend = friends.includes(user.id);
+                 const isSelf = user.id === currentUser?.uid;
+
+                 if (isSelf) return null;
+
+                return (
                 <div key={user.id} className="flex items-center justify-between p-2 rounded-md hover:bg-muted">
                     <Link href={user.profileUrl} className="flex items-center gap-3">
                         <div className="relative">
@@ -38,26 +49,70 @@ function UserList({ users }: { users: AppUser[] }) {
                             <p className="text-xs text-muted-foreground line-clamp-1">{user.bio}</p>
                         </div>
                     </Link>
-                    <Button variant="ghost" size="icon">
-                        <UserPlus className="h-4 w-4" />
+                    <Button
+                        variant={isFriend ? 'outline' : 'default'}
+                        size="sm"
+                        onClick={() => onToggleFriend(user.id)}
+                        className={cn("w-[120px]", !isFriend && "bg-green-600 hover:bg-green-700 text-white")}
+                    >
+                        {isFriend ? <UserCheck className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
+                        {isFriend ? 'Friend' : 'Add Friend'}
                     </Button>
                 </div>
-            ))}
+            )})}
         </div>
     )
 }
 
+interface OnlineUsersDialogProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    onlineUsers: AppUser[];
+    currentUser: AuthUser | null;
+}
+
 export function OnlineUsersDialog({ isOpen, onOpenChange, onlineUsers, currentUser }: OnlineUsersDialogProps) {
+    const { toast } = useToast();
+    const [friends, setFriends] = useState(currentUser?.friends || []);
+    
+    const handleToggleFriend = (userId: string) => {
+        if (!currentUser) return;
+        
+        const isFriend = friends.includes(userId);
+        const user = users.find(u => u.id === userId);
+        if (!user) return;
+        
+        let updatedFriends;
+        if (isFriend) {
+            updatedFriends = friends.filter(id => id !== userId);
+            toast({
+                title: 'Friend Removed',
+                description: `${user.name} has been removed from your friends list.`,
+            });
+        } else {
+            updatedFriends = [...friends, userId];
+            toast({
+                title: 'Friend Added!',
+                description: `${user.name} has been added to your friends list.`,
+            });
+        }
+        
+        setFriends(updatedFriends);
+        
+        // This is where you'd update the database in a real app.
+        // For our mock data, we'll update the in-memory user object.
+        currentUser.friends = updatedFriends;
+    };
 
-    const { friends, others } = useMemo(() => {
-        if (!currentUser) return { friends: [], others: onlineUsers };
 
-        const friendIds = currentUser.friends || [];
-        const friends = onlineUsers.filter(u => u.id !== currentUser.uid && friendIds.includes(u.id));
-        const others = onlineUsers.filter(u => u.id !== currentUser.uid && !friendIds.includes(u.id));
+    const { friendUsers, otherUsers } = useMemo(() => {
+        if (!currentUser) return { friendUsers: [], otherUsers: onlineUsers };
 
-        return { friends, others };
-    }, [onlineUsers, currentUser]);
+        const friendUsers = onlineUsers.filter(u => u.id !== currentUser.uid && friends.includes(u.id));
+        const otherUsers = onlineUsers.filter(u => u.id !== currentUser.uid && !friends.includes(u.id));
+
+        return { friendUsers, otherUsers };
+    }, [onlineUsers, currentUser, friends]);
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -71,17 +126,17 @@ export function OnlineUsersDialog({ isOpen, onOpenChange, onlineUsers, currentUs
                 <Tabs defaultValue="all" className="flex-1 min-h-0 flex flex-col">
                     <div className="px-6">
                         <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="all">Public ({others.length})</TabsTrigger>
-                            <TabsTrigger value="friends">Friends ({friends.length})</TabsTrigger>
+                            <TabsTrigger value="all">Public ({otherUsers.length})</TabsTrigger>
+                            <TabsTrigger value="friends">Friends ({friendUsers.length})</TabsTrigger>
                         </TabsList>
                     </div>
                     <ScrollArea className="flex-1">
                         <div className="p-6">
                             <TabsContent value="all" className="m-0">
-                                <UserList users={others} />
+                                <UserList users={otherUsers} currentUser={currentUser} friends={friends} onToggleFriend={handleToggleFriend} />
                             </TabsContent>
                             <TabsContent value="friends" className="m-0">
-                                <UserList users={friends} />
+                                <UserList users={friendUsers} currentUser={currentUser} friends={friends} onToggleFriend={handleToggleFriend} />
                             </TabsContent>
                         </div>
                     </ScrollArea>
