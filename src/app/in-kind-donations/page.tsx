@@ -1,19 +1,12 @@
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Package, Award } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getProjects } from '@/services/projects-service';
-import { getInKindDonations, getUsers } from '@/services/donations-service';
-import { Package } from 'lucide-react';
+import { projects, physicalDonations, users, allDonations } from '@/lib/data';
 import { InKindDonationsClient } from './in-kind-donations-client';
+import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
 
 export default async function InKindDonationsPage() {
-  const projects = await getProjects();
-  const physicalDonations = await getInKindDonations();
-  const users = await getUsers();
-
   const completedDonations = physicalDonations.filter(
     (d) => d.status === 'Completed'
   );
@@ -27,45 +20,54 @@ export default async function InKindDonationsPage() {
       <div className="text-center">
         <Package className="mx-auto h-12 w-12 text-primary" />
         <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">
-          Donation Hall of Fame
+          In-Kind Donations
         </h1>
         <p className="mt-2 text-base md:text-lg text-muted-foreground">
           A heartfelt thank you to our donors for these generous physical
           contributions.
         </p>
       </div>
+      
+      <HallOfFameDonors donations={allDonations} />
 
-      {projectsWithDonations.length > 0 ? (
-        <Tabs defaultValue={projectsWithDonations[0].id} className="w-full">
-          <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
-            {projectsWithDonations.map((project) => (
-              <TabsTrigger key={project.id} value={project.id}>
-                {project.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          {projectsWithDonations.map((project) => {
-            const projectDonations = completedDonations.filter(
-              (d) => d.projectId === project.id
-            );
-            return (
-              <TabsContent key={project.id} value={project.id}>
-                <InKindDonationsClient
-                  project={project}
-                  donations={projectDonations}
-                  users={users}
-                />
-              </TabsContent>
-            );
-          })}
-        </Tabs>
-      ) : (
-        <Card>
-          <CardContent className="py-24 text-center text-muted-foreground">
-            <p>No completed in-kind donations to display yet.</p>
+      <Card>
+          <CardHeader>
+              <CardTitle>Completed In-Kind Donations by Project</CardTitle>
+              <CardDescription>A showcase of successfully donated physical items, organized by campaign.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {projectsWithDonations.length > 0 ? (
+                <Tabs defaultValue={projectsWithDonations[0].id} className="w-full">
+                <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
+                    {projectsWithDonations.map((project) => (
+                    <TabsTrigger key={project.id} value={project.id}>
+                        {project.name}
+                    </TabsTrigger>
+                    ))}
+                </TabsList>
+                {projectsWithDonations.map((project) => {
+                    const projectDonations = completedDonations.filter(
+                    (d) => d.projectId === project.id
+                    );
+                    return (
+                    <TabsContent key={project.id} value={project.id} className="mt-4">
+                        <InKindDonationsClient
+                            project={project}
+                            donations={projectDonations}
+                            users={users}
+                        />
+                    </TabsContent>
+                    );
+                })}
+                </Tabs>
+            ) : (
+                <div className="py-24 text-center text-muted-foreground">
+                    <p>No completed in-kind donations to display yet.</p>
+                </div>
+            )}
           </CardContent>
-        </Card>
-      )}
+      </Card>
     </div>
   );
 }
+
