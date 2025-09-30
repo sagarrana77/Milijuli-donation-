@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -29,7 +30,7 @@ import InstagramIcon from '@/components/icons/instagram-icon';
 import TwitterIcon from '@/components/icons/TwitterIcon';
 import LinkedInIcon from '@/components/icons/LinkedInIcon';
 import { ProfileInKindDonations } from '@/components/profile/in-kind-donations';
-import { Calendar, List, UserPlus, CheckCircle, Sparkles } from 'lucide-react';
+import { Calendar, List, UserPlus, CheckCircle, Sparkles, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -40,7 +41,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/auth-provider';
 
 const socialLinks = [
@@ -73,11 +74,26 @@ export function ProfilePageClient({
     setIsClient(true);
   }, []);
 
+  const topDonorIds = useMemo(() => {
+    const donationTotals: Record<string, number> = {};
+    allDonations.forEach(donation => {
+        if (!donation.donor || donation.donor.id === 'user-anonymous') return;
+        if (donationTotals[donation.donor.id]) {
+            donationTotals[donation.donor.id] += donation.amount;
+        } else {
+            donationTotals[donation.donor.id] = donation.amount;
+        }
+    });
+    const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
+    return sortedDonors.slice(0, 5);
+  }, [allDonations]);
+
   if (!user) {
     return null; // Should be handled by notFound on the server
   }
 
   const isCurrentUserProfile = currentUser?.uid === user.id;
+  const isTopDonor = topDonorIds.includes(user.id);
 
   const handleAddFriend = () => {
     toast({
@@ -105,10 +121,17 @@ export function ProfilePageClient({
     <div className="space-y-8">
       <Card className="overflow-hidden">
         <div className="bg-muted/30 p-4 sm:p-6 md:p-8 text-center">
-          <Avatar className="mx-auto mb-4 h-28 w-28 border-4 border-primary/20 shadow-lg">
-            <AvatarImage src={user.avatarUrl} alt={user.name} />
-            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-          </Avatar>
+            <div className="relative inline-block">
+                <Avatar className="mx-auto mb-4 h-28 w-28 border-4 border-primary/20 shadow-lg">
+                    <AvatarImage src={user.avatarUrl} alt={user.name} />
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                 {isTopDonor && (
+                    <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-1 text-white border-2 border-background">
+                        <Award className="h-5 w-5" />
+                    </div>
+                )}
+            </div>
           <TooltipProvider>
             <div className="flex items-center justify-center gap-2">
               <CardTitle className="text-2xl md:text-3xl">{user.name}</CardTitle>
@@ -138,6 +161,11 @@ export function ProfilePageClient({
               </div>
             </div>
           </TooltipProvider>
+           {isTopDonor && (
+            <div className="mt-2 text-sm font-bold text-amber-600 animate-pulse uppercase tracking-wider flex items-center justify-center gap-2">
+                <Award className="h-4 w-4" /> Hall of Fame Donor
+            </div>
+          )}
           {user.email && <p className="text-muted-foreground">{user.email}</p>}
           <div className="mt-4 flex justify-center gap-2">
             {socialLinks.map((link) => (
