@@ -161,7 +161,7 @@ export default async function DashboardPage() {
                       <span>
                       Rs.{operationalCostsFund.raisedAmount.toLocaleString()} Received
                       </span>
-                      <span>{opsPercentage}%</span>
+                      <span>{operationalCostsFund.donors} Donors</span>
                   </div>
                   <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
               </div>
