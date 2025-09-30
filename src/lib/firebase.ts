@@ -25,8 +25,8 @@ let emulatorsConnected = false;
 
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development' && !emulatorsConnected) {
     try {
-        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+        connectFirestoreEmulator(db, 'localhost', 8080);
         console.log("Connected to Firebase emulators.");
         emulatorsConnected = true; // Set the flag to prevent re-connection
     } catch (error) {
