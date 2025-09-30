@@ -506,6 +506,36 @@ export let teamMembers: TeamMember[] = [
   },
 ];
 
+export let values: { title: string; description: string }[] = [
+  {
+    title: 'Absolute Transparency',
+    description:
+      'We believe that transparency is non-negotiable. Every financial transaction, from donation to expense, is publicly recorded and verifiable.',
+  },
+  {
+    title: 'Donor Empowerment',
+    description:
+      "We empower donors with the information they need to make informed decisions and see the tangible results of their generosity. Your trust is our most valued asset.",
+  },
+  {
+    title: 'Community-Centric',
+    description:
+      'We prioritize projects that are deeply rooted in the communities they serve, ensuring that solutions are sustainable, culturally appropriate, and create lasting impact.',
+  },
+  {
+    title: 'Innovation for Good',
+    description:
+      'We constantly explore and implement new technologies, not for their own sake, but to solve real-world problems in the non-profit sector and enhance the effectiveness of giving.',
+  },
+];
+
+export let aboutContent = {
+  tagline: 'Fostering trust and empowering change through radical transparency.',
+  mission:
+    'Our mission is to rebuild the foundation of trust in philanthropy. We believe that every donor has the right to know exactly how their contribution is being used to create change. By leveraging cutting-edge technology and an unwavering commitment to openness, we provide a platform where donations are tracked, expenses are verified, and impact is clearly visible. We empower non-profits to showcase their incredible work with integrity and enable donors to give with absolute confidence, creating a world where every act of generosity is transparent, accountable, and profoundly impactful.',
+};
+
+
 export type JobOpening = {
   id: string;
   title: string;
@@ -673,7 +703,7 @@ export let users: User[] = [
     { id: 'user-anonymous', uid: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile/user-anonymous', bio: 'A generous donor who prefers to remain anonymous.', isOnline: false },
 ]
 
-export let currentUser = users.find(u => u.id === 'milijuli-sewa-admin');
+export let currentUser = users.find(u => u.email === 'admin@example.com');
 if (currentUser) {
     currentUser.isAdmin = true;
 }
