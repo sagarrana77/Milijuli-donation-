@@ -3,11 +3,11 @@
 'use client';
 
 import { useState, useEffect, ReactNode, createContext, useContext, useMemo } from 'react';
-import type { Project, Update, Donation } from '@/lib/data';
+import type { Project, Update, Donation, PhysicalDonation } from '@/lib/data';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { sendThankYouEmail } from '@/ai/flows/send-thank-you-email';
-import { currentUser, allDonations as initialDonations, users } from '@/lib/data';
+import { currentUser, allDonations as initialDonations, users, physicalDonations as initialPhysicalDonations } from '@/lib/data';
 
 interface DonationContextType {
   raisedAmount: number;
@@ -19,6 +19,7 @@ interface DonationContextType {
   project: Project;
   allUpdates: Update[];
   donations: Donation[];
+  physicalDonations: PhysicalDonation[];
 }
 
 const DonationContext = createContext<DonationContextType | null>(null);
@@ -44,6 +45,7 @@ export function DonationDialogWrapper({
   const [donors, setDonors] = useState(project.donors);
   const [allUpdates, setAllUpdates] = useState<Update[]>(() => [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
   const [allDonations, setAllDonations] = useState<Donation[]>(() => (initialDonations.filter(d => d.project === project.name) || []));
+  const [physicalDonations, setPhysicalDonations] = useState<PhysicalDonation[]>(() => initialPhysicalDonations);
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
@@ -54,6 +56,7 @@ export function DonationDialogWrapper({
     setRaisedAmount(project.raisedAmount);
     setDonors(project.donors);
     setAllDonations(initialDonations.filter(d => d.project === project.name) || [])
+    setPhysicalDonations(initialPhysicalDonations);
 
     const initialCombinedUpdates = [...project.updates].sort((a, b) => {
         // Complex sorting logic will be handled in useMemo
@@ -224,6 +227,7 @@ export function DonationDialogWrapper({
     project,
     allUpdates: sortedUpdates,
     donations: allDonations,
+    physicalDonations,
   };
 
   return (
