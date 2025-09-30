@@ -1,12 +1,14 @@
 
-import { Package, Award } from 'lucide-react';
+import { Package } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { projects, physicalDonations, users, allDonations } from '@/lib/data';
+import { projects, users, allDonations } from '@/lib/data';
 import { InKindDonationsClient } from './in-kind-donations-client';
 import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
+import { getInKindDonations } from '@/services/donations-service';
 
 export default async function InKindDonationsPage() {
+  const physicalDonations = await getInKindDonations();
   const completedDonations = physicalDonations.filter(
     (d) => d.status === 'Completed'
   );
@@ -70,4 +72,3 @@ export default async function InKindDonationsPage() {
     </div>
   );
 }
-
