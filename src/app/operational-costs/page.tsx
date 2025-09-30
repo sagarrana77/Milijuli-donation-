@@ -159,12 +159,14 @@ export default function OperationalCostsPage() {
                   </div>
                 </div>
               )}
-              <Button size="lg" className="w-full text-lg" onClick={() => setIsDonationOpen(true)}>
-                <Sparkles className="mr-2 h-5 w-5"/> Become a Pro Member
-              </Button>
-               <p className="text-xs text-center text-muted-foreground">
-                Donate to our operational costs to become a Pro member and receive bonus AI credits.
-              </p>
+               <div className="pt-4 flex flex-col items-center text-center sm:items-start sm:text-left">
+                    <Button size="lg" className="w-full sm:w-auto text-base" onClick={() => setIsDonationOpen(true)}>
+                        <Sparkles className="mr-2 h-5 w-5"/> Become a Pro
+                    </Button>
+                    <p className="text-sm text-muted-foreground mt-2">
+                        Donate to our operational costs to become a Pro member and receive bonus AI credits.
+                    </p>
+                </div>
             </CardContent>
           </Card>
           <Card>
