@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -11,10 +11,12 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Card, CardContent } from '@/components/ui/card';
-import type { Project } from '@/lib/data';
-import { allDonations } from '@/lib/data';
+import type { Project, User } from '@/lib/data';
+import { allDonations, users as allUsersData } from '@/lib/data';
 import Link from 'next/link';
 import { Reply, Award } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { ScrollArea } from '../ui/scroll-area';
 
 type Comment = Project['discussion'][0];
 
@@ -36,6 +38,9 @@ export function DiscussionSection({
   projectId,
 }: DiscussionSectionProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const topDonorIds = useMemo(() => {
     const donationTotals: Record<string, number> = {};
@@ -50,6 +55,17 @@ export function DiscussionSection({
     const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
     return sortedDonors.slice(0, 5);
   }, []);
+  
+  const sortedUsers = useMemo(() => {
+    return [...allUsersData].sort((a, b) => a.name.localeCompare(b.name));
+  }, []);
+  
+  const filteredUsers = useMemo(() => {
+    if (!mentionQuery) return [];
+    return sortedUsers.filter(user =>
+      user.name.toLowerCase().includes(mentionQuery.toLowerCase())
+    );
+  }, [mentionQuery, sortedUsers]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -75,6 +91,30 @@ export function DiscussionSection({
     form.reset();
   }
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    form.setValue('comment', text);
+
+    const match = text.match(/@(\w*)$/);
+    if (match) {
+      setMentionQuery(match[1]);
+      setIsMentionPopoverOpen(true);
+    } else {
+      setIsMentionPopoverOpen(false);
+      setMentionQuery('');
+    }
+  };
+
+  const handleUserSelect = (user: User) => {
+    const currentText = form.getValues('comment');
+    const newText = currentText.replace(/@(\w*)$/, `@${user.name} `);
+    form.setValue('comment', newText);
+    setIsMentionPopoverOpen(false);
+    setMentionQuery('');
+    textareaRef.current?.focus();
+  };
+
+
   return (
     <CardContent className="p-6 space-y-6">
         <h3 className="text-lg font-semibold">Community Discussion</h3>
@@ -86,22 +126,50 @@ export function DiscussionSection({
               <AvatarFallback>CU</AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-2">
-              <FormField
-                control={form.control}
-                name="comment"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Share your thoughts or ask a question... Use @ to mention a user."
-                        rows={3}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <Popover open={isMentionPopoverOpen} onOpenChange={setIsMentionPopoverOpen}>
+                <PopoverTrigger asChild>
+                    <FormField
+                        control={form.control}
+                        name="comment"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormControl>
+                            <Textarea
+                                placeholder="Share your thoughts or ask a question... Use @ to mention a user."
+                                rows={3}
+                                {...field}
+                                ref={textareaRef}
+                                onChange={handleTextChange}
+                            />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                </PopoverTrigger>
+                 {filteredUsers.length > 0 && (
+                    <PopoverContent className="p-0 w-80">
+                        <ScrollArea className="max-h-60">
+                             <div className="space-y-1 p-2">
+                                {filteredUsers.map(user => (
+                                    <button
+                                        key={user.id}
+                                        type="button"
+                                        className="w-full text-left p-2 rounded-md hover:bg-accent flex items-center gap-2"
+                                        onClick={() => handleUserSelect(user)}
+                                    >
+                                        <Avatar className="h-8 w-8">
+                                            <AvatarImage src={user.avatarUrl} alt={user.name} />
+                                            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                        <span className="font-medium">{user.name}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </ScrollArea>
+                    </PopoverContent>
+                 )}
+            </Popover>
               <div className="flex justify-end">
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   Post Comment
