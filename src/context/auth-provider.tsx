@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -15,7 +16,7 @@ import {
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { type User as AppUser } from '@/lib/data';
+import { type User as AppUser, users } from '@/lib/data';
 import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 // Combine Firebase user with our app-specific user data
@@ -34,33 +35,43 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Helper to fetch/create user profile in Firestore
 const getOrCreateUserProfile = async (firebaseUser: FirebaseUser): Promise<AppUser> => {
+    // In our mock-data setup, we check if the user exists in our array.
+    const existingUser = users.find(u => u.email === firebaseUser.email);
+    if (existingUser) {
+        return existingUser;
+    }
+
+    // In a real Firestore app, you would do this:
+    /*
     const userRef = doc(db, 'users', firebaseUser.uid);
     const docSnap = await getDoc(userRef);
 
     if (docSnap.exists()) {
         return {id: docSnap.id, ...docSnap.data()} as AppUser;
-    } else {
-        const newUserProfile: Omit<AppUser, 'id'> = {
-            uid: firebaseUser.uid,
-            name: firebaseUser.displayName || 'New User',
-            email: firebaseUser.email || '',
-            avatarUrl: firebaseUser.photoURL || `https://avatar.vercel.sh/${firebaseUser.uid}`,
-            profileUrl: `/profile/${firebaseUser.uid}`,
-            bio: 'Welcome to milijuli donation sewa!',
-            isAdmin: firebaseUser.email === 'aayush.kc@example.com',
-            canCreateCampaigns: firebaseUser.email === 'aayush.kc@example.com',
-            friends: [],
-            aiCredits: 10,
-            isProMember: false,
-        };
-
-        await setDoc(userRef, {
-            ...newUserProfile,
-            joinedAt: serverTimestamp(),
-        });
-        
-        return {id: firebaseUser.uid, ...newUserProfile};
-    }
+    } 
+    */
+    
+    // If not found, create a new profile (for non-mocked users, e.g., via Google sign-in)
+    const newUserProfile: Omit<AppUser, 'id'> = {
+        uid: firebaseUser.uid,
+        name: firebaseUser.displayName || 'New User',
+        email: firebaseUser.email || '',
+        avatarUrl: firebaseUser.photoURL || `https://avatar.vercel.sh/${firebaseUser.uid}`,
+        profileUrl: `/profile/${firebaseUser.uid}`,
+        bio: 'Welcome to milijuli donation sewa!',
+        isAdmin: false, // Default to not admin
+        canCreateCampaigns: false, // Default to not able
+        friends: [],
+        aiCredits: 10,
+        isProMember: false,
+    };
+    
+    // In a real app, you'd save this to Firestore:
+    // await setDoc(userRef, { ...newUserProfile, joinedAt: serverTimestamp() });
+    
+    const newUserWithId = { id: firebaseUser.uid, ...newUserProfile };
+    users.push(newUserWithId); // Add to our mock data array for this session
+    return newUserWithId;
 }
 
 

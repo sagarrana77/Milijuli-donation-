@@ -504,29 +504,6 @@ export let teamMembers: TeamMember[] = [
   },
 ];
 
-export let values = [
-  {
-    title: 'Transparency',
-    description:
-      'We are committed to complete openness in how funds are raised, managed, and spent. Every transaction is public.',
-  },
-  {
-    title: 'Accountability',
-    description:
-      'We hold ourselves to the highest standards, ensuring that all stakeholders can verify our actions and their impact.',
-  },
-  {
-    title: 'Impact',
-    description:
-      'Our ultimate goal is to maximize the positive impact of every donation, creating lasting change in communities.',
-  },
-];
-
-export let aboutContent = {
-  mission: `Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. milijuli donation sewa provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.`,
-  tagline: 'Driving transparency and trust in charitable giving through technology.',
-};
-
 export type JobOpening = {
   id: string;
   title: string;
@@ -681,6 +658,7 @@ export let platformSettings = {
 };
 
 export let users: User[] = [
+    { id: 'admin-user', uid: 'admin-user', name: 'Admin User', email: 'admin@example.com', avatarUrl: getImageUrl('avatar-alex-johnson'), profileUrl: '/profile/admin-user', bio: 'Application administrator.', hasPaymentMethod: true, isAdmin: true, canCreateCampaigns: true, friends: [], aiCredits: 9999, isProMember: true },
     { id: 'aayush-kc', uid: 'aayush-kc', name: 'Aayush KC', email: 'aayush.kc@example.com', avatarUrl: getImageUrl('avatar-alex-johnson'), profileUrl: '/profile/aayush-kc', bio: 'Founder & CEO of milijuli donation sewa. Passionate about transparency and social impact.', hasPaymentMethod: true, isAdmin: true, canCreateCampaigns: true, friends: ['priya-adhikari', 'rohan-maharjan', 'user-jane-doe'], aiCredits: 999, isProMember: true },
     { id: 'priya-adhikari', uid: 'priya-adhikari', name: 'Priya Adhikari', avatarUrl: getImageUrl('avatar-maria-garcia'), profileUrl: '/profile/priya-adhikari', bio: 'Head of Operations in Nepal, ensuring projects run smoothly and create lasting change.', friends: ['aayush-kc', 'sunita-sharma'], aiCredits: 50, isProMember: true, canCreateCampaigns: true, isAdmin: true },
     { id: 'rohan-maharjan', uid: 'rohan-maharjan', name: 'Rohan Maharjan', avatarUrl: getImageUrl('avatar-sam-chen'), profileUrl: '/profile/rohan-maharjan', bio: 'Lead developer building the future of transparent fundraising.', friends: ['aayush-kc', 'david-kim'], aiCredits: 50, isProMember: true, canCreateCampaigns: true, isAdmin: true },
@@ -693,7 +671,7 @@ export let users: User[] = [
     { id: 'user-anonymous', uid: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile/user-anonymous', bio: 'A generous donor who prefers to remain anonymous.' },
 ]
 
-export let currentUser = users.find(u => u.email === 'aayush.kc@example.com');
+export let currentUser = users.find(u => u.email === 'admin@example.com');
 
 export const allDonations: Donation[] = [
   { id: 1, donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Education for All Nepal', amount: 5000, date: '2023-10-01T10:00:00Z' },
