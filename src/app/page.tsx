@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers } from '@/lib/data';
+import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers, platformSettings } from '@/lib/data';
 import { getProjects } from '@/services/projects-service';
 import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 import { ProjectCard } from '@/components/projects/project-card';
@@ -85,6 +85,8 @@ export default async function DashboardPage() {
     const opsPercentage = Math.round(
     (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
   );
+
+  const showOpsTarget = platformSettings.showOperationalCostsTarget && operationalCostsFund.targetAmount > 0;
 
   const approvedProjects = projects.filter(p => p.verified);
   const runningProjects = approvedProjects.filter(p => p.raisedAmount < p.targetAmount);
@@ -163,7 +165,9 @@ export default async function DashboardPage() {
                       </span>
                       <span>{operationalCostsFund.donors} Donors</span>
                   </div>
-                  <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
+                  {showOpsTarget && (
+                    <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
+                  )}
               </div>
             </CardContent>
             <CardFooter>

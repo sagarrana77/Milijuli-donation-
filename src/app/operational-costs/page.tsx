@@ -11,6 +11,7 @@ import {
   miscExpenses,
   currentUser,
   platformSettings,
+  allDonations,
 } from '@/lib/data';
 import {
   Card,
@@ -39,6 +40,8 @@ export default function OperationalCostsPage() {
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
   
+  const operationalDonations = allDonations.filter(d => d.project === 'Operational Costs');
+
 
   useEffect(() => {
     setIsClient(true);
@@ -104,7 +107,7 @@ export default function OperationalCostsPage() {
                     <CardDescription>Supporters helping to fund our core operations.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <DonorsList donations={[]} />
+                    <DonorsList donations={operationalDonations} />
                 </CardContent>
             </Card>
         </div>
