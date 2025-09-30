@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -42,7 +43,24 @@ export default function OperationalCostsPage() {
   const { toast } = useToast();
   
   const operationalDonations = allDonations.filter(d => d.project === 'Operational Costs');
-  const operationalCostsProject = { ...projects[0], id: 'operational-costs', name: 'Operational Costs' };
+  const operationalCostsProject = {
+    id: 'operational-costs',
+    name: 'Operational Costs',
+    organization: 'milijuli donation sewa',
+    description: 'Support the core team and infrastructure that makes our work possible.',
+    longDescription: 'Our mission is to foster trust and empower change through radical transparency. Your contribution supports the core team and infrastructure that makes our work possible, ensuring every donation can be tracked with integrity.',
+    imageUrl: operationalCostsFund.imageUrl,
+    imageHint: operationalCostsFund.imageHint,
+    targetAmount: operationalCostsFund.targetAmount,
+    raisedAmount: operationalCostsFund.raisedAmount,
+    donors: operationalCostsFund.donors,
+    verified: true,
+    updates: [],
+    expenses: [],
+    discussion: [],
+    wishlist: [],
+    createdAt: new Date().toISOString(),
+  };
 
   useEffect(() => {
     setIsClient(true);
