@@ -16,7 +16,7 @@ export default async function InKindDonationsPage() {
   );
 
   const projectsWithDonations = projects.filter((project) =>
-    completedDonations.some((donation) => donation.projectId === project.id)
+    completedDonations.some((donation) => donation.projectName === project.name)
   );
 
   return (
@@ -51,7 +51,7 @@ export default async function InKindDonationsPage() {
                 </TabsList>
                 {projectsWithDonations.map((project) => {
                     const projectDonations = completedDonations.filter(
-                    (d) => d.projectId === project.id
+                    (d) => d.projectName === project.name
                     );
                     return (
                     <TabsContent key={project.id} value={project.id} className="mt-4">
