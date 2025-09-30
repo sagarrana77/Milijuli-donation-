@@ -15,6 +15,7 @@ export type Comment = {
   date: string; // Use string to prevent timezone issues
   text: string;
   replyTo?: string; // Author name of the comment being replied to
+  status: 'approved' | 'pending' | 'hidden';
 };
 
 export type Update = {

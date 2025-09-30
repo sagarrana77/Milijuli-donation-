@@ -3,7 +3,7 @@
 'use client';
 
 import { useRouter, useParams, notFound } from 'next/navigation';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
@@ -27,13 +27,38 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy, Pin } from 'lucide-react';
+import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy, Pin, Check, X, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
-import { projects, type Project, currentUser } from '@/lib/data';
+import { projects, type Project, currentUser, type Comment } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { generateSeoSuggestions } from '@/ai/flows/generate-seo-suggestions';
 import { Badge } from '@/components/ui/badge';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { format } from 'date-fns';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { getComments, updateComment } from '@/services/discussion-service';
+
 
 const wishlistItemSchema = z.object({
   id: z.string(),
@@ -80,6 +105,12 @@ export default function EditProjectPage() {
   const params = useParams();
   const projectId = params.id as string;
   const [isGeneratingSeo, setIsGeneratingSeo] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [editingComment, setEditingComment] = useState<Comment | null>(null);
+
+  useEffect(() => {
+    getComments(projectId).then(setComments);
+  }, [projectId]);
 
   const project = projects.find(p => p.id === projectId);
 
@@ -170,6 +201,24 @@ export default function EditProjectPage() {
     navigator.clipboard.writeText(text);
     toast({ title: "Copied to Clipboard!" });
   };
+  
+  const handleCommentStatusChange = async (commentId: string, status: 'approved' | 'pending' | 'hidden' | 'deleted') => {
+    await updateComment(projectId, commentId, { status });
+    if (status === 'deleted') {
+        setComments(prev => prev.filter(c => c.id !== commentId));
+    } else {
+        setComments(prev => prev.map(c => c.id === commentId ? { ...c, status } : c));
+    }
+    toast({ title: "Comment status updated!", description: `The comment has been ${status}.` });
+  };
+
+  const handleSaveCommentEdit = async () => {
+    if (!editingComment) return;
+    await updateComment(projectId, editingComment.id, { text: editingComment.text });
+    setComments(prev => prev.map(c => c.id === editingComment.id ? editingComment : c));
+    setEditingComment(null);
+    toast({ title: "Comment updated!" });
+  };
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -183,8 +232,9 @@ export default function EditProjectPage() {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Tabs defaultValue="details">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="details">Project Details</TabsTrigger>
+                    <TabsTrigger value="discussion">Discussion</TabsTrigger>
                     <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                     <TabsTrigger value="updates">Updates</TabsTrigger>
                 </TabsList>
@@ -396,6 +446,84 @@ export default function EditProjectPage() {
                                     </FormItem>
                                 )}
                                 />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                
+                 <TabsContent value="discussion" className="mt-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Discussion Moderation</CardTitle>
+                            <CardDescription>Manage comments for this project.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Author</TableHead>
+                                        <TableHead>Comment</TableHead>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {comments.map(comment => (
+                                        <TableRow key={comment.id}>
+                                            <TableCell>
+                                                <div className="flex items-center gap-2">
+                                                    <Avatar className="h-8 w-8">
+                                                        <AvatarImage src={comment.avatarUrl} />
+                                                        <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
+                                                    </Avatar>
+                                                    <span>{comment.author}</span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className="max-w-xs whitespace-pre-wrap">
+                                                {editingComment?.id === comment.id ? (
+                                                    <Textarea
+                                                        value={editingComment.text}
+                                                        onChange={(e) => setEditingComment({ ...editingComment, text: e.target.value })}
+                                                    />
+                                                ) : (
+                                                    comment.text
+                                                )}
+                                            </TableCell>
+                                            <TableCell>{format(new Date(comment.date), 'PPp')}</TableCell>
+                                            <TableCell>
+                                                 <Select value={comment.status} onValueChange={(value) => handleCommentStatusChange(comment.id, value as 'approved' | 'pending' | 'hidden')}>
+                                                    <SelectTrigger className="w-[120px]">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="approved"><Badge variant="default" className="bg-green-500">Approved</Badge></SelectItem>
+                                                        <SelectItem value="pending"><Badge variant="secondary">Pending</Badge></SelectItem>
+                                                        <SelectItem value="hidden"><Badge variant="destructive">Hidden</Badge></SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </TableCell>
+                                            <TableCell>
+                                                {editingComment?.id === comment.id ? (
+                                                    <div className="flex gap-2">
+                                                        <Button size="icon" variant="ghost" onClick={handleSaveCommentEdit}><Check className="h-4 w-4" /></Button>
+                                                        <Button size="icon" variant="ghost" onClick={() => setEditingComment(null)}><X className="h-4 w-4" /></Button>
+                                                    </div>
+                                                ) : (
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button size="icon" variant="ghost">...</Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent>
+                                                            <DropdownMenuItem onClick={() => setEditingComment(comment)}>Edit</DropdownMenuItem>
+                                                            <DropdownMenuItem onClick={() => handleCommentStatusChange(comment.id, 'deleted')} className="text-destructive">Delete</DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         </CardContent>
                     </Card>
                 </TabsContent>

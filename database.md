@@ -85,7 +85,7 @@ Stores all fundraising projects, whether created by admins or users.
      `Document Data: { "item": "string", "amount": "number", "date": "timestamp", "receiptUrl": "string (URL)" }`
 -   **`discussion`**: Comments and discussions for the project.
     -   Path: `/projects/{projectId}/discussion/{commentId}`
-    -   Document Data: `{ "authorId": "string (references /users/{userId})", "text": "string", "date": "timestamp", "replyTo": "string (author name)" }`
+    -   Document Data: `{ "authorId": "string (references /users/{userId})", "text": "string", "date": "timestamp", "replyTo": "string (author name)", "status": "string (approved|pending|hidden)" }`
 -   **`wishlist`**: Specific items the project needs.
     -   Path: `/projects/{projectId}/wishlist/{wishlistItemId}`
     -   Document Data: `{ "name": "string", "description": "string", "quantityNeeded": "number", "quantityDonated": "number", "costPerItem": "number", "imageUrl": "string (URL)", "allowInKind": "boolean" }`
