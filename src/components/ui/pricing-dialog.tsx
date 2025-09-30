@@ -72,7 +72,7 @@ export function PricingDialog() {
                 <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
             </DialogClose>
-            <ScrollArea className="flex-1">
+            <div className="flex-1 overflow-y-auto">
                 <div className="grid grid-cols-1 gap-8 p-4 md:grid-cols-2 md:p-6">
                     <Card className="flex flex-col border-primary border-2 shadow-primary/20">
                         <CardHeader className="text-center">
@@ -135,7 +135,7 @@ export function PricingDialog() {
                         </div>
                     </Card>
                 </div>
-            </ScrollArea>
+            </div>
         </DialogContent>
     </Dialog>
   );
