@@ -84,6 +84,7 @@ const updateSchema = z.object({
   isExpense: z.boolean().optional(),
   isInKindDonation: z.boolean().optional(),
   expenseDetails: z.object({ item: z.string(), amount: z.number() }).optional(),
+  transferDetails: z.object({ amount: z.number(), fromProject: z.string().optional(), toProject: z.string().optional() }).optional(),
 });
 
 const projectSchema = z.object({
@@ -654,7 +655,7 @@ export default function EditProjectPage() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => appendWishlistItem({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false })}
+                                onClick={() => appendWishlistItem({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false, imageHint: '' })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add Wishlist Item
                             </Button>
@@ -675,13 +676,13 @@ export default function EditProjectPage() {
                                         name={`updates.${index}.title`}
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>
+                                                <FormLabel className="flex items-center gap-2">
                                                     Update Title
-                                                    {item.isTransfer && <Badge variant="secondary" className="ml-2">Fund Transfer</Badge>}
-                                                    {item.isExpense && <Badge variant="secondary" className="ml-2">Expense</Badge>}
-                                                    {item.isInKindDonation && <Badge variant="secondary" className="ml-2">In-Kind Donation</Badge>}
+                                                    {item.isTransfer && <Badge variant="secondary">Fund Transfer</Badge>}
+                                                    {item.isExpense && <Badge variant="secondary">Expense</Badge>}
+                                                    {item.isInKindDonation && <Badge variant="secondary">In-Kind Donation</Badge>}
                                                 </FormLabel>
-                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormControl><Input {...field} disabled={item.isTransfer || item.isExpense || item.isInKindDonation} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -692,7 +693,7 @@ export default function EditProjectPage() {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Update Description</FormLabel>
-                                                <FormControl><Textarea rows={3} {...field} /></FormControl>
+                                                <FormControl><Textarea rows={3} {...field} disabled={item.isTransfer || item.isExpense || item.isInKindDonation} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -703,7 +704,7 @@ export default function EditProjectPage() {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Image URL</FormLabel>
-                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormControl><Input {...field} disabled={item.isTransfer || item.isExpense || item.isInKindDonation} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -714,7 +715,7 @@ export default function EditProjectPage() {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Image Hint</FormLabel>
-                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormControl><Input {...field} disabled={item.isTransfer || item.isExpense || item.isInKindDonation}/></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -739,7 +740,7 @@ export default function EditProjectPage() {
                                             </FormItem>
                                         )}
                                         />
-                                    <Button size="sm" variant="destructive" onClick={() => removeUpdate(index)} className="absolute top-2 right-2">
+                                    <Button size="sm" variant="destructive" onClick={() => removeUpdate(index)} className="absolute top-2 right-2" disabled={item.isTransfer || item.isExpense || item.isInKindDonation}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </div>

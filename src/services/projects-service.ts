@@ -92,9 +92,9 @@ export async function getProjects(): Promise<Project[]> {
           },
         ],
         wishlist: [
-          { id: 'wish-1', name: 'School Benches', description: 'Durable wooden benches for classrooms', quantityNeeded: 50, quantityDonated: 10, costPerItem: 3000, allowInKind: true },
-          { id: 'wish-2', name: 'Whiteboards', description: 'Large whiteboards for teaching', quantityNeeded: 10, quantityDonated: 2, costPerItem: 5000, allowInKind: true },
-          { id: 'wish-3', name: 'School Backpacks', description: 'Sturdy backpacks for students', quantityNeeded: 500, quantityDonated: 150, costPerItem: 800, allowInKind: true },
+          { id: 'wish-1', name: 'School Benches', description: 'Durable wooden benches for classrooms', quantityNeeded: 50, quantityDonated: 10, costPerItem: 3000, allowInKind: true, imageHint: 'school bench' },
+          { id: 'wish-2', name: 'Whiteboards', description: 'Large whiteboards for teaching', quantityNeeded: 10, quantityDonated: 2, costPerItem: 5000, allowInKind: true, imageHint: 'whiteboard classroom' },
+          { id: 'wish-3', name: 'School Backpacks', description: 'Sturdy backpacks for students', quantityNeeded: 500, quantityDonated: 150, costPerItem: 800, allowInKind: true, imageHint: 'school backpack' },
         ],
         createdAt: '2023-09-01T12:00:00Z'
       },
@@ -119,8 +119,8 @@ export async function getProjects(): Promise<Project[]> {
         expenses: [],
         discussion: [],
         wishlist: [
-          { id: 'wish-cw-1', name: 'Water Filters', description: 'High-quality ceramic water filters for households.', quantityNeeded: 200, quantityDonated: 5, costPerItem: 1500, allowInKind: true },
-          { id: 'wish-cw-2', name: 'Hand Pump Spare Parts', description: 'A kit of spare parts for well maintenance.', quantityNeeded: 10, quantityDonated: 1, costPerItem: 10000, allowInKind: false },
+          { id: 'wish-cw-1', name: 'Water Filters', description: 'High-quality ceramic water filters for households.', quantityNeeded: 200, quantityDonated: 5, costPerItem: 1500, allowInKind: true, imageHint: 'water filter' },
+          { id: 'wish-cw-2', name: 'Hand Pump Spare Parts', description: 'A kit of spare parts for well maintenance.', quantityNeeded: 10, quantityDonated: 1, costPerItem: 10000, allowInKind: false, imageHint: 'metal parts' },
         ],
         createdAt: '2023-08-15T12:00:00Z'
       },
