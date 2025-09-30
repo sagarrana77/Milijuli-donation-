@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -25,8 +25,16 @@ import { getFaqs, setFaqs, contactInfo } from '@/lib/data';
 import type { FAQ } from '@/lib/data';
 
 export default function AdminHelpPage() {
-  const [faqs, setFaqsState] = useState(getFaqs());
+  const [faqs, setFaqsState] = useState<FAQ[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    async function loadFaqs() {
+        const data = await getFaqs();
+        setFaqsState(data);
+    }
+    loadFaqs();
+  }, []);
 
   const handleAddFaq = () => {
     const newFaq: FAQ = {
@@ -45,8 +53,8 @@ export default function AdminHelpPage() {
     setFaqsState(prev => prev.map(faq => faq.id === id ? { ...faq, [field]: value } : faq));
   }
 
-  const handleSaveFaqs = () => {
-      setFaqs(faqs);
+  const handleSaveFaqs = async () => {
+      await setFaqs(faqs);
       toast({ title: "FAQs Saved!", description: "Your changes have been saved."});
   }
   

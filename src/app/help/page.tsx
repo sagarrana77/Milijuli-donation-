@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useEffect, useState } from 'react';
 import {
   Accordion,
   AccordionContent,
@@ -14,10 +15,19 @@ import { InfoIcon } from '@/components/icons/InfoIcon';
 import { MailIcon } from '@/components/icons/MailIcon';
 import { PhoneIcon } from '@/components/icons/PhoneIcon';
 import { getFaqs, contactInfo } from '@/lib/data';
-
-const faqs = getFaqs();
+import type { FAQ } from '@/lib/data';
 
 export default function HelpPage() {
+    const [faqs, setFaqs] = useState<FAQ[]>([]);
+
+    useEffect(() => {
+        async function loadFaqs() {
+            const data = await getFaqs();
+            setFaqs(data);
+        }
+        loadFaqs();
+    }, []);
+
   return (
     <div className="space-y-8">
       <div className="text-center">

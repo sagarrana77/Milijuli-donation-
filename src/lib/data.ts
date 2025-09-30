@@ -1,4 +1,7 @@
 
+
+'use server';
+
 import { getProjects } from '@/services/projects-service';
 import { PlaceHolderImages } from './placeholder-images';
 
@@ -370,7 +373,7 @@ export const teamMembers: TeamMember[] = [
 ];
 
 
-export function getTeamMember(id: string) {
+export async function getTeamMember(id: string) {
   return teamMembers.find((member) => member.id === id);
 }
 
@@ -488,8 +491,10 @@ let faqs: FAQ[] = [
 // In-memory store for FAQs to allow for mutation on the admin page.
 // In a real app, this would be a database.
 let faqStore = [...faqs];
-export const getFaqs = () => [...faqStore];
-export const setFaqs = (newFaqs: FAQ[]) => {
+export async function getFaqs(): Promise<FAQ[]> {
+  return [...faqStore];
+}
+export async function setFaqs(newFaqs: FAQ[]) {
   faqStore = newFaqs;
 }
 
@@ -520,7 +525,12 @@ export let paymentGateways: Gateway[] = [
 export let platformSettings = {
     appName: 'milijuli donation sewa',
     appLogoUrl: '',
-    loginImageUrl: 'https://images.unsplash.com/photo-1593442808882-775dfcd90699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxuZXBhbCUyMGNsYXNzcm9vbXxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    loginImages: [
+        { imageUrl: getImageUrl('project-education-nepal'), label: 'Education for All' },
+        { imageUrl: getImageUrl('project-clean-water'), label: 'Clean Water Initiative' },
+        { imageUrl: getImageUrl('project-community-health'), label: 'Community Health' },
+        { imageUrl: getImageUrl('project-disaster-relief'), label: 'Disaster Relief' },
+    ],
     userQrPaymentsEnabled: true,
     campaignCreationEnabled: true,
     showOperationalCostsTotal: true,

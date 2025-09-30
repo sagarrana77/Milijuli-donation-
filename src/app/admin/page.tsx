@@ -559,13 +559,23 @@ export default function AdminDashboardPage() {
     setForceRender(c => c + 1);
   }
   
-  const handleLoginImageChange = () => {
+  const handleAddLoginImage = () => {
+    platformSettings.loginImages.push({ imageUrl: '', label: '' });
+    setForceRender(c => c + 1);
+  };
+  
+  const handleDeleteLoginImage = (index: number) => {
+    platformSettings.loginImages.splice(index, 1);
+    setForceRender(c => c + 1);
+  };
+
+  const handleSaveLoginImages = () => {
     toast({
-        title: 'Login Image Updated!',
-        description: 'The login page image has been saved.',
+        title: 'Login Images Updated!',
+        description: 'The login page carousel images have been saved.',
     });
     setForceRender(c => c + 1);
-  }
+  };
 
   const handleGenerateRecoveryPlan = async () => {
     setIsGeneratingRecoveryPlan(true);
@@ -1296,18 +1306,41 @@ export default function AdminDashboardPage() {
                                 </div>
                                 <p className="text-sm text-muted-foreground">Enter a URL for the app logo. It will replace the default logo in the sidebar.</p>
                             </div>
-                             <div className="rounded-lg border p-4 space-y-2">
-                                <Label htmlFor="login-image-input" className="text-base font-medium">Login Page Image URL</Label>
-                                <div className="flex gap-2">
-                                    <Input 
-                                        id="login-image-input"
-                                        defaultValue={platformSettings.loginImageUrl}
-                                        onChange={(e) => platformSettings.loginImageUrl = e.target.value}
-                                    />
-                                    <Button onClick={handleLoginImageChange}>Save</Button>
-                                </div>
-                                <p className="text-sm text-muted-foreground">This image will be displayed on the left side of the login page.</p>
-                            </div>
+                             <Card>
+                                <CardHeader>
+                                    <CardTitle>Login Page Images</CardTitle>
+                                    <CardDescription>Manage the images that appear in the login page carousel.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {platformSettings.loginImages.map((image, index) => (
+                                        <div key={index} className="flex items-end gap-2 rounded-md border p-4">
+                                            <div className="grid flex-1 gap-2">
+                                                <Label htmlFor={`login-image-url-${index}`}>Image URL</Label>
+                                                <Input
+                                                    id={`login-image-url-${index}`}
+                                                    defaultValue={image.imageUrl}
+                                                    onChange={(e) => platformSettings.loginImages[index].imageUrl = e.target.value}
+                                                />
+                                                <Label htmlFor={`login-image-label-${index}`}>Label</Label>
+                                                <Input
+                                                    id={`login-image-label-${index}`}
+                                                    defaultValue={image.label}
+                                                    onChange={(e) => platformSettings.loginImages[index].label = e.target.value}
+                                                />
+                                            </div>
+                                            <Button size="icon" variant="destructive" onClick={() => handleDeleteLoginImage(index)}>
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    ))}
+                                    <div className="flex justify-between">
+                                        <Button onClick={handleAddLoginImage}>
+                                            <PlusCircle className="mr-2 h-4 w-4" /> Add Image
+                                        </Button>
+                                        <Button onClick={handleSaveLoginImages}>Save Login Images</Button>
+                                    </div>
+                                </CardContent>
+                             </Card>
                              <div className="rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
                                     <div>

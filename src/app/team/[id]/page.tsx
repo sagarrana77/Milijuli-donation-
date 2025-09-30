@@ -12,8 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { Briefcase, GraduationCap, Star, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function TeamMemberPage({ params }: { params: { id: string } }) {
-  const member = getTeamMember(params.id);
+export default async function TeamMemberPage({ params }: { params: { id: string } }) {
+  const member = await getTeamMember(params.id);
 
   if (!member) {
     notFound();

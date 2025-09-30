@@ -31,6 +31,8 @@ import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { platformSettings } from '@/lib/data';
 import { useLoginDialog } from '@/context/login-dialog-provider';
+import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -106,18 +108,31 @@ export function LoginForm() {
   return (
     <div className="grid lg:grid-cols-2">
       <div className="relative hidden bg-muted lg:block">
-        <Image
-          src={platformSettings.loginImageUrl}
-          alt="A descriptive image related to the platform's mission"
-          fill
-          objectFit="cover"
-          className="brightness-75"
-        />
-         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-         <div className="absolute bottom-8 left-8 text-white">
-            <h2 className="text-3xl font-bold">Radical Transparency in Giving</h2>
-            <p className="mt-2 max-w-md">Join a community dedicated to ensuring every donation makes a verified impact. Track your contributions from start to finish.</p>
-         </div>
+        <Carousel
+            opts={{ loop: true }}
+            plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
+        >
+            <CarouselContent>
+                {platformSettings.loginImages.map((img, index) => (
+                    <CarouselItem key={index}>
+                        <div className="relative h-full">
+                            <Image
+                                src={img.imageUrl}
+                                alt={img.label}
+                                width={800}
+                                height={600}
+                                className="h-full w-full object-cover brightness-75"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                            <div className="absolute bottom-8 left-8 text-white">
+                                <h2 className="text-3xl font-bold">{img.label}</h2>
+                                <p className="mt-2 max-w-md">Join a community dedicated to ensuring every donation makes a verified impact.</p>
+                            </div>
+                        </div>
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+        </Carousel>
       </div>
       <div className="flex flex-col justify-center p-6">
             <CardHeader className="text-center">
