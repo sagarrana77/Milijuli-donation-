@@ -1,3 +1,4 @@
+
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -12,6 +13,12 @@ const firebaseConfig = {
   "storageBucket": "clarity-chainfinal2-5492-9f214.appspot.com",
   "messagingSenderId": "84723762935"
 };
+
+// Force the authDomain to solve for odd development environments.
+if (typeof window !== 'undefined' && window.location.hostname.includes('cloudworkstations.dev')) {
+    firebaseConfig.authDomain = 'clarity-chainfinal2-5492-9f214.firebaseapp.com';
+}
+
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
