@@ -125,7 +125,7 @@ export default function OperationalCostsPage() {
                     className="h-3"
                     aria-label={`${percentage}% funded`}
                   />
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-muted-foreground">Available</span>
                       <div>
