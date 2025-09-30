@@ -673,7 +673,11 @@ export let users: User[] = [
     { id: 'user-anonymous', uid: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile/user-anonymous', bio: 'A generous donor who prefers to remain anonymous.', isOnline: false },
 ]
 
-export let currentUser = users.find(u => u.email === 'admin@example.com');
+export let currentUser = users.find(u => u.id === 'milijuli-sewa-admin');
+if (currentUser) {
+    currentUser.isAdmin = true;
+}
+
 
 export const allDonations: Donation[] = [
   { id: 1, donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Education for All Nepal', amount: 5000, date: '2023-10-01T10:00:00Z' },
