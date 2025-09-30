@@ -117,7 +117,7 @@ export default async function DashboardPage() {
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-chart-1">
+              <div className="text-xl md:text-2xl font-bold text-chart-1">
                 Rs.{(dashboardStats.totalFunds || 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
               <HandCoins className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-chart-2">
+              <div className="text-xl md:text-2xl font-bold text-chart-2">
                 Rs.{(dashboardStats.fundsInHand || 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
@@ -152,7 +152,7 @@ export default async function DashboardPage() {
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-chart-3">
+              <div className="text-xl md:text-2xl font-bold text-chart-3">
                 Rs.{(dashboardStats.totalSpent || 0).toLocaleString()}
               </div>
               <p className="text-xs text-muted-foreground">
