@@ -111,7 +111,6 @@ export function LoginForm() {
       });
     } else {
         toast({ title: 'Login Successful!' });
-        closeDialog();
     }
     setIsSubmitting(false);
   }
