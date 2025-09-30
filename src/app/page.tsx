@@ -159,7 +159,7 @@ export default async function DashboardPage() {
               <div className="w-full">
                   <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                       <span>
-                      Rs.{operationalCostsFund.raisedAmount.toLocaleString()} Available
+                      Rs.{operationalCostsFund.raisedAmount.toLocaleString()} Received
                       </span>
                       <span>{opsPercentage}%</span>
                   </div>
