@@ -136,7 +136,7 @@ export function LoginForm() {
             </CarouselContent>
         </Carousel>
       </div>
-      <div className="flex flex-col justify-center p-6">
+      <div className="flex flex-col justify-center p-6 py-6">
             <CardHeader className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
                     <Logo className="h-10 w-10 text-primary" />
