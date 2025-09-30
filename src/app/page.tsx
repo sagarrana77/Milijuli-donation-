@@ -19,6 +19,7 @@ import {
   TrendingUp,
   UserPlus,
   ArrowRight,
+  Award,
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
@@ -184,7 +185,7 @@ export default async function DashboardPage() {
                         {operationalDonors.map(donation => (
                             <Tooltip key={donation.id}>
                                 <TooltipTrigger asChild>
-                                    <Link href={donation.donor.profileUrl}>
+                                    <Link href={donation.donor.profileUrl} className="relative inline-block">
                                         <Avatar className="inline-block h-8 w-8 rounded-full ring-2 ring-background hover:ring-primary transition-all">
                                             <AvatarImage src={donation.donor.avatarUrl} alt={donation.donor.name} />
                                             <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>

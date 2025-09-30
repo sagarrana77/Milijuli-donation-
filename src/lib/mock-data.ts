@@ -9,6 +9,7 @@ export function getImageUrl(id: string) {
 export type Comment = {
   id: string;
   author: string;
+  authorId: string;
   avatarUrl: string;
   profileUrl: string;
   date: string; // Use string to prevent timezone issues
@@ -46,6 +47,7 @@ export type Update = {
     donorName: string;
     donorAvatarUrl: string;
     donorProfileUrl: string;
+    donorId: string;
     amount: number;
   };
 };

@@ -20,6 +20,7 @@ interface DonationContextType {
   allUpdates: Update[];
   donations: Donation[];
   physicalDonations: PhysicalDonation[];
+  users: typeof users;
 }
 
 const DonationContext = createContext<DonationContextType | null>(null);
@@ -88,6 +89,7 @@ export function DonationDialogWrapper({
                 donorName: donor.name,
                 donorAvatarUrl: donor.avatarUrl,
                 donorProfileUrl: donor.profileUrl,
+                donorId: donor.id,
                 amount: newAmount,
             },
             };
@@ -137,6 +139,7 @@ export function DonationDialogWrapper({
         donorName: donor.name,
         donorAvatarUrl: donor.avatarUrl,
         donorProfileUrl: donor.profileUrl,
+        donorId: donor.id,
         amount: amount,
       },
     };
@@ -228,6 +231,7 @@ export function DonationDialogWrapper({
     allUpdates: sortedUpdates,
     donations: allDonations,
     physicalDonations,
+    users,
   };
 
   return (

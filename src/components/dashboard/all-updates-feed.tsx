@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
@@ -13,11 +13,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import type { Project, Update, User } from '@/lib/data';
+import type { Project, Update, User, Donation } from '@/lib/data';
 import { getUsers } from '@/services/donations-service';
 import { Skeleton } from '../ui/skeleton';
-import { ArrowRight, Gift, ShoppingCart } from 'lucide-react';
+import { ArrowRight, Gift, ShoppingCart, Award } from 'lucide-react';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
+import { allDonations as initialAllDonations } from '@/lib/data';
 
 type UpdateWithProject = Update & {
     projectName: string;
@@ -33,6 +34,20 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
   const [isClient, setIsClient] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const { openPhoto } = usePhotoDialog();
+
+  const topDonorIds = useMemo(() => {
+    const donationTotals: Record<string, number> = {};
+    initialAllDonations.forEach(donation => {
+        if (!donation.donor || donation.donor.id === 'user-anonymous') return;
+        if (donationTotals[donation.donor.id]) {
+            donationTotals[donation.donor.id] += donation.amount;
+        } else {
+            donationTotals[donation.donor.id] = donation.amount;
+        }
+    });
+    const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
+    return sortedDonors.slice(0, 5);
+  }, []);
 
   useEffect(() => {
     async function loadUsers() {
@@ -80,6 +95,7 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
                 donorAvatarUrl: randomDonor.avatarUrl,
                 donorProfileUrl: randomDonor.profileUrl,
                 amount: randomAmount,
+                donorId: randomDonor.id,
             },
             projectName: randomProject.name,
             projectId: randomProject.id,
@@ -127,13 +143,18 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
           {allUpdates.length > 0 ? (
             allUpdates.slice(0, 7).map(update => (
               <div key={update.id} className="flex items-start gap-4">
-                <div className="w-10 flex justify-center">
+                <div className="w-10 flex-shrink-0">
                    {update.isMonetaryDonation && update.monetaryDonationDetails && (
-                        <Link href={update.monetaryDonationDetails.donorProfileUrl}>
+                        <Link href={update.monetaryDonationDetails.donorProfileUrl} className="relative inline-block">
                             <Avatar className="h-10 w-10 border">
                                 <AvatarImage src={update.monetaryDonationDetails.donorAvatarUrl} alt={update.monetaryDonationDetails.donorName} />
                                 <AvatarFallback>{update.monetaryDonationDetails.donorName.charAt(0)}</AvatarFallback>
                             </Avatar>
+                            {topDonorIds.includes(update.monetaryDonationDetails.donorId) && (
+                                <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-0.5 text-white border border-background">
+                                    <Award className="h-3 w-3" />
+                                </div>
+                            )}
                         </Link>
                    )}
                    {update.isTransfer && (

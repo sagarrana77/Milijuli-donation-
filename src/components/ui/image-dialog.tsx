@@ -17,10 +17,26 @@ import { ScrollArea } from './scroll-area';
 import { DiscussionSection } from '../projects/discussion-section';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 import { Button } from './button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Award } from 'lucide-react';
+import { useMemo } from 'react';
+import { allDonations } from '@/lib/data';
 
 export function ImageDialog() {
   const { isOpen, closeImage, photoData } = usePhotoDialog();
+
+  const topDonorIds = useMemo(() => {
+    const donationTotals: Record<string, number> = {};
+    allDonations.forEach(donation => {
+        if (!donation.donor || donation.donor.id === 'user-anonymous') return;
+        if (donationTotals[donation.donor.id]) {
+            donationTotals[donation.donor.id] += donation.amount;
+        } else {
+            donationTotals[donation.donor.id] = donation.amount;
+        }
+    });
+    const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
+    return sortedDonors.slice(0, 5);
+  }, []);
 
   if (!isOpen || !photoData) {
     return null;
@@ -29,6 +45,7 @@ export function ImageDialog() {
   const { imageUrl, imageAlt, title, donor, project, comments } = photoData;
 
   const hasDonorInfo = donor && project;
+  const isTopDonor = donor ? topDonorIds.includes(donor.id) : false;
 
   return (
     <Dialog open={isOpen} onOpenChange={closeImage}>
@@ -64,13 +81,20 @@ export function ImageDialog() {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <div className="flex items-center gap-4 rounded-lg border p-4">
-                                        <Avatar className="h-16 w-16 border">
-                                            <AvatarImage
-                                            src={donor.avatarUrl}
-                                            alt={donor.name}
-                                            />
-                                            <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
-                                        </Avatar>
+                                        <div className="relative">
+                                            <Avatar className="h-16 w-16 border">
+                                                <AvatarImage
+                                                src={donor.avatarUrl}
+                                                alt={donor.name}
+                                                />
+                                                <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
+                                            </Avatar>
+                                             {isTopDonor && (
+                                                <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-1 text-white border-2 border-background">
+                                                    <Award className="h-4 w-4" />
+                                                </div>
+                                            )}
+                                        </div>
                                         <div className="flex-1">
                                             <div className="font-bold text-lg">Donated by {donor.name}</div>
                                             <p className="text-sm text-muted-foreground line-clamp-2">{donor.bio}</p>

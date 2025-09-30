@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -17,6 +18,9 @@ import {
 import type { PhysicalDonation, Project, User } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
+import { useMemo } from 'react';
+import { allDonations as initialAllDonations } from '@/lib/data';
+import { Award } from 'lucide-react';
 
 interface InKindDonationsSliderClientProps {
     completedDonations: PhysicalDonation[];
@@ -26,6 +30,20 @@ interface InKindDonationsSliderClientProps {
 
 export function InKindDonationsSliderClient({ completedDonations, allProjects, users }: InKindDonationsSliderClientProps) {
   const { openPhoto } = usePhotoDialog();
+
+  const topDonorIds = useMemo(() => {
+    const donationTotals: Record<string, number> = {};
+    initialAllDonations.forEach(donation => {
+        if (!donation.donor || donation.donor.id === 'user-anonymous') return;
+        if (donationTotals[donation.donor.id]) {
+            donationTotals[donation.donor.id] += donation.amount;
+        } else {
+            donationTotals[donation.donor.id] = donation.amount;
+        }
+    });
+    const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
+    return sortedDonors.slice(0, 5);
+  }, []);
   
   return (
         <Carousel
@@ -44,6 +62,7 @@ export function InKindDonationsSliderClient({ completedDonations, allProjects, u
                 if (!wishlistItem || !donor || !project) return null;
 
                 const imageUrl = wishlistItem.imageUrl || 'https://picsum.photos/seed/placeholder/400/225';
+                const isTopDonor = topDonorIds.includes(donor.id);
 
                 return (
                     <CarouselItem key={donation.id} className="md:basis-1/2">
@@ -73,13 +92,20 @@ export function InKindDonationsSliderClient({ completedDonations, allProjects, u
                             </CardContent>
                             <CardFooter className="p-4 pt-0">
                                 <Link href={donor.profileUrl} className="flex items-center gap-3 w-full">
-                                    <Avatar className="h-9 w-9 border">
-                                        <AvatarImage
-                                        src={donor.avatarUrl}
-                                        alt={donor.name}
-                                        />
-                                        <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
-                                    </Avatar>
+                                    <div className="relative">
+                                        <Avatar className="h-9 w-9 border">
+                                            <AvatarImage
+                                            src={donor.avatarUrl}
+                                            alt={donor.name}
+                                            />
+                                            <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                         {isTopDonor && (
+                                            <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-0.5 text-white border border-background">
+                                                <Award className="h-3 w-3" />
+                                            </div>
+                                        )}
+                                    </div>
                                     <div>
                                         <div className="font-medium text-sm">Donated by {donor.name}</div>
                                     </div>

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '../ui/button';
-import { Bell, User, LogIn, LogOut } from 'lucide-react';
+import { Bell, User, LogIn, LogOut, Award } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,8 @@ import { useNotifications } from '@/context/notification-provider';
 import { useAuth } from '@/context/auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useLoginDialog } from '@/context/login-dialog-provider';
+import { useMemo } from 'react';
+import { allDonations } from '@/lib/data';
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith('/admin/projects/new')) {
@@ -109,6 +111,22 @@ export function Header() {
   const { openDialog } = useLoginDialog();
   const title = getPageTitle(pathname);
   const unreadCount = notifications.filter(n => !n.read).length;
+  
+  const topDonorIds = useMemo(() => {
+    const donationTotals: Record<string, number> = {};
+    allDonations.forEach(donation => {
+        if (!donation.donor || donation.donor.id === 'user-anonymous') return;
+        if (donationTotals[donation.donor.id]) {
+            donationTotals[donation.donor.id] += donation.amount;
+        } else {
+            donationTotals[donation.donor.id] = donation.amount;
+        }
+    });
+    const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
+    return sortedDonors.slice(0, 5);
+  }, []);
+
+  const isTopDonor = user ? topDonorIds.includes(user.uid) : false;
 
   return (
     <header className="sticky top-0 z-10 flex h-auto flex-col items-start gap-2 border-b bg-background/80 px-4 py-3 backdrop-blur-sm sm:px-6">
@@ -146,6 +164,11 @@ export function Header() {
                         <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? ""} />
                         <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
                     </Avatar>
+                     {isTopDonor && (
+                        <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-0.5 text-white border border-background">
+                            <Award className="h-3 w-3" />
+                        </div>
+                    )}
                  </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

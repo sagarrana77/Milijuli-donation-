@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,8 +12,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Card, CardContent } from '@/components/ui/card';
 import type { Project } from '@/lib/data';
+import { allDonations } from '@/lib/data';
 import Link from 'next/link';
-import { Reply } from 'lucide-react';
+import { Reply, Award } from 'lucide-react';
 
 type Comment = Project['discussion'][0];
 
@@ -36,6 +37,20 @@ export function DiscussionSection({
 }: DiscussionSectionProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
 
+  const topDonorIds = useMemo(() => {
+    const donationTotals: Record<string, number> = {};
+    allDonations.forEach(donation => {
+        if (!donation.donor || donation.donor.id === 'user-anonymous') return;
+        if (donationTotals[donation.donor.id]) {
+            donationTotals[donation.donor.id] += donation.amount;
+        } else {
+            donationTotals[donation.donor.id] = donation.amount;
+        }
+    });
+    const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
+    return sortedDonors.slice(0, 5);
+  }, []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,6 +63,7 @@ export function DiscussionSection({
     const newComment: Comment = {
       id: `comment-${Date.now()}`,
       author: 'Current User', // This would come from auth
+      authorId: 'aayush-kc', // This would come from auth
       avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop',
       profileUrl: '/profile/current-user',
       date: new Date().toISOString(),
@@ -97,33 +113,41 @@ export function DiscussionSection({
         
         <div className="space-y-6">
           {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.id} className="flex items-start gap-4">
-                 <Link href={comment.profileUrl}>
-                    <Avatar className="h-10 w-10 border">
-                        <AvatarImage src={comment.avatarUrl} alt={comment.author} />
-                        <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                </Link>
-                <div className="flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <Link href={comment.profileUrl} className="font-semibold hover:underline">
-                        {comment.author}
-                    </Link>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(new Date(comment.date), { addSuffix: true })}
-                    </p>
+            comments.map((comment) => {
+              const isTopDonor = topDonorIds.includes(comment.authorId);
+              return (
+                <div key={comment.id} className="flex items-start gap-4">
+                   <Link href={comment.profileUrl} className="relative inline-block">
+                      <Avatar className="h-10 w-10 border">
+                          <AvatarImage src={comment.avatarUrl} alt={comment.author} />
+                          <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                       {isTopDonor && (
+                          <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-0.5 text-white border border-background">
+                              <Award className="h-3 w-3" />
+                          </div>
+                      )}
+                  </Link>
+                  <div className="flex-1">
+                    <div className="flex items-baseline gap-2">
+                      <Link href={comment.profileUrl} className="font-semibold hover:underline">
+                          {comment.author}
+                      </Link>
+                      <p className="text-xs text-muted-foreground">
+                        {formatDistanceToNow(new Date(comment.date), { addSuffix: true })}
+                      </p>
+                    </div>
+                      {comment.replyTo && (
+                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Reply className="h-3 w-3" />
+                              Replying to <span className="font-medium text-primary/80">@{comment.replyTo}</span>
+                          </p>
+                      )}
+                    <p className="mt-1 text-foreground/90 whitespace-pre-wrap">{comment.text}</p>
                   </div>
-                    {comment.replyTo && (
-                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                            <Reply className="h-3 w-3" />
-                            Replying to <span className="font-medium text-primary/80">@{comment.replyTo}</span>
-                        </p>
-                    )}
-                  <p className="mt-1 text-foreground/90 whitespace-pre-wrap">{comment.text}</p>
                 </div>
-              </div>
-            ))
+              )
+            })
           ) : (
             <p className="text-muted-foreground text-center py-4">Be the first to start the discussion!</p>
           )}
@@ -131,4 +155,3 @@ export function DiscussionSection({
       </CardContent>
   );
 }
-    

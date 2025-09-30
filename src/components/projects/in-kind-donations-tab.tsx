@@ -7,6 +7,9 @@ import { useDonationContext } from '@/components/projects/donation-dialog-wrappe
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
+import { useMemo } from 'react';
+import { allDonations as initialAllDonations } from '@/lib/data';
+import { Award } from 'lucide-react';
 
 // This component is now client-side only and receives all data via context.
 export function InKindDonationsTab() {
@@ -16,6 +19,20 @@ export function InKindDonationsTab() {
   const completedDonations = physicalDonations.filter(
     (d) => d.projectId === project.id && d.status === 'Completed'
   );
+
+  const topDonorIds = useMemo(() => {
+    const donationTotals: Record<string, number> = {};
+    initialAllDonations.forEach(donation => {
+        if (!donation.donor || donation.donor.id === 'user-anonymous') return;
+        if (donationTotals[donation.donor.id]) {
+            donationTotals[donation.donor.id] += donation.amount;
+        } else {
+            donationTotals[donation.donor.id] = donation.amount;
+        }
+    });
+    const sortedDonors = Object.keys(donationTotals).sort((a, b) => donationTotals[b] - donationTotals[a]);
+    return sortedDonors.slice(0, 5);
+  }, []);
 
   if (completedDonations.length === 0) {
     return (
@@ -42,6 +59,8 @@ export function InKindDonationsTab() {
             const imageUrl =
               wishlistItem.imageUrl ||
               'https://picsum.photos/seed/placeholder/400/300';
+            
+            const isTopDonor = topDonorIds.includes(donor.id);
 
             return (
               <Card
@@ -80,10 +99,17 @@ export function InKindDonationsTab() {
                     href={donor.profileUrl}
                     className="flex w-full items-center gap-3"
                   >
-                    <Avatar className="h-9 w-9 border">
-                      <AvatarImage src={donor.avatarUrl} alt={donor.name} />
-                      <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
+                    <div className="relative">
+                        <Avatar className="h-9 w-9 border">
+                        <AvatarImage src={donor.avatarUrl} alt={donor.name} />
+                        <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        {isTopDonor && (
+                            <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-0.5 text-white border border-background">
+                                <Award className="h-3 w-3" />
+                            </div>
+                        )}
+                    </div>
                     <div>
                       <div className="text-sm font-medium">
                         Donated by {donor.name}
