@@ -5,7 +5,7 @@
 
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, getDoc, query, where, orderBy, getCountFromServer } from 'firebase/firestore';
-import { teamMembers, type TeamMember, type Project, users, getImageUrl } from '@/lib/mock-data';
+import { teamMembers, type TeamMember, type Project, users, getImageUrl, allDonations } from '@/lib/mock-data';
 
 /**
  * Fetches all projects from the Firestore 'projects' collection.
@@ -72,19 +72,23 @@ export async function getProjects(): Promise<Project[]> {
           {
             id: 'comment-1',
             author: 'Jane Doe',
+            authorId: 'user-jane-doe',
             avatarUrl: getImageUrl('avatar-jane-doe'),
             profileUrl: '/profile/user-jane-doe',
             date: '2023-11-16T10:00:00Z',
             text: 'This is such a wonderful project! So happy to see the progress.',
+            status: 'approved',
           },
           {
             id: 'comment-2',
             author: 'John Smith',
+            authorId: 'user-john-smith',
             avatarUrl: getImageUrl('avatar-john-smith'),
             profileUrl: '/profile/user-john-smith',
             date: '2023-11-17T11:30:00Z',
             text: 'Keep up the great work! Can\'t wait to see the finished school.',
             replyTo: 'Jane Doe',
+            status: 'approved',
           },
         ],
         wishlist: [
@@ -180,7 +184,7 @@ export async function getProjects(): Promise<Project[]> {
         ],
         expenses: [],
         discussion: [
-            { id: 'comment-art-1', author: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile/user-john-smith', date: '2023-11-26T10:00:00Z', text: 'This is amazing, Raj! So glad to be a small part of it.' }
+            { id: 'comment-art-1', author: 'John Smith', authorId: 'user-john-smith', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile/user-john-smith', date: '2023-11-26T10:00:00Z', text: 'This is amazing, Raj! So glad to be a small part of it.', status: 'approved' }
         ],
         wishlist: [
             { id: 'wish-art-1', name: 'Watercolor Paint Sets', description: 'Sets of non-toxic watercolor paints for kids.', quantityNeeded: 50, quantityDonated: 5, costPerItem: 500, imageUrl: getImageUrl('wishlist-paints'), imageHint: 'watercolor paints', allowInKind: true },
