@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -125,49 +124,38 @@ export default function OperationalCostsPage() {
                     className="h-3"
                     aria-label={`${percentage}% funded`}
                   />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-muted-foreground">Available</span>
-                      <div>
-                        <p className="font-bold">
-                          Rs.{operationalCostsFund.raisedAmount.toLocaleString()}
-                        </p>
-                      </div>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="font-medium text-muted-foreground">Available</span>
+                      <span className="font-bold">
+                        Rs.{operationalCostsFund.raisedAmount.toLocaleString()}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Target className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <p className="font-bold">
-                          Rs.{operationalCostsFund.targetAmount.toLocaleString()}
-                        </p>
-                        <p className="text-muted-foreground">Target</p>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Target className="h-4 w-4" />
+                        <span>Target</span>
                       </div>
+                      <span className="font-bold">
+                        Rs.{operationalCostsFund.targetAmount.toLocaleString()}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <p className="font-bold">{operationalCostsFund.donors.toLocaleString()}</p>
-                        <p className="text-muted-foreground">Donors</p>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Users className="h-4 w-4" />
+                        <span>Donors</span>
                       </div>
+                      <span className="font-bold">{operationalCostsFund.donors.toLocaleString()}</span>
                     </div>
                   </div>
                 </>
               ) : (
                 <div className="space-y-4">
                   <Skeleton className="h-3 w-full" />
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                        <Skeleton className="h-4 w-12"/>
-                        <Skeleton className="h-4 w-16"/>
-                    </div>
-                     <div className="space-y-1">
-                        <Skeleton className="h-4 w-12"/>
-                        <Skeleton className="h-4 w-20"/>
-                    </div>
-                     <div className="space-y-1">
-                        <Skeleton className="h-4 w-8"/>
-                        <Skeleton className="h-4 w-12"/>
-                    </div>
+                  <div className="space-y-3">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-5 w-1/2" />
+                    <Skeleton className="h-5 w-5/6" />
                   </div>
                 </div>
               )}
