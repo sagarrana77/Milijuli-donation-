@@ -652,7 +652,7 @@ export let users: User[] = [
     { id: 'user-anonymous', uid: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile/user-anonymous', bio: 'A generous donor who prefers to remain anonymous.' },
 ]
 
-export let currentUser = users.find(u => u.id === 'milijuli-sewa-admin');
+export let currentUser = users.find(u => u.email === 'aayush.kc@example.com');
 
 export const allDonations: Donation[] = [
   {

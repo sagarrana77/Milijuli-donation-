@@ -35,7 +35,8 @@ import {
   BookOpen,
   Edit,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  Award
 } from 'lucide-react';
 import { platformSettings } from '@/lib/data';
 import { Button } from '../ui/button';
@@ -51,6 +52,7 @@ const menuItems = [
   { href: '/projects', label: 'All Projects', icon: HeartHandshake },
   { href: '/friends', label: 'Friends', icon: Users },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
+  { href: '/in-kind-donations', label: 'Hall of Fame', icon: Award },
   { href: '/careers', label: 'Careers', icon: UserPlus },
   { href: '/reports', label: 'Reports', icon: FileText },
   { href: '/about', label: 'About', icon: Users },
@@ -122,18 +124,6 @@ export function MainSidebar() {
                   <Link href="/my-campaigns" onClick={handleLinkClick}>
                   <HeartHandshake />
                   <span>My Campaigns</span>
-                  </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                  asChild
-                  isActive={isActive('/in-kind-donations')}
-                  tooltip={{ children: 'In-Kind Donations', side: 'right' }}
-              >
-                  <Link href="/in-kind-donations" onClick={handleLinkClick}>
-                  <Package />
-                  <span>In-Kind Donations</span>
                   </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
