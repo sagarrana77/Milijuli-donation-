@@ -216,14 +216,14 @@ export default async function DashboardPage() {
       </ScrollFadeIn>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-3">
                 <ScrollFadeIn asChild>
                     <section>
                         <HallOfFameDonors donations={allDonations} />
                     </section>
                 </ScrollFadeIn>
             </div>
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-3">
                  <ScrollFadeIn asChild>
                      <AllUpdatesFeed allProjects={projects} />
                  </ScrollFadeIn>
