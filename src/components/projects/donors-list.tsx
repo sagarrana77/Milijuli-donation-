@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -80,7 +79,7 @@ export function DonorsList({ donations: donationsProp }: DonorsListProps) {
                                             <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                          {isTopDonor && (
-                                            <div className="absolute -bottom-1 -right-1 bg-amber-500 text-white rounded-full p-0.5 border border-background">
+                                            <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-0.5 text-white border border-background">
                                                 <Award className="h-3 w-3" />
                                             </div>
                                         )}

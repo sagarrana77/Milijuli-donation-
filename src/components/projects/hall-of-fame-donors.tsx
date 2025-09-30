@@ -86,7 +86,7 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
                                     <AvatarImage src={donor.avatarUrl} alt={donor.name} />
                                     <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <div className="absolute bottom-4 -right-1 bg-amber-500 text-white rounded-full p-1 border-2 border-background">
+                                <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-1 text-white border-2 border-background">
                                     <Award className="h-4 w-4" />
                                 </div>
                                 </Link>
