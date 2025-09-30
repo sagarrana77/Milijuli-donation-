@@ -5,7 +5,7 @@
 
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, doc, getDoc, getCountFromServer } from 'firebase/firestore';
-import { users as mockUsers, physicalDonations as mockPhysicalDonations, type PhysicalDonation, type User } from '@/lib/data';
+import { users as mockUsers, physicalDonations as mockPhysicalDonations, allDonations as mockAllDonations, type PhysicalDonation, type User, type Donation } from '@/lib/data';
 
 /**
  * Fetches all in-kind donations from the Firestore 'donations' collection.
@@ -18,6 +18,19 @@ export async function getInKindDonations(): Promise<PhysicalDonation[]> {
     console.error("Error fetching in-kind donations: ", error);
     return [];
   }
+}
+
+/**
+ * Fetches all monetary donations.
+ * @returns A promise that resolves to an array of all monetary donations.
+ */
+export async function getAllDonations(): Promise<Donation[]> {
+    try {
+        return mockAllDonations;
+    } catch (error) {
+        console.error("Error fetching all donations: ", error);
+        return [];
+    }
 }
 
 /**

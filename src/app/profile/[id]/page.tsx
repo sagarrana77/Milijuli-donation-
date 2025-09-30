@@ -1,7 +1,8 @@
+
 'use server';
 
 import { notFound } from 'next/navigation';
-import { getInKindDonations, getUser } from '@/services/donations-service';
+import { getInKindDonations, getUser, getAllDonations } from '@/services/donations-service';
 import type { User } from '@/lib/data';
 import { getProjects } from '@/services/projects-service';
 import { ProfilePageClient } from './profile-page-client';
@@ -19,7 +20,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
   }
 
   // Fetch data on the server
-  const allDonations = []; // Assuming monetary donations come from another service
+  const allDonations = await getAllDonations();
   const physicalDonations = await getInKindDonations();
   const projects = await getProjects();
   const allUsers = await require('@/services/donations-service').getUsers();
