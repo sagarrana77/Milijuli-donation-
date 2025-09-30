@@ -5,7 +5,7 @@
 
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, getDoc, query, where, orderBy, getCountFromServer } from 'firebase/firestore';
-import { teamMembers, type TeamMember, type Project, users } from '@/lib/mock-data';
+import { teamMembers, type TeamMember, type Project, users, getImageUrl } from '@/lib/mock-data';
 
 /**
  * Fetches all projects from the Firestore 'projects' collection.
