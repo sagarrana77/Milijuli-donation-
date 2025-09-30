@@ -1,12 +1,16 @@
 
 import { Award } from 'lucide-react';
-import { getInKindDonations, getUsers, getAllDonations } from '@/services/donations-service';
+import { getAllDonations } from '@/services/donations-service';
 import { getProjects } from '@/services/projects-service';
 import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
 import { Card, CardContent } from '@/components/ui/card';
+import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 
 export default async function HallOfFamePage() {
-  const allDonationsData = await getAllDonations();
+  const [allDonationsData, projects] = await Promise.all([
+    getAllDonations(),
+    getProjects(),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
@@ -29,6 +33,8 @@ export default async function HallOfFamePage() {
           </CardContent>
         </Card>
       )}
+
+      <AllUpdatesFeed allProjects={projects} />
     </div>
   );
 }
