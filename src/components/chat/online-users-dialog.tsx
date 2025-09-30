@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useMemo, useState } from 'react';
@@ -55,7 +56,7 @@ function UserList({ users, currentUser, friends, pendingFriends, onToggleFriend 
                         variant={isFriend ? 'outline' : isPending ? 'secondary' : 'default'}
                         size="sm"
                         onClick={() => onToggleFriend(user.id)}
-                        disabled={isPending}
+                        disabled={isFriend || isPending}
                         className={cn("w-[120px]", !isFriend && !isPending && "bg-green-600 hover:bg-green-700 text-white")}
                     >
                         {isFriend ? <UserCheck className="mr-2 h-4 w-4" /> : isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <UserPlus className="mr-2 h-4 w-4" />}

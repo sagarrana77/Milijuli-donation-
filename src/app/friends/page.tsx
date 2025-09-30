@@ -8,7 +8,7 @@ import { users, currentUser } from '@/lib/data';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { UserPlus, UserCheck, Search, Users } from 'lucide-react';
+import { UserPlus, UserCheck, Search, Users, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -18,32 +18,44 @@ export default function FriendsPage() {
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [friends, setFriends] = useState(currentUser?.friends || []);
+    const [pendingFriends, setPendingFriends] = useState<string[]>([]);
 
     const handleToggleFriend = (userId: string) => {
+        if (!currentUser) return;
+
         const isFriend = friends.includes(userId);
+        const isPending = pendingFriends.includes(userId);
         const user = users.find(u => u.id === userId);
         if (!user) return;
         
-        if (isFriend) {
-            // Simulate removing a friend
-            setFriends(prev => prev.filter(id => id !== userId));
-            toast({
-                title: 'Friend Removed',
-                description: `${user.name} has been removed from your friends list.`,
-            });
-        } else {
-            // Simulate adding a friend
-            setFriends(prev => [...prev, userId]);
-            toast({
-                title: 'Friend Added!',
-                description: `${user.name} has been added to your friends list.`,
-            });
+        if (isFriend || isPending) {
+            // For this simulation, we won't handle removing friends here
+            // to keep the "Add -> Pending -> Friend" flow clear.
+            return;
         }
-        // In a real app, you would make an API call here to update the backend.
-        const currentUserData = users.find(u => u.id === currentUser?.id);
-        if(currentUserData) {
-            currentUserData.friends = isFriend ? friends.filter(id => id !== userId) : [...friends, userId];
-        }
+
+        // Add to pending state
+        setPendingFriends(prev => [...prev, userId]);
+        toast({
+            title: 'Friend Request Sent',
+            description: `Your friend request to ${user.name} has been sent.`,
+        });
+
+        // Simulate the friend accepting after a delay
+        setTimeout(() => {
+            const updatedFriends = [...friends, userId];
+            setFriends(updatedFriends);
+            setPendingFriends(prev => prev.filter(id => id !== userId));
+            
+            if(currentUser.friends) {
+                currentUser.friends = updatedFriends;
+            }
+
+            toast({
+                title: 'Friend Request Accepted',
+                description: `${user.name} has accepted your friend request.`,
+            });
+        }, 3000);
     };
     
     const filteredUsers = users.filter(user => 
@@ -82,6 +94,7 @@ export default function FriendsPage() {
           <div className="space-y-4">
             {filteredUsers.map(user => {
               const isFriend = friends.includes(user.id);
+              const isPending = pendingFriends.includes(user.id);
               return (
                 <div key={user.id} className="flex items-center justify-between rounded-md border p-4">
                   <Link href={user.profileUrl} className="flex items-center gap-4">
@@ -95,12 +108,13 @@ export default function FriendsPage() {
                     </div>
                   </Link>
                   <Button
-                    variant={isFriend ? 'outline' : 'default'}
+                    variant={isFriend ? 'outline' : isPending ? 'secondary' : 'default'}
                     onClick={() => handleToggleFriend(user.id)}
-                    className={cn(!isFriend && "bg-green-600 hover:bg-green-700 text-white")}
+                    disabled={isFriend || isPending}
+                    className={cn("w-[140px]", !isFriend && !isPending && "bg-green-600 hover:bg-green-700 text-white")}
                   >
-                    {isFriend ? <UserCheck className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
-                    {isFriend ? 'Friend' : 'Add Friend'}
+                    {isFriend ? <UserCheck className="mr-2 h-4 w-4" /> : isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <UserPlus className="mr-2 h-4 w-4" />}
+                    {isFriend ? 'Friend' : isPending ? 'Pending' : 'Add Friend'}
                   </Button>
                 </div>
               );
