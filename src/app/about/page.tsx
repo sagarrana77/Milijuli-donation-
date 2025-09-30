@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
   Card,
@@ -10,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { teamMembers, values, aboutContent } from '@/lib/mock-data';
+import { teamMembers as initialTeamMembers, values as initialValues, aboutContent as initialAboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -55,7 +56,21 @@ const features: { title: string; description: string; icon: LucideIcon, link?: s
 export default function AboutPage() {
   const { openPhoto } = usePhotoDialog();
   const { openDialog: openPricingDialog } = usePricingDialog();
+  const [teamMembers, setTeamMembers] = useState<typeof initialTeamMembers>([]);
+  const [values, setValues] = useState<typeof initialValues>([]);
+  const [aboutContent, setAboutContent] = useState<typeof initialAboutContent | null>(null);
+
+  useEffect(() => {
+    setTeamMembers(initialTeamMembers);
+    setValues(initialValues);
+    setAboutContent(initialAboutContent);
+  }, []);
+
   const teamPhotoUrl = getImageUrl('team-photo');
+
+  if (!aboutContent) {
+    return <div>Loading...</div>; // Or a skeleton loader
+  }
 
   return (
     <div className="space-y-12">
