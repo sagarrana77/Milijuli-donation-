@@ -5,7 +5,7 @@
 
 import { db } from '@/lib/firebase';
 import { collection, getDocs, doc, getDoc, query, where, orderBy,getCountFromServer } from 'firebase/firestore';
-import type { Project } from '@/lib/data';
+import { teamMembers, type TeamMember, type Project } from '@/lib/mock-data';
 
 /**
  * Fetches all projects from the Firestore 'projects' collection.
@@ -47,6 +47,17 @@ export async function getProject(id: string): Promise<Project | undefined> {
     console.error("Error fetching project: ", error);
     return undefined;
   }
+}
+
+/**
+ * Fetches a single team member by their ID.
+ * @param id The ID of the team member to fetch.
+ * @returns A promise that resolves to the team member object or undefined if not found.
+ */
+export async function getTeamMember(id: string): Promise<TeamMember | undefined> {
+  // In a real app, this might fetch from a 'teamMembers' collection in Firestore.
+  // For this demo, we're filtering an in-memory array.
+  return teamMembers.find((member) => member.id === id);
 }
 
 

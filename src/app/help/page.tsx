@@ -14,8 +14,8 @@ import Link from 'next/link';
 import { InfoIcon } from '@/components/icons/InfoIcon';
 import { MailIcon } from '@/components/icons/MailIcon';
 import { PhoneIcon } from '@/components/icons/PhoneIcon';
-import { getFaqs, contactInfo } from '@/lib/data';
-import type { FAQ } from '@/lib/data';
+import { getFaqs } from '@/services/content-service';
+import { contactInfo, type FAQ } from '@/lib/data';
 
 export default function HelpPage() {
     const [faqs, setFaqs] = useState<FAQ[]>([]);

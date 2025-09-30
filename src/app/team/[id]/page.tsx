@@ -1,7 +1,7 @@
 
 
 import { notFound } from 'next/navigation';
-import { getTeamMember } from '@/lib/data';
+import { getTeamMember } from '@/services/projects-service';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

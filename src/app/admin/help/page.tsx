@@ -21,8 +21,9 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { getFaqs, setFaqs, contactInfo } from '@/lib/data';
-import type { FAQ } from '@/lib/data';
+import { getFaqs, setFaqs } from '@/services/content-service';
+import { contactInfo, type FAQ } from '@/lib/data';
+
 
 export default function AdminHelpPage() {
   const [faqs, setFaqsState] = useState<FAQ[]>([]);
