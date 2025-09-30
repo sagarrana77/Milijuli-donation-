@@ -82,17 +82,26 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
           className="w-full"
         >
           <CarouselContent className="-ml-4">
-            {topDonors.map((donor, index) => (
+            {topDonors.map((donor, index) => {
+                 const chartColor = `var(--chart-${index + 1})`;
+                return (
                 <CarouselItem key={donor.id} className="pl-4 lg:basis-full">
                     <div className="h-full p-1">
-                        <Card className="flex flex-col h-full text-center overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+                        <Card 
+                            className="flex flex-col h-full text-center overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1"
+                            style={{
+                                '--fame-color': `hsl(${chartColor})`,
+                                background: `hsla(${chartColor}, 0.05)`,
+                                borderColor: `hsla(${chartColor}, 0.2)`
+                            } as React.CSSProperties}
+                        >
                             <CardHeader className="flex-1 items-center">
                                 <Link href={donor.profileUrl} className="relative inline-block">
-                                <Avatar className="w-24 h-24 mb-4 border-4 border-amber-400">
+                                <Avatar className="w-24 h-24 mb-4 border-4" style={{ borderColor: 'hsl(var(--fame-color))' }}>
                                     <AvatarImage src={donor.avatarUrl} alt={donor.name} />
                                     <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <div className="absolute -bottom-1 -right-1 rounded-full bg-amber-500 p-1 text-white border-2 border-background">
+                                <div className="absolute -bottom-1 -right-1 rounded-full p-1 text-white border-2 border-background" style={{ backgroundColor: 'hsl(var(--fame-color))' }}>
                                     <Award className="h-4 w-4" />
                                 </div>
                                 </Link>
@@ -104,7 +113,7 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
                                     <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger>
-                                        <Sparkles className="h-5 w-5 text-primary" />
+                                        <Sparkles className="h-5 w-5" style={{ color: 'hsl(var(--fame-color))' }} />
                                         </TooltipTrigger>
                                         <TooltipContent><p>Pro Member</p></TooltipContent>
                                     </Tooltip>
@@ -115,7 +124,7 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
                             </CardHeader>
                             <CardContent className="flex-1">
                                 <div className="text-sm font-semibold text-muted-foreground">Total Donated</div>
-                                <div className="text-3xl font-bold text-amber-600">
+                                <div className="text-3xl font-bold" style={{ color: 'hsl(var(--fame-color))' }}>
                                 Rs.{donor.totalDonated.toLocaleString()}
                                 </div>
                             </CardContent>
@@ -144,7 +153,7 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
                         </Card>
                     </div>
                 </CarouselItem>
-            ))}
+            )})}
           </CarouselContent>
            {topDonors.length > 1 && (
                <>
