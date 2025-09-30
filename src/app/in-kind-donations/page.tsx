@@ -11,9 +11,9 @@ export default async function InKindDonationsPage() {
   const physicalDonations = await getInKindDonations();
   
   // Ensure physicalDonations is an array before filtering
-  const completedDonations = (physicalDonations || []).filter(
-    (d) => d.status === 'Completed'
-  );
+  const completedDonations = Array.isArray(physicalDonations)
+    ? physicalDonations.filter((d) => d.status === 'Completed')
+    : [];
 
   const projectsWithDonations = projects.filter((project) =>
     completedDonations.some((donation) => donation.projectName === project.name)
