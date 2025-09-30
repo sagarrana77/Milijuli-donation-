@@ -60,6 +60,22 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
   if (topDonors.length === 0) {
     return null;
   }
+  
+  const cardColors = [
+    "bg-chart-1/5 border-chart-1/20",
+    "bg-chart-2/5 border-chart-2/20",
+    "bg-chart-3/5 border-chart-3/20",
+    "bg-chart-4/5 border-chart-4/20",
+    "bg-chart-5/5 border-chart-5/20",
+  ];
+  
+  const textColors = [
+      "text-chart-1",
+      "text-chart-2",
+      "text-chart-3",
+      "text-chart-4",
+      "text-chart-5",
+  ];
 
   return (
     <Card className="bg-amber-500/5 border-amber-500/10">
@@ -83,25 +99,21 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
         >
           <CarouselContent className="-ml-4">
             {topDonors.map((donor, index) => {
-                 const chartColor = `var(--chart-${index + 1})`;
+                 const cardColorClass = cardColors[index % cardColors.length];
+                 const textColorClass = textColors[index % textColors.length];
                 return (
                 <CarouselItem key={donor.id} className="pl-4 lg:basis-full">
                     <div className="h-full p-1">
                         <Card 
-                            className="flex flex-col h-full text-center overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1"
-                            style={{
-                                '--fame-color': `hsl(${chartColor})`,
-                                background: `hsla(${chartColor}, 0.05)`,
-                                borderColor: `hsla(${chartColor}, 0.2)`
-                            } as React.CSSProperties}
+                            className={cn("flex flex-col h-full text-center overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1", cardColorClass)}
                         >
                             <CardHeader className="flex-1 items-center">
                                 <Link href={donor.profileUrl} className="relative inline-block">
-                                <Avatar className="w-24 h-24 mb-4 border-4" style={{ borderColor: 'hsl(var(--fame-color))' }}>
+                                <Avatar className={cn("w-24 h-24 mb-4 border-4", textColorClass.replace("text-", "border-"))}>
                                     <AvatarImage src={donor.avatarUrl} alt={donor.name} />
                                     <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <div className="absolute -bottom-1 -right-1 rounded-full p-1 text-white border-2 border-background" style={{ backgroundColor: 'hsl(var(--fame-color))' }}>
+                                <div className={cn("absolute -bottom-1 -right-1 rounded-full p-1 text-white border-2 border-background", textColorClass.replace("text-", "bg-"))}>
                                     <Award className="h-4 w-4" />
                                 </div>
                                 </Link>
@@ -113,7 +125,7 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
                                     <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger>
-                                        <Sparkles className="h-5 w-5" style={{ color: 'hsl(var(--fame-color))' }} />
+                                        <Sparkles className={cn("h-5 w-5", textColorClass)} />
                                         </TooltipTrigger>
                                         <TooltipContent><p>Pro Member</p></TooltipContent>
                                     </Tooltip>
@@ -124,7 +136,7 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
                             </CardHeader>
                             <CardContent className="flex-1">
                                 <div className="text-sm font-semibold text-muted-foreground">Total Donated</div>
-                                <div className="text-3xl font-bold" style={{ color: 'hsl(var(--fame-color))' }}>
+                                <div className={cn("text-3xl font-bold", textColorClass)}>
                                 Rs.{donor.totalDonated.toLocaleString()}
                                 </div>
                             </CardContent>
