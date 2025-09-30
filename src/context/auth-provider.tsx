@@ -18,8 +18,10 @@ import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { type User as AppUser } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// Force the auth domain to fix localhost issues in some environments
-auth.tenantId = auth.config.authDomain;
+// Force the auth domain to fix localhost/cloud workstation issues in some environments
+if (auth.config.authDomain) {
+    auth.config.authDomain = 'clarity-chainfinal2-5492-9f214.firebaseapp.com';
+}
 
 
 // Combine Firebase user with our app-specific user data
