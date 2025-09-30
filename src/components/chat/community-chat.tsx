@@ -102,7 +102,7 @@ export function CommunityChat() {
                                             </Link>
                                         )}
                                         <span className="text-xs text-muted-foreground">
-                                            {formatDistanceToNow(msg.timestamp.toDate(), { addSuffix: true })}
+                                            {msg.timestamp ? formatDistanceToNow(msg.timestamp.toDate(), { addSuffix: true }) : 'just now'}
                                         </span>
                                     </div>
                                     <div className={`p-3 rounded-2xl max-w-sm md:max-w-md ${msg.authorId === user?.uid ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted rounded-bl-none'}`}>
