@@ -218,7 +218,7 @@ export let operationalCostsFund = {
   id: 'operational-costs',
   name: 'Operational Costs',
   description:
-    'Support the core team and infrastructure that make our work possible.',
+    'Our mission is to foster trust and empower change through radical transparency. Your contribution supports the core team and infrastructure that makes our work possible, ensuring every donation can be tracked with integrity.',
   targetAmount: 15000000, // Static target for now
   raisedAmount: 1575000,
   donors: 88,
@@ -250,12 +250,14 @@ export type Donor = Omit<
 >;
 
 export type Donation = {
-  id: number;
+  id: string;
   donor: Donor;
   project: string;
   amount: number;
   date: string; // Use string to prevent timezone issues
   isAnonymous?: boolean;
+  status: 'pending' | 'confirmed' | 'failed';
+  paymentMethod: 'QR' | 'Card' | 'Bank';
 };
 
 export type PhysicalDonation = {
@@ -710,15 +712,15 @@ if (currentUser) {
 
 
 export const allDonations: Donation[] = [
-  { id: 1, donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Education for All Nepal', amount: 5000, date: '2023-10-01T10:00:00Z' },
-  { id: 2, donor: users.find(u => u.id === 'user-john-smith')!, project: 'Education for All Nepal', amount: 10000, date: '2023-10-02T11:30:00Z' },
-  { id: 3, donor: users.find(u => u.id === 'user-ai-chan')!, project: 'Clean Water Initiative', amount: 7500, date: '2023-10-03T14:00:00Z' },
-  { id: 4, donor: users.find(u => u.id === 'user-raj-patel')!, project: 'Operational Costs', amount: 2000, date: '2023-10-04T09:00:00Z' },
-  { id: 5, donor: users.find(u => u.id === 'aayush-kc')!, project: 'Disaster Relief Fund', amount: 25000, date: '2023-10-05T18:00:00Z' },
-  { id: 6, donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Community Health Posts', amount: 3000, date: '2023-10-06T12:00:00Z' },
-  { id: 7, donor: users.find(u => u.id === 'priya-adhikari')!, project: 'Operational Costs', amount: 15000, date: '2023-10-07T15:00:00Z' },
-  { id: 8, donor: users.find(u => u.id === 'user-john-smith')!, project: 'Art for All', amount: 5000, date: '2023-11-15T10:00:00Z' },
-  { id: 9, donor: users.find(u => u.id === 'user-ai-chan')!, project: 'Art for All', amount: 10000, date: '2023-11-16T11:00:00Z' },
+  { id: 'don-1', donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Education for All Nepal', amount: 5000, date: '2023-10-01T10:00:00Z', status: 'confirmed', paymentMethod: 'Card' },
+  { id: 'don-2', donor: users.find(u => u.id === 'user-john-smith')!, project: 'Education for All Nepal', amount: 10000, date: '2023-10-02T11:30:00Z', status: 'confirmed', paymentMethod: 'Card' },
+  { id: 'don-3', donor: users.find(u => u.id === 'user-ai-chan')!, project: 'Clean Water Initiative', amount: 7500, date: '2023-10-03T14:00:00Z', status: 'confirmed', paymentMethod: 'Bank' },
+  { id: 'don-4', donor: users.find(u => u.id === 'user-raj-patel')!, project: 'Operational Costs', amount: 2000, date: '2023-10-04T09:00:00Z', status: 'confirmed', paymentMethod: 'QR' },
+  { id: 'don-5', donor: users.find(u => u.id === 'aayush-kc')!, project: 'Disaster Relief Fund', amount: 25000, date: '2023-10-05T18:00:00Z', status: 'confirmed', paymentMethod: 'Card' },
+  { id: 'don-6', donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Community Health Posts', amount: 3000, date: '2023-10-06T12:00:00Z', status: 'confirmed', paymentMethod: 'QR' },
+  { id: 'don-7', donor: users.find(u => u.id === 'priya-adhikari')!, project: 'Operational Costs', amount: 15000, date: '2023-10-07T15:00:00Z', status: 'confirmed', paymentMethod: 'Bank' },
+  { id: 'don-8', donor: users.find(u => u.id === 'user-john-smith')!, project: 'Art for All', amount: 5000, date: '2023-11-15T10:00:00Z', status: 'confirmed', paymentMethod: 'Card' },
+  { id: 'don-9', donor: users.find(u => u.id === 'user-ai-chan')!, project: 'Art for All', amount: 10000, date: '2023-11-16T11:00:00Z', status: 'confirmed', paymentMethod: 'QR' },
 ];
 
 export let physicalDonations: PhysicalDonation[] = [

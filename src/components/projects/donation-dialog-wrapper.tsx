@@ -8,6 +8,7 @@ import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { sendThankYouEmail } from '@/ai/flows/send-thank-you-email';
 import { currentUser, allDonations as initialDonations, users, physicalDonations as initialPhysicalDonations } from '@/lib/data';
+import { useNotifications } from '@/context/notification-provider';
 
 interface DonationContextType {
   raisedAmount: number;
@@ -50,13 +51,17 @@ export function DonationDialogWrapper({
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const { toast } = useToast();
+  const { addNotification } = useNotifications();
+
 
  useEffect(() => {
     setIsClient(true);
     // This effect re-syncs state when the underlying mutable mock data changes (e.g., from an admin action)
-    setRaisedAmount(project.raisedAmount);
-    setDonors(project.donors);
-    setDonations(initialDonations.filter(d => d.project === project.name) || [])
+    const confirmedDonations = initialDonations.filter(d => d.project === project.name && d.status === 'confirmed') || [];
+    setRaisedAmount(confirmedDonations.reduce((acc, d) => acc + d.amount, 0));
+    setDonors(new Set(confirmedDonations.map(d => d.donor.id)).size);
+
+    setDonations(initialDonations.filter(d => d.project === project.name) || []);
     setPhysicalDonations(initialPhysicalDonations);
 
     const initialCombinedUpdates = [...project.updates].sort((a, b) => {
@@ -65,19 +70,19 @@ export function DonationDialogWrapper({
     });
     setAllUpdates(initialCombinedUpdates);
     
+    // This simulation is for demonstration and doesn't affect the actual data state used by the admin panel.
     if (typeof window !== 'undefined') {
         const interval = setInterval(() => {
         if(document.hidden) return;
         const totalSpent = project.expenses.reduce((acc, exp) => acc + exp.amount, 0);
-        const availableFunds = project.raisedAmount - totalSpent;
-        const isDonation = Math.random() > 0.7; // 30% chance of donation
+        const currentRaised = initialDonations
+            .filter(d => d.project === project.name && d.status === 'confirmed')
+            .reduce((acc, d) => acc + d.amount, 0);
+        const availableFunds = currentRaised - totalSpent;
+
+        const isDonation = Math.random() > 0.7;
         if (isDonation && availableFunds < project.targetAmount) {
             const newAmount = Math.floor(Math.random() * 150) + 20;
-            
-            // This is a mock update. In a real app, this would come from a real-time backend.
-            project.raisedAmount += newAmount;
-            project.donors += 1;
-            
             const donor = users.find(u => u.id === 'user-anonymous')!;
             
             const newDonationUpdate: Update = {
@@ -94,26 +99,24 @@ export function DonationDialogWrapper({
                 amount: newAmount,
               },
             };
+            setAllUpdates(prev => [newDonationUpdate, ...prev]);
 
-            const newDonationEntry: Donation = {
-              id: Date.now(),
+             const newDonationEntry: Donation = {
+              id: Date.now().toString(),
               donor: donor,
               project: project.name,
               amount: newAmount,
               date: new Date().toISOString(),
               isAnonymous: true,
+              status: 'confirmed',
+              paymentMethod: 'Card',
             }
-            
-            project.updates.unshift(newDonationUpdate);
-            initialDonations.unshift(newDonationEntry);
-
-            // Now update the state to trigger re-render
-            setRaisedAmount(project.raisedAmount);
-            setDonors(project.donors);
-            setAllUpdates(prev => [newDonationUpdate, ...prev]);
             setDonations(prev => [newDonationEntry, ...prev]);
+            setRaisedAmount(prev => prev + newAmount);
+            // This is just a visual update for the donor count on the client
+            setDonors(prev => prev + 1);
         }
-        }, 4000);
+        }, 8000);
 
         return () => clearInterval(interval);
     }
@@ -121,7 +124,9 @@ export function DonationDialogWrapper({
   }, [project.id, project.raisedAmount, project.donors, project.updates]);
 
 
-  const handleDonation = async (amount: number, isAnonymous: boolean) => {
+  const handleDonation = async (amount: number, isAnonymous: boolean, paymentMethod: 'QR' | 'Card' | 'Bank') => {
+    // This function is now mostly for showing the initial "pending" toast.
+    // The actual state update will happen when an admin confirms the donation.
     if (!currentUser) {
         toast({
             variant: "destructive",
@@ -129,73 +134,6 @@ export function DonationDialogWrapper({
             description: "You must be logged in to make a donation.",
         });
         return;
-    }
-
-    setRaisedAmount((prev) => prev + amount);
-    setDonors((prev) => prev + 1);
-
-    const donor = isAnonymous ? users.find(u => u.id === 'user-anonymous')! : currentUser;
-
-    const newDonationUpdate: Update = {
-      id: `update-donation-${Date.now()}`,
-      title: 'New Donation Received!',
-      description: `${donor.name} generously donated Rs.${amount.toLocaleString()}.`,
-      date: new Date().toISOString(),
-      isMonetaryDonation: true,
-      monetaryDonationDetails: {
-        donorName: donor.name,
-        donorAvatarUrl: donor.avatarUrl,
-        donorProfileUrl: donor.profileUrl,
-        donorId: donor.id,
-        amount: amount,
-      },
-    };
-    
-    setAllUpdates(prev => [newDonationUpdate, ...prev]);
-
-    // This would be a database update in a real app
-    project.raisedAmount += amount;
-    project.donors += 1;
-    project.updates.unshift(newDonationUpdate);
-    
-    const newDonationEntry: Donation = {
-        id: Date.now(),
-        donor: donor,
-        project: project.name,
-        amount: amount,
-        date: new Date().toISOString(),
-        isAnonymous: isAnonymous,
-    }
-    initialDonations.unshift(newDonationEntry);
-    setDonations(prev => [newDonationEntry, ...prev]);
-
-
-    toast({
-      title: 'Thank You for Your Support!',
-      description: `Your generous donation of Rs.${amount.toLocaleString()} will help us continue our mission.`,
-      variant: 'default',
-    });
-
-    if (currentUser?.email && !isAnonymous) {
-      try {
-        await sendThankYouEmail({
-          donorName: currentUser.name,
-          amount: amount,
-          projectName: project.name,
-          donorEmail: currentUser.email,
-        });
-        toast({
-          title: 'Confirmation Email Sent',
-          description: 'A thank-you note has been sent to your email.',
-        });
-      } catch (error) {
-        console.error("Failed to send thank you email:", error);
-        toast({
-            variant: 'destructive',
-            title: 'Email Failed',
-            description: 'There was an issue sending the thank-you email.',
-        });
-      }
     }
   };
   
@@ -245,5 +183,3 @@ export function DonationDialogWrapper({
     </DonationContext.Provider>
   );
 }
-
-    

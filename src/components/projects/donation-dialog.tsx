@@ -26,12 +26,15 @@ import Link from 'next/link';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { PaymentGateways } from './payment-gateways';
 import { useDonationContext } from './donation-dialog-wrapper';
+import { allDonations } from '@/lib/data';
+import { useNotifications } from '@/context/notification-provider';
+import { currentUser } from '@/lib/data';
 
 interface DonationDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   projectName: string;
-  onDonate: (amount: number, isAnonymous: boolean) => void;
+  onDonate: (amount: number, isAnonymous: boolean, paymentMethod: 'QR' | 'Card' | 'Bank') => void;
 }
 
 const presetAmounts: { [key: string]: number[] } = {
@@ -53,9 +56,10 @@ const creditCardSchema = z.object({
 });
 
 const bankAccountSchema = z.object({
-  accountHolderName: z.string().min(1, "Account holder name is required."),
-  accountNumber: z.string().min(1, "Account number is required."),
-  routingNumber: z.string().min(1, "Routing number is required."),
+    bankName: z.string().min(1, "Bank name is required."),
+    accountHolderName: z.string().min(1, "Account holder name is required."),
+    accountNumber: z.string().min(1, "Account number is required."),
+    routingNumber: z.string().min(1, "Routing number is required."),
 });
 
 
@@ -71,6 +75,7 @@ export function DonationDialog({
   const [relocationConsent, setRelocationConsent] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [currency, setCurrency] = useState<'NPR' | 'USD' | 'EUR'>('NPR');
+  const { addNotification } = useNotifications();
   
   const context = useDonationContext();
 
@@ -81,7 +86,7 @@ export function DonationDialog({
 
   const bankForm = useForm<z.infer<typeof bankAccountSchema>>({
     resolver: zodResolver(bankAccountSchema),
-    defaultValues: { accountHolderName: '', accountNumber: '', routingNumber: ''}
+    defaultValues: { bankName: '', accountHolderName: '', accountNumber: '', routingNumber: ''}
   });
 
   const handleProceedToPayment = () => {
@@ -98,11 +103,42 @@ export function DonationDialog({
     setStep('payment');
   }
 
-  const completeDonation = () => {
+  const completeDonation = (paymentMethod: 'QR' | 'Card' | 'Bank') => {
     const numericAmount = parseFloat(amount);
     const nprAmount = numericAmount * exchangeRates[currency];
-    onDonate(nprAmount, isAnonymous);
+
+    // Create a pending donation
+    const donor = isAnonymous ? users.find(u => u.id === 'user-anonymous')! : currentUser;
+
+    if (!donor) {
+        console.error("No current user found to make a donation.");
+        return;
+    }
+    
+    const newDonation = {
+        id: `don-${Date.now()}`,
+        donor: donor,
+        project: projectName,
+        amount: nprAmount,
+        date: new Date().toISOString(),
+        isAnonymous: isAnonymous,
+        status: 'pending' as const,
+        paymentMethod: paymentMethod,
+    };
+    allDonations.unshift(newDonation);
+
+    // Trigger onDonate callback from context (which might do optimistic UI updates)
+    onDonate(nprAmount, isAnonymous, paymentMethod);
+    
+    // Add a "pending" notification for the user
+    addNotification({
+        title: 'Donation Pending',
+        description: `Your donation of Rs.${nprAmount.toLocaleString()} to "${projectName}" is being processed.`,
+        href: `/projects/${context?.project.id}`,
+    });
+
     onOpenChange(false); // Close dialog
+    
     // Reset state for next time
     setTimeout(() => {
         setStep('amount');
@@ -111,6 +147,8 @@ export function DonationDialog({
         setRelocationConsent(false);
         setIsAnonymous(false);
         setCurrency('NPR');
+        ccForm.reset();
+        bankForm.reset();
     }, 300);
   }
 
@@ -238,12 +276,12 @@ export function DonationDialog({
                         <PaymentGateways project={context?.project!} />
                          <DialogFooter className="mt-4">
                              <Button type="button" variant="secondary" onClick={() => setStep('amount')}>Back</Button>
-                             <Button onClick={completeDonation}><Check className="mr-2 h-4 w-4" /> I Have Paid</Button>
+                             <Button onClick={() => completeDonation('QR')}><Check className="mr-2 h-4 w-4" /> I Have Paid</Button>
                          </DialogFooter>
                     </TabsContent>
                     <TabsContent value="card" className="mt-4">
                         <Form {...ccForm}>
-                            <form onSubmit={ccForm.handleSubmit(completeDonation)} className="space-y-4">
+                            <form onSubmit={ccForm.handleSubmit(() => completeDonation('Card'))} className="space-y-4">
                                 <FormField control={ccForm.control} name="cardNumber" render={({ field }) => (
                                     <FormItem>
                                         <Label>Card Number</Label>
@@ -276,7 +314,7 @@ export function DonationDialog({
                     </TabsContent>
                      <TabsContent value="bank" className="mt-4">
                         <Form {...bankForm}>
-                            <form onSubmit={bankForm.handleSubmit(completeDonation)} className="space-y-4">
+                            <form onSubmit={bankForm.handleSubmit(() => completeDonation('Bank'))} className="space-y-4">
                                <FormField control={bankForm.control} name="accountHolderName" render={({ field }) => (
                                     <FormItem>
                                         <Label>Account Holder Name</Label>

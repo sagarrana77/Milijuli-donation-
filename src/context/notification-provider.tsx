@@ -1,12 +1,12 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import type { Notification } from '@/lib/data';
 
 interface NotificationContextType {
   notifications: Notification[];
-  setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+  addNotification: (notification: Omit<Notification, 'id' | 'date' | 'read'>) => void;
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
 }
@@ -15,6 +15,16 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const addNotification = useCallback((notification: Omit<Notification, 'id' | 'date' | 'read'>) => {
+    const newNotification: Notification = {
+      ...notification,
+      id: `notif-${Date.now()}`,
+      date: new Date().toISOString(),
+      read: false,
+    };
+    setNotifications(prev => [newNotification, ...prev]);
+  }, []);
 
   const markAsRead = (id: string) => {
     setNotifications(prev => prev.map(n => (n.id === id ? { ...n, read: true } : n)));
@@ -26,7 +36,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   const value = {
     notifications,
-    setNotifications,
+    addNotification,
     markAsRead,
     markAllAsRead,
   };
