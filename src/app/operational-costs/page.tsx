@@ -34,6 +34,7 @@ import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PaymentGateways } from '@/components/projects/payment-gateways';
+import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wrapper';
 
 
 export default function OperationalCostsPage() {
@@ -98,13 +99,8 @@ export default function OperationalCostsPage() {
   const showTarget = platformSettings.showOperationalCostsTarget && operationalCostsFund.targetAmount > 0;
 
   return (
+    <DonationDialogWrapper project={operationalCostsProject}>
     <div className="mx-auto max-w-6xl space-y-8">
-      <DonationDialog
-        isOpen={isDonationOpen}
-        onOpenChange={setIsDonationOpen}
-        projectName={operationalCostsFund.name}
-        onDonate={handleDonation}
-      />
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
           {operationalCostsFund.name}
@@ -245,6 +241,7 @@ export default function OperationalCostsPage() {
         </aside>
       </div>
     </div>
+    </DonationDialogWrapper>
   );
 }
 
