@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { teamMembers, values, aboutContent } from '@/lib/data';
+import { teamMembers as initialTeamMembers, values as initialValues, aboutContent as initialAboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { Button } from '@/components/ui/button';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { useState, useEffect } from 'react';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -56,6 +57,9 @@ export default function AboutPage() {
   const { openPhoto } = usePhotoDialog();
   const { openDialog: openPricingDialog } = usePricingDialog();
   const teamPhotoUrl = getImageUrl('team-photo');
+  const [aboutContent, setAboutContent] = useState(initialAboutContent);
+  const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
+  const [values, setValues] = useState(initialValues);
 
   return (
     <div className="space-y-12">
