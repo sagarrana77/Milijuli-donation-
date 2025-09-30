@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -54,6 +55,7 @@ const creditCardSchema = z.object({
 const bankAccountSchema = z.object({
   accountHolderName: z.string().min(1, "Account holder name is required."),
   accountNumber: z.string().min(1, "Account number is required."),
+  routingNumber: z.string().min(1, "Routing number is required."),
 });
 
 
@@ -79,7 +81,7 @@ export function DonationDialog({
 
   const bankForm = useForm<z.infer<typeof bankAccountSchema>>({
     resolver: zodResolver(bankAccountSchema),
-    defaultValues: { accountHolderName: '', accountNumber: ''}
+    defaultValues: { accountHolderName: '', accountNumber: '', routingNumber: ''}
   });
 
   const handleProceedToPayment = () => {
@@ -289,6 +291,13 @@ export function DonationDialog({
                                         <FormMessage />
                                     </FormItem>
                                 )} />
+                                <FormField control={bankForm.control} name="routingNumber" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Routing Number</Label>
+                                        <FormControl><Input placeholder="Your routing number" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
                                 <DialogFooter>
                                     <Button type="button" variant="secondary" onClick={() => setStep('amount')}>Back</Button>
                                     <Button type="submit">Pay Rs.{(parseFloat(amount) * exchangeRates[currency]).toLocaleString()}</Button>
@@ -303,5 +312,3 @@ export function DonationDialog({
     </Dialog>
   );
 }
-
-    
