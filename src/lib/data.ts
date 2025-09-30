@@ -1,3 +1,4 @@
+
 import { getProjects } from '@/services/projects-service';
 import { PlaceHolderImages } from './placeholder-images';
 
@@ -519,6 +520,7 @@ export let paymentGateways: Gateway[] = [
 export let platformSettings = {
     appName: 'milijuli donation sewa',
     appLogoUrl: '',
+    loginImageUrl: 'https://images.unsplash.com/photo-1593442808882-775dfcd90699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxuZXBhbCUyMGNsYXNzcm9vbXxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
     userQrPaymentsEnabled: true,
     campaignCreationEnabled: true,
     showOperationalCostsTotal: true,

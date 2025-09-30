@@ -558,6 +558,14 @@ export default function AdminDashboardPage() {
     });
     setForceRender(c => c + 1);
   }
+  
+  const handleLoginImageChange = () => {
+    toast({
+        title: 'Login Image Updated!',
+        description: 'The login page image has been saved.',
+    });
+    setForceRender(c => c + 1);
+  }
 
   const handleGenerateRecoveryPlan = async () => {
     setIsGeneratingRecoveryPlan(true);
@@ -1287,6 +1295,18 @@ export default function AdminDashboardPage() {
                                     <Button onClick={handleAppLogoChange}>Save</Button>
                                 </div>
                                 <p className="text-sm text-muted-foreground">Enter a URL for the app logo. It will replace the default logo in the sidebar.</p>
+                            </div>
+                             <div className="rounded-lg border p-4 space-y-2">
+                                <Label htmlFor="login-image-input" className="text-base font-medium">Login Page Image URL</Label>
+                                <div className="flex gap-2">
+                                    <Input 
+                                        id="login-image-input"
+                                        defaultValue={platformSettings.loginImageUrl}
+                                        onChange={(e) => platformSettings.loginImageUrl = e.target.value}
+                                    />
+                                    <Button onClick={handleLoginImageChange}>Save</Button>
+                                </div>
+                                <p className="text-sm text-muted-foreground">This image will be displayed on the left side of the login page.</p>
                             </div>
                              <div className="rounded-lg border p-4">
                                 <div className="flex items-center justify-between">
