@@ -20,6 +20,7 @@ import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { Button } from '@/components/ui/button';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -72,7 +73,7 @@ export default function AboutPage() {
   if (!aboutContent) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <AnimatedLogo />
       </div>
     );
   }

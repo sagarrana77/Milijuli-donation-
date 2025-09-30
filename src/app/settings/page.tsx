@@ -23,6 +23,7 @@ import { usePricingDialog } from '@/context/pricing-dialog-provider';
 import { useAuth } from '@/context/auth-provider';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 
 const profileSchema = z.object({
@@ -118,7 +119,11 @@ export default function SettingsPage() {
     };
 
     if (loading || !user) {
-        return <div>Loading...</div>; // Or a skeleton loader
+        return (
+            <div className="flex h-96 items-center justify-center">
+                <AnimatedLogo />
+            </div>
+        );
     }
 
 

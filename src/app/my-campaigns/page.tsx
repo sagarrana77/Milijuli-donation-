@@ -33,6 +33,7 @@ import { useRouter } from 'next/navigation';
 import { Pagination } from '@/components/ui/pagination';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/auth-provider';
+import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -49,7 +50,11 @@ export default function MyCampaignsPage() {
 
 
   if (loading || !user) {
-    return <div>Loading...</div>; // Or a skeleton loader
+    return (
+        <div className="flex h-96 items-center justify-center">
+            <AnimatedLogo />
+        </div>
+    );
   }
 
   const userProjects = projects.filter(p => p.ownerId === user.uid);

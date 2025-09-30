@@ -36,6 +36,7 @@ import { summarizeProject } from '@/ai/flows/summarize-project';
 import { generateCampaignStory } from '@/ai/flows/generate-campaign-story';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
 import { useAuth } from '@/context/auth-provider';
+import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 const gatewaySchema = z.object({
     name: z.string(),
@@ -249,7 +250,11 @@ export default function CreateCampaignPage() {
   };
 
   if (loading || !user) {
-    return <div>Loading...</div>; // Or a skeleton loader
+    return (
+        <div className="flex h-96 items-center justify-center">
+            <AnimatedLogo />
+        </div>
+    );
   }
 
 
