@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -33,6 +34,7 @@ import { platformSettings } from '@/lib/data';
 import { useLoginDialog } from '@/context/login-dialog-provider';
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
+import { Logo } from '../icons/logo';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -136,8 +138,11 @@ export function LoginForm() {
       </div>
       <div className="flex flex-col justify-center p-6">
             <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>Sign in or create an account to continue</CardDescription>
+                <div className="flex items-center justify-center gap-2 mb-4">
+                    <Logo className="h-10 w-10 text-primary" />
+                    <CardTitle className="text-3xl font-bold">{platformSettings.appName}</CardTitle>
+                </div>
+                <CardDescription>Sign in or create an account to continue</CardDescription>
             </CardHeader>
             <CardContent>
             <Tabs defaultValue="login">

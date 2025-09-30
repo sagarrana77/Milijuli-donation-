@@ -1,4 +1,5 @@
 
+
 import {
   Card,
   CardContent,
@@ -31,6 +32,7 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { CampaignHeroSlider } from '@/components/dashboard/campaign-hero-slider';
+import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
 
 export default async function DashboardPage() {
     const projects = await getProjects();
@@ -55,7 +57,7 @@ export default async function DashboardPage() {
 
     const reliefExpenses = projects
       .filter(p => p.id === 'disaster-relief-fund')
-      .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
+      .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0)_ || 0), 0);
 
     // Calculate totals for dashboard stats
     const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0) + operationalCostsFund.raisedAmount;
@@ -210,6 +212,12 @@ export default async function DashboardPage() {
       <ScrollFadeIn>
         <InKindDonationsSlider allProjects={projects} />
       </ScrollFadeIn>
+
+        <ScrollFadeIn asChild>
+            <section>
+                <HallOfFameDonors donations={allDonations} />
+            </section>
+        </ScrollFadeIn>
 
       <ScrollFadeIn asChild>
         <section>
