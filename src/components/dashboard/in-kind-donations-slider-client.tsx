@@ -18,9 +18,10 @@ import {
 import type { PhysicalDonation, Project, User } from '@/lib/data';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { allDonations as initialAllDonations } from '@/lib/data';
 import { Award } from 'lucide-react';
+import Autoplay from 'embla-carousel-autoplay';
 
 interface InKindDonationsSliderClientProps {
     completedDonations: PhysicalDonation[];
@@ -30,6 +31,9 @@ interface InKindDonationsSliderClientProps {
 
 export function InKindDonationsSliderClient({ completedDonations, allProjects, users }: InKindDonationsSliderClientProps) {
   const { openPhoto } = usePhotoDialog();
+  const plugin = useRef(
+    Autoplay({ delay: 3000, stopOnInteraction: true, stopOnMouseEnter: true })
+  );
 
   const topDonorIds = useMemo(() => {
     const donationTotals: Record<string, number> = {};
@@ -51,6 +55,7 @@ export function InKindDonationsSliderClient({ completedDonations, allProjects, u
             align: 'start',
             loop: true,
           }}
+          plugins={[plugin.current]}
           className="w-full"
         >
           <CarouselContent>

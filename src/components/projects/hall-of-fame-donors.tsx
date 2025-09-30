@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import type { Donation, Donor } from '@/lib/data';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '../ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
@@ -20,6 +20,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
 
 interface HallOfFameDonorsProps {
   donations: Donation[];
@@ -28,6 +29,10 @@ interface HallOfFameDonorsProps {
 type TopDonor = Donor & { totalDonated: number };
 
 export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
+  const plugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })
+  );
+  
   const topDonors = useMemo(() => {
     const donationTotals: Record<string, { donor: Donor; total: number }> = {};
 
@@ -73,11 +78,12 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
             align: 'start',
             loop: topDonors.length > 1,
           }}
+          plugins={[plugin.current]}
           className="w-full"
         >
           <CarouselContent className="-ml-4">
             {topDonors.map((donor, index) => (
-                <CarouselItem key={donor.id} className="pl-4">
+                <CarouselItem key={donor.id} className="pl-4 md:basis-1/2 lg:basis-full">
                     <div className="h-full p-1">
                         <Card className="flex flex-col h-full text-center overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
                             <CardHeader className="flex-1 items-center">
