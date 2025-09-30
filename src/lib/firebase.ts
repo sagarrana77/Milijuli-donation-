@@ -22,20 +22,9 @@ const storage = getStorage(app);
 
 if (process.env.NODE_ENV === 'development') {
     try {
-        // Important: Use 127.0.0.1 instead of localhost to avoid potential network issues.
-        // Check if emulators are already connected to prevent errors during hot-reloading.
-        if (auth.emulatorConfig === null) {
-            console.log("Connecting to Firebase Auth emulator...");
-            connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-        }
-        // @ts-ignore - _settings is a private property but a reliable way to check emulator connection for Firestore
-        if (db._settings.host.includes('localhost') || db._settings.host.includes('127.0.0.1')) {
-            // Already connected
-        } else {
-            console.log("Connecting to Firebase Firestore emulator...");
-            connectFirestoreEmulator(db, '127.0.0.1', 8080);
-        }
-        console.log("Successfully configured Firebase emulators.");
+        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        console.log("Connected to Firebase emulators.");
     } catch (error) {
         console.error("Error connecting to Firebase emulators:", error);
     }
