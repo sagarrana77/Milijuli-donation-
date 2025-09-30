@@ -16,7 +16,7 @@ export function LoginDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={closeDialog}>
-      <DialogContent className="max-w-4xl p-0 gap-0 border-0 data-[state=open]:h-auto data-[state=open]:max-h-[90vh] data-[state=open]:overflow-y-auto" aria-describedby="login-dialog-description">
+      <DialogContent className="max-w-md lg:max-w-4xl p-0 gap-0 border-0 data-[state=open]:h-auto data-[state=open]:max-h-[90vh] data-[state=open]:overflow-y-auto" aria-describedby="login-dialog-description">
         <DialogTitle className="sr-only">Login or Sign Up</DialogTitle>
         <DialogDescription id="login-dialog-description" className="sr-only">A dialog to log in or create a new account.</DialogDescription>
         <LoginForm />
