@@ -25,7 +25,7 @@ export type AuthUser = FirebaseUser & AppUser;
 interface AuthContextType {
   user: AuthUser | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: () => Promise<AuthError | null>;
   signOut: () => Promise<void>;
   signInWithEmail: (email: string, pass: string) => Promise<AuthError | null>;
   signUpWithEmail: (name: string, email: string, pass: string) => Promise<AuthError | null>;
@@ -98,8 +98,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
+      return null;
     } catch (error) {
       console.error("Error during Google sign-in with popup:", error);
+      return error as AuthError;
     }
   };
 

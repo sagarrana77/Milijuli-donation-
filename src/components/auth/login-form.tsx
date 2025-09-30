@@ -102,8 +102,17 @@ export function LoginForm() {
   
   const handleGoogleSignIn = async () => {
     setIsSubmitting(true);
-    await signInWithGoogle();
-    // The useEffect will handle closing the dialog
+    const error = await signInWithGoogle();
+     if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign-in Failed',
+        description: error.message,
+      });
+    } else {
+        toast({ title: 'Login Successful!' });
+        closeDialog();
+    }
     setIsSubmitting(false);
   }
 
