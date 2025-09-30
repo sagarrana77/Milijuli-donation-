@@ -57,9 +57,15 @@ export default function AboutPage() {
   const { openPhoto } = usePhotoDialog();
   const { openDialog: openPricingDialog } = usePricingDialog();
   const teamPhotoUrl = getImageUrl('team-photo');
-  const [aboutContent, setAboutContent] = useState(initialAboutContent);
+  const [aboutContent, setAboutContent] = useState({ tagline: '', mission: '' });
   const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
   const [values, setValues] = useState(initialValues);
+
+  useEffect(() => {
+    setAboutContent(initialAboutContent);
+    setTeamMembers(initialTeamMembers);
+    setValues(initialValues);
+  }, []);
 
   return (
     <div className="space-y-12">
