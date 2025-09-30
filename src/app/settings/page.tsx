@@ -267,6 +267,13 @@ export default function SettingsPage() {
             <TabsContent value="credit-card" className="mt-6">
                 <Form {...ccForm}>
                     <form onSubmit={ccForm.handleSubmit(onCreditCardSubmit)} className="space-y-4">
+                        <FormField control={ccForm.control} name="cardName" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Name on Card</FormLabel>
+                                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
                         <FormField control={ccForm.control} name="cardNumber" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Card Number</FormLabel>
@@ -290,13 +297,6 @@ export default function SettingsPage() {
                                 </FormItem>
                             )} />
                         </div>
-                        <FormField control={ccForm.control} name="cardName" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Name on Card</FormLabel>
-                                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
                         <Button type="submit"><Save className="mr-2 h-4 w-4" /> Save Card</Button>
                     </form>
                 </Form>
@@ -388,3 +388,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+    
