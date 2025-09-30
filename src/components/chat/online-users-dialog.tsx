@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '../ui/scroll-area';
 import { Button } from '../ui/button';
-import { UserPlus, UserCheck } from 'lucide-react';
+import { UserPlus, UserCheck, Loader2 } from 'lucide-react';
 import type { User as AppUser, AuthUser } from '@/context/auth-provider';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -18,11 +18,12 @@ interface UserListProps {
     users: AppUser[];
     currentUser: AuthUser | null;
     friends: string[];
+    pendingFriends: string[];
     onToggleFriend: (userId: string) => void;
 }
 
 
-function UserList({ users, currentUser, friends, onToggleFriend }: UserListProps) {
+function UserList({ users, currentUser, friends, pendingFriends, onToggleFriend }: UserListProps) {
     if (users.length === 0) {
         return <p className="text-center text-muted-foreground py-8">No users in this category are online.</p>
     }
@@ -30,6 +31,7 @@ function UserList({ users, currentUser, friends, onToggleFriend }: UserListProps
         <div className="space-y-2">
             {users.map(user => {
                  const isFriend = friends.includes(user.id);
+                 const isPending = pendingFriends.includes(user.id);
                  const isSelf = user.id === currentUser?.uid;
 
                  if (isSelf) return null;
@@ -50,13 +52,14 @@ function UserList({ users, currentUser, friends, onToggleFriend }: UserListProps
                         </div>
                     </Link>
                     <Button
-                        variant={isFriend ? 'outline' : 'default'}
+                        variant={isFriend ? 'outline' : isPending ? 'secondary' : 'default'}
                         size="sm"
                         onClick={() => onToggleFriend(user.id)}
-                        className={cn("w-[120px]", !isFriend && "bg-green-600 hover:bg-green-700 text-white")}
+                        disabled={isPending}
+                        className={cn("w-[120px]", !isFriend && !isPending && "bg-green-600 hover:bg-green-700 text-white")}
                     >
-                        {isFriend ? <UserCheck className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
-                        {isFriend ? 'Friend' : 'Add Friend'}
+                        {isFriend ? <UserCheck className="mr-2 h-4 w-4" /> : isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <UserPlus className="mr-2 h-4 w-4" />}
+                        {isFriend ? 'Friend' : isPending ? 'Pending' : 'Add Friend'}
                     </Button>
                 </div>
             )})}
@@ -74,34 +77,45 @@ interface OnlineUsersDialogProps {
 export function OnlineUsersDialog({ isOpen, onOpenChange, onlineUsers, currentUser }: OnlineUsersDialogProps) {
     const { toast } = useToast();
     const [friends, setFriends] = useState(currentUser?.friends || []);
+    const [pendingFriends, setPendingFriends] = useState<string[]>([]);
     
     const handleToggleFriend = (userId: string) => {
         if (!currentUser) return;
         
         const isFriend = friends.includes(userId);
+        const isPending = pendingFriends.includes(userId);
         const user = users.find(u => u.id === userId);
         if (!user) return;
         
-        let updatedFriends;
-        if (isFriend) {
-            updatedFriends = friends.filter(id => id !== userId);
-            toast({
-                title: 'Friend Removed',
-                description: `${user.name} has been removed from your friends list.`,
-            });
-        } else {
-            updatedFriends = [...friends, userId];
-            toast({
-                title: 'Friend Added!',
-                description: `${user.name} has been added to your friends list.`,
-            });
+        if (isFriend || isPending) {
+            // For now, let's only handle adding friends, not removing or canceling.
+            return;
         }
-        
-        setFriends(updatedFriends);
-        
-        // This is where you'd update the database in a real app.
-        // For our mock data, we'll update the in-memory user object.
-        currentUser.friends = updatedFriends;
+
+        // Add to pending state
+        setPendingFriends(prev => [...prev, userId]);
+        toast({
+            title: 'Friend Request Sent',
+            description: `Your friend request to ${user.name} has been sent.`,
+        });
+
+        // Simulate the friend accepting after a delay
+        setTimeout(() => {
+            const updatedFriends = [...friends, userId];
+            setFriends(updatedFriends);
+            setPendingFriends(prev => prev.filter(id => id !== userId));
+            
+            // This is where you'd update the database in a real app.
+            // For our mock data, we'll update the in-memory user object.
+            if(currentUser.friends) {
+                currentUser.friends = updatedFriends;
+            }
+
+            toast({
+                title: 'Friend Request Accepted',
+                description: `${user.name} has accepted your friend request.`,
+            });
+        }, 3000); // 3-second delay for simulation
     };
 
 
@@ -133,10 +147,10 @@ export function OnlineUsersDialog({ isOpen, onOpenChange, onlineUsers, currentUs
                     <ScrollArea className="flex-1">
                         <div className="p-6">
                             <TabsContent value="all" className="m-0">
-                                <UserList users={otherUsers} currentUser={currentUser} friends={friends} onToggleFriend={handleToggleFriend} />
+                                <UserList users={otherUsers} currentUser={currentUser} friends={friends} pendingFriends={pendingFriends} onToggleFriend={handleToggleFriend} />
                             </TabsContent>
                             <TabsContent value="friends" className="m-0">
-                                <UserList users={friendUsers} currentUser={currentUser} friends={friends} onToggleFriend={handleToggleFriend} />
+                                <UserList users={friendUsers} currentUser={currentUser} friends={friends} pendingFriends={pendingFriends} onToggleFriend={handleToggleFriend} />
                             </TabsContent>
                         </div>
                     </ScrollArea>
