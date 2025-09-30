@@ -9,7 +9,9 @@ import { getInKindDonations } from '@/services/donations-service';
 
 export default async function InKindDonationsPage() {
   const physicalDonations = await getInKindDonations();
-  const completedDonations = physicalDonations.filter(
+  
+  // Ensure physicalDonations is an array before filtering
+  const completedDonations = (physicalDonations || []).filter(
     (d) => d.status === 'Completed'
   );
 
