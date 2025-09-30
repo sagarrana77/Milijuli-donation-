@@ -208,16 +208,17 @@ export default function OperationalCostsPage() {
                         </div>
                     </TabsContent>
                     <TabsContent value="card" className="mt-4 min-h-0">
-                        <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
-                            <CreditCard className="mr-2 h-4 w-4" />
-                            Pay with Credit Card
-                        </Button>
+                        <div className="p-4 text-center text-sm text-muted-foreground border rounded-lg">
+                            <p>To make a secure payment with your credit or debit card, please click the main "Become a Pro" button and select the 'Card' option in the payment dialog.</p>
+                        </div>
                     </TabsContent>
-                    <TabsContent value="bank" className="mt-4 min-h-0">
-                        <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
-                            <Landmark className="mr-2 h-4 w-4" />
-                            Pay with Bank Transfer
-                        </Button>
+                    <TabsContent value="bank" className="mt-4 min-h-0 space-y-2 text-sm">
+                        <div className="font-semibold">Bank Transfer Details:</div>
+                        <p><span className="text-muted-foreground">Bank Name:</span> Example Bank Nepal</p>
+                        <p><span className="text-muted-foreground">Account Holder:</span> milijuli donation sewa</p>
+                        <p><span className="text-muted-foreground">Account Number:</span> 0123456789012345</p>
+                        <p><span className="text-muted-foreground">Swift Code:</span> EBNPNPKA</p>
+                        <p className="text-xs text-muted-foreground pt-2">After making a transfer, please <Link href="/contact" className="text-primary underline">contact us</Link> with the transaction details to confirm your donation.</p>
                     </TabsContent>
                 </Tabs>
             </CardContent>
