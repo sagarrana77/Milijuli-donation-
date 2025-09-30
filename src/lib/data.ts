@@ -1,6 +1,4 @@
 
-'use server';
-
 import {
   PlaceHolderImages,
   salaries,
