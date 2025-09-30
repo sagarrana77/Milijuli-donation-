@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy, Pin, Check, X, ShieldAlert } from 'lucide-react';
+import { PlusCircle, Trash2, Save, Wand2, Loader2, Copy, Pin, Check, X, ShieldAlert, ArrowRight, Gift, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { projects, type Project, currentUser, type Comment } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -77,9 +77,13 @@ const updateSchema = z.object({
   title: z.string().min(1, "Title is required."),
   description: z.string().min(1, "Description is required."),
   date: z.date(),
-  imageUrl: z.string().url("Image URL is required."),
-  imageHint: z.string().min(1, "Image hint is required."),
+  imageUrl: z.string().url("Image URL is required.").optional().or(z.literal('')),
+  imageHint: z.string().optional(),
   pinned: z.boolean().optional(),
+  isTransfer: z.boolean().optional(),
+  isExpense: z.boolean().optional(),
+  isInKindDonation: z.boolean().optional(),
+  expenseDetails: z.object({ item: z.string(), amount: z.number() }).optional(),
 });
 
 const projectSchema = z.object({
@@ -143,8 +147,12 @@ export default function EditProjectPage() {
   function onSubmit(data: ProjectFormData) {
     const projectIndex = projects.findIndex(p => p.id === projectId);
     if (projectIndex !== -1) {
-        const updatedProject = { ...projects[projectIndex], ...data };
-        projects[projectIndex] = updatedProject;
+        const updatedProjectData = {
+          ...projects[projectIndex],
+          ...data,
+          updates: data.updates.map(u => ({ ...u, date: (u.date as Date).toISOString() }))
+        };
+        projects[projectIndex] = updatedProjectData as Project;
     }
     
     toast({
@@ -231,12 +239,12 @@ export default function EditProjectPage() {
 
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <Tabs defaultValue="details">
+            <Tabs defaultValue="updates">
                 <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="details">Project Details</TabsTrigger>
+                    <TabsTrigger value="updates">Updates</TabsTrigger>
                     <TabsTrigger value="discussion">Discussion</TabsTrigger>
                     <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
-                    <TabsTrigger value="updates">Updates</TabsTrigger>
                 </TabsList>
                 <TabsContent value="details" className="space-y-8 mt-6">
                     <Card>
@@ -657,7 +665,7 @@ export default function EditProjectPage() {
                      <Card>
                         <CardHeader>
                             <CardTitle>Project Updates</CardTitle>
-                            <CardDescription>Post updates for your project donors.</CardDescription>
+                            <CardDescription>Post updates for your project donors. Pinned items appear at the top of the feed.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {updateFields.map((item, index) => (
@@ -667,7 +675,12 @@ export default function EditProjectPage() {
                                         name={`updates.${index}.title`}
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Update Title</FormLabel>
+                                                <FormLabel>
+                                                    Update Title
+                                                    {item.isTransfer && <Badge variant="secondary" className="ml-2">Fund Transfer</Badge>}
+                                                    {item.isExpense && <Badge variant="secondary" className="ml-2">Expense</Badge>}
+                                                    {item.isInKindDonation && <Badge variant="secondary" className="ml-2">In-Kind Donation</Badge>}
+                                                </FormLabel>
                                                 <FormControl><Input {...field} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
