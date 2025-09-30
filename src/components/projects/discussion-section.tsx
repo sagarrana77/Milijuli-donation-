@@ -40,6 +40,7 @@ export function DiscussionSection({
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [mentionQuery, setMentionQuery] = useState('');
   const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false);
+  const [replyTo, setReplyTo] = useState<string | undefined>(undefined);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const topDonorIds = useMemo(() => {
@@ -61,7 +62,7 @@ export function DiscussionSection({
   }, []);
   
   const filteredUsers = useMemo(() => {
-    if (!mentionQuery) return [];
+    if (!mentionQuery) return sortedUsers;
     return sortedUsers.filter(user =>
       user.name.toLowerCase().includes(mentionQuery.toLowerCase())
     );
@@ -84,11 +85,13 @@ export function DiscussionSection({
       profileUrl: '/profile/current-user',
       date: new Date().toISOString(),
       text: values.comment,
+      replyTo: replyTo,
     };
 
     // Simulate optimistic update
     setComments((prev) => [newComment, ...prev]);
     form.reset();
+    setReplyTo(undefined);
   }
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -114,6 +117,12 @@ export function DiscussionSection({
     textareaRef.current?.focus();
   };
 
+  const handleReply = (authorName: string) => {
+    setReplyTo(authorName);
+    form.setValue('comment', `@${authorName} `);
+    textareaRef.current?.focus();
+  };
+
 
   return (
     <CardContent className="p-6 space-y-6">
@@ -135,7 +144,7 @@ export function DiscussionSection({
                         <FormItem>
                             <FormControl>
                             <Textarea
-                                placeholder="Share your thoughts or ask a question... Use @ to mention a user."
+                                placeholder={replyTo ? `Replying to @${replyTo}...` : "Share your thoughts or ask a question... Use @ to mention a user."}
                                 rows={3}
                                 {...field}
                                 ref={textareaRef}
@@ -147,7 +156,7 @@ export function DiscussionSection({
                         )}
                     />
                 </PopoverTrigger>
-                 {filteredUsers.length > 0 && (
+                 {(filteredUsers.length > 0 && isMentionPopoverOpen) && (
                     <PopoverContent className="p-0 w-80">
                         <ScrollArea className="max-h-60">
                              <div className="space-y-1 p-2">
@@ -170,7 +179,10 @@ export function DiscussionSection({
                     </PopoverContent>
                  )}
             </Popover>
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
+                 {replyTo && (
+                    <Button variant="ghost" size="sm" onClick={() => setReplyTo(undefined)}>Cancel Reply</Button>
+                )}
                 <Button type="submit" disabled={form.formState.isSubmitting}>
                   Post Comment
                 </Button>
@@ -184,7 +196,7 @@ export function DiscussionSection({
             comments.map((comment) => {
               const isTopDonor = topDonorIds.includes(comment.authorId);
               return (
-                <div key={comment.id} className="flex items-start gap-4">
+                <div key={comment.id} className="flex items-start gap-4 group">
                    <Link href={comment.profileUrl} className="relative inline-block">
                       <Avatar className="h-10 w-10 border">
                           <AvatarImage src={comment.avatarUrl} alt={comment.author} />
@@ -213,6 +225,15 @@ export function DiscussionSection({
                       )}
                     <p className="mt-1 text-foreground/90 whitespace-pre-wrap">{comment.text}</p>
                   </div>
+                   <Button
+                        variant="ghost"
+                        size="icon"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7"
+                        onClick={() => handleReply(comment.author)}
+                        >
+                        <Reply className="h-4 w-4" />
+                        <span className="sr-only">Reply</span>
+                    </Button>
                 </div>
               )
             })
