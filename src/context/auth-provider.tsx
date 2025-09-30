@@ -71,22 +71,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setLoading(true);
       if (firebaseUser) {
         const userProfile = await getOrCreateUserProfile(firebaseUser);
         setUser({ ...firebaseUser, ...userProfile });
       } else {
-        // Handle the redirect result when the page loads
-        getRedirectResult(auth)
-          .catch((error) => {
-            console.error("Error getting redirect result:", error);
-          })
-          .finally(() => {
-            setUser(null);
-          });
+        setUser(null);
       }
       setLoading(false);
     });
-
+  
+    // Handle redirect result
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (result && result.user) {
+          // User signed in via redirect. The onAuthStateChanged listener will handle setting the user.
+          console.log("Redirect result processed for user:", result.user.displayName);
+        }
+      })
+      .catch((error) => {
+        console.error("Error processing redirect result:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  
     return () => unsubscribe();
   }, []);
 
