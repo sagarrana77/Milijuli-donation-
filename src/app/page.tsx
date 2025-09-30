@@ -57,7 +57,7 @@ export default async function DashboardPage() {
 
     const reliefExpenses = projects
       .filter(p => p.id === 'disaster-relief-fund')
-      .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0)_ || 0), 0);
+      .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
 
     // Calculate totals for dashboard stats
     const totalRaised = projects.reduce((acc, p) => acc + p.raisedAmount, 0) + operationalCostsFund.raisedAmount;
