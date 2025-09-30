@@ -21,7 +21,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <SidebarProvider>
                 <div className="flex min-h-screen bg-background">
                   <MainSidebar />
-                  <SidebarInset className="min-w-0 flex-1 flex-col">
+                  <SidebarInset className="flex min-w-0 flex-1 flex-col">
                     <Header />
                     <main className="flex-1 p-4 sm:p-6 md:p-8">
                       <div className="mx-auto w-full max-w-7xl">{children}</div>
