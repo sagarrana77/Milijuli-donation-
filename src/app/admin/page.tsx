@@ -50,6 +50,7 @@ import {
   Gift,
   Trash2,
   AlertTriangle,
+  DollarSign,
 } from 'lucide-react';
 import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund, allDonations, getImageUrl } from '@/lib/data';
 import type { PhysicalDonation, Project, User, Donation } from '@/lib/data';
@@ -84,6 +85,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 
 
 const ITEMS_PER_PAGE = 5;
+const MONETARY_DONATIONS_PER_PAGE = 10;
 
 export default function AdminDashboardPage() {
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
@@ -115,7 +117,8 @@ export default function AdminDashboardPage() {
   const [isRecoveryPlanOpen, setIsRecoveryPlanOpen] = useState(false);
   
   const [projectPage, setProjectPage] = useState(1);
-  const [donationPage, setDonationPage] = useState(1);
+  const [inKindDonationPage, setInKindDonationPage] = useState(1);
+  const [monetaryDonationPage, setMonetaryDonationPage] = useState(1);
   const [userPage, setUserPage] = useState(1);
 
   const paginatedProjects = projects.slice(
@@ -124,11 +127,18 @@ export default function AdminDashboardPage() {
   );
   const totalProjectPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   
-  const paginatedDonations = physicalDonations.slice(
-    (donationPage - 1) * ITEMS_PER_PAGE,
-    donationPage * ITEMS_PER_PAGE
+  const paginatedInKindDonations = physicalDonations.slice(
+    (inKindDonationPage - 1) * ITEMS_PER_PAGE,
+    inKindDonationPage * ITEMS_PER_PAGE
   );
-  const totalDonationPages = Math.ceil(physicalDonations.length / ITEMS_PER_PAGE);
+  const totalInKindDonationPages = Math.ceil(physicalDonations.length / ITEMS_PER_PAGE);
+  
+  const sortedMonetaryDonations = allDonations.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const paginatedMonetaryDonations = sortedMonetaryDonations.slice(
+    (monetaryDonationPage - 1) * MONETARY_DONATIONS_PER_PAGE,
+    monetaryDonationPage * MONETARY_DONATIONS_PER_PAGE
+  );
+  const totalMonetaryDonationPages = Math.ceil(allDonations.length / MONETARY_DONATIONS_PER_PAGE);
 
   const nonAdminUsers = users.filter(u => u.id !== 'milijuli-sewa-admin');
   const paginatedUsers = nonAdminUsers.slice(
@@ -701,11 +711,12 @@ export default function AdminDashboardPage() {
       
       <Tabs defaultValue="projects">
         <TooltipProvider>
-            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+            <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 lg:grid-cols-7">
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="projects"><List className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Projects</span></TabsTrigger></TooltipTrigger><TooltipContent>Projects</TooltipContent></Tooltip>
-                <Tooltip><TooltipTrigger asChild><TabsTrigger value="donations"><HandCoins className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">In-Kind Donations</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind Donations</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="donations"><DollarSign className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Monetary Donations</span></TabsTrigger></TooltipTrigger><TooltipContent>Monetary Donations</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="in-kind"><HandCoins className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">In-Kind</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind Donations</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="operational-costs"><Briefcase className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Operational Costs</span></TabsTrigger></TooltipTrigger><TooltipContent>Operational Costs</TooltipContent></Tooltip>
-                <Tooltip><TooltipTrigger asChild><TabsTrigger value="user-management"><Users className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">User Management</span></TabsTrigger></TooltipTrigger><TooltipContent>User Management</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="user-management"><Users className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Users</span></TabsTrigger></TooltipTrigger><TooltipContent>User Management</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="ai-tools"><Wand2 className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">AI Tools</span></TabsTrigger></TooltipTrigger><TooltipContent>AI Tools</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="settings"><Settings className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Settings</span></TabsTrigger></TooltipTrigger><TooltipContent>Platform Settings</TooltipContent></Tooltip>
             </TabsList>
@@ -787,9 +798,60 @@ export default function AdminDashboardPage() {
             </Card>
         </TabsContent>
          <TabsContent value="donations" className="mt-6">
+             <Card>
+                <CardHeader>
+                    <CardTitle>Monetary Donations Log</CardTitle>
+                    <CardDescription>
+                        A complete record of all monetary donations made to any project or fund.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>Donor</TableHead>
+                                    <TableHead>Project</TableHead>
+                                    <TableHead className="text-right">Amount (NPR)</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {paginatedMonetaryDonations.map(donation => (
+                                    <TableRow key={donation.id}>
+                                        <TableCell>{format(new Date(donation.date), 'PPp')}</TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-2">
+                                                <Avatar className="h-8 w-8">
+                                                    <AvatarImage src={donation.donor.avatarUrl} alt={donation.donor.name} />
+                                                    <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <Link href={donation.donor.profileUrl} className="font-medium hover:underline">{donation.donor.name}</Link>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Link href={`/projects/${projects.find(p => p.name === donation.project)?.id}`} className="hover:underline">
+                                                {donation.project}
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell className="text-right font-semibold text-primary">Rs.{donation.amount.toLocaleString()}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </CardContent>
+                 {totalMonetaryDonationPages > 1 && (
+                    <CardFooter>
+                        <Pagination currentPage={monetaryDonationPage} totalPages={totalMonetaryDonationPages} onPageChange={setMonetaryDonationPage} />
+                    </CardFooter>
+                )}
+             </Card>
+        </TabsContent>
+        <TabsContent value="in-kind" className="mt-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>In-Kind Donation Pledges</CardTitle>
+                    <CardTitle>In-Kind Donation Management</CardTitle>
                     <CardDescription>
                         Manage and track physical item donations from your supporters.
                     </CardDescription>
@@ -815,7 +877,7 @@ export default function AdminDashboardPage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {paginatedDonations.map(donation => (
+                                        {paginatedInKindDonations.map(donation => (
                                             <TableRow key={donation.id}>
                                                 <TableCell>{new Date(donation.date).toLocaleDateString()}</TableCell>
                                                 <TableCell>
@@ -862,9 +924,9 @@ export default function AdminDashboardPage() {
                                     </TableBody>
                                 </Table>
                             </div>
-                             {totalDonationPages > 1 && (
+                             {totalInKindDonationPages > 1 && (
                                 <div className="mt-4">
-                                   <Pagination currentPage={donationPage} totalPages={totalDonationPages} onPageChange={setDonationPage} />
+                                   <Pagination currentPage={inKindDonationPage} totalPages={totalInKindDonationPages} onPageChange={setInKindDonationPage} />
                                 </div>
                             )}
                         </TabsContent>
