@@ -153,6 +153,7 @@ export function LoginForm() {
                 <TabsContent value="login">
                 <Form {...loginForm}>
                     <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4 pt-4">
+                     <div className="h-[72px] hidden sm:block" />
                     <FormField
                         control={loginForm.control}
                         name="email"
