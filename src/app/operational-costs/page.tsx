@@ -196,27 +196,28 @@ export default function OperationalCostsPage() {
                 <CardTitle>Payment Methods</CardTitle>
             </CardHeader>
             <CardContent>
-                <Tabs defaultValue="qr">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="qr"><QrCode className="mr-2 h-4 w-4"/>QR Code</TabsTrigger>
-                        <TabsTrigger value="other"><CreditCard className="mr-2 h-4 w-4"/>Other</TabsTrigger>
+                <Tabs defaultValue="qr" className="min-h-0">
+                    <TabsList className="grid w-full grid-cols-3">
+                        <TabsTrigger value="qr"><QrCode className="mr-2 h-4 w-4"/>QR</TabsTrigger>
+                        <TabsTrigger value="card"><CreditCard className="mr-2 h-4 w-4"/>Card</TabsTrigger>
+                        <TabsTrigger value="bank"><Landmark className="mr-2 h-4 w-4"/>Bank</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="qr" className="mt-4">
+                    <TabsContent value="qr" className="mt-4 min-h-0">
                          <div className="flex flex-col items-center gap-4">
                             <PaymentGateways project={operationalCostsProject} />
                         </div>
                     </TabsContent>
-                    <TabsContent value="other" className="mt-4">
-                        <div className="space-y-2">
-                            <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
-                                <CreditCard className="mr-2 h-4 w-4" />
-                                Pay with Credit Card
-                            </Button>
-                            <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
-                                <Landmark className="mr-2 h-4 w-4" />
-                                Pay with Bank Transfer
-                            </Button>
-                        </div>
+                    <TabsContent value="card" className="mt-4 min-h-0">
+                        <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            Pay with Credit Card
+                        </Button>
+                    </TabsContent>
+                    <TabsContent value="bank" className="mt-4 min-h-0">
+                        <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
+                            <Landmark className="mr-2 h-4 w-4" />
+                            Pay with Bank Transfer
+                        </Button>
                     </TabsContent>
                 </Tabs>
             </CardContent>
