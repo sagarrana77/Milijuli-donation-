@@ -3,7 +3,7 @@
  */
 'use server';
 
-import { projects, currentUser } from '@/lib/data';
+import { projects, currentUser, allDonations } from '@/lib/data';
 import type { Comment } from '@/lib/data';
 
 /**
@@ -38,6 +38,10 @@ export async function addComment(projectId: string, commentData: { text: string;
       throw new Error("Project not found");
     }
 
+    // Check if the user has donated before
+    const isDonor = allDonations.some(donation => donation.donor.id === currentUser.id);
+    const shouldAutoApprove = currentUser.isAdmin || currentUser.isProMember || isDonor;
+
     const newComment: Comment = {
       id: `comment-${Date.now()}`,
       author: currentUser.name,
@@ -47,7 +51,7 @@ export async function addComment(projectId: string, commentData: { text: string;
       date: new Date().toISOString(),
       text: commentData.text,
       replyTo: commentData.replyTo,
-      status: currentUser.isAdmin ? 'approved' : 'pending',
+      status: shouldAutoApprove ? 'approved' : 'pending',
     };
 
     project.discussion.unshift(newComment);
