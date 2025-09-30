@@ -7,6 +7,8 @@ import {
   operationalCostsFund as initialOperationalCostsFund,
   teamMembers,
   equipment,
+  salaries,
+  miscExpenses,
   currentUser,
   platformSettings,
 } from '@/lib/data';
@@ -19,11 +21,12 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Users, Target, CheckCircle, ArrowRight, Sparkles } from 'lucide-react';
+import { Users, Target, CheckCircle, ArrowRight, Sparkles, Landmark, CreditCard } from 'lucide-react';
 import { DonorsList } from '@/components/projects/donors-list';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { EquipmentShowcase } from '@/components/dashboard/equipment-showcase';
+import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -91,17 +94,8 @@ export default function OperationalCostsPage() {
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Our Mission</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">
-                        Our mission is to bring radical transparency to fundraising. We believe donors have the right to know exactly how their contributions create change. milijuli sewa provides a secure, auditable platform to track funds, ensuring accountability and rebuilding trust in the non-profit sector.
-                    </p>
-                </CardContent>
-            </Card>
-
+            <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} teamMembers={teamMembers} />
+            
             <EquipmentShowcase equipment={equipment} />
             
             <Card>
@@ -130,7 +124,7 @@ export default function OperationalCostsPage() {
                       aria-label={`${percentage}% funded`}
                     />
                   )}
-                  <div className="space-y-3 text-sm">
+                   <div className="space-y-3 text-sm">
                     <div className="flex items-center justify-between gap-4">
                       <span className="font-medium text-muted-foreground">Available</span>
                       <span className="font-bold">
@@ -184,6 +178,22 @@ export default function OperationalCostsPage() {
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
                 <PaymentGateways project={{ id: 'operational-costs' } as any} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+                <CardTitle>Other Payment Methods</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+                <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    Pay with Credit Card
+                </Button>
+                <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
+                    <Landmark className="mr-2 h-4 w-4" />
+                    Pay with Bank Transfer
+                </Button>
             </CardContent>
           </Card>
 

@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -173,10 +174,6 @@ export default async function DashboardPage() {
           </Card>
         </ScrollFadeIn>
       </div>
-      
-      <ScrollFadeIn>
-        <OperationalCosts salaries={salaries} equipment={equipment} miscExpenses={miscExpenses} teamMembers={teamMembers} />
-      </ScrollFadeIn>
       
       <ScrollFadeIn>
         <AllUpdatesFeed allProjects={projects} />
