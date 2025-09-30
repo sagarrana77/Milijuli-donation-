@@ -215,7 +215,7 @@ const Sidebar = React.forwardRef<
               } as React.CSSProperties
             }
             side={side}
-            hideCloseButton
+            hideCloseButton={true}
           >
             <SheetTitle>Main Menu</SheetTitle>
             <div className="flex h-full w-full flex-col">{children}</div>
