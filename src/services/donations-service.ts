@@ -5,7 +5,7 @@
 
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, doc, getDoc, getCountFromServer } from 'firebase/firestore';
-import type { PhysicalDonation, User } from '@/lib/data';
+import { users as mockUsers, physicalDonations as mockPhysicalDonations, type PhysicalDonation, type User } from '@/lib/data';
 
 /**
  * Fetches all in-kind donations from the Firestore 'donations' collection.
@@ -13,18 +13,7 @@ import type { PhysicalDonation, User } from '@/lib/data';
  */
 export async function getInKindDonations(): Promise<PhysicalDonation[]> {
   try {
-    const donationsCollection = collection(db, 'donations');
-    const q = query(
-        donationsCollection, 
-        where('type', '==', 'in-kind'), 
-        orderBy('pledgedAt', 'desc')
-    );
-    const donationSnapshot = await getDocs(q);
-    const donationsList = donationSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as PhysicalDonation[];
-    return donationsList;
+    return mockPhysicalDonations.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
     console.error("Error fetching in-kind donations: ", error);
     return [];
@@ -37,13 +26,7 @@ export async function getInKindDonations(): Promise<PhysicalDonation[]> {
  */
 export async function getUsers(): Promise<User[]> {
     try {
-        const usersCollection = collection(db, 'users');
-        const userSnapshot = await getDocs(usersCollection);
-        const usersList = userSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-        })) as User[];
-        return usersList;
+        return mockUsers;
     } catch (error) {
         console.error("Error fetching users: ", error);
         return [];
@@ -57,15 +40,7 @@ export async function getUsers(): Promise<User[]> {
  */
 export async function getUser(id: string): Promise<User | undefined> {
     try {
-        const userRef = doc(db, 'users', id);
-        const userSnap = await getDoc(userRef);
-
-        if (userSnap.exists()) {
-            return { id: userSnap.id, ...userSnap.data() } as User;
-        } else {
-            console.log(`No user found with id: ${id}`);
-            return undefined;
-        }
+        return mockUsers.find(u => u.id === id);
     } catch (error) {
         console.error("Error fetching user: ", error);
         return undefined;
@@ -79,14 +54,7 @@ export async function getUser(id: string): Promise<User | undefined> {
  */
 export async function getPendingDonationsCount(): Promise<number> {
     try {
-        const donationsCollection = collection(db, 'donations');
-        const q = query(
-            donationsCollection,
-            where('type', '==', 'in-kind'),
-            where('status', '==', 'Pending')
-        );
-        const snapshot = await getCountFromServer(q);
-        return snapshot.data().count;
+        return mockPhysicalDonations.filter(d => d.status === 'Pending').length;
     } catch (error) {
         console.error("Error fetching pending donations count: ", error);
         return 0;

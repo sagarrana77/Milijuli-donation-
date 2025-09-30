@@ -96,6 +96,7 @@ export type Project = {
   gateways?: Gateway[];
   metaDescription?: string;
   keywords?: string[];
+  createdAt: string;
 };
 
 export let salaries: {
@@ -132,6 +133,13 @@ export let salaries: {
     role: 'Community Manager (Nepal)',
     salary: 80000,
     currency: 'NPR',
+  },
+  {
+    id: 'sal-5',
+    employee: 'David Kim',
+    role: 'Marketing Lead',
+    salary: 2800,
+    currency: 'USD',
   },
 ];
 
@@ -193,6 +201,13 @@ export let miscExpenses: {
     cost: 13300,
     purchaseDate: '2023-10-05T10:00:00Z',
     vendor: 'FastNet ISP',
+  },
+  {
+    id: 'misc-3',
+    item: 'Legal Consultation',
+    cost: 66500,
+    purchaseDate: '2023-11-10T10:00:00Z',
+    vendor: 'Law Associates',
   },
 ];
 
@@ -463,6 +478,27 @@ export let teamMembers: TeamMember[] = [
       'Nepali & English Fluency',
     ],
   },
+   {
+    id: 'david-kim',
+    name: 'David Kim',
+    role: 'Marketing Lead',
+    avatarUrl: getImageUrl('avatar-david-kim'),
+    bio: "David spearheads our global marketing efforts, focusing on growing our community of donors and project creators. He's an expert in digital storytelling and data-driven marketing, dedicated to sharing the impact of transparent giving with the world.",
+    socials: {
+      twitter: 'https://twitter.com/davidkim',
+      linkedin: 'https://linkedin.com/in/davidkim',
+    },
+    experience: [
+      { role: 'Marketing Lead', company: 'milijuli donation sewa', duration: '2023 - Present' },
+      { role: 'Digital Marketing Manager', company: 'Global Impact Now', duration: '2019 - 2023' },
+      { role: 'Marketing Specialist', company: 'StartUp Reach', duration: '2017 - 2019' },
+    ],
+    education: [
+      { degree: 'MBA, Marketing', institution: 'Kellogg School of Management', year: '2017' },
+      { degree: 'B.A. in Communications', institution: 'University of Southern California', year: '2014' },
+    ],
+    skills: ['Digital Marketing', 'Content Strategy', 'SEO/SEM', 'Brand Management', 'Data Analysis'],
+  },
 ];
 
 export let values = [
@@ -642,75 +678,34 @@ export let platformSettings = {
 };
 
 export let users: User[] = [
-    { id: 'aayush-kc', uid: 'aayush-kc', name: 'Aayush KC', email: 'aayush.kc@example.com', avatarUrl: getImageUrl('avatar-alex-johnson'), profileUrl: '/profile/aayush-kc', bio: 'Founder & CEO of milijuli donation sewa. Passionate about transparency and social impact.', hasPaymentMethod: true, isAdmin: true, canCreateCampaigns: true, friends: ['priya-adhikari', 'rohan-maharjan'], aiCredits: 999, isProMember: true },
-    { id: 'priya-adhikari', uid: 'priya-adhikari', name: 'Priya Adhikari', avatarUrl: getImageUrl('avatar-maria-garcia'), profileUrl: '/profile/priya-adhikari', bio: 'Head of Operations in Nepal, ensuring projects run smoothly and create lasting change.', friends: ['aayush-kc'], aiCredits: 50, isProMember: true, canCreateCampaigns: true, isAdmin: true },
-    { id: 'rohan-maharjan', uid: 'rohan-maharjan', name: 'Rohan Maharjan', avatarUrl: getImageUrl('avatar-sam-chen'), profileUrl: '/profile/rohan-maharjan', bio: 'Lead developer building the future of transparent fundraising.', friends: ['aayush-kc'], aiCredits: 50, isProMember: true, canCreateCampaigns: true, isAdmin: true },
-    { id: 'user-jane-doe', uid: 'user-jane-doe', name: 'Jane Doe', avatarUrl: getImageUrl('avatar-jane-doe'), profileUrl: '/profile/user-jane-doe', bio: 'Supporting causes that matter, one donation at a time.', hasPaymentMethod: true, friends: ['user-john-smith'], aiCredits: 10, isProMember: false },
-    { id: 'user-john-smith', uid: 'user-john-smith', name: 'John Smith', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile/user-john-smith', bio: 'Happy to contribute to transparent and impactful projects.', friends: ['user-jane-doe'], aiCredits: 25, isProMember: true },
-    { id: 'user-ai-chan', uid: 'user-ai-chan', name: 'Ai Chan', avatarUrl: getImageUrl('avatar-ai-chan'), profileUrl: '/profile/user-ai-chan', bio: 'Believer in technology for social good.', hasPaymentMethod: true, friends: [], canCreateCampaigns: true, aiCredits: 100, isProMember: true },
-    { id: 'user-raj-patel', uid: 'user-raj-patel', name: 'Raj Patel', avatarUrl: getImageUrl('avatar-raj-patel'), profileUrl: '/profile/user-raj-patel', bio: 'Let\'s build a better world together.', friends: [], aiCredits: 0, isProMember: false },
+    { id: 'aayush-kc', uid: 'aayush-kc', name: 'Aayush KC', email: 'aayush.kc@example.com', avatarUrl: getImageUrl('avatar-alex-johnson'), profileUrl: '/profile/aayush-kc', bio: 'Founder & CEO of milijuli donation sewa. Passionate about transparency and social impact.', hasPaymentMethod: true, isAdmin: true, canCreateCampaigns: true, friends: ['priya-adhikari', 'rohan-maharjan', 'user-jane-doe'], aiCredits: 999, isProMember: true },
+    { id: 'priya-adhikari', uid: 'priya-adhikari', name: 'Priya Adhikari', avatarUrl: getImageUrl('avatar-maria-garcia'), profileUrl: '/profile/priya-adhikari', bio: 'Head of Operations in Nepal, ensuring projects run smoothly and create lasting change.', friends: ['aayush-kc', 'sunita-sharma'], aiCredits: 50, isProMember: true, canCreateCampaigns: true, isAdmin: true },
+    { id: 'rohan-maharjan', uid: 'rohan-maharjan', name: 'Rohan Maharjan', avatarUrl: getImageUrl('avatar-sam-chen'), profileUrl: '/profile/rohan-maharjan', bio: 'Lead developer building the future of transparent fundraising.', friends: ['aayush-kc', 'david-kim'], aiCredits: 50, isProMember: true, canCreateCampaigns: true, isAdmin: true },
+    { id: 'sunita-sharma', uid: 'sunita-sharma', name: 'Sunita Sharma', avatarUrl: getImageUrl('avatar-sunita-sharma'), profileUrl: '/profile/sunita-sharma', bio: 'Community Manager, connecting with our partners and users in Nepal.', friends: ['priya-adhikari', 'user-raj-patel'], aiCredits: 50, isProMember: true, canCreateCampaigns: true },
+    { id: 'david-kim', uid: 'david-kim', name: 'David Kim', avatarUrl: getImageUrl('avatar-david-kim'), profileUrl: '/profile/david-kim', bio: 'Marketing Lead, spreading the word about transparent giving.', friends: ['rohan-maharjan'], aiCredits: 50, isProMember: true, canCreateCampaigns: true },
+    { id: 'user-jane-doe', uid: 'user-jane-doe', name: 'Jane Doe', email: 'jane.doe@example.com', avatarUrl: getImageUrl('avatar-jane-doe'), profileUrl: '/profile/user-jane-doe', bio: 'Supporting causes that matter, one donation at a time.', hasPaymentMethod: true, friends: ['user-john-smith', 'aayush-kc'], aiCredits: 10, isProMember: false },
+    { id: 'user-john-smith', uid: 'user-john-smith', name: 'John Smith', email: 'john.smith@example.com', avatarUrl: getImageUrl('avatar-john-smith'), profileUrl: '/profile/user-john-smith', bio: 'Happy to contribute to transparent and impactful projects.', friends: ['user-jane-doe'], aiCredits: 25, isProMember: true },
+    { id: 'user-ai-chan', uid: 'user-ai-chan', name: 'Ai Chan', email: 'ai.chan@example.com', avatarUrl: getImageUrl('avatar-ai-chan'), profileUrl: '/profile/user-ai-chan', bio: 'Believer in technology for social good.', hasPaymentMethod: true, friends: [], canCreateCampaigns: true, aiCredits: 100, isProMember: true },
+    { id: 'user-raj-patel', uid: 'user-raj-patel', name: 'Raj Patel', email: 'raj.patel@example.com', avatarUrl: getImageUrl('avatar-raj-patel'), profileUrl: '/profile/user-raj-patel', bio: "Let's build a better world together. Creator of the 'Art for All' campaign.", friends: ['sunita-sharma'], aiCredits: 0, isProMember: false, canCreateCampaigns: true },
     { id: 'user-anonymous', uid: 'user-anonymous', name: 'Anonymous', avatarUrl: getImageUrl('avatar-anonymous'), profileUrl: '/profile/user-anonymous', bio: 'A generous donor who prefers to remain anonymous.' },
 ]
 
 export let currentUser = users.find(u => u.email === 'aayush.kc@example.com');
 
 export const allDonations: Donation[] = [
-  {
-    id: 1,
-    donor: users.find(u => u.id === 'user-jane-doe')!,
-    project: 'Education for All Nepal',
-    amount: 5000,
-    date: '2023-10-01T10:00:00Z',
-  },
-  {
-    id: 2,
-    donor: users.find(u => u.id === 'user-john-smith')!,
-    project: 'Education for All Nepal',
-    amount: 10000,
-    date: '2023-10-02T11:30:00Z',
-  },
-  {
-    id: 3,
-    donor: users.find(u => u.id === 'user-ai-chan')!,
-    project: 'Clean Water Initiative',
-    amount: 7500,
-    date: '2023-10-03T14:00:00Z',
-  },
-  {
-    id: 4,
-    donor: users.find(u => u.id === 'user-raj-patel')!,
-    project: 'Operational Costs',
-    amount: 2000,
-    date: '2023-10-04T09:00:00Z',
-  },
+  { id: 1, donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Education for All Nepal', amount: 5000, date: '2023-10-01T10:00:00Z' },
+  { id: 2, donor: users.find(u => u.id === 'user-john-smith')!, project: 'Education for All Nepal', amount: 10000, date: '2023-10-02T11:30:00Z' },
+  { id: 3, donor: users.find(u => u.id === 'user-ai-chan')!, project: 'Clean Water Initiative', amount: 7500, date: '2023-10-03T14:00:00Z' },
+  { id: 4, donor: users.find(u => u.id === 'user-raj-patel')!, project: 'Operational Costs', amount: 2000, date: '2023-10-04T09:00:00Z' },
+  { id: 5, donor: users.find(u => u.id === 'aayush-kc')!, project: 'Disaster Relief Fund', amount: 25000, date: '2023-10-05T18:00:00Z' },
+  { id: 6, donor: users.find(u => u.id === 'user-jane-doe')!, project: 'Community Health Posts', amount: 3000, date: '2023-10-06T12:00:00Z' },
+  { id: 7, donor: users.find(u => u.id === 'priya-adhikari')!, project: 'Operational Costs', amount: 15000, date: '2023-10-07T15:00:00Z' },
+  { id: 8, donor: users.find(u => u.id === 'user-john-smith')!, project: 'Art for All', amount: 5000, date: '2023-11-15T10:00:00Z' },
+  { id: 9, donor: users.find(u => u.id === 'user-ai-chan')!, project: 'Art for All', amount: 10000, date: '2023-11-16T11:00:00Z' },
 ];
 
 export let physicalDonations: PhysicalDonation[] = [
-  {
-    id: 'pd-1',
-    donorName: 'Jane Doe',
-    donorId: 'user-jane-doe',
-    donorEmail: 'jane.doe@example.com',
-    projectName: 'Education for All Nepal',
-    itemName: 'School Benches',
-    quantity: 10,
-    donationType: 'pickup',
-    address: '123 Maple Street, Anytown',
-    status: 'Pending',
-    date: '2023-10-28T10:00:00Z',
-    comments: [],
-  },
-  {
-    id: 'pd-2',
-    donorName: 'John Smith',
-    donorId: 'user-john-smith',
-    donorEmail: 'john.smith@example.com',
-    projectName: 'Clean Water Initiative',
-    itemName: 'Water Filters',
-    quantity: 5,
-    donationType: 'drop-off',
-    status: 'Completed',
-    date: '2023-10-25T14:00:00Z',
-    comments: [],
-  }
+  { id: 'pd-1', donorName: 'Jane Doe', donorId: 'user-jane-doe', donorEmail: 'jane.doe@example.com', projectName: 'Education for All Nepal', itemName: 'School Benches', quantity: 10, donationType: 'pickup', address: '123 Maple Street, Anytown', status: 'Pending', date: '2023-10-28T10:00:00Z', comments: [] },
+  { id: 'pd-2', donorName: 'John Smith', donorId: 'user-john-smith', donorEmail: 'john.smith@example.com', projectName: 'Clean Water Initiative', itemName: 'Water Filters', quantity: 5, donationType: 'drop-off', status: 'Completed', date: '2023-10-25T14:00:00Z', comments: [] },
+  { id: 'pd-3', donorName: 'Ai Chan', donorId: 'user-ai-chan', donorEmail: 'ai.chan@example.com', projectName: 'Education for All Nepal', itemName: 'School Backpacks', quantity: 50, donationType: 'drop-off', status: 'Completed', date: '2023-11-01T09:00:00Z', comments: [] },
 ];
