@@ -4,9 +4,9 @@
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Sparkles, Star } from "lucide-react";
+import { Check, Sparkles, Star, X } from "lucide-react";
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from './dialog';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
 import { useAuth } from '@/context/auth-provider';
 import { ScrollArea } from './scroll-area';
@@ -60,14 +60,18 @@ export function PricingDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={closeDialog}>
         <DialogContent className="max-w-4xl p-0 max-h-[90vh] flex flex-col">
-            <DialogHeader className="p-6 pb-0 text-center sticky top-0 bg-background z-10">
+            <DialogHeader className="p-6 pb-4 text-center sticky top-0 bg-background z-10 border-b">
                  <DialogTitle className="text-2xl md:text-3xl font-bold tracking-tight">
                     Pricing & Membership
                 </DialogTitle>
-                <DialogDescription className="text-base">
+                <DialogDescription className="text-base max-w-2xl mx-auto">
                     Supercharge your fundraising with Pro status and AI credits.
                 </DialogDescription>
             </DialogHeader>
+            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+            </DialogClose>
             <ScrollArea className="flex-1">
                 <div className="grid grid-cols-1 gap-8 p-4 md:grid-cols-2 md:p-6">
                     <Card className="flex flex-col border-primary border-2 shadow-primary/20">
