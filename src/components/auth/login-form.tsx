@@ -136,7 +136,7 @@ export function LoginForm() {
             </CarouselContent>
         </Carousel>
       </div>
-      <div className="flex flex-col justify-center p-6 sm:p-8">
+      <div className="flex flex-col justify-center p-6 sm:py-6 sm:px-8">
             <CardHeader className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
                     <Logo className="h-10 w-10 text-primary" />
@@ -153,7 +153,6 @@ export function LoginForm() {
                 <TabsContent value="login">
                 <Form {...loginForm}>
                     <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4 pt-4">
-                     <div className="h-[72px] sm:block hidden" />
                     <FormField
                         control={loginForm.control}
                         name="email"
