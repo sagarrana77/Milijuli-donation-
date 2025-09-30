@@ -23,7 +23,7 @@ const storage = getStorage(app);
 // A flag to ensure we only connect to emulators once
 let emulatorsConnected = false;
 
-if (process.env.NODE_ENV === 'development' && !emulatorsConnected) {
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development' && !emulatorsConnected) {
     try {
         connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
         connectFirestoreEmulator(db, '127.0.0.1', 8080);
