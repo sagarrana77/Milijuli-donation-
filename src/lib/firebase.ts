@@ -25,15 +25,18 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Connect to emulators in development
+// Connect to emulators in development. This must be done before any other Firebase operations.
 if (process.env.NODE_ENV === 'development') {
-  try {
-    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
-    connectFirestoreEmulator(db, 'localhost', 8080);
-    console.log("Connected to Firebase emulators.");
-  } catch (error) {
-    console.error("Error connecting to Firebase emulators:", error);
-  }
+    // Check if emulators are already connected to prevent re-connecting on hot reloads
+    if (!(auth as any).emulatorConfig) {
+        try {
+            connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+            connectFirestoreEmulator(db, '127.0.0.1', 8080);
+            console.log("Connected to Firebase emulators.");
+        } catch (error) {
+            console.error("Error connecting to Firebase emulators:", error);
+        }
+    }
 }
 
 export { app, auth, db, storage };
