@@ -71,13 +71,13 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
          <Carousel
           opts={{
             align: 'start',
-            loop: topDonors.length > 3,
+            loop: topDonors.length > 1,
           }}
           className="w-full"
         >
           <CarouselContent className="-ml-4">
             {topDonors.map((donor, index) => (
-                <CarouselItem key={donor.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                <CarouselItem key={donor.id} className="pl-4">
                     <div className="h-full p-1">
                         <Card className="flex flex-col h-full text-center overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
                             <CardHeader className="flex-1 items-center">
