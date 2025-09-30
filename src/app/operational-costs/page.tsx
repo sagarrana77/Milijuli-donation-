@@ -26,6 +26,7 @@ import { EquipmentShowcase } from '@/components/dashboard/equipment-showcase';
 import { DonationDialog } from '@/components/projects/donation-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PaymentGateways } from '@/components/projects/payment-gateways';
 
 
 export default function OperationalCostsPage() {
@@ -161,7 +162,7 @@ export default function OperationalCostsPage() {
               )}
                <div className="pt-4 flex flex-col items-center text-center sm:items-start sm:text-left">
                     <Button size="lg" className="w-full sm:w-auto text-base" onClick={() => setIsDonationOpen(true)}>
-                        <Sparkles className="mr-2 h-5 w-5"/> Become a Pro
+                        <Sparkles className="mr-2 h-5 w-5"/> Become a Pro Member
                     </Button>
                     <p className="text-sm text-muted-foreground mt-2">
                         Donate to our operational costs to become a Pro member and receive bonus AI credits.
@@ -169,6 +170,16 @@ export default function OperationalCostsPage() {
                 </div>
             </CardContent>
           </Card>
+          
+          <Card>
+            <CardHeader>
+                <CardTitle>Donate via QR</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center gap-4">
+                <PaymentGateways project={{ id: 'operational-costs' } as any} />
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
                 <CardTitle>Meet The Team</CardTitle>
