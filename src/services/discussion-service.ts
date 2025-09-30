@@ -38,9 +38,8 @@ export async function addComment(projectId: string, commentData: { text: string;
       throw new Error("Project not found");
     }
 
-    // Check if the user has donated before
-    const isDonor = allDonations.some(donation => donation.donor.id === currentUser.id);
-    const shouldAutoApprove = currentUser.isAdmin || currentUser.isProMember || isDonor;
+    // Pro members and admins have their comments auto-approved.
+    const shouldAutoApprove = currentUser.isAdmin || currentUser.isProMember;
 
     const newComment: Comment = {
       id: `comment-${Date.now()}`,
