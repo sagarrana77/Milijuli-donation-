@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,9 +12,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { teamMembers as initialTeamMembers, values as initialValues, aboutContent as initialAboutContent } from '@/lib/data';
+import { teamMembers as initialTeamMembers, values as initialValues, aboutContent as initialAboutContent } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2, Star } from 'lucide-react';
+import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2, Star, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
@@ -58,12 +59,22 @@ export default function AboutPage() {
   const { openDialog: openPricingDialog } = usePricingDialog();
   const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
   const [values, setValues] = useState(initialValues);
-  const [aboutContent, setAboutContent] = useState(initialAboutContent);
+  const [aboutContent, setAboutContent] = useState<typeof initialAboutContent | null>(null);
+
+  useEffect(() => {
+    setAboutContent(initialAboutContent);
+    setTeamMembers(initialTeamMembers);
+    setValues(initialValues);
+  }, []);
 
   const teamPhotoUrl = getImageUrl('team-photo');
 
   if (!aboutContent) {
-    return <div>Loading...</div>; // Or a skeleton loader
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
