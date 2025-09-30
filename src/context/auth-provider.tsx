@@ -5,14 +5,13 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { 
   onAuthStateChanged, 
   User as FirebaseUser, 
-  signInWithRedirect,
+  signInWithPopup,
   GoogleAuthProvider, 
   signOut as firebaseSignOut, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
   updateProfile,
   type AuthError,
-  getRedirectResult
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
@@ -81,30 +80,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
   
-    // Handle redirect result
-    getRedirectResult(auth)
-      .then(async (result) => {
-        if (result && result.user) {
-          // User signed in via redirect. The onAuthStateChanged listener will handle setting the user.
-          console.log("Redirect result processed for user:", result.user.displayName);
-        }
-      })
-      .catch((error) => {
-        console.error("Error processing redirect result:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  
     return () => unsubscribe();
   }, []);
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithRedirect(auth, provider);
+      await signInWithPopup(auth, provider);
     } catch (error) {
-      console.error("Error during Google sign-in with redirect:", error);
+      console.error("Error during Google sign-in with popup:", error);
     }
   };
 

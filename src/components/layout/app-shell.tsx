@@ -9,6 +9,7 @@ import { AuthProvider } from '@/context/auth-provider';
 import { PhotoDialogProvider } from '@/context/image-dialog-provider';
 import { NotificationProvider } from '@/context/notification-provider';
 import { PricingDialogProvider } from '@/context/pricing-dialog-provider';
+import { LoginDialogProvider } from '@/context/login-dialog-provider';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -16,18 +17,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <PhotoDialogProvider>
         <NotificationProvider>
           <PricingDialogProvider>
-            <SidebarProvider>
-              <div className="flex min-h-screen bg-background">
-                <MainSidebar />
-                <SidebarInset className="min-w-0 flex-1 flex-col">
-                  <Header />
-                  <main className="flex-1 p-4 sm:p-6 md:p-8">
-                    <div className="mx-auto w-full max-w-7xl">{children}</div>
-                  </main>
-                </SidebarInset>
-                <FloatingContactButton />
-              </div>
-            </SidebarProvider>
+            <LoginDialogProvider>
+              <SidebarProvider>
+                <div className="flex min-h-screen bg-background">
+                  <MainSidebar />
+                  <SidebarInset className="min-w-0 flex-1 flex-col">
+                    <Header />
+                    <main className="flex-1 p-4 sm:p-6 md:p-8">
+                      <div className="mx-auto w-full max-w-7xl">{children}</div>
+                    </main>
+                  </SidebarInset>
+                  <FloatingContactButton />
+                </div>
+              </SidebarProvider>
+            </LoginDialogProvider>
           </PricingDialogProvider>
         </NotificationProvider>
       </PhotoDialogProvider>

@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -31,7 +30,7 @@ import GoogleIcon from '@/components/icons/GoogleIcon';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { platformSettings } from '@/lib/data';
-import Link from 'next/link';
+import { useLoginDialog } from '@/context/login-dialog-provider';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -44,8 +43,9 @@ const signupSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-export default function LoginPage() {
+export function LoginForm() {
   const { user, signInWithGoogle, loading, signInWithEmail, signUpWithEmail } = useAuth();
+  const { closeDialog } = useLoginDialog();
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,9 +62,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/');
+      closeDialog();
     }
-  }, [user, loading, router]);
+  }, [user, loading, closeDialog]);
 
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
     setIsSubmitting(true);
@@ -95,14 +95,21 @@ export default function LoginPage() {
     }
     setIsSubmitting(false);
   };
+  
+  const handleGoogleSignIn = async () => {
+    setIsSubmitting(true);
+    await signInWithGoogle();
+    // The useEffect will handle closing the dialog
+    setIsSubmitting(false);
+  }
 
   return (
-    <div className="w-full lg:grid lg:min-h-[calc(100vh-10rem)] lg:grid-cols-2 xl:min-h-[calc(100vh-10rem)]">
+    <div className="grid lg:grid-cols-2">
       <div className="relative hidden bg-muted lg:block">
         <Image
           src={platformSettings.loginImageUrl}
           alt="A descriptive image related to the platform's mission"
-          layout="fill"
+          fill
           objectFit="cover"
           className="brightness-75"
         />
@@ -112,8 +119,7 @@ export default function LoginPage() {
             <p className="mt-2 max-w-md">Join a community dedicated to ensuring every donation makes a verified impact. Track your contributions from start to finish.</p>
          </div>
       </div>
-      <div className="flex items-center justify-center py-12">
-        <Card className="w-full max-w-md border-0 shadow-none sm:border sm:shadow-sm">
+      <div className="flex flex-col justify-center p-6">
             <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome Back</CardTitle>
             <CardDescription>Sign in or create an account to continue</CardDescription>
@@ -217,15 +223,14 @@ export default function LoginPage() {
                 <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
                 </div>
             </div>
-            <Button variant="outline" className="w-full" onClick={signInWithGoogle} disabled={isSubmitting}>
+            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
                 <GoogleIcon className="mr-2 h-4 w-4" />
                 Google
             </Button>
             </CardFooter>
-        </Card>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -23,6 +24,7 @@ import { NotificationList } from './notification-list';
 import { useNotifications } from '@/context/notification-provider';
 import { useAuth } from '@/context/auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useLoginDialog } from '@/context/login-dialog-provider';
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith('/admin/projects/new')) {
@@ -102,6 +104,7 @@ export function Header() {
   const pathname = usePathname();
   const { notifications } = useNotifications();
   const { user, signOut } = useAuth();
+  const { openDialog } = useLoginDialog();
   const title = getPageTitle(pathname);
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -160,11 +163,9 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild>
-                <Link href="/login">
-                    <LogIn className="mr-2 h-4 w-4" />
-                    Login
-                </Link>
+            <Button onClick={openDialog}>
+                <LogIn className="mr-2 h-4 w-4" />
+                Login
             </Button>
           )}
         </div>
