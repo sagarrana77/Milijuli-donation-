@@ -107,10 +107,7 @@ export function Breadcrumbs({ title }: { title: string }) {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <h1 className="text-xl font-semibold md:text-2xl whitespace-nowrap">{title}</h1>
-      <BreadcrumbSeparator />
-      <Breadcrumb>
+    <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
@@ -120,6 +117,10 @@ export function Breadcrumbs({ title }: { title: string }) {
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
+           <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <h1 className="text-xl font-semibold md:text-2xl whitespace-nowrap text-foreground">{title}</h1>
+            </BreadcrumbItem>
           {pathSegments.map((segment, index) => {
             const isLast = index === pathSegments.length - 1;
             const href = '/' + pathSegments.slice(0, index + 1).join('/');
@@ -135,6 +136,5 @@ export function Breadcrumbs({ title }: { title: string }) {
           })}
         </BreadcrumbList>
       </Breadcrumb>
-    </div>
   );
 }
