@@ -28,9 +28,11 @@ export function WishlistTab() {
     // In a real app, this would be an API call
     physicalDonations.unshift({
         id: `pd-${Date.now()}`,
+        donorId: currentUser.id,
         donorName: currentUser.name,
         donorEmail: currentUser.email || 'anonymous@example.com',
         projectName: project.name,
+        projectId: project.id,
         itemName: selectedItem.name,
         quantity: data.quantity,
         donationType: data.donationType,
@@ -128,3 +130,5 @@ export function WishlistTab() {
     </>
   );
 }
+
+    

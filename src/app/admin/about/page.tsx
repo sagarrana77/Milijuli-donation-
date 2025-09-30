@@ -32,10 +32,16 @@ import Link from 'next/link';
 
 export default function AdminAboutPage() {
   const { toast } = useToast();
-  // We use a state to re-render the component when the underlying data changes.
+  // We use local state to manage edits before saving.
+  const [mission, setMission] = useState(aboutContent.mission);
+  const [tagline, setTagline] = useState(aboutContent.tagline);
+  const [localValues, setLocalValues] = useState(JSON.parse(JSON.stringify(values)));
   const [_, setForceRender] = useState(0);
 
   const handleSaveChanges = () => {
+    // Save changes to the "source of truth"
+    aboutContent.mission = mission;
+    aboutContent.tagline = tagline;
     toast({
       title: 'Content Saved!',
       description:
@@ -45,6 +51,9 @@ export default function AdminAboutPage() {
   };
   
   const handleSaveValues = () => {
+     // Replace the original array with the new one
+     values.length = 0;
+     Array.prototype.push.apply(values, localValues);
      toast({
       title: 'Values Saved!',
       description:
@@ -54,13 +63,17 @@ export default function AdminAboutPage() {
   }
 
   const handleAddValue = () => {
-      values.push({ title: 'New Value', description: 'New description' });
-      setForceRender(c => c + 1);
+      setLocalValues([...localValues, { title: 'New Value', description: 'New description' }]);
   }
 
   const handleDeleteValue = (index: number) => {
-      values.splice(index, 1);
-      setForceRender(c => c + 1);
+      setLocalValues(localValues.filter((_: any, i: number) => i !== index));
+  }
+  
+  const handleValueChange = (index: number, field: 'title' | 'description', value: string) => {
+      const newValues = [...localValues];
+      newValues[index][field] = value;
+      setLocalValues(newValues);
   }
 
   return (
@@ -85,8 +98,8 @@ export default function AdminAboutPage() {
             <Textarea
               id="mission"
               rows={5}
-              value={aboutContent.mission}
-              onChange={(e) => aboutContent.mission = e.target.value}
+              value={mission}
+              onChange={(e) => setMission(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -94,8 +107,8 @@ export default function AdminAboutPage() {
             <Textarea
               id="hero-tagline"
               rows={2}
-              value={aboutContent.tagline}
-              onChange={(e) => aboutContent.tagline = e.target.value}
+              value={tagline}
+              onChange={(e) => setTagline(e.target.value)}
             />
           </div>
           <Button onClick={handleSaveChanges}>Save All Changes</Button>
@@ -155,19 +168,15 @@ export default function AdminAboutPage() {
               <PlusCircle className="mr-2 h-4 w-4" /> Add Value
             </Button>
           </div>
-          {values.map((value, index) => (
+          {localValues.map((value: { title: string, description: string }, index: number) => (
              <div key={index} className="space-y-4 rounded-md border p-4">
                 <div className="space-y-2">
                     <Label htmlFor={`value-title-${index}`}>Value Title</Label>
-                    <Input id={`value-title-${index}`} defaultValue={value.title} onChange={(e) => {
-                        value.title = e.target.value;
-                    }}/>
+                    <Input id={`value-title-${index}`} value={value.title} onChange={(e) => handleValueChange(index, 'title', e.target.value)}/>
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor={`value-desc-${index}`}>Value Description</Label>
-                    <Textarea id={`value-desc-${index}`} defaultValue={value.description} onChange={(e) => {
-                        value.description = e.target.value;
-                    }}/>
+                    <Textarea id={`value-desc-${index}`} value={value.description} onChange={(e) => handleValueChange(index, 'description', e.target.value)}/>
                 </div>
                 <Button size="sm" variant="destructive" onClick={() => handleDeleteValue(index)}>
                     <Trash2 className="mr-2 h-4 w-4" /> Delete Value
@@ -180,3 +189,5 @@ export default function AdminAboutPage() {
     </div>
   );
 }
+
+    

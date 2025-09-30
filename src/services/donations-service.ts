@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview A service for fetching donation data from Firestore.
  */
@@ -5,7 +6,7 @@
 
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, doc, getDoc, getCountFromServer } from 'firebase/firestore';
-import { users as mockUsers, physicalDonations as mockPhysicalDonations, allDonations as mockAllDonations, type PhysicalDonation, type User, type Donation } from '@/lib/data';
+import { users as mockUsers, physicalDonations as mockPhysicalDonations, allDonations as mockAllDonations, type PhysicalDonation, type User, type Donation, projects } from '@/lib/data';
 
 /**
  * Fetches all in-kind donations from the Firestore 'donations' collection.
@@ -26,7 +27,7 @@ export async function getInKindDonations(): Promise<PhysicalDonation[]> {
  */
 export async function getAllDonations(): Promise<Donation[]> {
     try {
-        return mockAllDonations;
+        return mockAllDonations.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     } catch (error) {
         console.error("Error fetching all donations: ", error);
         return [];
@@ -73,3 +74,5 @@ export async function getPendingDonationsCount(): Promise<number> {
         return 0;
     }
 }
+
+    

@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
   Card,
@@ -51,8 +51,8 @@ import {
   Trash2,
   AlertTriangle,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund } from '@/lib/data';
-import type { PhysicalDonation, Project, User } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund, allDonations, getImageUrl } from '@/lib/data';
+import type { PhysicalDonation, Project, User, Donation } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -96,7 +96,7 @@ export default function AdminDashboardPage() {
   const [newMiscExpense, setNewMiscExpense] = useState({ item: '', cost: '', purchaseDate: '', vendor: '' });
   const [newInKindDonation, setNewInKindDonation] = useState({
     donorName: '',
-    projectName: '',
+    projectId: '',
     wishlistItemId: '',
     quantity: '1',
     date: format(new Date(), 'yyyy-MM-dd'),
@@ -210,7 +210,7 @@ export default function AdminDashboardPage() {
 
     const handleAddInKindDonation = () => {
         if (newInKindDonation.donorName && newInKindDonation.wishlistItemId) {
-          const project = projects.find(p => p.id === newInKindDonation.projectName);
+          const project = projects.find(p => p.id === newInKindDonation.projectId);
           const donor = users.find(u => u.name === newInKindDonation.donorName);
           const wishlistItem = project?.wishlist.find(w => w.id === newInKindDonation.wishlistItemId);
     
@@ -221,9 +221,11 @@ export default function AdminDashboardPage() {
     
           const newDonation: PhysicalDonation = {
             id: `pd-admin-${Date.now()}`,
+            donorId: donor.id,
             donorName: newInKindDonation.donorName,
             donorEmail: donor.email || 'N/A',
             projectName: project.name,
+            projectId: project.id,
             itemName: wishlistItem.name,
             quantity: parseInt(newInKindDonation.quantity, 10),
             donationType: 'received',
@@ -252,7 +254,7 @@ export default function AdminDashboardPage() {
     
           setNewInKindDonation({
             donorName: '',
-            projectName: '',
+            projectId: '',
             wishlistItemId: '',
             quantity: '1',
             date: format(new Date(), 'yyyy-MM-dd'),
@@ -304,7 +306,7 @@ export default function AdminDashboardPage() {
             item: data.item,
             amount: data.amount,
             date: new Date().toISOString(),
-            receiptUrl: 'https://placehold.co/600x400/EEE/31343C',
+            receiptUrl: getImageUrl('receipt-1'),
             receiptHint: 'receipt scan'
         });
     }
@@ -882,7 +884,7 @@ export default function AdminDashboardPage() {
                                         </div>
                                         <div className="space-y-2">
                                             <Label>Project</Label>
-                                            <Select value={newInKindDonation.projectName} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, projectName: value, wishlistItemId: ''})}>
+                                            <Select value={newInKindDonation.projectId} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, projectId: value, wishlistItemId: ''})}>
                                                 <SelectTrigger><SelectValue placeholder="Select a project" /></SelectTrigger>
                                                 <SelectContent>
                                                     {projects.map(project => <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>)}
@@ -891,14 +893,14 @@ export default function AdminDashboardPage() {
                                         </div>
                                     </div>
 
-                                    {newInKindDonation.projectName && (
+                                    {newInKindDonation.projectId && (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="space-y-2">
                                             <Label>Wishlist Item</Label>
                                             <Select value={newInKindDonation.wishlistItemId} onValueChange={(value) => setNewInKindDonation({...newInKindDonation, wishlistItemId: value})}>
                                                 <SelectTrigger><SelectValue placeholder="Select an item" /></SelectTrigger>
                                                 <SelectContent>
-                                                    {projects.find(p => p.id === newInKindDonation.projectName)?.wishlist.map(item => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}
+                                                    {projects.find(p => p.id === newInKindDonation.projectId)?.wishlist.map(item => <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>)}
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -959,15 +961,9 @@ export default function AdminDashboardPage() {
                             <TableBody>
                                 {salaries.map((salary) => (
                                 <TableRow key={salary.id}>
-                                    <TableCell>
-                                        <Input defaultValue={salary.employee} onChange={(e) => salary.employee = e.target.value} />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input defaultValue={salary.role} onChange={(e) => salary.role = e.target.value} />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Input type="number" defaultValue={salary.salary} onChange={(e) => salary.salary = parseFloat(e.target.value)} />
-                                    </TableCell>
+                                    <TableCell>{salary.employee}</TableCell>
+                                    <TableCell>{salary.role}</TableCell>
+                                    <TableCell>Rs.{salary.salary.toLocaleString()}</TableCell>
                                     <TableCell className="text-right">
                                         <Button variant="ghost" size="icon" onClick={() => handleDeleteSalary(salary.id)}>
                                             <Trash2 className="h-4 w-4 text-destructive" />
@@ -1006,18 +1002,10 @@ export default function AdminDashboardPage() {
                             <TableBody>
                                 {equipment.map((equip) => (
                                     <TableRow key={equip.id}>
-                                        <TableCell>
-                                            <Input defaultValue={equip.item} onChange={(e) => equip.item = e.target.value} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Input type="number" defaultValue={equip.cost} onChange={(e) => equip.cost = parseFloat(e.target.value)} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Input type="date" defaultValue={equip.purchaseDate} onChange={(e) => equip.purchaseDate = e.target.value} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Input defaultValue={equip.vendor} onChange={(e) => equip.vendor = e.target.value} />
-                                        </TableCell>
+                                        <TableCell>{equip.item}</TableCell>
+                                        <TableCell>Rs.{equip.cost.toLocaleString()}</TableCell>
+                                        <TableCell>{format(new Date(equip.purchaseDate), 'PP')}</TableCell>
+                                        <TableCell>{equip.vendor}</TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon" onClick={() => handleDeleteEquipment(equip.id)}>
                                                 <Trash2 className="h-4 w-4 text-destructive" />
@@ -1054,18 +1042,10 @@ export default function AdminDashboardPage() {
                             <TableBody>
                                 {miscExpenses.map((expense) => (
                                     <TableRow key={expense.id}>
-                                        <TableCell>
-                                            <Input defaultValue={expense.item} onChange={(e) => expense.item = e.target.value} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Input type="number" defaultValue={expense.cost} onChange={(e) => expense.cost = parseFloat(e.target.value)} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Input type="date" defaultValue={expense.purchaseDate} onChange={(e) => expense.purchaseDate = e.target.value} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Input defaultValue={expense.vendor} onChange={(e) => expense.vendor = e.target.value} />
-                                        </TableCell>
+                                        <TableCell>{expense.item}</TableCell>
+                                        <TableCell>Rs.{expense.cost.toLocaleString()}</TableCell>
+                                        <TableCell>{format(new Date(expense.purchaseDate), 'PP')}</TableCell>
+                                        <TableCell>{expense.vendor}</TableCell>
                                         <TableCell className="text-right">
                                             <Button variant="ghost" size="icon" onClick={() => handleDeleteMiscExpense(expense.id)}>
                                                 <Trash2 className="h-4 w-4 text-destructive" />
@@ -1554,3 +1534,5 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
+
+    

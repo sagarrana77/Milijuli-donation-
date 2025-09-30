@@ -45,7 +45,7 @@ export function DonationDialogWrapper({
   const [raisedAmount, setRaisedAmount] = useState(project.raisedAmount);
   const [donors, setDonors] = useState(project.donors);
   const [allUpdates, setAllUpdates] = useState<Update[]>(() => [...project.updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
-  const [allDonations, setAllDonations] = useState<Donation[]>(() => (initialDonations.filter(d => d.project === project.name) || []));
+  const [donations, setDonations] = useState<Donation[]>(() => (initialDonations.filter(d => d.project === project.name) || []));
   const [physicalDonations, setPhysicalDonations] = useState<PhysicalDonation[]>(() => initialPhysicalDonations);
   const [isClient, setIsClient] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
@@ -56,7 +56,7 @@ export function DonationDialogWrapper({
     // This effect re-syncs state when the underlying mutable mock data changes (e.g., from an admin action)
     setRaisedAmount(project.raisedAmount);
     setDonors(project.donors);
-    setAllDonations(initialDonations.filter(d => d.project === project.name) || [])
+    setDonations(initialDonations.filter(d => d.project === project.name) || [])
     setPhysicalDonations(initialPhysicalDonations);
 
     const initialCombinedUpdates = [...project.updates].sort((a, b) => {
@@ -69,42 +69,49 @@ export function DonationDialogWrapper({
         const interval = setInterval(() => {
         if(document.hidden) return;
         const totalSpent = project.expenses.reduce((acc, exp) => acc + exp.amount, 0);
-        const availableFunds = raisedAmount - totalSpent;
+        const availableFunds = project.raisedAmount - totalSpent;
         const isDonation = Math.random() > 0.7; // 30% chance of donation
         if (isDonation && availableFunds < project.targetAmount) {
             const newAmount = Math.floor(Math.random() * 150) + 20;
             
-            setRaisedAmount((prev) => Math.min(prev + newAmount, project.targetAmount));
-            setDonors((prev) => prev + 1);
+            // This is a mock update. In a real app, this would come from a real-time backend.
+            project.raisedAmount += newAmount;
+            project.donors += 1;
             
             const donor = users.find(u => u.id === 'user-anonymous')!;
             
             const newDonationUpdate: Update = {
-            id: `update-donation-${Date.now()}`,
-            title: `New Anonymous Donation!`,
-            description: `${donor.name} generously donated Rs.${newAmount.toLocaleString()}.`,
-            date: new Date().toISOString(),
-            isMonetaryDonation: true,
-            monetaryDonationDetails: {
+              id: `update-donation-${Date.now()}`,
+              title: `New Anonymous Donation!`,
+              description: `${donor.name} generously donated Rs.${newAmount.toLocaleString()}.`,
+              date: new Date().toISOString(),
+              isMonetaryDonation: true,
+              monetaryDonationDetails: {
                 donorName: donor.name,
                 donorAvatarUrl: donor.avatarUrl,
                 donorProfileUrl: donor.profileUrl,
                 donorId: donor.id,
                 amount: newAmount,
-            },
+              },
             };
-            
-            setAllUpdates(prev => [newDonationUpdate, ...prev]);
 
             const newDonationEntry: Donation = {
-                id: Date.now(),
-                donor: donor,
-                project: project.name,
-                amount: newAmount,
-                date: new Date().toISOString(),
-                isAnonymous: true,
+              id: Date.now(),
+              donor: donor,
+              project: project.name,
+              amount: newAmount,
+              date: new Date().toISOString(),
+              isAnonymous: true,
             }
-            setAllDonations(prev => [newDonationEntry, ...prev]);
+            
+            project.updates.unshift(newDonationUpdate);
+            initialDonations.unshift(newDonationEntry);
+
+            // Now update the state to trigger re-render
+            setRaisedAmount(project.raisedAmount);
+            setDonors(project.donors);
+            setAllUpdates(prev => [newDonationUpdate, ...prev]);
+            setDonations(prev => [newDonationEntry, ...prev]);
         }
         }, 4000);
 
@@ -160,7 +167,7 @@ export function DonationDialogWrapper({
         isAnonymous: isAnonymous,
     }
     initialDonations.unshift(newDonationEntry);
-    setAllDonations(prev => [newDonationEntry, ...prev]);
+    setDonations(prev => [newDonationEntry, ...prev]);
 
 
     toast({
@@ -221,7 +228,7 @@ export function DonationDialogWrapper({
     setIsDonationOpen,
     project,
     allUpdates: sortedUpdates,
-    donations: allDonations,
+    donations: donations,
     physicalDonations,
     users,
   };
@@ -238,3 +245,5 @@ export function DonationDialogWrapper({
     </DonationContext.Provider>
   );
 }
+
+    

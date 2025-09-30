@@ -30,3 +30,5 @@ export default function AdminLayout({
 
   return <div className="mx-auto max-w-7xl w-full">{children}</div>;
 }
+
+    
