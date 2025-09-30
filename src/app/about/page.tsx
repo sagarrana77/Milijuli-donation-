@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { teamMembers as initialTeamMembers, values as initialValues, aboutContent as initialAboutContent } from '@/lib/data';
+import { teamMembers, values, aboutContent } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -18,7 +18,6 @@ import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { Button } from '@/components/ui/button';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
-import { useState, useEffect } from 'react';
 
 function getImageUrl(id: string) {
   return PlaceHolderImages.find((img) => img.id === id)?.imageUrl || '';
@@ -57,15 +56,6 @@ export default function AboutPage() {
   const { openPhoto } = usePhotoDialog();
   const { openDialog: openPricingDialog } = usePricingDialog();
   const teamPhotoUrl = getImageUrl('team-photo');
-  const [aboutContent, setAboutContent] = useState({ tagline: '', mission: '' });
-  const [teamMembers, setTeamMembers] = useState<typeof initialTeamMembers>([]);
-  const [values, setValues] = useState<typeof initialValues>([]);
-
-  useEffect(() => {
-    setAboutContent(initialAboutContent);
-    setTeamMembers(initialTeamMembers);
-    setValues(initialValues);
-  }, []);
 
   return (
     <div className="space-y-12">
@@ -191,7 +181,7 @@ export default function AboutPage() {
                             <CardTitle className="text-xl md:text-2xl">Our Core Values</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                             {values.map((value, index) => (
+                             {values.map((value) => (
                                 <div key={value.title}>
                                     <div className="flex items-center gap-3">
                                         <div className="rounded-full bg-primary/10 p-2 text-primary">
