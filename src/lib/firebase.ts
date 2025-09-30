@@ -20,18 +20,14 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    // Check if emulators are already running to avoid re-connecting on hot reloads
-    // A more robust check on the auth object's emulator config.
-    if (!(auth as any)._config?.emulator) {
-        try {
-            console.log("Connecting to Firebase emulators...");
-            connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-            connectFirestoreEmulator(db, '127.0.0.1', 8080);
-            console.log("Successfully connected to Firebase emulators.");
-        } catch (error) {
-            console.error("Error connecting to Firebase emulators:", error);
-        }
+if (process.env.NODE_ENV === 'development') {
+    try {
+        console.log("Connecting to Firebase emulators...");
+        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        console.log("Successfully connected to Firebase emulators.");
+    } catch (error) {
+        console.error("Error connecting to Firebase emulators:", error);
     }
 }
 
