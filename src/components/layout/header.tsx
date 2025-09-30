@@ -26,7 +26,9 @@ import { useAuth } from '@/context/auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useLoginDialog } from '@/context/login-dialog-provider';
 import { useMemo } from 'react';
-import { allDonations } from '@/lib/data';
+import { allDonations, platformSettings } from '@/lib/data';
+import { Logo } from '../icons/logo';
+import Image from 'next/image';
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith('/admin/projects/new')) {
@@ -132,7 +134,14 @@ export function Header() {
     <header className="sticky top-0 z-10 flex h-auto flex-col items-start gap-2 border-b bg-background/80 px-4 py-3 backdrop-blur-sm sm:px-6">
        <div className="flex w-full items-center gap-4">
         <SidebarTrigger className="md:flex" />
-        <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
+        <div className="flex items-center gap-2">
+            {platformSettings.appLogoUrl ? (
+                <Image src={platformSettings.appLogoUrl} alt={platformSettings.appName} width={32} height={32} className="h-8 w-8" />
+            ) : (
+                <Logo className="h-8 w-8 text-primary" />
+            )}
+            <span className="hidden sm:inline-block text-lg font-semibold">{platformSettings.appName}</span>
+        </div>
         <div className="ml-auto flex items-center gap-2">
           {user && (
             <Popover>
@@ -193,7 +202,7 @@ export function Header() {
           )}
         </div>
       </div>
-      <Breadcrumbs />
+      <Breadcrumbs title={title} />
     </header>
   );
 }

@@ -93,40 +93,48 @@ function Crumb({ segment, href, isLast }: { segment: string, href: string, isLas
 }
 
 
-export function Breadcrumbs() {
+export function Breadcrumbs({ title }: { title: string }) {
   const pathname = usePathname();
   const pathSegments = pathname.split('/').filter((i) => i);
 
   // Don't show breadcrumbs on the homepage
   if (pathSegments.length === 0) {
-    return null;
+    return (
+        <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
+        </div>
+    );
   }
 
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/">
-              <Home className="h-4 w-4" />
-              <span className="sr-only">Home</span>
-            </Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        {pathSegments.map((segment, index) => {
-          const isLast = index === pathSegments.length - 1;
-          const href = '/' + pathSegments.slice(0, index + 1).join('/');
+    <div className="flex items-center gap-2">
+      <h1 className="text-xl font-semibold md:text-2xl whitespace-nowrap">{title}</h1>
+      <BreadcrumbSeparator />
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">
+                <Home className="h-4 w-4" />
+                <span className="sr-only">Home</span>
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          {pathSegments.map((segment, index) => {
+            const isLast = index === pathSegments.length - 1;
+            const href = '/' + pathSegments.slice(0, index + 1).join('/');
 
-          return (
-            <React.Fragment key={href}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <Crumb segment={segment} href={href} isLast={isLast} />
-              </BreadcrumbItem>
-            </React.Fragment>
-          );
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
+            return (
+              <React.Fragment key={href}>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <Crumb segment={segment} href={href} isLast={isLast} />
+                </BreadcrumbItem>
+              </React.Fragment>
+            );
+          })}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
   );
 }
