@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -20,7 +21,8 @@ import {
 } from "@/components/ui/select"
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Wand2 } from 'lucide-react';
-import { projects } from '@/lib/data';
+import { getProjects } from '@/services/projects-service';
+import type { Project } from '@/lib/data';
 
 const formSchema = z.object({
   projectId: z.string().min(1, {
@@ -31,7 +33,16 @@ const formSchema = z.object({
 export function ReportGenerator() {
   const [report, setReport] = useState<GenerateDonorFriendlyReportOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    async function loadProjects() {
+        const fetchedProjects = await getProjects();
+        setProjects(fetchedProjects);
+    }
+    loadProjects();
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

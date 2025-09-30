@@ -1,7 +1,6 @@
+
 'use server';
 
-import Image from 'next/image';
-import Link from 'next/link';
 import {
   Card,
   CardContent,
@@ -10,27 +9,29 @@ import {
   CardTitle,
   CardFooter
 } from '@/components/ui/card';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
 import type { Project } from '@/lib/data';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { ArrowRight } from 'lucide-react';
 import { getInKindDonations, getUsers } from '@/services/donations-service';
 import { InKindDonationsSliderClient } from './in-kind-donations-slider-client';
+import Link from 'next/link';
 
 interface InKindDonationsSliderProps {
     allProjects: Project[];
 }
 
 export async function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProps) {
-  const physicalDonations = await getInKindDonations();
-  const users = await getUsers();
+    let physicalDonations = [];
+    let users = [];
+    
+    try {
+        [physicalDonations, users] = await Promise.all([getInKindDonations(), getUsers()]);
+    } catch (error) {
+        console.error("Failed to fetch data for In-Kind Donations Slider:", error);
+        // Return null or an empty state to prevent crashing the page
+        return null;
+    }
+  
   const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
 
   if (completedDonations.length === 0) {
