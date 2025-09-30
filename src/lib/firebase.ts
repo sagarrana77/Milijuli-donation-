@@ -14,19 +14,12 @@ const firebaseConfig = {
   "messagingSenderId": "84723762935"
 };
 
-// Force the authDomain to solve for odd development environments.
-if (typeof window !== 'undefined' && window.location.hostname.includes('cloudworkstations.dev')) {
-    firebaseConfig.authDomain = 'clarity-chainfinal2-5492-9f214.firebaseapp.com';
-}
-
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Connect to emulators in development.
-// This must be done before any other Firebase operations.
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     // Check if emulators are already connected to prevent re-connecting on hot reloads
     // Use a more robust check on the auth object's emulator config.
