@@ -5,13 +5,14 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { 
   onAuthStateChanged, 
   User as FirebaseUser, 
-  signInWithPopup, 
+  signInWithRedirect,
   GoogleAuthProvider, 
   signOut as firebaseSignOut, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
   updateProfile,
-  type AuthError
+  type AuthError,
+  getRedirectResult
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
@@ -74,7 +75,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userProfile = await getOrCreateUserProfile(firebaseUser);
         setUser({ ...firebaseUser, ...userProfile });
       } else {
-        setUser(null);
+        // Handle the redirect result when the page loads
+        getRedirectResult(auth)
+          .catch((error) => {
+            console.error("Error getting redirect result:", error);
+          })
+          .finally(() => {
+            setUser(null);
+          });
       }
       setLoading(false);
     });
@@ -85,9 +93,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      await signInWithRedirect(auth, provider);
     } catch (error) {
-      console.error("Error during Google sign-in:", error);
+      console.error("Error during Google sign-in with redirect:", error);
     }
   };
 
