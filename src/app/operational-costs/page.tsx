@@ -124,7 +124,7 @@ export default function OperationalCostsPage() {
                       aria-label={`${percentage}% funded`}
                     />
                   )}
-                   <div className="space-y-3 text-sm">
+                  <div className="space-y-3 text-sm">
                     <div className="flex items-center justify-between gap-4">
                       <span className="font-medium text-muted-foreground">Available</span>
                       <span className="font-bold">

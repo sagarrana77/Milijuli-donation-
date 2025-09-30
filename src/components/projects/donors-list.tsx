@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -11,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/
 import { useDonationContext } from './donation-dialog-wrapper';
 import type { Donation } from '@/lib/data';
 import { Pagination } from '../ui/pagination';
+import { HallOfFameDonors } from './hall-of-fame-donors';
 
 interface DonorsListProps {
     donations?: Donation[];
@@ -40,58 +42,61 @@ export function DonorsList({ donations: donationsProp }: DonorsListProps) {
   );
 
   return (
-    <Card className="bg-blue-500/5 border-blue-500/10">
-        <CardHeader>
-            <CardTitle>All Donors</CardTitle>
-        </CardHeader>
-        <CardContent>
-            {donations.length > 0 ? (
-            <ul className="space-y-4">
-                {paginatedDonations.map((donation) => (
-                <li key={donation.id} className="flex items-center justify-between gap-4 rounded-md border bg-card p-3">
-                    <Link href={donation.donor.profileUrl} className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border">
-                            <AvatarImage src={donation.donor.avatarUrl} alt={donation.donor.name} />
-                            <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <div className="flex items-center gap-1.5">
-                            <p className="font-semibold">{donation.donor.name}</p>
-                            {donation.donor.isProMember && (
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <Sparkles className="h-4 w-4 text-primary" />
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Pro Member</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                            )}
+    <div className="space-y-6">
+        <HallOfFameDonors donations={donations} />
+        <Card className="bg-blue-500/5 border-blue-500/10">
+            <CardHeader>
+                <CardTitle>All Donors</CardTitle>
+            </CardHeader>
+            <CardContent>
+                {donations.length > 0 ? (
+                <ul className="space-y-4">
+                    {paginatedDonations.map((donation) => (
+                    <li key={donation.id} className="flex items-center justify-between gap-4 rounded-md border bg-card p-3">
+                        <Link href={donation.donor.profileUrl} className="flex items-center gap-3">
+                            <Avatar className="h-10 w-10 border">
+                                <AvatarImage src={donation.donor.avatarUrl} alt={donation.donor.name} />
+                                <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <div className="flex items-center gap-1.5">
+                                <p className="font-semibold">{donation.donor.name}</p>
+                                {donation.donor.isProMember && (
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <Sparkles className="h-4 w-4 text-primary" />
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Pro Member</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                )}
+                                </div>
+                                <p className="text-sm text-muted-foreground">{format(new Date(donation.date), 'PPP')}</p>
                             </div>
-                            <p className="text-sm text-muted-foreground">{format(new Date(donation.date), 'PPP')}</p>
-                        </div>
-                    </Link>
-                    <p className="font-bold text-lg text-primary">Rs.{donation.amount.toLocaleString()}</p>
-                </li>
-                ))}
-            </ul>
-            ) : (
-            <p className="text-center text-muted-foreground">
-                No donations for this project yet. Be the first!
-            </p>
+                        </Link>
+                        <p className="font-bold text-lg text-primary">Rs.{donation.amount.toLocaleString()}</p>
+                    </li>
+                    ))}
+                </ul>
+                ) : (
+                <p className="text-center text-muted-foreground">
+                    No donations for this project yet. Be the first!
+                </p>
+                )}
+            </CardContent>
+            {totalPages > 1 && (
+                <CardFooter>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                    />
+                </CardFooter>
             )}
-        </CardContent>
-        {totalPages > 1 && (
-            <CardFooter>
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                />
-            </CardFooter>
-        )}
-    </Card>
+        </Card>
+    </div>
   );
 }
