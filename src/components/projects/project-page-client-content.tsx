@@ -117,9 +117,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                      </Card>
                  )}
 
-                <p className="text-base text-foreground/90">
-                    {project.longDescription}
-                </p>
+                <div className="prose prose-sm max-w-none text-foreground/90" dangerouslySetInnerHTML={{ __html: project.longDescription.replace(/\n/g, '<br />') }} />
             </CardContent>
             
             <ScrollFadeIn asChild delay={200}>

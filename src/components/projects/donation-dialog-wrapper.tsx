@@ -207,14 +207,6 @@ export function DonationDialogWrapper({
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
 
-        // Image updates second
-        if (a.imageUrl && !b.imageUrl) return -1;
-        if (!a.imageUrl && b.imageUrl) return 1;
-
-        // In-kind donations third
-        if (a.isInKindDonation && !b.isInKindDonation) return -1;
-        if (!a.isInKindDonation && b.isInKindDonation) return 1;
-
         // Then sort by date
         return bDate - aDate;
     });

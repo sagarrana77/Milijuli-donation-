@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { CampaignHeroSlider } from '@/components/dashboard/campaign-hero-slider';
 import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
+import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 
 export default async function DashboardPage() {
     const projects = await getProjects();
@@ -214,11 +215,20 @@ export default async function DashboardPage() {
         <InKindDonationsSlider allProjects={projects} />
       </ScrollFadeIn>
 
-        <ScrollFadeIn asChild>
-            <section>
-                <HallOfFameDonors donations={allDonations} />
-            </section>
-        </ScrollFadeIn>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+                <ScrollFadeIn asChild>
+                    <section>
+                        <HallOfFameDonors donations={allDonations} />
+                    </section>
+                </ScrollFadeIn>
+            </div>
+            <div className="lg:col-span-1">
+                 <ScrollFadeIn asChild>
+                     <AllUpdatesFeed allProjects={projects} />
+                 </ScrollFadeIn>
+            </div>
+        </div>
 
       <ScrollFadeIn asChild>
         <section>
