@@ -18,6 +18,10 @@ import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { type User as AppUser } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 
+// Force the auth domain to fix localhost issues in some environments
+auth.tenantId = auth.config.authDomain;
+
+
 // Combine Firebase user with our app-specific user data
 export type AuthUser = FirebaseUser & AppUser;
 
@@ -46,7 +50,7 @@ const getOrCreateUserProfile = async (firebaseUser: FirebaseUser): Promise<AppUs
             email: firebaseUser.email || '',
             avatarUrl: firebaseUser.photoURL || `https://avatar.vercel.sh/${firebaseUser.uid}`,
             profileUrl: `/profile/${firebaseUser.uid}`,
-            bio: 'Welcome to milijuli sewa!',
+            bio: 'Welcome to milijuli donation sewa!',
             isAdmin: firebaseUser.email === 'aayush.kc@example.com',
             canCreateCampaigns: firebaseUser.email === 'aayush.kc@example.com',
             friends: [],
