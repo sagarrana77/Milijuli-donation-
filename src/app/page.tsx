@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers, platformSettings } from '@/lib/data';
+import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers, platformSettings, allDonations } from '@/lib/data';
 import { getProjects } from '@/services/projects-service';
 import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 import { ProjectCard } from '@/components/projects/project-card';
@@ -29,6 +29,8 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { InKindDonationsSlider } from '@/components/dashboard/in-kind-donations-slider';
 import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default async function DashboardPage() {
     const projects = await getProjects();
@@ -92,6 +94,7 @@ export default async function DashboardPage() {
   const runningProjects = approvedProjects.filter(p => p.raisedAmount < p.targetAmount);
   const finishedProjects = approvedProjects.filter(p => p.raisedAmount >= p.targetAmount);
   const featuredJobs = jobOpenings.filter(job => job.featured).slice(0, 2);
+  const operationalDonors = allDonations.filter(d => d.project === 'Operational Costs').slice(0, 5);
 
 
   return (
@@ -157,7 +160,7 @@ export default async function DashboardPage() {
                 Operational Costs Fund
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1">
+            <CardContent className="flex-1 space-y-2">
               <div className="w-full">
                   <div className="mb-1 flex justify-between text-xs text-muted-foreground">
                       <span>
@@ -166,9 +169,30 @@ export default async function DashboardPage() {
                       <span>{operationalCostsFund.donors} Donors</span>
                   </div>
                   {showOpsTarget && (
-                    <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
+                    <Progress value={opsPercentage} aria-label={`${percentage}% funded`} />
                   )}
               </div>
+              {operationalDonors.length > 0 && (
+                <div className="flex -space-x-2 overflow-hidden">
+                    <TooltipProvider>
+                        {operationalDonors.map(donation => (
+                            <Tooltip key={donation.id}>
+                                <TooltipTrigger asChild>
+                                    <Link href={donation.donor.profileUrl}>
+                                        <Avatar className="inline-block h-8 w-8 rounded-full ring-2 ring-background hover:ring-primary transition-all">
+                                            <AvatarImage src={donation.donor.avatarUrl} alt={donation.donor.name} />
+                                            <AvatarFallback>{donation.donor.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{donation.donor.name} donated Rs.{donation.amount.toLocaleString()}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        ))}
+                     </TooltipProvider>
+                </div>
+              )}
             </CardContent>
             <CardFooter>
               <Button asChild className="w-full">
