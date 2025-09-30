@@ -45,6 +45,13 @@ const getOrCreateUserProfile = async (firebaseUser: FirebaseUser): Promise<AppUs
             isProMember: false,
         };
 
+        // Special case for the pre-defined admin user
+        if (firebaseUser.email === 'aayush.kc@example.com') {
+            newUserProfile.isAdmin = true;
+            newUserProfile.canCreateCampaigns = true;
+        }
+
+
         await setDoc(userRef, {
             ...newUserProfile,
             joinedAt: serverTimestamp(),
