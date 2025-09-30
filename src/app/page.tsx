@@ -30,7 +30,7 @@ import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { InKindDonationsSlider } from '@/components/dashboard/in-kind-donations-slider';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tooltip, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 export default async function DashboardPage() {
     const projects = await getProjects();
@@ -169,7 +169,7 @@ export default async function DashboardPage() {
                       <span>{operationalCostsFund.donors} Donors</span>
                   </div>
                   {showOpsTarget && (
-                    <Progress value={opsPercentage} aria-label={`${percentage}% funded`} />
+                    <Progress value={opsPercentage} aria-label={`${opsPercentage}% funded`} />
                   )}
               </div>
               {operationalDonors.length > 0 && (
