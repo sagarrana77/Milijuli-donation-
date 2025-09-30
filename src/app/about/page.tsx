@@ -56,15 +56,9 @@ const features: { title: string; description: string; icon: LucideIcon, link?: s
 export default function AboutPage() {
   const { openPhoto } = usePhotoDialog();
   const { openDialog: openPricingDialog } = usePricingDialog();
-  const [teamMembers, setTeamMembers] = useState<typeof initialTeamMembers>([]);
-  const [values, setValues] = useState<typeof initialValues>([]);
-  const [aboutContent, setAboutContent] = useState<typeof initialAboutContent | null>(null);
-
-  useEffect(() => {
-    setTeamMembers(initialTeamMembers);
-    setValues(initialValues);
-    setAboutContent(initialAboutContent);
-  }, []);
+  const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
+  const [values, setValues] = useState(initialValues);
+  const [aboutContent, setAboutContent] = useState(initialAboutContent);
 
   const teamPhotoUrl = getImageUrl('team-photo');
 
