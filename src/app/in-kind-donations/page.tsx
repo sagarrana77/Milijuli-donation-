@@ -2,18 +2,33 @@
 import { Package } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { projects, users, allDonations } from '@/lib/data';
 import { InKindDonationsClient } from './in-kind-donations-client';
 import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
-import { getInKindDonations } from '@/services/donations-service';
+import { getInKindDonations, getAllDonations, getUsers } from '@/services/donations-service';
+import { getProjects } from '@/services/projects-service';
 
 export default async function InKindDonationsPage() {
-  const physicalDonations = await getInKindDonations();
-  
-  // Ensure physicalDonations is an array before filtering
+  // Fetch all required data using service functions
+  const [
+    physicalDonations,
+    allDonationsData,
+    projectsData,
+    usersData
+  ] = await Promise.all([
+    getInKindDonations(),
+    getAllDonations(),
+    getProjects(),
+    getUsers()
+  ]);
+
+  // Ensure all data is treated as an array, even if fetching fails or returns nothing
   const completedDonations = Array.isArray(physicalDonations)
     ? physicalDonations.filter((d) => d.status === 'Completed')
     : [];
+
+  const projects = Array.isArray(projectsData) ? projectsData : [];
+  const users = Array.isArray(usersData) ? usersData : [];
+  const allDonations = Array.isArray(allDonationsData) ? allDonationsData : [];
 
   const projectsWithDonations = projects.filter((project) =>
     completedDonations.some((donation) => donation.projectName === project.name)
