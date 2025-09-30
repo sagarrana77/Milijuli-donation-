@@ -12,6 +12,7 @@ import {
   currentUser,
   platformSettings,
   allDonations,
+  projects,
 } from '@/lib/data';
 import {
   Card,
@@ -41,7 +42,7 @@ export default function OperationalCostsPage() {
   const { toast } = useToast();
   
   const operationalDonations = allDonations.filter(d => d.project === 'Operational Costs');
-
+  const operationalCostsProject = { ...projects[0], id: 'operational-costs', name: 'Operational Costs' };
 
   useEffect(() => {
     setIsClient(true);
@@ -180,7 +181,7 @@ export default function OperationalCostsPage() {
                 <CardTitle>Donate via QR</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
-                <PaymentGateways project={{ id: 'operational-costs' } as any} />
+                <PaymentGateways project={operationalCostsProject} />
             </CardContent>
           </Card>
 
@@ -228,3 +229,5 @@ export default function OperationalCostsPage() {
     </div>
   );
 }
+
+    

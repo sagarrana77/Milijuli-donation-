@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -18,14 +17,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CreditCard, Landmark, Save, UserX } from 'lucide-react';
-import { currentUser } from '@/lib/data';
+import { CreditCard, Landmark, UserX, Check, Banknote, QrCode } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Checkbox } from '../ui/checkbox';
 import Link from 'next/link';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { PaymentGateways } from './payment-gateways';
+import { useDonationContext } from './donation-dialog-wrapper';
 
 interface DonationDialogProps {
   isOpen: boolean;
@@ -64,13 +63,14 @@ export function DonationDialog({
   projectName,
   onDonate,
 }: DonationDialogProps) {
+  const [step, setStep] = useState<'amount' | 'payment'>('amount');
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
-  const [hasPaymentMethod, setHasPaymentMethod] = useState(currentUser?.hasPaymentMethod || false);
   const [relocationConsent, setRelocationConsent] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [currency, setCurrency] = useState<'NPR' | 'USD' | 'EUR'>('NPR');
-  const { toast } = useToast();
+  
+  const context = useDonationContext();
 
   const ccForm = useForm<z.infer<typeof creditCardSchema>>({
     resolver: zodResolver(creditCardSchema),
@@ -82,7 +82,7 @@ export function DonationDialog({
     defaultValues: { accountHolderName: '', accountNumber: ''}
   });
 
-  const handleDonateClick = () => {
+  const handleProceedToPayment = () => {
     const numericAmount = parseFloat(amount);
     if (isNaN(numericAmount) || numericAmount <= 0) {
       setError('Please enter a valid amount.');
@@ -92,38 +92,24 @@ export function DonationDialog({
       setError('Please consent to the fund relocation policy to proceed.');
       return;
     }
-    
-    const nprAmount = numericAmount * exchangeRates[currency];
-
-    console.log(`Donation of Rs.${nprAmount} for "${projectName}" with relocation consent: ${relocationConsent}`);
-    onDonate(nprAmount, isAnonymous);
-    onOpenChange(false); // Close dialog on successful donation
-    setAmount(''); // Reset amount
     setError('');
-    setRelocationConsent(false);
-    setIsAnonymous(false);
-    setCurrency('NPR');
-  };
-
-  const handleSavePaymentMethod = () => {
-    // In a real app, this would save the payment method to the backend
-    if (currentUser) {
-        currentUser.hasPaymentMethod = true;
-    }
-    toast({ title: "Payment Method Saved", description: "Your payment method has been securely saved." });
-    setHasPaymentMethod(true);
+    setStep('payment');
   }
 
-  const onCreditCardSubmit = (data: z.infer<typeof creditCardSchema>) => {
-    console.log("Credit Card data (dialog):", data);
-    handleSavePaymentMethod();
-    ccForm.reset();
-  }
-
-  const onBankSubmit = (data: z.infer<typeof bankAccountSchema>) => {
-    console.log("Bank Account data (dialog):", data);
-    handleSavePaymentMethod();
-    bankForm.reset();
+  const completeDonation = () => {
+    const numericAmount = parseFloat(amount);
+    const nprAmount = numericAmount * exchangeRates[currency];
+    onDonate(nprAmount, isAnonymous);
+    onOpenChange(false); // Close dialog
+    // Reset state for next time
+    setTimeout(() => {
+        setStep('amount');
+        setAmount('');
+        setError('');
+        setRelocationConsent(false);
+        setIsAnonymous(false);
+        setCurrency('NPR');
+    }, 300);
   }
 
   const handlePresetClick = (preset: number) => {
@@ -136,89 +122,13 @@ export function DonationDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
-        {!hasPaymentMethod ? (
-           <>
-             <DialogHeader>
-                <DialogTitle>Add a Payment Method</DialogTitle>
-                <DialogDescription>
-                    To continue, please add a payment method. This will be saved for future donations.
-                </DialogDescription>
-            </DialogHeader>
-            <Tabs defaultValue="credit-card">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="credit-card">
-                  <CreditCard className="mr-2 h-4 w-4" /> Credit Card
-                </TabsTrigger>
-                <TabsTrigger value="bank-account">
-                  <Landmark className="mr-2 h-4 w-4" /> Bank Account
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="credit-card" className="mt-6">
-                <Form {...ccForm}>
-                  <form onSubmit={ccForm.handleSubmit(onCreditCardSubmit)} className="space-y-4">
-                    <FormField control={ccForm.control} name="cardNumber" render={({ field }) => (
-                      <FormItem>
-                        <Label>Card Number</Label>
-                        <FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField control={ccForm.control} name="expiryDate" render={({ field }) => (
-                        <FormItem>
-                          <Label>Expiry Date</Label>
-                          <FormControl><Input placeholder="MM/YY" {...field} /></FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                      <FormField control={ccForm.control} name="cvc" render={({ field }) => (
-                        <FormItem>
-                          <Label>CVC</Label>
-                          <FormControl><Input placeholder="123" {...field} /></FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                    </div>
-                    <DialogFooter>
-                        <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
-                        <Button type="submit"><Save className="mr-2 h-4 w-4" />Save and Continue</Button>
-                    </DialogFooter>
-                  </form>
-                </Form>
-              </TabsContent>
-              <TabsContent value="bank-account" className="mt-6">
-                <Form {...bankForm}>
-                    <form onSubmit={bankForm.handleSubmit(onBankSubmit)} className="space-y-4">
-                        <FormField control={bankForm.control} name="accountHolderName" render={({ field }) => (
-                            <FormItem>
-                                <Label>Account Holder Name</Label>
-                                <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        <FormField control={bankForm.control} name="accountNumber" render={({ field }) => (
-                            <FormItem>
-                                <Label>Account Number</Label>
-                                <FormControl><Input placeholder="Your account number" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
-                        <DialogFooter>
-                            <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
-                            <Button type="submit"><Save className="mr-2 h-4 w-4" />Save and Continue</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-              </TabsContent>
-            </Tabs>
-           </>
-        ) : (
+        {step === 'amount' && (
             <>
                 <DialogHeader>
-                <DialogTitle>Fund "{projectName}"</DialogTitle>
-                <DialogDescription>
-                    Your contribution makes a difference. Please enter the amount you'd like to donate.
-                </DialogDescription>
+                    <DialogTitle>Fund "{projectName}"</DialogTitle>
+                    <DialogDescription>
+                        Your contribution makes a difference. Please enter the amount you'd like to donate.
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                     <div className="grid grid-cols-3 gap-2">
@@ -234,15 +144,15 @@ export function DonationDialog({
                                {currency === 'NPR' ? 'Rs.' : currency === 'USD' ? '$' : '€'}
                             </span>
                             <Input
-                            id="amount"
-                            type="number"
-                            placeholder="Or enter custom amount"
-                            value={amount}
-                            onChange={(e) => {
-                                setAmount(e.target.value);
-                                if (error) setError('');
-                            }}
-                            className="pl-8 text-lg"
+                                id="amount"
+                                type="number"
+                                placeholder="Or enter custom amount"
+                                value={amount}
+                                onChange={(e) => {
+                                    setAmount(e.target.value);
+                                    if (error) setError('');
+                                }}
+                                className="pl-8 text-lg"
                             />
                         </div>
                         <Select value={currency} onValueChange={(value) => setCurrency(value as 'NPR' | 'USD' | 'EUR')}>
@@ -297,18 +207,101 @@ export function DonationDialog({
                     {error && <p className="text-sm text-destructive">{error}</p>}
                 </div>
                 <DialogFooter>
-                <DialogClose asChild>
-                    <Button type="button" variant="secondary">
-                    Cancel
+                    <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                        Cancel
+                        </Button>
+                    </DialogClose>
+                    <Button type="button" onClick={handleProceedToPayment}>
+                        Proceed to Payment
                     </Button>
-                </DialogClose>
-                <Button type="button" onClick={handleDonateClick}>
-                    Confirm Donation
-                </Button>
                 </DialogFooter>
+            </>
+        )}
+        {step === 'payment' && (
+            <>
+                <DialogHeader>
+                    <DialogTitle>Complete Your Donation</DialogTitle>
+                    <DialogDescription>
+                        You are donating <span className="font-bold text-primary">Rs.{(parseFloat(amount) * exchangeRates[currency]).toLocaleString()}</span> to "{projectName}". Please select a payment method.
+                    </DialogDescription>
+                </DialogHeader>
+                <Tabs defaultValue="qr">
+                    <TabsList className="grid w-full grid-cols-3">
+                        <TabsTrigger value="qr"><QrCode className="mr-2 h-4 w-4" /> QR</TabsTrigger>
+                        <TabsTrigger value="card"><CreditCard className="mr-2 h-4 w-4" /> Card</TabsTrigger>
+                        <TabsTrigger value="bank"><Banknote className="mr-2 h-4 w-4" /> Bank</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="qr" className="mt-4">
+                        <PaymentGateways project={context?.project!} />
+                         <DialogFooter className="mt-4">
+                             <Button type="button" variant="secondary" onClick={() => setStep('amount')}>Back</Button>
+                             <Button onClick={completeDonation}><Check className="mr-2 h-4 w-4" /> I Have Paid</Button>
+                         </DialogFooter>
+                    </TabsContent>
+                    <TabsContent value="card" className="mt-4">
+                        <Form {...ccForm}>
+                            <form onSubmit={ccForm.handleSubmit(completeDonation)} className="space-y-4">
+                                <FormField control={ccForm.control} name="cardNumber" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Card Number</Label>
+                                        <FormControl><Input placeholder="0000 0000 0000 0000" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <FormField control={ccForm.control} name="expiryDate" render={({ field }) => (
+                                        <FormItem>
+                                        <Label>Expiry Date</Label>
+                                        <FormControl><Input placeholder="MM/YY" {...field} /></FormControl>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                    <FormField control={ccForm.control} name="cvc" render={({ field }) => (
+                                        <FormItem>
+                                        <Label>CVC</Label>
+                                        <FormControl><Input placeholder="123" {...field} /></FormControl>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                </div>
+                                <DialogFooter>
+                                    <Button type="button" variant="secondary" onClick={() => setStep('amount')}>Back</Button>
+                                    <Button type="submit">Pay Rs.{(parseFloat(amount) * exchangeRates[currency]).toLocaleString()}</Button>
+                                </DialogFooter>
+                            </form>
+                        </Form>
+                    </TabsContent>
+                     <TabsContent value="bank" className="mt-4">
+                        <Form {...bankForm}>
+                            <form onSubmit={bankForm.handleSubmit(completeDonation)} className="space-y-4">
+                               <FormField control={bankForm.control} name="accountHolderName" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Account Holder Name</Label>
+                                        <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField control={bankForm.control} name="accountNumber" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Account Number</Label>
+                                        <FormControl><Input placeholder="Your account number" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <DialogFooter>
+                                    <Button type="button" variant="secondary" onClick={() => setStep('amount')}>Back</Button>
+                                    <Button type="submit">Pay Rs.{(parseFloat(amount) * exchangeRates[currency]).toLocaleString()}</Button>
+                                </DialogFooter>
+                            </form>
+                        </Form>
+                     </TabsContent>
+                </Tabs>
             </>
         )}
       </DialogContent>
     </Dialog>
   );
 }
+
+    
