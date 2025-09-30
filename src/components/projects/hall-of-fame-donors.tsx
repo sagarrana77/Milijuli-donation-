@@ -76,6 +76,22 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
       "text-chart-4",
       "text-chart-5",
   ];
+  
+   const borderColors = [
+    "border-chart-1",
+    "border-chart-2",
+    "border-chart-3",
+    "border-chart-4",
+    "border-chart-5",
+  ];
+
+  const bgColors = [
+    "bg-chart-1",
+    "bg-chart-2",
+    "bg-chart-3",
+    "bg-chart-4",
+    "bg-chart-5",
+  ];
 
   return (
     <Card className="bg-amber-500/5 border-amber-500/10">
@@ -101,6 +117,8 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
             {topDonors.map((donor, index) => {
                  const cardColorClass = cardColors[index % cardColors.length];
                  const textColorClass = textColors[index % textColors.length];
+                 const borderColorClass = borderColors[index % borderColors.length];
+                 const bgColorClass = bgColors[index % bgColors.length];
                 return (
                 <CarouselItem key={donor.id} className="pl-4 lg:basis-full">
                     <div className="h-full p-1">
@@ -109,11 +127,11 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
                         >
                             <CardHeader className="flex-1 items-center">
                                 <Link href={donor.profileUrl} className="relative inline-block">
-                                <Avatar className={cn("w-24 h-24 mb-4 border-4", textColorClass.replace("text-", "border-"))}>
+                                <Avatar className={cn("w-24 h-24 mb-4 border-4", borderColorClass)}>
                                     <AvatarImage src={donor.avatarUrl} alt={donor.name} />
                                     <AvatarFallback>{donor.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
-                                <div className={cn("absolute -bottom-1 -right-1 rounded-full p-1 text-white border-2 border-background", textColorClass.replace("text-", "bg-"))}>
+                                <div className={cn("absolute -bottom-1 -right-1 rounded-full p-1 text-white border-2 border-background", bgColorClass)}>
                                     <Award className="h-4 w-4" />
                                 </div>
                                 </Link>
