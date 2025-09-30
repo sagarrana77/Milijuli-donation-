@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Users, Target, CheckCircle, ArrowRight, Sparkles, Landmark, CreditCard } from 'lucide-react';
+import { Users, Target, CheckCircle, ArrowRight, Sparkles, Landmark, CreditCard, QrCode, Banknote } from 'lucide-react';
 import { DonorsList } from '@/components/projects/donors-list';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
@@ -35,6 +35,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wrapper';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
 export default function OperationalCostsPage() {
@@ -192,26 +193,32 @@ export default function OperationalCostsPage() {
           
           <Card>
             <CardHeader>
-                <CardTitle>Donate via QR</CardTitle>
+                <CardTitle>Payment Methods</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col items-center gap-4">
-                <PaymentGateways project={operationalCostsProject} />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-                <CardTitle>Other Payment Methods</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    Pay with Credit Card
-                </Button>
-                <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
-                    <Landmark className="mr-2 h-4 w-4" />
-                    Pay with Bank Transfer
-                </Button>
+            <CardContent>
+                <Tabs defaultValue="qr">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="qr"><QrCode className="mr-2 h-4 w-4"/>QR Code</TabsTrigger>
+                        <TabsTrigger value="other"><CreditCard className="mr-2 h-4 w-4"/>Other</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="qr" className="mt-4">
+                         <div className="flex flex-col items-center gap-4">
+                            <PaymentGateways project={operationalCostsProject} />
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="other" className="mt-4">
+                        <div className="space-y-2">
+                            <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
+                                <CreditCard className="mr-2 h-4 w-4" />
+                                Pay with Credit Card
+                            </Button>
+                            <Button variant="outline" className="w-full" onClick={() => setIsDonationOpen(true)}>
+                                <Landmark className="mr-2 h-4 w-4" />
+                                Pay with Bank Transfer
+                            </Button>
+                        </div>
+                    </TabsContent>
+                </Tabs>
             </CardContent>
           </Card>
 
@@ -244,5 +251,3 @@ export default function OperationalCostsPage() {
     </DonationDialogWrapper>
   );
 }
-
-    
