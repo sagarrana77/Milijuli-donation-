@@ -25,10 +25,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Connect to emulators in development. This must be done before any other Firebase operations.
+// Connect to emulators in development.
+// This must be done before any other Firebase operations.
 if (process.env.NODE_ENV === 'development') {
     // Check if emulators are already connected to prevent re-connecting on hot reloads
-    if (!(auth as any).emulatorConfig) {
+    // Use a more robust check on the auth object's emulator config.
+    if (!(auth as any)._config?.emulator) {
         try {
             connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
             connectFirestoreEmulator(db, '127.0.0.1', 8080);
