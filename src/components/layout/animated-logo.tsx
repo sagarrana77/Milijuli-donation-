@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function AnimatedLogo() {
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="flex items-center justify-center">
        <Image
           src="https://media.tenor.com/9Rt9JC45-54AAAAj/nepal-nepali.gif"
           alt="Loading Nepali Flag"
