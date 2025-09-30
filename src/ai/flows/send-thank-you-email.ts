@@ -40,7 +40,7 @@ const prompt = ai.definePrompt({
   name: 'sendThankYouEmailPrompt',
   input: {schema: SendThankYouEmailInputSchema},
   output: {schema: SendThankYouEmailOutputSchema},
-  prompt: `You are an expert in donor communications for a non-profit organization called milijuli sewa. Your task is to write a warm, professional, and heartfelt thank-you email to a donor.
+  prompt: `You are an expert in donor communications for a non-profit organization called milijuli donation sewa. Your task is to write a warm, professional, and heartfelt thank-you email to a donor.
 
 The email should:
 1.  Have a clear and appreciative subject line.

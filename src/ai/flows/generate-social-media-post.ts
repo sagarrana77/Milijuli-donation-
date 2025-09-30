@@ -34,7 +34,7 @@ const getProjectDetailsForSocialPost = ai.defineTool(
       throw new Error('Project not found');
     }
     // In a real app, this URL would be dynamically generated based on the domain
-    const projectUrl = `https://milijulisewa.com/projects/${projectId}`;
+    const projectUrl = `https://milijulidonationsewa.com/projects/${projectId}`;
     return {
       name: project.name,
       description: project.description,
@@ -69,13 +69,13 @@ const prompt = ai.definePrompt({
   input: {schema: GenerateSocialMediaPostInputSchema},
   output: {schema: GenerateSocialMediaPostOutputSchema},
   tools: [getProjectDetailsForSocialPost],
-  prompt: `You are a social media marketing expert for a non-profit fundraising platform called milijuli sewa. Your task is to generate a compelling social media post for the project with ID '{{{projectId}}}' to be posted on {{{platform}}}.
+  prompt: `You are a social media marketing expert for a non-profit fundraising platform called milijuli donation sewa. Your task is to generate a compelling social media post for the project with ID '{{{projectId}}}' to be posted on {{{platform}}}.
 
 Use the getProjectDetailsForSocialPost tool to get the project details.
 
 Based on the fetched data and the target platform, create a post that:
 1.  Is engaging, concise, and emotionally resonant.
-2.  Clearly states the project's goal.
+2.  Clear-ly states the project's goal.
 3.  Includes a call to action, encouraging people to donate or share.
 4.  Mentions the project's URL.
 5.  Includes relevant and popular hashtags (e.g., #NonProfit, #Charity, #Nepal, #Donate, #Transparency).

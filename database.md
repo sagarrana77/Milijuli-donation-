@@ -1,6 +1,6 @@
-# milijuli sewa Database Structure (NoSQL / Firestore)
+# milijuli donation sewa Database Structure (NoSQL / Firestore)
 
-This document outlines a recommended database structure for the milijuli sewa application, designed for a NoSQL database like Google Firestore.
+This document outlines a recommended database structure for the milijuli donation sewa application, designed for a NoSQL database like Google Firestore.
 
 ## Root Collections
 
@@ -161,4 +161,4 @@ A collection for storing singleton documents that manage global site content and
     -   Path: `/platformSettings/globalConfig`
     -   Document Data: `{ "appName": "string", "campaignCreationEnabled": "boolean", "userQrPaymentsEnabled": "boolean", "showOperationalCostsTotal": "boolean", "paymentGateways": [ { "name": "string", ... } ] }`
 
-This structure provides a robust and scalable foundation for building out the backend of the milijuli sewa application.
+This structure provides a robust and scalable foundation for building out the backend of the milijuli donation sewa application.

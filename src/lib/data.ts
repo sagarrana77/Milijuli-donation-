@@ -286,13 +286,13 @@ export const teamMembers: TeamMember[] = [
     role: 'Founder & CEO',
     avatarUrl: getImageUrl('avatar-alex-johnson'),
     bio:
-      'Aayush is a passionate social entrepreneur dedicated to leveraging technology for good. With a background in computer science and a heart for philanthropy, he founded milijuli sewa to bring trust, transparency, and efficiency back to the non-profit sector. He believes that by showing donors exactly where their money goes, we can inspire a new wave of giving.',
+      'Aayush is a passionate social entrepreneur dedicated to leveraging technology for good. With a background in computer science and a heart for philanthropy, he founded milijuli donation sewa to bring trust, transparency, and efficiency back to the non-profit sector. He believes that by showing donors exactly where their money goes, we can inspire a new wave of giving.',
     socials: {
         twitter: 'https://twitter.com/aayushkc',
         linkedin: 'https://linkedin.com/in/aayushkc'
     },
     experience: [
-        { role: 'Founder & CEO', company: 'milijuli sewa', duration: '2022 - Present' },
+        { role: 'Founder & CEO', company: 'milijuli donation sewa', duration: '2022 - Present' },
         { role: 'Senior Software Engineer', company: 'Tech for Good Inc.', duration: '2018 - 2022' },
         { role: 'Software Engineer', company: 'Innovate Solutions', duration: '2015 - 2018' },
     ],
@@ -314,7 +314,7 @@ export const teamMembers: TeamMember[] = [
         linkedin: 'https://linkedin.com/in/priyaadhikari'
     },
     experience: [
-        { role: 'Head of Operations (Nepal)', company: 'milijuli sewa', duration: '2022 - Present' },
+        { role: 'Head of Operations (Nepal)', company: 'milijuli donation sewa', duration: '2022 - Present' },
         { role: 'Program Director', company: 'Himalayan Aid', duration: '2015 - 2022' },
         { role: 'Field Coordinator', company: 'Hope International, Nepal', duration: '2010 - 2015' },
     ],
@@ -330,13 +330,13 @@ export const teamMembers: TeamMember[] = [
     role: 'Lead Full-Stack Developer',
     avatarUrl: getImageUrl('avatar-sam-chen'),
     bio:
-      "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of milijuli sewa to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
+      "Rohan is the architect behind our platform. He's a firm believer in the power of technology to create a fairer and more accountable world. With expertise in modern web technologies and distributed systems, Rohan built the core of milijuli donation sewa to be secure, scalable, and accessible to everyone, ensuring every donation is tracked from start to finish.",
     socials: {
         twitter: 'https://twitter.com/rohanmaharjan',
         linkedin: 'https://linkedin.com/in/rohanmaharjan'
     },
     experience: [
-        { role: 'Lead Full-Stack Developer', company: 'milijuli sewa', duration: '2022 - Present' },
+        { role: 'Lead Full-Stack Developer', company: 'milijuli donation sewa', duration: '2022 - Present' },
         { role: 'Senior Software Engineer', company: 'ConnectSphere', duration: '2019 - 2022' },
         { role: 'Backend Engineer', company: 'Fintech Innovations', duration: '2017 - 2019' },
     ],
@@ -351,13 +351,13 @@ export const teamMembers: TeamMember[] = [
     role: 'Community Manager (Nepal)',
     avatarUrl: 'https://images.unsplash.com/photo-1615216367249-b3a535893f66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuZXBhbGklMjB3b21hbnxlbnwwfHx8fDE3NTg4NzQ2MDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
     bio:
-      'Sunita is the voice of milijuli sewa in Nepal. She works directly with our local project partners and user community, providing support, gathering feedback, and sharing their stories. Her passion for community building and her deep understanding of the local context are invaluable to our mission.',
+      'Sunita is the voice of milijuli donation sewa in Nepal. She works directly with our local project partners and user community, providing support, gathering feedback, and sharing their stories. Her passion for community building and her deep understanding of the local context are invaluable to our mission.',
     socials: {
         twitter: 'https://twitter.com/sunitasharma',
         linkedin: 'https://linkedin.com/in/sunitasharma'
     },
     experience: [
-        { role: 'Community Manager (Nepal)', company: 'milijuli sewa', duration: '2023 - Present' },
+        { role: 'Community Manager (Nepal)', company: 'milijuli donation sewa', duration: '2023 - Present' },
         { role: 'Social Media Coordinator', company: 'SastoDeal', duration: '2020 - 2023' },
         { role: 'Communications Intern', company: 'UNESCO Nepal', duration: '2019 - 2020' },
     ],
@@ -392,7 +392,7 @@ export let values = [
 ];
 
 export let aboutContent = {
-    mission: `Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. milijuli sewa provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.`,
+    mission: `Our mission is to bring radical transparency to the world of fundraising and charitable donations. We believe that every donor has the right to know exactly how their contributions are being used to make a difference. milijuli donation sewa provides a secure, auditable, and easy-to-understand platform that tracks funds from the moment they are donated to the point of expenditure, ensuring accountability and rebuilding trust in the non-profit sector.`,
     tagline: 'Driving transparency and trust in charitable giving through technology.',
 }
 
@@ -412,7 +412,7 @@ export const jobOpenings: JobOpening[] = [
     title: 'Community Manager',
     type: 'Full-time',
     location: 'Kathmandu, Nepal',
-    description: 'We are looking for a passionate Community Manager to engage with our users, manage our social media presence, and build a strong, supportive community around milijuli sewa. You will be the voice of our organization.',
+    description: 'We are looking for a passionate Community Manager to engage with our users, manage our social media presence, and build a strong, supportive community around milijuli donation sewa. You will be the voice of our organization.',
     requirements: [
         '2+ years of experience in community management or social media marketing.',
         'Excellent written and verbal communication skills in English and Nepali.',
@@ -517,7 +517,7 @@ export let paymentGateways: Gateway[] = [
 ];
 
 export let platformSettings = {
-    appName: 'milijuli sewa',
+    appName: 'milijuli donation sewa',
     appLogoUrl: '',
     userQrPaymentsEnabled: true,
     campaignCreationEnabled: true,

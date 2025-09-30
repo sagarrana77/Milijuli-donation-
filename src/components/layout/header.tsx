@@ -94,7 +94,7 @@ function getPageTitle(pathname: string): string {
     case '/login':
         return 'Login or Sign Up';
     default:
-      return 'milijuli sewa';
+      return 'milijuli donation sewa';
   }
 }
 

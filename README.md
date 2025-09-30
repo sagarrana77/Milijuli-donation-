@@ -1,4 +1,4 @@
-# milijuli sewa - A Transparent Fundraising Platform
+# milijuli donation sewa - A Transparent Fundraising Platform
 
 This is a Next.js starter project built in Firebase Studio. It demonstrates a transparent fundraising platform with a public-facing site and a comprehensive admin dashboard for managing content and finances. The project uses Genkit for AI-powered features.
 
@@ -37,8 +37,8 @@ Follow these steps to get your development environment set up and running.
 First, clone this repository to your local machine. If you've downloaded the code, you can skip this step.
 
 ```bash
-git clone https://github.com/your-repo/milijuli-sewa.git
-cd milijuli-sewa
+git clone https://github.com/your-repo/milijuli-donation-sewa.git
+cd milijuli-donation-sewa
 ```
 
 ### 2. Install Dependencies

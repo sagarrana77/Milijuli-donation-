@@ -70,7 +70,7 @@ export default function AdminSetupGuidePage() {
         <div>
           <h1 className="text-3xl font-bold">Admin Setup Guide</h1>
           <p className="text-muted-foreground">
-            Your step-by-step guide to managing the milijuli sewa platform.
+            Your step-by-step guide to managing the milijuli donation sewa platform.
           </p>
         </div>
       </div>

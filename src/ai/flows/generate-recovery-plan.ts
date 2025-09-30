@@ -30,7 +30,7 @@ const prompt = ai.definePrompt({
   name: 'generateRecoveryPlanPrompt',
   input: {schema: GenerateRecoveryPlanInputSchema},
   output: {schema: GenerateRecoveryPlanOutputSchema},
-  prompt: `You are an expert financial advisor for non-profit organizations. The user is an admin of a fundraising platform called "milijuli sewa" and is facing a negative fund balance.
+  prompt: `You are an expert financial advisor for non-profit organizations. The user is an admin of a fundraising platform called "milijuli donation sewa" and is facing a negative fund balance.
 
 Current Deficit: Rs. {{{negativeAmount}}}
 

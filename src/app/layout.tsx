@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 
 export const metadata: Metadata = {
-  title: 'milijuli sewa',
+  title: 'milijuli donation sewa',
   description: 'A platform for transparent and accountable fundraising.',
   manifest: '/manifest.json',
 };
