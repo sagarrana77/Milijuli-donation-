@@ -16,7 +16,7 @@ import {
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { type User as AppUser } from '@/lib/data';
-import { Skeleton } from '@/components/ui/skeleton';
+import { AnimatedLogo } from '@/components/layout/animated-logo';
 
 // Combine Firebase user with our app-specific user data
 export type AuthUser = FirebaseUser & AppUser;
@@ -126,10 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={value}>
         {loading ? (
              <div className="flex h-screen w-screen items-center justify-center">
-                <div className="w-1/2 space-y-4">
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-48 w-full" />
-                </div>
+                <AnimatedLogo />
             </div>
         ) : children}
     </AuthContext.Provider>
