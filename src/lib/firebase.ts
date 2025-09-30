@@ -25,13 +25,15 @@ const storage = getStorage(app);
 let emulatorsConnected = false;
 
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development' && !emulatorsConnected) {
-    try {
-        connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
-        connectFirestoreEmulator(db, 'localhost', 8080);
-        console.log("Connected to Firebase emulators.");
-        emulatorsConnected = true; // Set the flag to prevent re-connection
-    } catch (error) {
-        console.error("Error connecting to Firebase emulators:", error);
+    if (window.location.hostname === "localhost") {
+        try {
+            connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+            connectFirestoreEmulator(db, 'localhost', 8080);
+            console.log("Connected to Firebase emulators.");
+            emulatorsConnected = true; // Set the flag to prevent re-connection
+        } catch (error) {
+            console.error("Error connecting to Firebase emulators:", error);
+        }
     }
 }
 
