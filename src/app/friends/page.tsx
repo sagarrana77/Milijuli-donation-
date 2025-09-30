@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { UserPlus, UserCheck, Search, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 
 export default function FriendsPage() {
@@ -93,9 +94,10 @@ export default function FriendsPage() {
                         <p className="text-sm text-muted-foreground line-clamp-1">{user.bio}</p>
                     </div>
                   </Link>
-                  <Button 
+                  <Button
                     variant={isFriend ? 'outline' : 'default'}
                     onClick={() => handleToggleFriend(user.id)}
+                    className={cn(!isFriend && "bg-green-600 hover:bg-green-700 text-white")}
                   >
                     {isFriend ? <UserCheck className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
                     {isFriend ? 'Friend' : 'Add Friend'}
@@ -114,4 +116,3 @@ export default function FriendsPage() {
     </div>
   );
 }
-
