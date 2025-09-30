@@ -8,6 +8,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
 import { Button } from '../ui/button';
@@ -119,6 +121,8 @@ export function CampaignHeroSlider({ projects }: CampaignHeroSliderProps) {
             );
           })}
         </CarouselContent>
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex" />
       </Carousel>
        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
         {Array.from({ length: count }).map((_, index) => (
