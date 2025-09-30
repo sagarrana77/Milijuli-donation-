@@ -4,17 +4,19 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { MessageSquare, X } from 'lucide-react';
+import { MessageSquare, X, MessagesSquare } from 'lucide-react';
 import WhatsAppIcon from '@/components/icons/whatsapp-icon';
 import { ViberIcon } from '@/components/icons/viber-icon';
 import InstagramIcon from '@/components/icons/instagram-icon';
 import MessengerIcon from '@/components/icons/messenger-icon';
 import Link from 'next/link';
 import { socialLinks } from '@/lib/data';
+import { useChat } from '@/context/chat-provider';
 
 
 export function FloatingContactButton() {
   const [isOpen, setIsOpen] = useState(false);
+  const { openChat } = useChat();
 
   const whatsappLink = `https://wa.me/${socialLinks.whatsapp.replace(/\D/g, '')}`;
   const viberLink = `viber://chat?number=%2B${socialLinks.viber.replace(/\D/g, '')}`;
@@ -30,6 +32,9 @@ export function FloatingContactButton() {
             </PopoverTrigger>
             <PopoverContent side="top" align="end" className="w-auto rounded-full p-2 border-none bg-transparent shadow-none">
                 <div className="flex items-center gap-3 rounded-full bg-background border p-2 shadow-lg">
+                    <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-blue-500 hover:bg-blue-600 text-white" onClick={() => { openChat(); setIsOpen(false); }}>
+                        <MessagesSquare className="h-6 w-6" />
+                    </Button>
                     <Link href={whatsappLink} target="_blank" passHref>
                         <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-green-500 hover:bg-green-600 text-white">
                             <WhatsAppIcon className="h-6 w-6" />

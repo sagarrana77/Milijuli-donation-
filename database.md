@@ -8,6 +8,7 @@ This document outlines a recommended database structure for the milijuli donatio
 -   `/projects/{projectId}`
 -   `/donations/{donationId}`
 -   `/platformSettings/{settingId}`
+-   `/communityChat/{messageId}`
 
 ---
 
@@ -160,5 +161,25 @@ A collection for storing singleton documents that manage global site content and
 -   **`globalConfig`**:
     -   Path: `/platformSettings/globalConfig`
     -   Document Data: `{ "appName": "string", "campaignCreationEnabled": "boolean", "userQrPaymentsEnabled": "boolean", "showOperationalCostsTotal": "boolean", "paymentGateways": [ { "name": "string", ... } ] }`
+
+---
+
+## 5. `communityChat` Collection
+
+Stores real-time messages for the global community chat.
+
+**Path:** `/communityChat/{messageId}`
+
+**Document Data:**
+
+```json
+{
+  "authorId": "string (references /users/{userId})",
+  "authorName": "string",
+  "authorAvatarUrl": "string (URL)",
+  "text": "string",
+  "timestamp": "timestamp"
+}
+```
 
 This structure provides a robust and scalable foundation for building out the backend of the milijuli donation sewa application.
