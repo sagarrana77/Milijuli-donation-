@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { teamMembers, values, aboutContent } from '@/lib/data';
+import { teamMembers, values, aboutContent } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { CheckCircle, Eye, LineChart, ListChecks, LucideIcon, Repeat, Wand2, Star } from 'lucide-react';
 import Link from 'next/link';
