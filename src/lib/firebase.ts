@@ -1,7 +1,7 @@
 
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -19,12 +19,21 @@ if (typeof window !== 'undefined' && window.location.hostname.includes('cloudwor
     firebaseConfig.authDomain = 'clarity-chainfinal2-5492-9f214.firebaseapp.com';
 }
 
-
-// Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+// Connect to emulators in development
+if (process.env.NODE_ENV === 'development') {
+  try {
+    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+    connectFirestoreEmulator(db, 'localhost', 8080);
+    console.log("Connected to Firebase emulators.");
+  } catch (error) {
+    console.error("Error connecting to Firebase emulators:", error);
+  }
+}
 
 export { app, auth, db, storage };
