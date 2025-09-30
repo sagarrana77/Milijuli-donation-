@@ -16,7 +16,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarMenuBadge,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -29,7 +28,6 @@ import {
   Users,
   Briefcase,
   UserPlus,
-  Package,
   Mail,
   PlusSquare,
   BookOpen,
@@ -48,22 +46,22 @@ import Image from 'next/image';
 import { AdminNotificationBadge } from './admin-notification-badge';
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/projects', label: 'All Projects', icon: HeartHandshake },
-  { href: '/friends', label: 'Friends', icon: Users },
-  { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase },
-  { href: '/in-kind-donations', label: 'Hall of Fame', icon: Award },
-  { href: '/careers', label: 'Careers', icon: UserPlus },
-  { href: '/reports', label: 'Reports', icon: FileText },
-  { href: '/about', label: 'About', icon: Users },
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard, className: 'text-sky-500' },
+  { href: '/projects', label: 'All Projects', icon: HeartHandshake, className: 'text-red-500' },
+  { href: '/friends', label: 'Friends', icon: Users, className: 'text-blue-500' },
+  { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase, className: 'text-amber-600' },
+  { href: '/in-kind-donations', label: 'Hall of Fame', icon: Award, className: 'text-amber-500' },
+  { href: '/careers', label: 'Careers', icon: UserPlus, className: 'text-purple-500' },
+  { href: '/reports', label: 'Reports', icon: FileText, className: 'text-teal-500' },
+  { href: '/about', label: 'About', icon: Users, className: 'text-indigo-500' },
 ];
 
 const adminMenuItems = [
-    { href: '/admin', label: 'Admin Dashboard', icon: Shield },
-    { href: '/admin/setup-guide', label: 'Setup Guide', icon: BookOpen },
-    { href: '/admin/about', label: 'Edit About Page', icon: Edit },
-    { href: '/admin/careers', label: 'Manage Careers', icon: UserPlus },
-    { href: '/admin/help', label: 'Manage Help Page', icon: CircleHelp },
+    { href: '/admin', label: 'Admin Dashboard', icon: Shield, className: 'text-red-600' },
+    { href: '/admin/setup-guide', label: 'Setup Guide', icon: BookOpen, className: 'text-blue-600' },
+    { href: '/admin/about', label: 'Edit About Page', icon: Edit, className: 'text-green-600' },
+    { href: '/admin/careers', label: 'Manage Careers', icon: UserPlus, className: 'text-purple-600' },
+    { href: '/admin/help', label: 'Manage Help Page', icon: CircleHelp, className: 'text-orange-600' },
 ]
 
 export function MainSidebar() {
@@ -122,7 +120,7 @@ export function MainSidebar() {
                   tooltip={{ children: 'My Campaigns', side: 'right' }}
               >
                   <Link href="/my-campaigns" onClick={handleLinkClick}>
-                  <HeartHandshake />
+                  <HeartHandshake className="text-red-500" />
                   <span>My Campaigns</span>
                   </Link>
               </SidebarMenuButton>
@@ -132,7 +130,7 @@ export function MainSidebar() {
           <SidebarMenuItem className="my-2">
             <hr className="border-sidebar-border"/>
           </SidebarMenuItem>
-          {menuItems.map(({ href, label, icon: Icon }) => (
+          {menuItems.map(({ href, label, icon: Icon, className }) => (
             <SidebarMenuItem key={href}>
             <SidebarMenuButton
                 asChild
@@ -140,7 +138,7 @@ export function MainSidebar() {
                 tooltip={{ children: label, side: 'right' }}
             >
                 <Link href={href} onClick={handleLinkClick}>
-                <Icon />
+                <Icon className={className} />
                 <span>{label}</span>
                 </Link>
             </SidebarMenuButton>
@@ -151,7 +149,7 @@ export function MainSidebar() {
                   onClick={() => openDialog()}
                   tooltip={{ children: 'Pricing', side: 'right' }}
               >
-                  <Sparkles />
+                  <Sparkles className="text-yellow-500" />
                   <span>Pricing</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -164,7 +162,7 @@ export function MainSidebar() {
                                 isActive={pathname.startsWith('/admin')}
                                 tooltip={{ children: 'Admin', side: 'right' }}
                             >
-                                <Shield />
+                                <Shield className="text-red-600" />
                                 <span>Admin</span>
                                 <AdminNotificationBadge />
                                 <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform ui-open:rotate-180" />
@@ -172,11 +170,11 @@ export function MainSidebar() {
                         </CollapsibleTrigger>
                         <CollapsibleContent asChild>
                             <SidebarMenuSub>
-                                {adminMenuItems.map(({ href, label, icon: Icon }) => (
+                                {adminMenuItems.map(({ href, label, icon: Icon, className }) => (
                                     <SidebarMenuSubItem key={href}>
                                         <SidebarMenuSubButton asChild isActive={pathname === href}>
                                             <Link href={href} onClick={handleLinkClick}>
-                                                <Icon />
+                                                <Icon className={className} />
                                                 <span>{label}</span>
                                             </Link>
                                         </SidebarMenuSubButton>
@@ -194,7 +192,7 @@ export function MainSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip={{ children: 'Contact', side: 'right' }} isActive={isActive('/contact')}>
               <Link href="/contact" onClick={handleLinkClick}>
-                <Mail />
+                <Mail className="text-gray-500" />
                 <span>Contact</span>
               </Link>
             </SidebarMenuButton>
@@ -202,7 +200,7 @@ export function MainSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip={{ children: 'Help', side: 'right' }} isActive={isActive('/help')}>
               <Link href="/help" onClick={handleLinkClick}>
-                <CircleHelp />
+                <CircleHelp className="text-gray-500" />
                 <span>Help</span>
               </Link>
             </SidebarMenuButton>
@@ -211,7 +209,7 @@ export function MainSidebar() {
             <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip={{ children: 'Settings', side: 'right' }} isActive={isActive('/settings')}>
                 <Link href="/settings" onClick={handleLinkClick}>
-                    <Settings />
+                    <Settings className="text-gray-500" />
                     <span>Settings</span>
                 </Link>
                 </SidebarMenuButton>
