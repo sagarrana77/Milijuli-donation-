@@ -1,3 +1,4 @@
+
 'use client';
 
 import { motion } from 'framer-motion';
@@ -24,9 +25,10 @@ export function AnimatedLogo() {
           <Logo className="h-16 w-16 text-primary" />
         )}
       </motion.div>
-      <p className="text-lg font-semibold text-muted-foreground animate-pulse">
-        Loading {platformSettings.appName}...
-      </p>
+      <div className="text-center text-lg font-semibold text-muted-foreground">
+        <p>Milijuli Donation Sewa is ...</p>
+        <p className="animate-pulse">... LOADING... </p>
+      </div>
     </div>
   );
 }
