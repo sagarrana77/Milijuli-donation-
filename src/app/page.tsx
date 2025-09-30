@@ -23,7 +23,6 @@ import { ExpenseChart } from '@/components/dashboard/expense-chart';
 import { OperationalCosts } from '@/components/dashboard/operational-costs';
 import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers, platformSettings, allDonations } from '@/lib/data';
 import { getProjects } from '@/services/projects-service';
-import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
@@ -31,6 +30,7 @@ import { InKindDonationsSlider } from '@/components/dashboard/in-kind-donations-
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { CampaignHeroSlider } from '@/components/dashboard/campaign-hero-slider';
 
 export default async function DashboardPage() {
     const projects = await getProjects();
@@ -99,6 +99,10 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
+        <ScrollFadeIn>
+            <CampaignHeroSlider projects={projects} />
+        </ScrollFadeIn>
+
        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <ScrollFadeIn>
           <Card>
@@ -202,10 +206,6 @@ export default async function DashboardPage() {
           </Card>
         </ScrollFadeIn>
       </div>
-      
-      <ScrollFadeIn>
-        <AllUpdatesFeed allProjects={projects} />
-      </ScrollFadeIn>
       
       <ScrollFadeIn>
         <InKindDonationsSlider allProjects={projects} />
