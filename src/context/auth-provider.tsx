@@ -1,10 +1,11 @@
+
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { onAuthStateChanged, User as FirebaseUser, signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { users as mockUsers, type User as AppUser } from '@/lib/data';
+import { type User as AppUser } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Combine Firebase user with our app-specific user data
@@ -28,21 +29,20 @@ const getOrCreateUserProfile = async (firebaseUser: FirebaseUser): Promise<AppUs
     if (docSnap.exists()) {
         return docSnap.data() as AppUser;
     } else {
-        // Find if user exists in mock data to bootstrap profile
-        const mockUser = mockUsers.find(u => u.email === firebaseUser.email);
-        
+        // Create a default profile for a new user.
         const newUserProfile: AppUser = {
             id: firebaseUser.uid,
+            uid: firebaseUser.uid,
             name: firebaseUser.displayName || 'New User',
             email: firebaseUser.email || '',
             avatarUrl: firebaseUser.photoURL || `https://avatar.vercel.sh/${firebaseUser.uid}`,
             profileUrl: `/profile/${firebaseUser.uid}`,
-            bio: mockUser?.bio || 'Welcome to ClarityChain!',
-            isAdmin: mockUser?.isAdmin || false,
-            canCreateCampaigns: mockUser?.canCreateCampaigns || false,
-            friends: mockUser?.friends || [],
-            aiCredits: mockUser?.aiCredits || 10, // Give some starter credits
-            isProMember: mockUser?.isProMember || false,
+            bio: 'Welcome to ClarityChain!',
+            isAdmin: false, // Default to not admin
+            canCreateCampaigns: false, // Default to not being able to create campaigns
+            friends: [],
+            aiCredits: 10, // Give some starter credits
+            isProMember: false,
         };
 
         await setDoc(userRef, {
