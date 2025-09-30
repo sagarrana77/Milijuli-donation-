@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -27,6 +28,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import GoogleIcon from '@/components/icons/GoogleIcon';
+import { Loader2 } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -40,9 +42,10 @@ const signupSchema = z.object({
 });
 
 export default function LoginPage() {
-  const { user, signInWithGoogle, loading } = useAuth(); // Assuming useAuth provides these
+  const { user, signInWithGoogle, loading, signInWithEmail, signUpWithEmail } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -61,15 +64,33 @@ export default function LoginPage() {
   }, [user, loading, router]);
 
   const handleLogin = async (values: z.infer<typeof loginSchema>) => {
-    // This will be implemented with Firebase
-    toast({ title: 'Login attempt', description: 'This feature is coming soon!' });
-    console.log(values);
+    setIsSubmitting(true);
+    const error = await signInWithEmail(values.email, values.password);
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Login Failed',
+        description: error.message,
+      });
+    } else {
+        toast({ title: 'Login Successful!' });
+    }
+    setIsSubmitting(false);
   };
 
   const handleSignup = async (values: z.infer<typeof signupSchema>) => {
-     // This will be implemented with Firebase
-    toast({ title: 'Signup attempt', description: 'This feature is coming soon!' });
-    console.log(values);
+    setIsSubmitting(true);
+    const error = await signUpWithEmail(values.name, values.email, values.password);
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign-up Failed',
+        description: error.message,
+      });
+    } else {
+        toast({ title: 'Welcome!', description: 'Your account has been created.'});
+    }
+    setIsSubmitting(false);
   };
 
   return (
@@ -114,7 +135,8 @@ export default function LoginPage() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Log In
                   </Button>
                 </form>
@@ -162,7 +184,8 @@ export default function LoginPage() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Create Account
                   </Button>
                 </form>
@@ -179,7 +202,7 @@ export default function LoginPage() {
               <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
             </div>
           </div>
-          <Button variant="outline" className="w-full" onClick={signInWithGoogle}>
+          <Button variant="outline" className="w-full" onClick={signInWithGoogle} disabled={isSubmitting}>
             <GoogleIcon className="mr-2 h-4 w-4" />
             Google
           </Button>

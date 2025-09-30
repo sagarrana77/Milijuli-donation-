@@ -2,7 +2,17 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, User as FirebaseUser, signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { 
+  onAuthStateChanged, 
+  User as FirebaseUser, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  signOut as firebaseSignOut, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  updateProfile,
+  type AuthError
+} from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { type User as AppUser } from '@/lib/data';
@@ -16,7 +26,8 @@ interface AuthContextType {
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
-  // Add other methods like signInWithEmail, signUp, etc.
+  signInWithEmail: (email: string, pass: string) => Promise<AuthError | null>;
+  signUpWithEmail: (name: string, email: string, pass: string) => Promise<AuthError | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,37 +38,28 @@ const getOrCreateUserProfile = async (firebaseUser: FirebaseUser): Promise<AppUs
     const docSnap = await getDoc(userRef);
 
     if (docSnap.exists()) {
-        return docSnap.data() as AppUser;
+        return {id: docSnap.id, ...docSnap.data()} as AppUser;
     } else {
-        // Create a default profile for a new user.
-        const newUserProfile: AppUser = {
-            id: firebaseUser.uid,
+        const newUserProfile: Omit<AppUser, 'id'> = {
             uid: firebaseUser.uid,
             name: firebaseUser.displayName || 'New User',
             email: firebaseUser.email || '',
             avatarUrl: firebaseUser.photoURL || `https://avatar.vercel.sh/${firebaseUser.uid}`,
             profileUrl: `/profile/${firebaseUser.uid}`,
-            bio: 'Welcome to ClarityChain!',
-            isAdmin: false, // Default to not admin
-            canCreateCampaigns: false, // Default to not being able to create campaigns
+            bio: 'Welcome to milijuli sewa!',
+            isAdmin: firebaseUser.email === 'aayush.kc@example.com',
+            canCreateCampaigns: firebaseUser.email === 'aayush.kc@example.com',
             friends: [],
-            aiCredits: 10, // Give some starter credits
+            aiCredits: 10,
             isProMember: false,
         };
-
-        // Special case for the pre-defined admin user
-        if (firebaseUser.email === 'aayush.kc@example.com') {
-            newUserProfile.isAdmin = true;
-            newUserProfile.canCreateCampaigns = true;
-        }
-
 
         await setDoc(userRef, {
             ...newUserProfile,
             joinedAt: serverTimestamp(),
         });
         
-        return newUserProfile;
+        return {id: firebaseUser.uid, ...newUserProfile};
     }
 }
 
@@ -84,11 +86,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // onAuthStateChanged will handle the rest
     } catch (error) {
       console.error("Error during Google sign-in:", error);
     }
   };
+
+  const signInWithEmail = async (email: string, pass: string) => {
+    try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        return null;
+    } catch (error) {
+        return error as AuthError;
+    }
+  }
+
+  const signUpWithEmail = async (name: string, email: string, pass: string) => {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        await updateProfile(userCredential.user, { displayName: name });
+        // The onAuthStateChanged listener will handle creating the Firestore doc
+        return null;
+      } catch (error) {
+          return error as AuthError;
+      }
+  }
 
   const signOut = async () => {
     try {
@@ -98,7 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const value = { user, loading, signInWithGoogle, signOut };
+  const value = { user, loading, signInWithGoogle, signOut, signInWithEmail, signUpWithEmail };
 
   return (
     <AuthContext.Provider value={value}>
