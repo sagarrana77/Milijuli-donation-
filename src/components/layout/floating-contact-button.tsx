@@ -12,11 +12,14 @@ import MessengerIcon from '@/components/icons/messenger-icon';
 import Link from 'next/link';
 import { socialLinks } from '@/lib/data';
 import { useChat } from '@/context/chat-provider';
+import { Badge } from '../ui/badge';
 
 
 export function FloatingContactButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const { openChat } = useChat();
+  const { openChat, newPublicMessages, newFriendMessages } = useChat();
+
+  const totalNewMessages = newPublicMessages + newFriendMessages;
 
   const whatsappLink = `https://wa.me/${socialLinks.whatsapp.replace(/\D/g, '')}`;
   const viberLink = `viber://chat?number=%2B${socialLinks.viber.replace(/\D/g, '')}`;
@@ -26,13 +29,17 @@ export function FloatingContactButton() {
     <div className="fixed bottom-6 right-6 z-50">
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
-                <Button size="icon" className="h-14 w-14 rounded-full shadow-lg">
+                <Button size="icon" className="h-14 w-14 rounded-full shadow-lg relative">
+                    {totalNewMessages > 0 && (
+                        <Badge className="absolute -top-1 -right-1 h-6 w-6 justify-center p-0 bg-red-600 text-white">{totalNewMessages}</Badge>
+                    )}
                     {isOpen ? <X className="h-6 w-6" /> : <MessageSquare className="h-6 w-6" />}
                 </Button>
             </PopoverTrigger>
             <PopoverContent side="top" align="end" className="w-auto rounded-full p-2 border-none bg-transparent shadow-none">
                 <div className="flex items-center gap-3 rounded-full bg-background border p-2 shadow-lg">
-                    <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-blue-500 hover:bg-blue-600 text-white" onClick={() => { openChat(); setIsOpen(false); }}>
+                    <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 bg-blue-500 hover:bg-blue-600 text-white relative" onClick={() => { openChat(); setIsOpen(false); }}>
+                        {totalNewMessages > 0 && <Badge className="absolute -top-1 -right-1 h-5 w-5 justify-center p-0 bg-red-600 text-white">{totalNewMessages}</Badge>}
                         <MessagesSquare className="h-6 w-6" />
                     </Button>
                     <Link href={whatsappLink} target="_blank" passHref>

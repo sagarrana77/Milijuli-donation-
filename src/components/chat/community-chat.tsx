@@ -20,6 +20,8 @@ import { Send, MessagesSquare, Users } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from '../ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { cn } from '@/lib/utils';
+import { Badge } from '../ui/badge';
 
 const chatSchema = z.object({
   message: z.string().min(1, "Message cannot be empty.").max(500, "Message is too long."),
@@ -116,12 +118,22 @@ function ChatRoom({ messages, loading, user, isPublic }: { messages: ChatMessage
 }
 
 export function CommunityChat() {
-  const { isChatOpen, closeChat } = useChat();
+  const { isChatOpen, closeChat, newPublicMessages, newFriendMessages, clearPublicNotifications, clearFriendNotifications } = useChat();
   const { user, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('public');
   
   const { messages: publicMessages, loading: publicLoading } = usePublicChatMessages();
   const { messages: friendMessages, loading: friendLoading } = useFriendChatMessages(user);
+
+  useEffect(() => {
+    if (isChatOpen) {
+        if (activeTab === 'public') {
+            clearPublicNotifications();
+        } else if (activeTab === 'friends') {
+            clearFriendNotifications();
+        }
+    }
+  }, [activeTab, isChatOpen, clearPublicNotifications, clearFriendNotifications]);
 
   const form = useForm<ChatFormData>({
     resolver: zodResolver(chatSchema),
@@ -155,8 +167,14 @@ export function CommunityChat() {
         </SheetHeader>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 min-h-0 flex flex-col">
             <TabsList className="grid w-full grid-cols-2 sticky top-0 bg-background z-10 px-4 pt-4">
-                <TabsTrigger value="public">Public</TabsTrigger>
-                <TabsTrigger value="friends">Friends</TabsTrigger>
+                <TabsTrigger value="public" className="relative data-[state=active]:bg-sky-500 data-[state=active]:text-white">
+                    Public
+                    {newPublicMessages > 0 && <Badge className="absolute -top-2 -right-2 h-5 w-5 justify-center p-0 bg-red-600 text-white">{newPublicMessages}</Badge>}
+                </TabsTrigger>
+                <TabsTrigger value="friends" className="relative data-[state=active]:bg-green-600 data-[state=active]:text-white">
+                    Friends
+                     {newFriendMessages > 0 && <Badge className="absolute -top-2 -right-2 h-5 w-5 justify-center p-0 bg-red-600 text-white">{newFriendMessages}</Badge>}
+                </TabsTrigger>
             </TabsList>
             <TabsContent value="public" className="flex-1 min-h-0 mt-0">
                 <ChatRoom messages={publicMessages} loading={publicLoading} user={user} isPublic={true} />
