@@ -9,6 +9,7 @@ This document outlines a recommended database structure for the milijuli donatio
 -   `/donations/{donationId}`
 -   `/platformSettings/{settingId}`
 -   `/communityChat/{messageId}`
+-   `/friendChats/{messageId}`
 
 ---
 
@@ -166,7 +167,7 @@ A collection for storing singleton documents that manage global site content and
 
 ## 5. `communityChat` Collection
 
-Stores real-time messages for the global community chat.
+Stores real-time messages for the global community chat, accessible to all registered users.
 
 **Path:** `/communityChat/{messageId}`
 
@@ -179,6 +180,26 @@ Stores real-time messages for the global community chat.
   "authorAvatarUrl": "string (URL)",
   "text": "string",
   "timestamp": "timestamp"
+}
+```
+---
+
+## 6. `friendChats` Collection
+
+Stores real-time messages for private group chats between friends.
+
+**Path:** `/friendChats/{messageId}`
+
+**Document Data:**
+
+```json
+{
+  "authorId": "string (references /users/{userId})",
+  "authorName": "string",
+  "authorAvatarUrl": "string (URL)",
+  "text": "string",
+  "timestamp": "timestamp",
+  "friendIds": ["string"],
 }
 ```
 
