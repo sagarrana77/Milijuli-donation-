@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -22,6 +21,8 @@ import { Skeleton } from '../ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { cn } from '@/lib/utils';
 import { Badge } from '../ui/badge';
+import { OnlineUsersDialog } from './online-users-dialog';
+import { users as allUsersData } from '@/lib/data';
 
 const chatSchema = z.object({
   message: z.string().min(1, "Message cannot be empty.").max(500, "Message is too long."),
@@ -121,6 +122,7 @@ export function CommunityChat() {
   const { isChatOpen, closeChat, newPublicMessages, newFriendMessages, clearPublicNotifications, clearFriendNotifications } = useChat();
   const { user, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('public');
+  const [isOnlineUsersOpen, setIsOnlineUsersOpen] = useState(false);
   
   const { messages: publicMessages, loading: publicLoading } = usePublicChatMessages();
   const { messages: friendMessages, loading: friendLoading } = useFriendChatMessages(user);
@@ -153,17 +155,32 @@ export function CommunityChat() {
       console.error("Error sending message:", error);
     }
   };
+  
+  const onlineUsers = allUsersData.filter(u => u.isOnline);
 
   return (
+    <>
+    <OnlineUsersDialog
+        isOpen={isOnlineUsersOpen}
+        onOpenChange={setIsOnlineUsersOpen}
+        onlineUsers={onlineUsers}
+        currentUser={user}
+    />
     <Sheet open={isChatOpen} onOpenChange={(open) => !open && closeChat()}>
       <SheetContent side="bottom" className="h-[85vh] flex flex-col p-0">
-        <SheetHeader className="p-4 border-b">
-          <SheetTitle className="flex items-center gap-2 text-lg">
-            <MessagesSquare className="h-6 w-6" /> Community Chat
-          </SheetTitle>
-           <SheetDescription>
-            Talk with other donors and supporters in real-time.
-          </SheetDescription>
+        <SheetHeader className="p-4 border-b flex-row items-center justify-between">
+            <div>
+              <SheetTitle className="flex items-center gap-2 text-lg">
+                <MessagesSquare className="h-6 w-6" /> Community Chat
+              </SheetTitle>
+              <SheetDescription>
+                Talk with other donors and supporters in real-time.
+              </SheetDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setIsOnlineUsersOpen(true)}>
+                <Users className="mr-2 h-4 w-4" />
+                View Online ({onlineUsers.length})
+            </Button>
         </SheetHeader>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 min-h-0 flex flex-col">
             <TabsList className="grid w-full grid-cols-2 sticky top-0 bg-background z-10 px-4 pt-4">
@@ -212,5 +229,6 @@ export function CommunityChat() {
         </div>
       </SheetContent>
     </Sheet>
+    </>
   );
 }

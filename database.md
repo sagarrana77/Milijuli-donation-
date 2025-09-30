@@ -30,6 +30,8 @@ Stores public and private information for each user.
   "joinedAt": "timestamp",
   "isAdmin": "boolean",
   "canCreateCampaigns": "boolean",
+  "isOnline": "boolean",
+  "lastSeen": "timestamp",
   "socials": {
     "linkedin": "string (URL)",
     "twitter": "string (URL)",
