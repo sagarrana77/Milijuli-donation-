@@ -54,11 +54,7 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
           type="category"
           tickLine={false}
           axisLine={false}
-          tickMargin={10}
-          tickFormatter={(value) =>
-            chartConfig[value as keyof typeof chartConfig]
-              ?.label
-          }
+          tick={false}
         />
         <XAxis dataKey="value" type="number" hide />
         <ChartTooltip
