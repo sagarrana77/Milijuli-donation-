@@ -27,7 +27,7 @@ const storage = getStorage(app);
 
 // Connect to emulators in development.
 // This must be done before any other Firebase operations.
-if (process.env.NODE_ENV === 'development') {
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
     // Check if emulators are already connected to prevent re-connecting on hot reloads
     // Use a more robust check on the auth object's emulator config.
     if (!(auth as any)._config?.emulator) {
