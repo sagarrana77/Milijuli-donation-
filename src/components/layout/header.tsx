@@ -69,6 +69,8 @@ function getPageTitle(pathname: string): string {
       return 'All Projects';
     case '/friends':
         return 'Friends';
+    case '/hall-of-fame':
+        return 'Hall of Fame';
     case '/in-kind-donations':
         return 'In-Kind Donations';
     case '/operational-costs':

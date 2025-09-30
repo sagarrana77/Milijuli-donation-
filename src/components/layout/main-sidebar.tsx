@@ -50,7 +50,7 @@ const menuItems = [
   { href: '/projects', label: 'All Projects', icon: HeartHandshake, className: 'text-red-500' },
   { href: '/friends', label: 'Friends', icon: Users, className: 'text-blue-500' },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase, className: 'text-amber-600' },
-  { href: '/in-kind-donations', label: 'Hall of Fame', icon: Award, className: 'text-amber-500' },
+  { href: '/hall-of-fame', label: 'Hall of Fame', icon: Award, className: 'text-amber-500' },
   { href: '/careers', label: 'Careers', icon: UserPlus, className: 'text-purple-500' },
   { href: '/reports', label: 'Reports', icon: FileText, className: 'text-teal-500' },
   { href: '/about', label: 'About', icon: Users, className: 'text-indigo-500' },
