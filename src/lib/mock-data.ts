@@ -1,4 +1,5 @@
 
+
 import { PlaceHolderImages } from './placeholder-images';
 
 export function getImageUrl(id: string) {
@@ -636,6 +637,7 @@ export let platformSettings = {
   userQrPaymentsEnabled: true,
   campaignCreationEnabled: true,
   showOperationalCostsTotal: true,
+  showOperationalCostsTarget: false, // Default to false as requested
   aiSummaryEnabled: true,
 };
 

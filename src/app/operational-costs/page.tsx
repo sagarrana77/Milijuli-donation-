@@ -8,6 +8,7 @@ import {
   teamMembers,
   equipment,
   currentUser,
+  platformSettings,
 } from '@/lib/data';
 import {
   Card,
@@ -69,6 +70,8 @@ export default function OperationalCostsPage() {
     (operationalCostsFund.raisedAmount / operationalCostsFund.targetAmount) * 100
   );
 
+  const showTarget = platformSettings.showOperationalCostsTarget && operationalCostsFund.targetAmount > 0;
+
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <DonationDialog
@@ -120,11 +123,13 @@ export default function OperationalCostsPage() {
             <CardContent className="space-y-4">
               {isClient ? (
                 <>
-                  <Progress
-                    value={percentage}
-                    className="h-3"
-                    aria-label={`${percentage}% funded`}
-                  />
+                  {showTarget && (
+                    <Progress
+                      value={percentage}
+                      className="h-3"
+                      aria-label={`${percentage}% funded`}
+                    />
+                  )}
                   <div className="space-y-3 text-sm">
                     <div className="flex items-center justify-between gap-4">
                       <span className="font-medium text-muted-foreground">Available</span>
@@ -132,15 +137,17 @@ export default function OperationalCostsPage() {
                         Rs.{operationalCostsFund.raisedAmount.toLocaleString()}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Target className="h-4 w-4" />
-                        <span>Target</span>
+                    {showTarget && (
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Target className="h-4 w-4" />
+                          <span>Target</span>
+                        </div>
+                        <span className="font-bold">
+                          Rs.{operationalCostsFund.targetAmount.toLocaleString()}
+                        </span>
                       </div>
-                      <span className="font-bold">
-                        Rs.{operationalCostsFund.targetAmount.toLocaleString()}
-                      </span>
-                    </div>
+                    )}
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Users className="h-4 w-4" />

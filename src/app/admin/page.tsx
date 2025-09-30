@@ -502,6 +502,15 @@ export default function AdminDashboardPage() {
         description: `Operational cost total is now ${enabled ? 'visible' : 'hidden'} to users.`
     });
   }
+
+  const handleShowOpsTargetToggle = (enabled: boolean) => {
+    platformSettings.showOperationalCostsTarget = enabled;
+    setForceRender(c => c + 1);
+    toast({
+        title: 'Setting Updated!',
+        description: `Operational cost target is now ${enabled ? 'visible' : 'hidden'} to users.`
+    });
+  }
   
   const handleGenerateSocialPost = async () => {
     if (!socialPostProjectId) {
@@ -1348,6 +1357,15 @@ export default function AdminDashboardPage() {
                                         <p className="text-sm text-muted-foreground">Display the total with taxes on the public operational costs page.</p>
                                     </div>
                                     <Switch id="ops-total-switch" checked={platformSettings.showOperationalCostsTotal} onCheckedChange={handleShowTotalCostToggle} />
+                                </div>
+                            </div>
+                             <div className="rounded-lg border p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <Label htmlFor="ops-target-switch" className="text-base font-medium">Show Operational Costs Target</Label>
+                                        <p className="text-sm text-muted-foreground">Display the fundraising goal and progress bar on the public page.</p>
+                                    </div>
+                                    <Switch id="ops-target-switch" checked={platformSettings.showOperationalCostsTarget} onCheckedChange={handleShowOpsTargetToggle} />
                                 </div>
                             </div>
                             <div className="rounded-lg border p-4">
