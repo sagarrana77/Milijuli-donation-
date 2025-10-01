@@ -57,26 +57,28 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
     loadUsers();
 
     // Aggregate updates from all projects
-    const updates = allProjects.flatMap(project =>
-      (project.updates || []).map(update => ({
-        ...update,
-        projectName: project.name,
-        projectId: project.id,
-      }))
-    );
-    // Sort by date, most recent first
-    updates.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    setAllUpdates(updates);
+    if (allProjects && Array.isArray(allProjects)) {
+      const updates = allProjects.flatMap(project =>
+        (project.updates || []).map(update => ({
+          ...update,
+          projectName: project.name,
+          projectId: project.id,
+        }))
+      );
+      // Sort by date, most recent first
+      updates.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      setAllUpdates(updates);
+    }
     setIsClient(true);
     
   }, [allProjects]);
 
   useEffect(() => {
-    if (users.length === 0) return;
+    if (users.length === 0 || !allProjects || allProjects.length === 0) return;
 
     // Simulate real-time updates
     const interval = setInterval(() => {
-        if (document.hidden || allProjects.length === 0) return; // Don't update if tab is not visible or no projects exist
+        if (document.hidden) return;
 
         const randomProject = allProjects[Math.floor(Math.random() * allProjects.length)];
         const randomDonor = users.find(u => u.id === 'user-anonymous')!;
