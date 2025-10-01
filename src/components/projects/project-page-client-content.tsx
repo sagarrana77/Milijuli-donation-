@@ -21,7 +21,7 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
-import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins, GalleryHorizontal, MessageSquare, History, Receipt } from 'lucide-react';
+import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins, GalleryHorizontal, MessageSquare, History, Receipt, Info } from 'lucide-react';
 import { useState } from 'react';
 import { summarizeProject, SummarizeProjectOutput } from '@/ai/flows/summarize-project';
 import { useToast } from '@/hooks/use-toast';
@@ -31,6 +31,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import Link from 'next/link';
 import { Pagination } from '../ui/pagination';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 interface ProjectPageClientContentProps {
     project: typeof typeProject;
@@ -352,14 +353,33 @@ export function ProjectPageClientAside({ project }: { project: typeof typeProjec
             </ScrollFadeIn>
             
             <ScrollFadeIn asChild delay={200}>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Donate via QR</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center gap-4">
-                    <PaymentGateways project={project} />
-                </CardContent>
-            </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Info className="h-5 w-5" /> Donation Info</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Accordion type="single" collapsible className="w-full">
+                            <AccordionItem value="item-1">
+                                <AccordionTrigger>How is my donation secured?</AccordionTrigger>
+                                <AccordionContent>
+                                We use industry-standard encryption and partner with trusted payment gateways to ensure every transaction is secure. For verified projects, all funds are tracked on a public ledger for full transparency.
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="item-2">
+                                <AccordionTrigger>Is my donation refundable?</AccordionTrigger>
+                                <AccordionContent>
+                                Donations are generally non-refundable. However, in exceptional cases, like project cancellation, we will work to reallocate the funds to a similar project.
+                                </AccordionContent>
+                            </AccordionItem>
+                            <AccordionItem value="item-3">
+                                <AccordionTrigger>What is the Fund Relocation Policy?</AccordionTrigger>
+                                <AccordionContent>
+                                To maximize impact, surplus funds from over-funded or cancelled campaigns may be relocated to other projects in need. This is always done with full transparency. You can read the full policy <Link href="/fund-relocation-policy" className="text-primary underline">here</Link>.
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    </CardContent>
+                </Card>
             </ScrollFadeIn>
         </aside>
     )
