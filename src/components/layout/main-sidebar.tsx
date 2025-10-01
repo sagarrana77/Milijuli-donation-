@@ -88,8 +88,8 @@ export function MainSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b p-2">
-        <div className="flex flex-col gap-2 group-data-[collapsible=icon]:items-center">
-            <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col gap-2 items-center group-data-[collapsible=icon]:items-center group-data-[state=expanded]:items-stretch">
+            <div className="flex items-center justify-between w-full group-data-[state=expanded]:justify-between group-data-[collapsible=icon]:justify-center">
               <div className="flex items-center gap-2">
                 {platformSettings.appLogoUrl ? (
                     <Image src={platformSettings.appLogoUrl} alt={platformSettings.appName} width={32} height={32} className="h-8 w-8" />
