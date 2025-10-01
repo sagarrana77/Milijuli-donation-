@@ -3,8 +3,9 @@
  */
 'use server';
 
-import { projects, currentUser, allDonations } from '@/lib/data';
+import { currentUser, allDonations } from '@/lib/data';
 import type { Comment } from '@/lib/data';
+import { getProjects } from './projects-service';
 
 /**
  * Fetches all comments for a given project.
@@ -13,6 +14,7 @@ import type { Comment } from '@/lib/data';
  */
 export async function getComments(projectId: string): Promise<Comment[]> {
   try {
+    const projects = await getProjects();
     const project = projects.find(p => p.id === projectId);
     return project?.discussion.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) || [];
   } catch (error) {
@@ -32,6 +34,13 @@ export async function addComment(projectId: string, commentData: { text: string;
     if (!currentUser) {
       throw new Error("User not authenticated");
     }
+    
+    // We need to get a mutable reference to the projects array.
+    // In a real app, we would be updating a database.
+    // For this mock data setup, we need to ensure we can modify the in-memory data.
+    // The `getProjects` service returns a fresh copy, which we can't mutate.
+    // Let's import the actual `projects` array for mutation.
+    const { projects } = await import('@/services/projects-service');
     
     const project = projects.find(p => p.id === projectId);
     if (!project) {
@@ -73,6 +82,7 @@ export async function addComment(projectId: string, commentData: { text: string;
  */
 export async function updateComment(projectId: string, commentId: string, updates: Partial<Comment>): Promise<void> {
     try {
+        const { projects } = await import('@/services/projects-service');
         const project = projects.find(p => p.id === projectId);
         if (!project) {
           throw new Error("Project not found");
