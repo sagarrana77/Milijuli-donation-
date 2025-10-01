@@ -214,18 +214,18 @@ export default async function DashboardPage() {
         <InKindDonationsSlider allProjects={projects} />
       </ScrollFadeIn>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-3">
-                <ScrollFadeIn asChild>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+                 <ScrollFadeIn asChild>
+                     <AllUpdatesFeed allProjects={projects} />
+                 </ScrollFadeIn>
+            </div>
+             <div className="lg:col-span-1">
+                 <ScrollFadeIn asChild>
                     <section>
                         <HallOfFameDonors donations={allDonations} />
                     </section>
                 </ScrollFadeIn>
-            </div>
-            <div className="lg:col-span-3">
-                 <ScrollFadeIn asChild>
-                     <AllUpdatesFeed allProjects={projects} />
-                 </ScrollFadeIn>
             </div>
         </div>
 
