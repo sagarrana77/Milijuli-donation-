@@ -154,6 +154,7 @@ export default function CreateCampaignPage() {
       expenses: [],
       discussion: [],
       wishlist: [],
+      createdAt: new Date().toISOString(),
     };
     projects.unshift(newProject);
     toast({

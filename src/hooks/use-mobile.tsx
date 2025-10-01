@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import * as React from "react"
@@ -26,9 +27,13 @@ export function useDeviceView(defaultViewMode: ViewMode = 'auto') {
   const isMobile = React.useMemo(() => {
     if (!isClient) return false;
     if (viewMode === 'mobile') return true;
-    if (viewMode === 'desktop' || viewMode === 'tablet') return false;
-    // In auto mode, only screen widths below the mobile breakpoint are considered mobile.
-    return window.innerWidth < MOBILE_BREAKPOINT;
+    if (viewMode === 'desktop') return false;
+    // In auto mode, include tablet widths in the mobile-like behavior (drawer menu)
+    if (viewMode === 'auto') {
+      return window.innerWidth < TABLET_BREAKPOINT;
+    }
+    // If viewMode is 'tablet', it should not be considered mobile here.
+    return false;
   }, [viewMode, isClient]);
 
   return { isMobile, isTablet, viewMode, setViewMode, isClient };
