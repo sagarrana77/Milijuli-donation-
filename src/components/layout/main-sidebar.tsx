@@ -88,20 +88,18 @@ export function MainSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="border-b p-2">
-        <div className="flex flex-col gap-2 items-center group-data-[collapsible=icon]:items-center group-data-[state=expanded]:items-stretch">
-            <div className="flex items-center justify-between w-full group-data-[state=expanded]:justify-between group-data-[collapsible=icon]:justify-center">
-              <div className="flex items-center gap-2">
-                {platformSettings.appLogoUrl ? (
-                    <Image src={platformSettings.appLogoUrl} alt={platformSettings.appName} width={32} height={32} className="h-8 w-8" />
-                ) : (
-                    <Logo className="h-8 w-8 text-primary" />
-                )}
-                <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">{platformSettings.appName}</span>
-              </div>
-              <SidebarTrigger className="hidden group-data-[collapsible=icon]:hidden" />
+        <div className="flex w-full items-center justify-between group-data-[collapsible=icon]:justify-center">
+            <div className="flex items-center gap-2">
+            {platformSettings.appLogoUrl ? (
+                <Image src={platformSettings.appLogoUrl} alt={platformSettings.appName} width={32} height={32} className="h-8 w-8" />
+            ) : (
+                <Logo className="h-8 w-8 text-primary" />
+            )}
+            <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">{platformSettings.appName}</span>
             </div>
-            <SidebarTrigger className="group-data-[collapsible=icon]:flex hidden" />
+            <SidebarTrigger className="group-data-[collapsible=icon]:hidden" />
         </div>
+        <SidebarTrigger className="group-data-[collapsible=icon]:flex hidden" />
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarMenu>
