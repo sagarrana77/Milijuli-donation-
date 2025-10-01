@@ -17,10 +17,11 @@ import {
   HandCoins,
   Briefcase,
   TrendingUp,
-  CheckCircle
+  CheckCircle,
+  UserPlus,
+  ArrowRight
 } from 'lucide-react';
-import { ExpenseChart } from '@/components/dashboard/expense-chart';
-import { operationalCostsFund as initialOperationalCostsFund, salaries, equipment, miscExpenses, platformSettings, allDonations as initialAllDonations } from '@/lib/data';
+import { operationalCostsFund as initialOperationalCostsFund, salaries, equipment, miscExpenses, platformSettings, allDonations as initialAllDonations, jobOpenings } from '@/lib/data';
 import type { Project, Donation } from '@/lib/data';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip';
@@ -28,6 +29,7 @@ import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ProjectCard } from '../projects/project-card';
 import { HallOfFameDonors } from '../projects/hall-of-fame-donors';
+import { Badge } from '../ui/badge';
 
 interface DashboardStatsProps {
     allProjects: Project[];
@@ -43,12 +45,6 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
     countries: 1,
     totalSpent: 0,
     fundsInHand: 0,
-    spendingBreakdown: [
-      { name: 'Education', value: 0, key: 'education' },
-      { name: 'Health', value: 0, key: 'health' },
-      { name: 'Relief', value: 0, key: 'relief' },
-      { name: 'Operational', value: 0, key: 'operational' },
-    ],
   });
   const [operationalFund, setOperationalFund] = useState(initialOperationalCostsFund);
   const [allDonations, setAllDonations] = useState<Donation[]>(initialAllDonations);
@@ -62,18 +58,6 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
         const totalEquipmentCosts = equipment.reduce((acc, e) => acc + e.cost, 0);
         const totalMiscCosts = miscExpenses.reduce((acc, e) => acc + e.cost, 0);
         const currentOperationalExpenses = (totalSalaryCosts * 12) + totalEquipmentCosts + totalMiscCosts;
-
-        const educationExpenses = allProjects
-            .filter(p => p.id === 'education-for-all-nepal')
-            .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
-        
-        const healthExpenses = allProjects
-            .filter(p => ['clean-water-initiative', 'community-health-posts'].includes(p.id))
-            .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
-
-        const reliefExpenses = allProjects
-            .filter(p => p.id === 'disaster-relief-fund')
-            .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
 
         const totalRaised = allProjects.reduce((acc, p) => acc + p.raisedAmount, 0) + initialOperationalCostsFund.raisedAmount;
         const totalProjectExpenses = allProjects.reduce(
@@ -89,12 +73,6 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
             projectsFunded: allProjects.filter(p => p.raisedAmount >= p.targetAmount).length,
             totalSpent: totalSpending,
             fundsInHand: fundsInHand,
-            spendingBreakdown: [
-                { name: 'Education', value: educationExpenses, key: 'education' },
-                { name: 'Health', value: healthExpenses, key: 'health' },
-                { name: 'Relief', value: reliefExpenses, key: 'relief' },
-                { name: 'Operational', value: currentOperationalExpenses, key: 'operational' },
-            ],
         }));
         setOperationalFund({...initialOperationalCostsFund});
         setAllDonations([...initialAllDonations]);
@@ -115,6 +93,8 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
   const approvedProjects = allProjects.filter(p => p.verified);
   const runningProjects = approvedProjects.filter(p => p.raisedAmount < p.targetAmount);
   const finishedProjects = approvedProjects.filter(p => p.raisedAmount >= p.targetAmount);
+  const featuredJobs = jobOpenings.filter(job => job.featured).slice(0, 2);
+
 
   return (
     <>
@@ -251,6 +231,37 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                 <section>
                     <HallOfFameDonors donations={allDonations} />
                 </section>
+            </ScrollFadeIn>
+            <ScrollFadeIn>
+              <Card>
+                  <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                          <UserPlus className="h-6 w-6 text-purple-500" />
+                          We're Hiring!
+                      </CardTitle>
+                      <CardDescription>
+                          Join our mission to build a transparent world.
+                      </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                      <ul className="space-y-4">
+                          {featuredJobs.map(job => (
+                              <li key={job.id} className="p-3 rounded-md border bg-background/50 hover:bg-muted/50 md:flex md:items-center md:justify-between">
+                                  <div>
+                                      <p className="font-semibold">{job.title}</p>
+                                      <p className="text-sm text-muted-foreground">{job.location}</p>
+                                  </div>
+                                  <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'} className="mt-2 md:mt-0">{job.type}</Badge>
+                              </li>
+                          ))}
+                      </ul>
+                  </CardContent>
+                  <CardFooter>
+                      <Button asChild variant="outline" className="w-full">
+                          <Link href="/careers">View All Openings <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                      </Button>
+                  </CardFooter>
+              </Card>
             </ScrollFadeIn>
         </div>
     </div>

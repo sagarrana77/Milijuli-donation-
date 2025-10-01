@@ -64,7 +64,7 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
             hideLabel
             />}
         />
-        <Bar dataKey="value" radius={5}>
+        <Bar dataKey="value" radius={5} isAnimationActive={true}>
           {data.map((entry, index) => (
             <RechartsPrimitive key={`cell-${entry.key}`} fill={`hsl(var(--chart-${index + 1}))`}/>
           ))}
