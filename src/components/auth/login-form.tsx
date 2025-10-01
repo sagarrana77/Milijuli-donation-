@@ -7,7 +7,6 @@ import * as z from 'zod';
 import {
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -116,11 +115,11 @@ export function LoginForm() {
   }
 
   return (
-    <div className="grid max-h-[90vh] lg:grid-cols-2 lg:max-h-none">
+    <div className="grid lg:grid-cols-2">
       <div className="relative hidden bg-muted lg:block">
         <Carousel
             opts={{ loop: true }}
-            plugins={[Autoplay({ delay: 5000, stopOnInteraction: false })]}
+            plugins={[Autoplay({ delay: 5000, stopOnInteraction: false, direction: 'backward' })]}
         >
             <CarouselContent>
                 {platformSettings.loginImages.map((img, index) => (
@@ -144,8 +143,8 @@ export function LoginForm() {
             </CarouselContent>
         </Carousel>
       </div>
-      <ScrollArea>
-        <div className="flex flex-col justify-center p-6 sm:py-6 sm:px-8">
+      <ScrollArea className="max-h-[85vh]">
+        <div className="flex flex-col justify-center p-6 py-12 sm:px-8">
               <CardHeader className="text-center">
                   <div className="flex items-center justify-center gap-2 mb-4">
                       <Logo className="h-10 w-10 text-primary" />
