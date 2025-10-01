@@ -238,7 +238,7 @@ const Sidebar = React.forwardRef<
       >
         <div
             data-sidebar="sidebar"
-            className="flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+            className="flex flex-col h-full w-full group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
           >
             {children}
         </div>
@@ -261,7 +261,7 @@ const SidebarTrigger = React.forwardRef<
         data-sidebar="trigger"
         variant="ghost"
         size="icon"
-        className={cn("h-7 w-7", className)}
+        className={cn("h-7 w-7 md:hidden", className)}
         onClick={(event) => {
             onClick?.(event)
             toggleSidebar()
@@ -280,7 +280,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-7 transition-transform duration-300 ease-in-out", state === 'collapsed' && "rotate-180", className)}
+      className={cn("h-7 w-7 hidden md:flex transition-transform duration-300 ease-in-out group-data-[collapsible=icon]:mx-auto", state === 'collapsed' && "rotate-180", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
