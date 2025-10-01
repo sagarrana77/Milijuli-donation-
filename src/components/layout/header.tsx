@@ -28,6 +28,7 @@ import { useMemo } from 'react';
 import { allDonations, platformSettings } from '@/lib/data';
 import { Logo } from '../icons/logo';
 import Image from 'next/image';
+import { SidebarTrigger } from '../ui/sidebar';
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith('/admin/projects/new')) {
@@ -132,13 +133,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-10 flex h-auto flex-col items-start gap-2 border-b bg-background/80 px-4 py-3 backdrop-blur-sm sm:px-6">
        <div className="flex w-full items-center gap-4">
+        <SidebarTrigger className="md:hidden" />
         <div className="flex items-center gap-2">
-            {platformSettings.appLogoUrl ? (
-                <Image src={platformSettings.appLogoUrl} alt={platformSettings.appName} width={32} height={32} className="h-8 w-8" />
-            ) : (
-                <Logo className="h-8 w-8 text-primary" />
-            )}
-            <span className="hidden sm:inline-block text-lg font-semibold">{platformSettings.appName}</span>
+            <Breadcrumbs title={title} />
         </div>
         <div className="ml-auto flex items-center gap-2">
           {user && (
@@ -200,7 +197,6 @@ export function Header() {
           )}
         </div>
       </div>
-      <Breadcrumbs title={title} />
     </header>
   );
 }
