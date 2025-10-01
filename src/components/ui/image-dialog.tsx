@@ -16,12 +16,28 @@ import { ScrollArea } from './scroll-area';
 import { DiscussionSection } from '../projects/discussion-section';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 import { Button } from './button';
-import { ArrowRight, Award } from 'lucide-react';
-import { useMemo } from 'react';
-import { allDonations } from '@/lib/data';
+import { ArrowRight, Award, Heart, Share2 } from 'lucide-react';
+import { useMemo, useState, useEffect } from 'react';
+import { allDonations, currentUser } from '@/lib/data';
+import { useToast } from '@/hooks/use-toast';
+import { useNotifications } from '@/context/notification-provider';
+import { cn } from '@/lib/utils';
 
 export function ImageDialog() {
   const { isOpen, closeImage, photoData } = usePhotoDialog();
+  const { toast } = useToast();
+  const { addNotification } = useNotifications();
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  useEffect(() => {
+    if (photoData?.update?.id) {
+      // In a real app, you'd check if the current user has liked this photo before.
+      // For this demo, we'll just use the initial like count.
+      setLikeCount(photoData.update.likes || 0);
+      setIsLiked(false); // Reset like state for each new image
+    }
+  }, [photoData]);
 
   const topDonorIds = useMemo(() => {
     const donationTotals: Record<string, number> = {};
@@ -37,11 +53,53 @@ export function ImageDialog() {
     return sortedDonors.slice(0, 5);
   }, []);
 
+  const handleLike = () => {
+    if (!currentUser) {
+        toast({
+            variant: "destructive",
+            title: "Please log in",
+            description: "You must be logged in to like a photo.",
+        });
+        return;
+    }
+    
+    // Optimistically update the UI
+    if (isLiked) {
+      setLikeCount(prev => prev - 1);
+    } else {
+      setLikeCount(prev => prev + 1);
+      // In a real app, you'd notify the admin here via an API call
+      // For the demo, we'll use the client-side notification provider
+      addNotification({
+          title: 'New Photo Like!',
+          description: `${currentUser.name} liked the photo from "${photoData?.project?.name}".`,
+          href: `/projects/${photoData?.project?.id}`
+      })
+      console.log(`ADMIN_NOTIFICATION: ${currentUser.name} liked a photo.`);
+    }
+    setIsLiked(prev => !prev);
+    
+    // Here you would also make an API call to update the like count on your backend.
+    if (photoData?.update) {
+        photoData.update.likes = likeCount + (isLiked ? -1 : 1);
+    }
+  };
+
+  const handleShare = () => {
+    if (!photoData?.project?.id) return;
+    const projectUrl = `${window.location.origin}/projects/${photoData.project.id}`;
+    navigator.clipboard.writeText(projectUrl);
+    toast({
+        title: "Link Copied!",
+        description: "The project link has been copied to your clipboard.",
+    })
+  };
+
   if (!isOpen || !photoData) {
     return null;
   }
 
-  const { imageUrl, imageAlt, title, donor, project, comments } = photoData;
+  const { imageUrl, imageAlt, title, donor, project, comments, update } = photoData;
 
   const hasDonorInfo = donor && project;
   const isTopDonor = donor ? topDonorIds.includes(donor.id) : false;
@@ -60,14 +118,34 @@ export function ImageDialog() {
               fill
               className="object-contain"
             />
+            {update && (
+              <div className="absolute bottom-4 right-4 flex items-center gap-2">
+                <Button variant="secondary" size="sm" onClick={handleLike} className="rounded-full h-10 w-10 p-0">
+                    <Heart className={cn("h-5 w-5", isLiked && "fill-red-500 text-red-500")} />
+                    <span className="sr-only">Like</span>
+                </Button>
+                <Button variant="secondary" size="sm" onClick={handleShare} className="rounded-full h-10 w-10 p-0">
+                    <Share2 className="h-5 w-5" />
+                    <span className="sr-only">Share</span>
+                </Button>
+              </div>
+            )}
           </div>
           <div className="flex flex-col min-h-0 overflow-y-auto border-t md:border-t-0 md:border-l">
             <Tabs defaultValue={hasDonorInfo ? "donor" : "discussion"} className="flex flex-col flex-1">
                 <div className="p-4 sticky top-0 bg-background z-10 border-b">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="donor" disabled={!hasDonorInfo}>Donor Info</TabsTrigger>
-                        <TabsTrigger value="discussion">Discussion</TabsTrigger>
-                    </TabsList>
+                     <div className="flex items-center justify-between">
+                         <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="donor" disabled={!hasDonorInfo}>Donor Info</TabsTrigger>
+                            <TabsTrigger value="discussion">Discussion</TabsTrigger>
+                        </TabsList>
+                        {update && (
+                            <div className="ml-4 flex items-center gap-1 text-sm text-muted-foreground">
+                                <Heart className="h-4 w-4" />
+                                <span>{likeCount.toLocaleString()}</span>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <ScrollArea className="flex-1">
                     <div className="p-4 space-y-4">

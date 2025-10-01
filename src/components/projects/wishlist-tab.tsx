@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -86,7 +85,7 @@ export function WishlistTab() {
                       height={300}
                       className="aspect-video w-full object-cover rounded-t-lg cursor-pointer"
                       data-ai-hint={item.imageHint}
-                      onClick={() => openPhoto({ imageUrl: item.imageUrl!, title: item.name })}
+                      onClick={() => openPhoto({ imageUrl: item.imageUrl!, title: item.name, project })}
                   />
               )}
               <CardHeader>
@@ -130,5 +129,3 @@ export function WishlistTab() {
     </>
   );
 }
-
-    

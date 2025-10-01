@@ -4,7 +4,7 @@
 import React, from 'react';
 import type { ReactNode } from 'react';
 import { ImageDialog } from '@/components/ui/image-dialog';
-import type { Donor, Project, Comment } from '@/lib/data';
+import type { Donor, Project, Comment, Update } from '@/lib/data';
 
 export interface PhotoData {
   imageUrl: string;
@@ -13,6 +13,7 @@ export interface PhotoData {
   donor?: Donor;
   project?: Pick<Project, 'id' | 'name'>;
   comments?: Comment[];
+  update?: Update;
 }
 
 interface PhotoDialogContextType {

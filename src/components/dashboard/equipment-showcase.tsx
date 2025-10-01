@@ -62,7 +62,7 @@ export function EquipmentShowcase({ equipment }: EquipmentShowcaseProps) {
                      <div className="p-4 flex flex-col flex-grow">
                         <p className="font-semibold">{item.item}</p>
                         <p className="text-sm text-muted-foreground">Purchased: {format(new Date(item.purchaseDate), 'PP')}</p>
-                        <p className="text-sm text-muted-foreground">Cost: ${item.cost.toLocaleString()}</p>
+                        <p className="text-sm text-muted-foreground">Cost: Rs.{item.cost.toLocaleString()}</p>
                      </div>
                   </Card>
                 </div>

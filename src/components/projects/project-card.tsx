@@ -32,7 +32,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card className="flex flex-col overflow-hidden transition-all hover:shadow-lg">
       <CardHeader className="relative p-0">
-        <div onClick={() => openPhoto({ imageUrl: project.imageUrl, title: project.name, comments: project.discussion })} className="cursor-pointer">
+        <div onClick={() => openPhoto({ imageUrl: project.imageUrl, title: project.name, comments: project.discussion, project })} className="cursor-pointer">
           <Image
             src={project.imageUrl}
             alt={project.name}

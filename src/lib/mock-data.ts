@@ -25,6 +25,7 @@ export type Update = {
   imageUrl?: string;
   imageHint?: string;
   pinned?: boolean;
+  likes?: number;
   isTransfer?: boolean; // To distinguish transfer updates
   transferDetails?: {
     amount: number;
