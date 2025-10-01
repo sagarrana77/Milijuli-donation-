@@ -1,39 +1,55 @@
 
+'use client';
 
+import { useState } from 'react';
 import { Package } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { InKindDonationsClient } from './in-kind-donations-client';
 import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
 import { getInKindDonations, getAllDonations, getUsers } from '@/services/donations-service';
 import { getProjects } from '@/services/projects-service';
+import { type Project, type PhysicalDonation, type User, type Donation } from '@/lib/data';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useEffect } from 'react';
 
-export default async function InKindDonationsPage() {
-  // Fetch all required data using service functions
-  const [
-    physicalDonations,
-    allDonationsData,
-    projectsData,
-    usersData
-  ] = await Promise.all([
-    getInKindDonations(),
-    getAllDonations(),
-    getProjects(),
-    getUsers()
-  ]);
+export default function InKindDonationsPage() {
+  const [physicalDonations, setPhysicalDonations] = useState<PhysicalDonation[]>([]);
+  const [allDonationsData, setAllDonationsData] = useState<Donation[]>([]);
+  const [projectsData, setProjectsData] = useState<Project[]>([]);
+  const [usersData, setUsersData] = useState<User[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
-  // Ensure all data is treated as an array, even if fetching fails or returns nothing
-  const completedDonations = Array.isArray(physicalDonations)
-    ? physicalDonations.filter((d) => d.status === 'Completed')
-    : [];
+  useEffect(() => {
+    async function fetchData() {
+      const [pd, ad, p, u] = await Promise.all([
+        getInKindDonations(),
+        getAllDonations(),
+        getProjects(),
+        getUsers()
+      ]);
+      setPhysicalDonations(pd);
+      setAllDonationsData(ad);
+      setProjectsData(p);
+      setUsersData(u);
+    }
+    fetchData();
+  }, []);
 
-  const projects = Array.isArray(projectsData) ? projectsData : [];
-  const users = Array.isArray(usersData) ? usersData : [];
-  const allDonations = Array.isArray(allDonationsData) ? allDonationsData : [];
-
-  const projectsWithDonations = projects.filter((project) =>
+  const completedDonations = physicalDonations.filter((d) => d.status === 'Completed');
+  const projectsWithDonations = projectsData.filter((project) =>
     completedDonations.some((donation) => donation.projectName === project.name)
   );
+
+  useEffect(() => {
+    if (projectsWithDonations.length > 0 && !selectedProjectId) {
+      setSelectedProjectId(projectsWithDonations[0].id);
+    }
+  }, [projectsWithDonations, selectedProjectId]);
+
+  const selectedProject = projectsData.find(p => p.id === selectedProjectId);
+  const selectedProjectDonations = selectedProject
+    ? completedDonations.filter(d => d.projectName === selectedProject.name)
+    : [];
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
@@ -48,44 +64,47 @@ export default async function InKindDonationsPage() {
         </p>
       </div>
       
-      <HallOfFameDonors donations={allDonations} />
+      <HallOfFameDonors donations={allDonationsData} />
 
       <Card>
-          <CardHeader>
-              <CardTitle>Completed In-Kind Donations by Project</CardTitle>
-              <CardDescription>A showcase of successfully donated physical items, organized by campaign.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {projectsWithDonations.length > 0 ? (
-                <Tabs defaultValue={projectsWithDonations[0].id} className="w-full">
-                <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    {projectsWithDonations.map((project) => (
-                    <TabsTrigger key={project.id} value={project.id}>
-                        {project.name}
-                    </TabsTrigger>
-                    ))}
-                </TabsList>
-                {projectsWithDonations.map((project) => {
-                    const projectDonations = completedDonations.filter(
-                    (d) => d.projectName === project.name
-                    );
-                    return (
-                    <TabsContent key={project.id} value={project.id} className="mt-4">
-                        <InKindDonationsClient
-                            project={project}
-                            donations={projectDonations}
-                            users={users}
-                        />
-                    </TabsContent>
-                    );
-                })}
-                </Tabs>
-            ) : (
-                <div className="py-24 text-center text-muted-foreground">
-                    <p>No completed in-kind donations to display yet.</p>
+        <CardHeader>
+          <CardTitle>Completed In-Kind Donations by Project</CardTitle>
+          <CardDescription>A showcase of successfully donated physical items, organized by campaign.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {projectsWithDonations.length > 0 ? (
+            <div className="space-y-4">
+              <Select
+                value={selectedProjectId || ''}
+                onValueChange={(value) => setSelectedProjectId(value)}
+              >
+                <SelectTrigger className="w-full md:w-72">
+                  <SelectValue placeholder="Select a project" />
+                </SelectTrigger>
+                <SelectContent>
+                  {projectsWithDonations.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedProject && (
+                <div className="mt-4">
+                  <InKindDonationsClient
+                    project={selectedProject}
+                    donations={selectedProjectDonations}
+                    users={usersData}
+                  />
                 </div>
-            )}
-          </CardContent>
+              )}
+            </div>
+          ) : (
+            <div className="py-24 text-center text-muted-foreground">
+              <p>No completed in-kind donations to display yet.</p>
+            </div>
+          )}
+        </CardContent>
       </Card>
     </div>
   );
