@@ -69,7 +69,7 @@ export function HallOfFameDonors({ donations }: HallOfFameDonorsProps) {
     "bg-chart-5/5 border-chart-5/20",
   ];
   
-  const textColors = [
+   const textColors = [
       "text-chart-1",
       "text-chart-2",
       "text-chart-3",
