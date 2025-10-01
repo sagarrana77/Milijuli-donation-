@@ -34,6 +34,7 @@ import { useLoginDialog } from '@/context/login-dialog-provider';
 import { Carousel, CarouselContent, CarouselItem } from '../ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import { Logo } from '../icons/logo';
+import { ScrollArea } from '../ui/scroll-area';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -115,7 +116,7 @@ export function LoginForm() {
   }
 
   return (
-    <div className="grid lg:grid-cols-2">
+    <div className="grid max-h-[90vh] lg:grid-cols-2 lg:max-h-none">
       <div className="relative hidden bg-muted lg:block">
         <Carousel
             opts={{ loop: true }}
@@ -143,132 +144,134 @@ export function LoginForm() {
             </CarouselContent>
         </Carousel>
       </div>
-      <div className="flex flex-col justify-center p-6 sm:py-6 sm:px-8">
-            <CardHeader className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                    <Logo className="h-10 w-10 text-primary" />
-                    <CardTitle className="text-3xl font-bold">{platformSettings.appName}</CardTitle>
-                </div>
-                <CardDescription>Sign in or create an account to continue</CardDescription>
-            </CardHeader>
-            <CardContent>
-            <Tabs defaultValue="login">
-                <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Log In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-                </TabsList>
-                <TabsContent value="login">
-                <Form {...loginForm}>
-                    <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4 pt-4">
-                    <FormField
-                        control={loginForm.control}
-                        name="email"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                            <Input type="email" placeholder="you@example.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={loginForm.control}
-                        name="password"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                            <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <Button type="submit" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Log In
-                    </Button>
-                     <div className="relative pt-4">
-                        <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-                        </div>
-                    </div>
-                    <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
-                        <GoogleIcon className="mr-2 h-4 w-4" />
-                        Google
-                    </Button>
-                    </form>
-                </Form>
-                </TabsContent>
-                <TabsContent value="signup">
-                <Form {...signupForm}>
-                    <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4 pt-4">
-                    <FormField
-                        control={signupForm.control}
-                        name="name"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Full Name</FormLabel>
-                            <FormControl>
-                            <Input placeholder="John Doe" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={signupForm.control}
-                        name="email"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                            <Input type="email" placeholder="you@example.com" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={signupForm.control}
-                        name="password"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                            <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                        )}
-                    />
-                    <Button type="submit" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Create Account
-                    </Button>
-                     <div className="relative pt-4">
-                        <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-                        </div>
-                    </div>
-                    <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
-                        <GoogleIcon className="mr-2 h-4 w-4" />
-                        Google
-                    </Button>
-                    </form>
-                </Form>
-                </TabsContent>
-            </Tabs>
-            </CardContent>
-      </div>
+      <ScrollArea>
+        <div className="flex flex-col justify-center p-6 sm:py-6 sm:px-8">
+              <CardHeader className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                      <Logo className="h-10 w-10 text-primary" />
+                      <CardTitle className="text-3xl font-bold">{platformSettings.appName}</CardTitle>
+                  </div>
+                  <CardDescription>Sign in or create an account to continue</CardDescription>
+              </CardHeader>
+              <CardContent>
+              <Tabs defaultValue="login">
+                  <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="login">Log In</TabsTrigger>
+                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="login">
+                  <Form {...loginForm}>
+                      <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4 pt-4">
+                      <FormField
+                          control={loginForm.control}
+                          name="email"
+                          render={({ field }) => (
+                          <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                              <Input type="email" placeholder="you@example.com" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                          )}
+                      />
+                      <FormField
+                          control={loginForm.control}
+                          name="password"
+                          render={({ field }) => (
+                          <FormItem>
+                              <FormLabel>Password</FormLabel>
+                              <FormControl>
+                              <Input type="password" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                          )}
+                      />
+                      <Button type="submit" className="w-full" disabled={isSubmitting}>
+                          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          Log In
+                      </Button>
+                      <div className="relative pt-4">
+                          <div className="absolute inset-0 flex items-center">
+                          <span className="w-full border-t" />
+                          </div>
+                          <div className="relative flex justify-center text-xs uppercase">
+                          <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                          </div>
+                      </div>
+                      <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
+                          <GoogleIcon className="mr-2 h-4 w-4" />
+                          Google
+                      </Button>
+                      </form>
+                  </Form>
+                  </TabsContent>
+                  <TabsContent value="signup">
+                  <Form {...signupForm}>
+                      <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4 pt-4">
+                      <FormField
+                          control={signupForm.control}
+                          name="name"
+                          render={({ field }) => (
+                          <FormItem>
+                              <FormLabel>Full Name</FormLabel>
+                              <FormControl>
+                              <Input placeholder="John Doe" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                          )}
+                      />
+                      <FormField
+                          control={signupForm.control}
+                          name="email"
+                          render={({ field }) => (
+                          <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                              <Input type="email" placeholder="you@example.com" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                          )}
+                      />
+                      <FormField
+                          control={signupForm.control}
+                          name="password"
+                          render={({ field }) => (
+                          <FormItem>
+                              <FormLabel>Password</FormLabel>
+                              <FormControl>
+                              <Input type="password" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                          </FormItem>
+                          )}
+                      />
+                      <Button type="submit" className="w-full" disabled={isSubmitting}>
+                          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          Create Account
+                      </Button>
+                      <div className="relative pt-4">
+                          <div className="absolute inset-0 flex items-center">
+                          <span className="w-full border-t" />
+                          </div>
+                          <div className="relative flex justify-center text-xs uppercase">
+                          <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                          </div>
+                      </div>
+                      <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
+                          <GoogleIcon className="mr-2 h-4 w-4" />
+                          Google
+                      </Button>
+                      </form>
+                  </Form>
+                  </TabsContent>
+              </Tabs>
+              </CardContent>
+        </div>
+      </ScrollArea>
     </div>
   );
 }
