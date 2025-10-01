@@ -218,7 +218,7 @@ export let operationalCostsFund = {
   id: 'operational-costs',
   name: 'Operational Costs',
   description:
-    'Our mission is to foster trust and empower change through radical transparency. Your contribution supports the core team and infrastructure that makes our work possible, ensuring every donation can be tracked with integrity.',
+    'Our mission is to foster trust and empowering change through radical transparency. Your contribution supports the core team and infrastructure that makes our work possible, ensuring every donation can be tracked with integrity.',
   targetAmount: 15000000, // Static target for now
   raisedAmount: 1575000,
   donors: 88,
@@ -273,6 +273,7 @@ export type PhysicalDonation = {
   date: string; // Use string to prevent timezone issues
   comments: Comment[];
   donorId?: string;
+  featured?: boolean;
 };
 
 export type Notification = {
@@ -725,9 +726,9 @@ export const allDonations: Donation[] = [
 
 export let physicalDonations: PhysicalDonation[] = [
   { id: 'pd-1', donorName: 'Jane Doe', donorId: 'user-jane-doe', donorEmail: 'jane.doe@example.com', projectName: 'Education for All Nepal', itemName: 'School Benches', quantity: 10, donationType: 'pickup', address: '123 Maple Street, Anytown', status: 'Pending', date: '2023-10-28T10:00:00Z', comments: [] },
-  { id: 'pd-2', donorName: 'John Smith', donorId: 'user-john-smith', donorEmail: 'john.smith@example.com', projectName: 'Clean Water Initiative', itemName: 'Water Filters', quantity: 5, donationType: 'drop-off', status: 'Completed', date: '2023-10-25T14:00:00Z', comments: [] },
+  { id: 'pd-2', donorName: 'John Smith', donorId: 'user-john-smith', donorEmail: 'john.smith@example.com', projectName: 'Clean Water Initiative', itemName: 'Water Filters', quantity: 5, donationType: 'drop-off', status: 'Completed', date: '2023-10-25T14:00:00Z', comments: [], featured: true },
   { id: 'pd-3', donorName: 'Ai Chan', donorId: 'user-ai-chan', donorEmail: 'ai.chan@example.com', projectName: 'Education for All Nepal', itemName: 'School Backpacks', quantity: 50, donationType: 'drop-off', status: 'Completed', date: '2023-11-01T09:00:00Z', comments: [] },
-  { id: 'pd-4', donorName: 'Raj Patel', donorId: 'user-raj-patel', donorEmail: 'raj.patel@example.com', projectName: 'Art for All', itemName: 'Watercolor Paint Sets', quantity: 20, donationType: 'pickup', address: '456 Oak Avenue, Sometown', status: 'Completed', date: '2023-11-20T10:00:00Z', comments: [] },
+  { id: 'pd-4', donorName: 'Raj Patel', donorId: 'user-raj-patel', donorEmail: 'raj.patel@example.com', projectName: 'Art for All', itemName: 'Watercolor Paint Sets', quantity: 20, donationType: 'pickup', address: '456 Oak Avenue, Sometown', status: 'Completed', date: '2023-11-20T10:00:00Z', comments: [], featured: true },
   { id: 'pd-5', donorName: 'Jane Doe', donorId: 'user-jane-doe', donorEmail: 'jane.doe@example.com', projectName: 'Art for All', itemName: 'Drawing Canvases (8x10)', quantity: 30, donationType: 'drop-off', status: 'Pending', date: '2023-11-22T10:00:00Z', comments: [] },
   { id: 'pd-6', donorName: 'Aayush KC', donorId: 'aayush-kc', donorEmail: 'aayush.kc@example.com', projectName: 'Education for All Nepal', itemName: 'Whiteboards', quantity: 2, donationType: 'drop-off', status: 'Completed', date: '2023-11-05T10:00:00Z', comments: [] },
   { id: 'pd-7', donorName: 'David Kim', donorId: 'david-kim', donorEmail: 'david.kim@example.com', projectName: 'Disaster Relief Fund', itemName: 'Tarps', quantity: 100, donationType: 'received', status: 'Completed', date: '2023-11-28T10:00:00Z', comments: [] },

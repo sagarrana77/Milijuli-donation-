@@ -432,6 +432,18 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleFeatureToggle = (donationId: string, featured: boolean) => {
+    const donation = physicalDonations.find(d => d.id === donationId);
+    if (donation) {
+      donation.featured = featured;
+      setForceRender(c => c + 1);
+       toast({
+        title: 'Feature Status Updated!',
+        description: `Donation has been ${featured ? 'featured' : 'unfeatured'}.`,
+      });
+    }
+  }
+
   const handleUserQrToggle = (enabled: boolean) => {
     platformSettings.userQrPaymentsEnabled = enabled;
     setForceRender(c => c + 1);
@@ -859,7 +871,7 @@ export default function AdminDashboardPage() {
                 <CardContent>
                     <Tabs defaultValue="pledges">
                         <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="pledges"><List className="mr-2 h-4 w-4"/> Pledges</TabsTrigger>
+                            <TabsTrigger value="pledges"><List className="mr-2 h-4 w-4"/> Pledges & Donations</TabsTrigger>
                             <TabsTrigger value="post-received"><Package className="mr-2 h-4 w-4"/> Post Received Donation</TabsTrigger>
                         </TabsList>
                         <TabsContent value="pledges" className="mt-4">
@@ -871,8 +883,8 @@ export default function AdminDashboardPage() {
                                             <TableHead>Donor</TableHead>
                                             <TableHead>Item</TableHead>
                                             <TableHead>Project</TableHead>
-                                            <TableHead>Type</TableHead>
                                             <TableHead>Status</TableHead>
+                                            <TableHead>Featured</TableHead>
                                             <TableHead><span className="sr-only">Actions</span></TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -887,17 +899,20 @@ export default function AdminDashboardPage() {
                                                 <TableCell>{donation.itemName} (x{donation.quantity})</TableCell>
                                                 <TableCell>{donation.projectName}</TableCell>
                                                 <TableCell>
-                                                    <Badge variant={donation.donationType === 'pickup' ? 'default' : 'secondary'}>
-                                                        {donation.donationType}
-                                                    </Badge>
-                                                </TableCell>
-                                                <TableCell>
                                                     <Badge variant={
                                                         donation.status === 'Completed' ? 'default' : 
                                                         donation.status === 'Cancelled' ? 'destructive' : 'secondary'
                                                     }>
                                                         {donation.status}
                                                     </Badge>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Switch
+                                                        checked={donation.featured}
+                                                        onCheckedChange={(checked) => handleFeatureToggle(donation.id, checked)}
+                                                        disabled={donation.status !== 'Completed'}
+                                                        aria-label="Feature on homepage"
+                                                    />
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <DropdownMenu>
@@ -1596,5 +1611,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
-    

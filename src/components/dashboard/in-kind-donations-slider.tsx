@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import {
@@ -11,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import type { Project } from '@/lib/data';
 import { Button } from '../ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Gift } from 'lucide-react';
 import { getInKindDonations, getUsers } from '@/services/donations-service';
 import { InKindDonationsSliderClient } from './in-kind-donations-slider-client';
 import Link from 'next/link';
@@ -32,30 +33,23 @@ export async function InKindDonationsSlider({ allProjects }: InKindDonationsSlid
         return null;
     }
   
-  const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
+  const featuredDonations = physicalDonations.filter(d => d.status === 'Completed' && d.featured);
 
-  if (completedDonations.length === 0) {
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>In-Kind Donations</CardTitle>
-                <CardDescription>A showcase of successfully donated physical items.</CardDescription>
-            </CardHeader>
-            <CardContent className="h-64 flex items-center justify-center text-muted-foreground">
-                <p>No completed in-kind donations to show yet.</p>
-            </CardContent>
-        </Card>
-    );
+  if (featuredDonations.length === 0) {
+    return null; // Don't show the slider if there are no featured items
   }
 
   return (
     <Card className="bg-primary/5 border-primary/20">
       <CardHeader>
-        <CardTitle>Recent In-Kind Donations</CardTitle>
-        <CardDescription>A showcase of successfully donated physical items.</CardDescription>
+        <CardTitle className="flex items-center gap-2">
+            <Gift className="h-6 w-6 text-primary" />
+            Featured In-Kind Donations
+        </CardTitle>
+        <CardDescription>A showcase of tangible support from our generous community.</CardDescription>
       </CardHeader>
       <CardContent>
-        <InKindDonationsSliderClient completedDonations={completedDonations} allProjects={allProjects} users={users} />
+        <InKindDonationsSliderClient completedDonations={featuredDonations} allProjects={allProjects} users={users} />
       </CardContent>
        <CardFooter>
             <Button asChild variant="outline" className="w-full">

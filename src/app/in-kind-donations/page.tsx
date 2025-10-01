@@ -1,4 +1,5 @@
 
+
 import { Package } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -57,7 +58,7 @@ export default async function InKindDonationsPage() {
           <CardContent>
             {projectsWithDonations.length > 0 ? (
                 <Tabs defaultValue={projectsWithDonations[0].id} className="w-full">
-                <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
+                <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {projectsWithDonations.map((project) => (
                     <TabsTrigger key={project.id} value={project.id}>
                         {project.name}

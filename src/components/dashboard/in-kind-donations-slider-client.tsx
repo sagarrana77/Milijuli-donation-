@@ -70,7 +70,7 @@ export function InKindDonationsSliderClient({ completedDonations, allProjects, u
                 const isTopDonor = topDonorIds.includes(donor.id);
 
                 return (
-                    <CarouselItem key={donation.id} className="md:basis-1/2">
+                    <CarouselItem key={donation.id} className="md:basis-1/2 lg:basis-1/3">
                         <div className="p-1 h-full">
                         <Card className="flex flex-col h-full overflow-hidden">
                              <Image
