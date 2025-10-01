@@ -252,49 +252,50 @@ export default async function DashboardPage() {
                         <HallOfFameDonors donations={allDonations} />
                     </section>
                 </ScrollFadeIn>
+                 <ScrollFadeIn asChild>
+                    <section>
+                        <div className="mb-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <UserPlus className="h-6 w-6 text-primary" />
+                            <h2 className="text-2xl font-bold">We're Hiring!</h2>
+                        </div>
+                        <Button asChild variant="outline">
+                            <Link href="/careers">
+                                View All Openings <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                        </Button>
+                        </div>
+                        <div className="grid grid-cols-1 gap-6">
+                        {featuredJobs.map((job, index) => (
+                            <ScrollFadeIn key={job.id} delay={index * 100}>
+                            <Card className="flex flex-col">
+                                <CardHeader>
+                                <CardTitle>{job.title}</CardTitle>
+                                <CardDescription>{job.location}</CardDescription>
+                                </CardHeader>
+                                <CardContent className="flex-grow">
+                                <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
+                                    {job.type}
+                                </Badge>
+                                </CardContent>
+                                <CardFooter>
+                                <Button asChild variant="default" className="w-full">
+                                    <Link href="/careers">Learn More</Link>
+                                </Button>
+                                </CardFooter>
+                            </Card>
+                            </ScrollFadeIn>
+                        ))}
+                        </div>
+                    </section>
+                </ScrollFadeIn>
                 <ScrollFadeIn asChild>
                   <AllUpdatesFeed allProjects={projects} />
                 </ScrollFadeIn>
             </div>
         </div>
 
-      <ScrollFadeIn asChild>
-        <section>
-            <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-                <UserPlus className="h-6 w-6 text-primary" />
-                <h2 className="text-2xl font-bold">We're Hiring!</h2>
-            </div>
-            <Button asChild variant="outline">
-                <Link href="/careers">
-                    View All Openings <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-            </Button>
-            </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {featuredJobs.map((job, index) => (
-                <ScrollFadeIn key={job.id} delay={index * 100}>
-                <Card className="flex flex-col">
-                    <CardHeader>
-                    <CardTitle>{job.title}</CardTitle>
-                    <CardDescription>{job.location}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                    <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
-                        {job.type}
-                    </Badge>
-                    </CardContent>
-                    <CardFooter>
-                    <Button asChild variant="default" className="w-full">
-                        <Link href="/careers">Learn More</Link>
-                    </Button>
-                    </CardFooter>
-                </Card>
-                </ScrollFadeIn>
-            ))}
-            </div>
-        </section>
-      </ScrollFadeIn>
+      
 
        <ScrollFadeIn>
           <Card>
