@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -96,7 +95,7 @@ export function MainSidebar() {
             ) : (
                 <Logo className="h-8 w-8 text-primary" />
             )}
-            <span className="text-lg font-semibold">{platformSettings.appName}</span>
+            <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">{platformSettings.appName}</span>
           </div>
           <SidebarTrigger className="flex" />
         </div>
