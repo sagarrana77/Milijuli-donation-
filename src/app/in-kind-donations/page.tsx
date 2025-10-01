@@ -2,33 +2,32 @@
 'use client';
 
 import { useState } from 'react';
-import { Package } from 'lucide-react';
+import { Package, Users, Activity } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InKindDonationsClient } from './in-kind-donations-client';
-import { HallOfFameDonors } from '@/components/projects/hall-of-fame-donors';
-import { getInKindDonations, getAllDonations, getUsers } from '@/services/donations-service';
+import { AllInKindDonors } from './all-in-kind-donors';
+import { getInKindDonations, getUsers } from '@/services/donations-service';
 import { getProjects } from '@/services/projects-service';
-import { type Project, type PhysicalDonation, type User, type Donation } from '@/lib/data';
+import { type Project, type PhysicalDonation, type User } from '@/lib/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect } from 'react';
+import { InKindPledges } from '@/components/dashboard/in-kind-pledges';
 
 export default function InKindDonationsPage() {
   const [physicalDonations, setPhysicalDonations] = useState<PhysicalDonation[]>([]);
-  const [allDonationsData, setAllDonationsData] = useState<Donation[]>([]);
   const [projectsData, setProjectsData] = useState<Project[]>([]);
   const [usersData, setUsersData] = useState<User[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
-      const [pd, ad, p, u] = await Promise.all([
+      const [pd, p, u] = await Promise.all([
         getInKindDonations(),
-        getAllDonations(),
         getProjects(),
         getUsers()
       ]);
       setPhysicalDonations(pd);
-      setAllDonationsData(ad);
       setProjectsData(p);
       setUsersData(u);
     }
@@ -50,6 +49,10 @@ export default function InKindDonationsPage() {
   const selectedProjectDonations = selectedProject
     ? completedDonations.filter(d => d.projectName === selectedProject.name)
     : [];
+  
+  const inKindDonors = usersData.filter(user => 
+    completedDonations.some(donation => donation.donorId === user.id)
+  );
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
@@ -64,48 +67,73 @@ export default function InKindDonationsPage() {
         </p>
       </div>
       
-      <HallOfFameDonors donations={allDonationsData} />
+      <Tabs defaultValue="gallery">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="gallery"><Package className="mr-2 h-4 w-4" /> Completed Donations</TabsTrigger>
+          <TabsTrigger value="donors"><Users className="mr-2 h-4 w-4" /> All Donors</TabsTrigger>
+          <TabsTrigger value="feed"><Activity className="mr-2 h-4 w-4" /> Live Feed</TabsTrigger>
+        </TabsList>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Completed In-Kind Donations by Project</CardTitle>
-          <CardDescription>A showcase of successfully donated physical items, organized by campaign.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {projectsWithDonations.length > 0 ? (
-            <div className="space-y-4">
-              <Select
-                value={selectedProjectId || ''}
-                onValueChange={(value) => setSelectedProjectId(value)}
-              >
-                <SelectTrigger className="w-full md:w-72">
-                  <SelectValue placeholder="Select a project" />
-                </SelectTrigger>
-                <SelectContent>
-                  {projectsWithDonations.map((project) => (
-                    <SelectItem key={project.id} value={project.id}>
-                      {project.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {selectedProject && (
-                <div className="mt-4">
-                  <InKindDonationsClient
-                    project={selectedProject}
-                    donations={selectedProjectDonations}
-                    users={usersData}
-                  />
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="py-24 text-center text-muted-foreground">
-              <p>No completed in-kind donations to display yet.</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        <TabsContent value="gallery" className="mt-6">
+            <Card>
+                <CardHeader>
+                <CardTitle>Donations by Project</CardTitle>
+                <CardDescription>A showcase of successfully donated physical items, organized by campaign.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                {projectsWithDonations.length > 0 ? (
+                    <div className="space-y-4">
+                    <Select
+                        value={selectedProjectId || ''}
+                        onValueChange={(value) => setSelectedProjectId(value)}
+                    >
+                        <SelectTrigger className="w-full md:w-72">
+                        <SelectValue placeholder="Select a project" />
+                        </SelectTrigger>
+                        <SelectContent>
+                        {projectsWithDonations.map((project) => (
+                            <SelectItem key={project.id} value={project.id}>
+                            {project.name}
+                            </SelectItem>
+                        ))}
+                        </SelectContent>
+                    </Select>
+                    {selectedProject && (
+                        <div className="mt-4">
+                        <InKindDonationsClient
+                            project={selectedProject}
+                            donations={selectedProjectDonations}
+                            users={usersData}
+                        />
+                        </div>
+                    )}
+                    </div>
+                ) : (
+                    <div className="py-24 text-center text-muted-foreground">
+                    <p>No completed in-kind donations to display yet.</p>
+                    </div>
+                )}
+                </CardContent>
+            </Card>
+        </TabsContent>
+        
+        <TabsContent value="donors" className="mt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Our In-Kind Donors</CardTitle>
+                    <CardDescription>A list of all the generous individuals who have donated physical items.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <AllInKindDonors donors={inKindDonors} allDonations={completedDonations} />
+                </CardContent>
+            </Card>
+        </TabsContent>
+
+        <TabsContent value="feed" className="mt-6">
+            <InKindPledges />
+        </TabsContent>
+
+      </Tabs>
     </div>
   );
 }
