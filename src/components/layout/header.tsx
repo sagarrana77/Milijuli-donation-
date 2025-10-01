@@ -28,7 +28,7 @@ import { useMemo } from 'react';
 import { allDonations, platformSettings } from '@/lib/data';
 import { Logo } from '../icons/logo';
 import Image from 'next/image';
-import { SidebarTrigger } from '../ui/sidebar';
+import { SidebarTrigger, useSidebar } from '../ui/sidebar';
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith('/admin/projects/new')) {
@@ -111,6 +111,7 @@ export function Header() {
   const { notifications } = useNotifications();
   const { user, signOut } = useAuth();
   const { openDialog } = useLoginDialog();
+  const { isMobile } = useSidebar();
   const title = getPageTitle(pathname);
   const unreadCount = notifications.filter(n => !n.read).length;
   
@@ -133,7 +134,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-10 flex h-auto flex-col items-start gap-2 border-b bg-background/80 px-4 py-3 backdrop-blur-sm sm:px-6">
        <div className="flex w-full items-center gap-4">
-        <SidebarTrigger className="md:hidden" />
+        {isMobile && <SidebarTrigger />}
         <div className="flex items-center gap-2">
             <Breadcrumbs title={title} />
         </div>

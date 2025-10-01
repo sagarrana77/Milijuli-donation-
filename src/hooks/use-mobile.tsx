@@ -26,12 +26,9 @@ export function useDeviceView(defaultViewMode: ViewMode = 'auto') {
   const isMobile = React.useMemo(() => {
     if (!isClient) return false;
     if (viewMode === 'mobile') return true;
-    if (viewMode === 'desktop') return false;
-    // In auto mode, tablet is also considered mobile for layout purposes
-    if (viewMode === 'auto') {
-        return window.innerWidth < TABLET_BREAKPOINT;
-    }
-    return false;
+    if (viewMode === 'desktop' || viewMode === 'tablet') return false;
+    // In auto mode, only screen widths below the mobile breakpoint are considered mobile.
+    return window.innerWidth < MOBILE_BREAKPOINT;
   }, [viewMode, isClient]);
 
   return { isMobile, isTablet, viewMode, setViewMode, isClient };
