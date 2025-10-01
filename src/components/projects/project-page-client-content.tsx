@@ -224,7 +224,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                         height={150} 
                                         className="aspect-video w-full rounded-md object-cover sm:w-48 cursor-pointer" 
                                         data-ai-hint={update.imageHint} 
-                                        onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title, comments: project.discussion })}
+                                        onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title, comments: update.comments })}
                                     />
                                 )}
                                 <div>
@@ -264,7 +264,7 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                             {imageUpdates.length > 0 ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                     {imageUpdates.map(update => (
-                                        <div key={`album-${update.id}`} className="aspect-square relative rounded-lg overflow-hidden cursor-pointer group" onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title, comments: project.discussion })}>
+                                        <div key={`album-${update.id}`} className="aspect-square relative rounded-lg overflow-hidden cursor-pointer group" onClick={() => openPhoto({ imageUrl: update.imageUrl!, title: update.title, comments: update.comments })}>
                                             <Image 
                                                 src={update.imageUrl!} 
                                                 alt={update.title} 

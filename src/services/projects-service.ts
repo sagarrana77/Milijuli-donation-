@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview A service for fetching project data from Firestore.
  */
@@ -39,6 +40,7 @@ export async function getProjects(): Promise<Project[]> {
             imageUrl: getImageUrl('update-photo-2'),
             imageHint: 'construction site',
             pinned: true,
+            comments: [],
           },
           {
             id: 'update-2',
@@ -48,6 +50,7 @@ export async function getProjects(): Promise<Project[]> {
             date: '2023-10-25T14:00:00Z',
             imageUrl: getImageUrl('update-photo-1'),
             imageHint: 'school supplies',
+            comments: [],
           },
         ],
         expenses: [
@@ -114,7 +117,7 @@ export async function getProjects(): Promise<Project[]> {
         verified: true,
         ownerId: 'milijuli-sewa-admin',
         updates: [
-          { id: 'update-cw-1', title: 'First Well Complete!', description: 'The first of ten wells has been successfully installed in the village of Ramgiri. The community now has access to clean, safe drinking water for the first time.', date: '2023-11-20T10:00:00Z' }
+          { id: 'update-cw-1', title: 'First Well Complete!', description: 'The first of ten wells has been successfully installed in the village of Ramgiri. The community now has access to clean, safe drinking water for the first time.', date: '2023-11-20T10:00:00Z', comments: [] }
         ],
         expenses: [],
         discussion: [],
@@ -180,7 +183,7 @@ export async function getProjects(): Promise<Project[]> {
         verified: false,
         ownerId: 'user-raj-patel',
         updates: [
-          { id: 'update-art-1', title: 'First Workshop a Success!', description: 'We held our first art workshop last weekend, and it was a huge success! Over 30 children attended and created some amazing artwork. Thank you to everyone who has supported us so far!', date: '2023-11-25T10:00:00Z', imageUrl: getImageUrl('update-art-class'), imageHint: 'child painting' }
+          { id: 'update-art-1', title: 'First Workshop a Success!', description: 'We held our first art workshop last weekend, and it was a huge success! Over 30 children attended and created some amazing artwork. Thank you to everyone who has supported us so far!', date: '2023-11-25T10:00:00Z', imageUrl: getImageUrl('update-art-class'), imageHint: 'child painting', comments: [] }
         ],
         expenses: [],
         discussion: [

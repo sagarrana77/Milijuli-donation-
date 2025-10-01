@@ -50,6 +50,7 @@ export type Update = {
     donorId: string;
     amount: number;
   };
+  comments?: Comment[];
 };
 
 export type WishlistItem = {
