@@ -736,3 +736,5 @@ export let physicalDonations: PhysicalDonation[] = [
   { id: 'pd-9', donorName: 'Rohan Maharjan', donorId: 'rohan-maharjan', donorEmail: 'rohan.maharjan@example.com', projectName: 'Clean Water Initiative', itemName: 'Water Filters', quantity: 10, donationType: 'pickup', address: '789 Pine Lane, Their Town', status: 'Cancelled', date: '2023-12-02T10:00:00Z', comments: [] },
   { id: 'pd-10', donorName: 'Sunita Sharma', donorId: 'sunita-sharma', donorEmail: 'sunita.sharma@example.com', projectName: 'Education for All Nepal', itemName: 'School Backpacks', quantity: 30, donationType: 'drop-off', status: 'Pending', date: '2023-12-05T10:00:00Z', comments: [] },
 ];
+
+    
