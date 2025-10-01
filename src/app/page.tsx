@@ -265,37 +265,36 @@ export default async function DashboardPage() {
                             </Link>
                         </Button>
                         </div>
-                        <div className="space-y-4">
-                        {featuredJobs.map((job, index) => (
-                            <ScrollFadeIn key={job.id} delay={index * 100}>
-                            <Card>
-                                <CardContent className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                <div>
-                                    <h3 className="font-semibold">{job.title}</h3>
-                                    <div className="text-sm text-muted-foreground flex items-center gap-4">
-                                        <span>{job.location}</span>
-                                        <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
-                                            {job.type}
-                                        </Badge>
+                        <div className="space-y-4 md:flex md:flex-col md:space-y-4 lg:space-y-4">
+                            {featuredJobs.map((job, index) => (
+                                <ScrollFadeIn key={job.id} delay={index * 100}>
+                                <Card>
+                                    <CardContent className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                    <div>
+                                        <h3 className="font-semibold">{job.title}</h3>
+                                        <div className="text-sm text-muted-foreground flex items-center gap-4">
+                                            <span>{job.location}</span>
+                                            <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
+                                                {job.type}
+                                            </Badge>
+                                        </div>
                                     </div>
-                                </div>
-                                <Button asChild variant="secondary" size="sm" className="w-full md:w-auto">
-                                    <Link href="/careers">Learn More</Link>
-                                </Button>
-                                </CardContent>
-                            </Card>
-                            </ScrollFadeIn>
-                        ))}
+                                    <Button asChild variant="secondary" size="sm" className="w-full md:w-auto mt-2 md:mt-0">
+                                        <Link href="/careers">Learn More</Link>
+                                    </Button>
+                                    </CardContent>
+                                </Card>
+                                </ScrollFadeIn>
+                            ))}
                         </div>
                     </section>
-                </ScrollFadeIn>
-                <ScrollFadeIn asChild>
-                  <AllUpdatesFeed allProjects={projects} />
                 </ScrollFadeIn>
             </div>
         </div>
 
-      
+       <ScrollFadeIn>
+          <AllUpdatesFeed allProjects={projects} />
+        </ScrollFadeIn>
 
        <ScrollFadeIn>
           <Card>
@@ -322,5 +321,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-
-    
