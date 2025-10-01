@@ -11,8 +11,8 @@ import { ChatProvider } from '@/context/chat-provider';
 export function AppProviders({ children }: { children: React.ReactNode }) {
     return (
         <AuthProvider>
-            <PhotoDialogProvider>
-                <NotificationProvider>
+            <NotificationProvider>
+                <PhotoDialogProvider>
                     <PricingDialogProvider>
                         <LoginDialogProvider>
                             <ChatProvider>
@@ -20,8 +20,8 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
                             </ChatProvider>
                         </LoginDialogProvider>
                     </PricingDialogProvider>
-                </NotificationProvider>
-            </PhotoDialogProvider>
+                </PhotoDialogProvider>
+            </NotificationProvider>
         </AuthProvider>
     )
 }
