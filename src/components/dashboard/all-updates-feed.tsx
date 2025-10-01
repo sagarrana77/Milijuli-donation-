@@ -11,6 +11,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { Project, Update, User, Donation } from '@/lib/data';
@@ -19,6 +20,10 @@ import { Skeleton } from '../ui/skeleton';
 import { ArrowRight, Gift, ShoppingCart, Award } from 'lucide-react';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { allDonations as initialAllDonations } from '@/lib/data';
+import { Pagination } from '../ui/pagination';
+
+
+const UPDATES_PER_PAGE = 7;
 
 type UpdateWithProject = Update & {
     projectName: string;
@@ -34,6 +39,7 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
   const [isClient, setIsClient] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const { openPhoto } = usePhotoDialog();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const topDonorIds = useMemo(() => {
     const donationTotals: Record<string, number> = {};
@@ -110,6 +116,12 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
     return () => clearInterval(interval);
   }, [allProjects, users]);
 
+  const paginatedUpdates = allUpdates.slice(
+    (currentPage - 1) * UPDATES_PER_PAGE,
+    currentPage * UPDATES_PER_PAGE
+  );
+  const totalPages = Math.ceil(allUpdates.length / UPDATES_PER_PAGE);
+
   if (!isClient) {
     return (
         <Card>
@@ -142,8 +154,8 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {allUpdates.length > 0 ? (
-            allUpdates.slice(0, 7).map(update => (
+          {paginatedUpdates.length > 0 ? (
+            paginatedUpdates.map(update => (
               <div key={update.id} className="flex items-start gap-4">
                 <div className="w-10 flex-shrink-0">
                    {update.isMonetaryDonation && update.monetaryDonationDetails && (
@@ -215,6 +227,15 @@ export function AllUpdatesFeed({ allProjects }: AllUpdatesFeedProps) {
           )}
         </div>
       </CardContent>
+      {totalPages > 1 && (
+        <CardFooter>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </CardFooter>
+      )}
     </Card>
   );
 }
