@@ -22,8 +22,7 @@ import {
   Award,
 } from 'lucide-react';
 import { ExpenseChart } from '@/components/dashboard/expense-chart';
-import { OperationalCosts } from '@/components/dashboard/operational-costs';
-import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers, platformSettings, allDonations } from '@/lib/data';
+import { operationalCostsFund, jobOpenings, salaries, equipment, miscExpenses, teamMembers, platformSettings, allDonations, projects as allProjectsData } from '@/lib/data';
 import { getProjects } from '@/services/projects-service';
 import { ProjectCard } from '@/components/projects/project-card';
 import { Badge } from '@/components/ui/badge';
@@ -225,7 +224,7 @@ export default async function DashboardPage() {
             </div>
             <div className="lg:col-span-3">
                  <ScrollFadeIn asChild>
-                     <AllUpdatesFeed allProjects={projects} />
+                     <AllUpdatesFeed allProjects={allProjectsData} />
                  </ScrollFadeIn>
             </div>
         </div>
