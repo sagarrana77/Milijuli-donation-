@@ -40,10 +40,10 @@ export async function InKindDonationsSlider({ allProjects }: InKindDonationsSlid
   }
 
   return (
-    <Card className="bg-primary/5 border-primary/20">
+    <Card className="bg-blue-500/5 border-blue-500/20">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-            <Gift className="h-6 w-6 text-primary" />
+        <CardTitle className="flex items-center gap-2 text-blue-600">
+            <Gift className="h-6 w-6" />
             Featured In-Kind Donations
         </CardTitle>
         <CardDescription>A showcase of tangible support from our generous community.</CardDescription>
