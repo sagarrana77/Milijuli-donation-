@@ -6,7 +6,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft, X } from "lucide-react"
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useDeviceView, type ViewMode } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,7 +33,10 @@ type SidebarContext = {
   setOpen: (open: boolean) => void
   openMobile: boolean
   setOpenMobile: (open: boolean) => void
-  isMobile: boolean | undefined
+  isMobile: boolean
+  isTablet: boolean
+  viewMode: ViewMode
+  setViewMode: (mode: ViewMode) => void
   toggleSidebar: () => void
 }
 
@@ -68,7 +71,7 @@ const SidebarProvider = React.forwardRef<
     },
     ref
   ) => {
-    const isMobile = useIsMobile()
+    const { isMobile, isTablet, viewMode, setViewMode, isClient } = useDeviceView();
     const [openMobile, setOpenMobile] = React.useState(false)
 
     // This is the internal state of the sidebar.
@@ -124,13 +127,20 @@ const SidebarProvider = React.forwardRef<
         state,
         open,
         setOpen,
-        isMobile,
+        isMobile: isClient ? isMobile : true,
+        isTablet: isClient ? isTablet : false,
+        viewMode,
+        setViewMode,
         openMobile,
         setOpenMobile,
         toggleSidebar,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+      [state, open, setOpen, isMobile, isTablet, viewMode, setViewMode, openMobile, setOpenMobile, toggleSidebar, isClient]
     )
+
+    if (!isClient) {
+      return null;
+    }
 
     return (
       <SidebarContext.Provider value={contextValue}>
@@ -261,7 +271,7 @@ const SidebarTrigger = React.forwardRef<
         data-sidebar="trigger"
         variant="ghost"
         size="icon"
-        className={cn("h-7 w-7 lg:hidden", className)}
+        className={cn("h-7 w-7", className)}
         onClick={(event) => {
             onClick?.(event)
             toggleSidebar()

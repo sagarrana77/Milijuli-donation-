@@ -16,6 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarTrigger,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -34,7 +35,10 @@ import {
   Edit,
   ChevronDown,
   Sparkles,
-  Award
+  Award,
+  Monitor,
+  Tablet,
+  Smartphone
 } from 'lucide-react';
 import { platformSettings } from '@/lib/data';
 import { Button } from '../ui/button';
@@ -44,6 +48,11 @@ import { usePricingDialog } from '@/context/pricing-dialog-provider';
 import { useAuth } from '@/context/auth-provider';
 import Image from 'next/image';
 import { AdminNotificationBadge } from './admin-notification-badge';
+import { Label } from '../ui/label';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { cn } from '@/lib/utils';
+import { ViewMode } from '@/hooks/use-mobile';
+
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard, className: 'text-sky-500' },
@@ -66,7 +75,7 @@ const adminMenuItems = [
 
 export function MainSidebar() {
   const pathname = usePathname();
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, viewMode, setViewMode } = useSidebar();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/admin'));
   const { openDialog } = usePricingDialog();
   const { user } = useAuth();
@@ -83,6 +92,10 @@ export function MainSidebar() {
   
   const handleLinkClick = () => {
     setOpenMobile(false);
+  }
+  
+  const handleViewModeChange = (value: string) => {
+    setViewMode(value as ViewMode);
   }
 
   return (
@@ -217,6 +230,28 @@ export function MainSidebar() {
             </SidebarMenuItem>
           )}
         </SidebarMenu>
+         <SidebarSeparator />
+         <div className="p-2 space-y-2 group-data-[collapsible=icon]:hidden">
+            <Label className="text-xs text-muted-foreground">View Mode</Label>
+             <RadioGroup defaultValue={viewMode} onValueChange={handleViewModeChange} className="flex">
+                <div className="flex items-center">
+                    <RadioGroupItem value="auto" id="view-auto" className="sr-only" />
+                    <Label htmlFor="view-auto" className={cn("p-2 rounded-md cursor-pointer", viewMode === 'auto' && "bg-primary text-primary-foreground")}>Auto</Label>
+                </div>
+                <div className="flex items-center">
+                    <RadioGroupItem value="desktop" id="view-desktop" className="sr-only" />
+                    <Label htmlFor="view-desktop" className={cn("p-2 rounded-md cursor-pointer", viewMode === 'desktop' && "bg-primary text-primary-foreground")}><Monitor className="h-4 w-4" /></Label>
+                </div>
+                <div className="flex items-center">
+                    <RadioGroupItem value="tablet" id="view-tablet" className="sr-only" />
+                    <Label htmlFor="view-tablet" className={cn("p-2 rounded-md cursor-pointer", viewMode === 'tablet' && "bg-primary text-primary-foreground")}><Tablet className="h-4 w-4" /></Label>
+                </div>
+                 <div className="flex items-center">
+                    <RadioGroupItem value="mobile" id="view-mobile" className="sr-only" />
+                    <Label htmlFor="view-mobile" className={cn("p-2 rounded-md cursor-pointer", viewMode === 'mobile' && "bg-primary text-primary-foreground")}><Smartphone className="h-4 w-4" /></Label>
+                </div>
+            </RadioGroup>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
