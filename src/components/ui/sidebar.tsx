@@ -221,7 +221,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-            "peer hidden md:flex md:flex-col text-sidebar-foreground sticky top-0 h-screen",
+            "peer hidden lg:flex lg:flex-col text-sidebar-foreground sticky top-0 h-screen",
             "duration-200 w-[--sidebar-width] bg-sidebar transition-[width] ease-linear",
             "group-data-[collapsible=offcanvas]:w-0",
             "group-data-[side=right]:rotate-180",
@@ -261,7 +261,7 @@ const SidebarTrigger = React.forwardRef<
         data-sidebar="trigger"
         variant="ghost"
         size="icon"
-        className={cn("h-7 w-7 md:hidden", className)}
+        className={cn("h-7 w-7 lg:hidden", className)}
         onClick={(event) => {
             onClick?.(event)
             toggleSidebar()
@@ -280,7 +280,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-7 hidden md:flex transition-transform duration-300 ease-in-out group-data-[collapsible=icon]:mx-auto", state === 'collapsed' && "rotate-180", className)}
+      className={cn("h-7 w-7 hidden lg:flex transition-transform duration-300 ease-in-out group-data-[collapsible=icon]:mx-auto", state === 'collapsed' && "rotate-180", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
@@ -335,7 +335,7 @@ const SidebarInset = React.forwardRef<
       ref={ref}
       className={cn(
         "relative flex min-h-svh flex-1 flex-col bg-background",
-        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] lg:peer-data-[variant=inset]:m-2 lg:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 lg:peer-data-[variant=inset]:ml-0 lg:peer-data-[variant=inset]:rounded-xl lg:peer-data-[variant=inset]:shadow",
         className
       )}
       {...props}
@@ -474,7 +474,7 @@ const SidebarGroupAction = React.forwardRef<
       className={cn(
         "absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
         // Increases the hit area of the button on mobile.
-        "after:absolute after:-inset-2 after:md:hidden",
+        "after:absolute after:-inset-2 after:lg:hidden",
         "group-data-[collapsible=icon]:hidden",
         className
       )}
@@ -620,7 +620,7 @@ const SidebarMenuAction = React.forwardRef<
       className={cn(
         "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0",
         // Increases the hit area of the button on mobile.
-        "after:absolute after:-inset-2 after:md:hidden",
+        "after:absolute after:-inset-2 after:lg:hidden",
         "peer-data-[size=sm]/menu-button:top-1",
         "peer-data-[size=default]/menu-button:top-1.5",
         "peer-data-[size=lg]/menu-button:top-2.5",
