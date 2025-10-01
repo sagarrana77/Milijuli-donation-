@@ -3,7 +3,6 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '../ui/button';
 import { Bell, User, LogIn, LogOut, Award } from 'lucide-react';
 import {
@@ -133,7 +132,6 @@ export function Header() {
   return (
     <header className="sticky top-0 z-10 flex h-auto flex-col items-start gap-2 border-b bg-background/80 px-4 py-3 backdrop-blur-sm sm:px-6">
        <div className="flex w-full items-center gap-4">
-        <SidebarTrigger className="flex" />
         <div className="flex items-center gap-2">
             {platformSettings.appLogoUrl ? (
                 <Image src={platformSettings.appLogoUrl} alt={platformSettings.appName} width={32} height={32} className="h-8 w-8" />

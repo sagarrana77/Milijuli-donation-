@@ -16,6 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import {
@@ -97,6 +98,7 @@ export function MainSidebar() {
             )}
             <span className="text-lg font-semibold">{platformSettings.appName}</span>
           </div>
+          <SidebarTrigger className="flex" />
         </div>
       </SidebarHeader>
       <SidebarContent className="flex-1">
