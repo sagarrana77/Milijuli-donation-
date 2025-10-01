@@ -221,8 +221,8 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
 
     <div className="space-y-8">
         <ScrollFadeIn asChild>
-            <section className="space-y-4">
-                <div className="space-y-8">
+            <section className="space-y-8">
+                <div className="grid grid-cols-1 gap-8">
                     <div>
                         <div className="mb-4 flex items-center gap-3">
                             <TrendingUp className="h-6 w-6 text-primary" />
@@ -291,7 +291,6 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                 </Card>
             </ScrollFadeIn>
         </div>
-
         <ScrollFadeIn>
             <Card>
                 <CardHeader>
