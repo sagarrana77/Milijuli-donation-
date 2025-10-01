@@ -214,51 +214,49 @@ export default async function DashboardPage() {
       </ScrollFadeIn>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 space-y-8">
                  <ScrollFadeIn asChild>
-                    <AllUpdatesFeed allProjects={projects} />
+                    <section>
+                      <div className="mb-4 flex items-center gap-3">
+                          <TrendingUp className="h-6 w-6 text-primary" />
+                          <h2 className="text-2xl font-bold">Active Campaigns</h2>
+                      </div>
+                      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                          {runningProjects.slice(0, 2).map((project, index) => (
+                              <ScrollFadeIn key={project.id} delay={index * 100}>
+                                  <ProjectCard project={project} />
+                              </ScrollFadeIn>
+                          ))}
+                      </div>
+                    </section>
+                 </ScrollFadeIn>
+                 <ScrollFadeIn asChild>
+                    <section>
+                      <div className="mb-4 flex items-center gap-3">
+                          <CheckCircle className="h-6 w-6 text-green-600" />
+                          <h2 className="text-2xl font-bold">Successfully Funded</h2>
+                      </div>
+                      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                          {finishedProjects.slice(0, 2).map((project, index) => (
+                              <ScrollFadeIn key={project.id} delay={index * 100}>
+                                  <ProjectCard project={project} />
+                              </ScrollFadeIn>
+                          ))}
+                      </div>
+                    </section>
                  </ScrollFadeIn>
             </div>
-             <div className="lg:col-span-1">
+             <div className="lg:col-span-1 space-y-8">
                  <ScrollFadeIn asChild>
                     <section>
                         <HallOfFameDonors donations={allDonations} />
                     </section>
                 </ScrollFadeIn>
+                <ScrollFadeIn asChild>
+                  <AllUpdatesFeed allProjects={projects} />
+                </ScrollFadeIn>
             </div>
         </div>
-
-      <ScrollFadeIn asChild>
-        <section>
-            <div className="mb-4 flex items-center gap-3">
-            <TrendingUp className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold">Active Campaigns</h2>
-            </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {runningProjects.map((project, index) => (
-                <ScrollFadeIn key={project.id} delay={index * 100}>
-                    <ProjectCard project={project} />
-                </ScrollFadeIn>
-            ))}
-            </div>
-        </section>
-      </ScrollFadeIn>
-      
-      <ScrollFadeIn asChild>
-        <section>
-            <div className="mb-4 flex items-center gap-3">
-                <CheckCircle className="h-6 w-6 text-green-600" />
-                <h2 className="text-2xl font-bold">Successfully Funded</h2>
-            </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {finishedProjects.map((project, index) => (
-                <ScrollFadeIn key={project.id} delay={index * 100}>
-                    <ProjectCard project={project} />
-                </ScrollFadeIn>
-            ))}
-            </div>
-        </section>
-      </ScrollFadeIn>
 
       <ScrollFadeIn asChild>
         <section>
