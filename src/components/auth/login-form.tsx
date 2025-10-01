@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -191,6 +190,18 @@ export function LoginForm() {
                         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Log In
                     </Button>
+                     <div className="relative pt-4">
+                        <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                        </div>
+                    </div>
+                    <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
+                        <GoogleIcon className="mr-2 h-4 w-4" />
+                        Google
+                    </Button>
                     </form>
                 </Form>
                 </TabsContent>
@@ -240,30 +251,24 @@ export function LoginForm() {
                         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Create Account
                     </Button>
+                     <div className="relative pt-4">
+                        <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                        </div>
+                    </div>
+                    <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
+                        <GoogleIcon className="mr-2 h-4 w-4" />
+                        Google
+                    </Button>
                     </form>
                 </Form>
                 </TabsContent>
             </Tabs>
             </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-            <div className="relative w-full">
-                <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-                </div>
-            </div>
-            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
-                <GoogleIcon className="mr-2 h-4 w-4" />
-                Google
-            </Button>
-            </CardFooter>
       </div>
     </div>
   );
 }
-
-    
-
-    
