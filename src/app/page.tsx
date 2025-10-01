@@ -1,5 +1,4 @@
 
-
 import {
   Card,
   CardContent,
@@ -214,10 +213,10 @@ export default async function DashboardPage() {
         <InKindDonationsSlider allProjects={projects} />
       </ScrollFadeIn>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
                  <ScrollFadeIn asChild>
-                     <AllUpdatesFeed allProjects={projects} />
+                    <AllUpdatesFeed allProjects={projects} />
                  </ScrollFadeIn>
             </div>
              <div className="lg:col-span-1">

@@ -1,6 +1,5 @@
 
-
-'use server';
+'use client';
 
 import {
   Card,
@@ -10,33 +9,42 @@ import {
   CardTitle,
   CardFooter
 } from '@/components/ui/card';
-import type { Project } from '@/lib/data';
+import type { Project, PhysicalDonation, User } from '@/lib/data';
 import { Button } from '../ui/button';
 import { ArrowRight, Gift } from 'lucide-react';
-import { getInKindDonations, getUsers } from '@/services/donations-service';
 import { InKindDonationsSliderClient } from './in-kind-donations-slider-client';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { getInKindDonations, getUsers } from '@/services/donations-service';
 
 interface InKindDonationsSliderProps {
     allProjects: Project[];
 }
 
-export async function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProps) {
-    let physicalDonations = [];
-    let users = [];
+export function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProps) {
+    const [physicalDonations, setPhysicalDonations] = useState<PhysicalDonation[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(true);
     
-    try {
-        [physicalDonations, users] = await Promise.all([getInKindDonations(), getUsers()]);
-    } catch (error) {
-        console.error("Failed to fetch data for In-Kind Donations Slider:", error);
-        // Return null or an empty state to prevent crashing the page
-        return null;
-    }
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const [pd, u] = await Promise.all([getInKindDonations(), getUsers()]);
+                setPhysicalDonations(pd);
+                setUsers(u);
+            } catch (error) {
+                console.error("Failed to fetch data for In-Kind Donations Slider:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, []);
   
   const featuredDonations = physicalDonations.filter(d => d.status === 'Completed' && d.featured);
 
-  if (featuredDonations.length === 0) {
-    return null; // Don't show the slider if there are no featured items
+  if (loading || featuredDonations.length === 0) {
+    return null; // Don't show the slider if there are no featured items or still loading
   }
 
   return (
