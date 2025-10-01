@@ -30,6 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ProjectCard } from '../projects/project-card';
 import { HallOfFameDonors } from '../projects/hall-of-fame-donors';
 import { Badge } from '../ui/badge';
+import { ExpenseChart } from './expense-chart';
 
 
 interface DashboardStatsProps {
@@ -221,30 +222,32 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
     <div className="space-y-8">
         <ScrollFadeIn asChild>
             <section className="space-y-4">
-                <div>
-                    <div className="mb-4 flex items-center gap-3">
-                        <TrendingUp className="h-6 w-6 text-primary" />
-                        <h2 className="text-2xl font-bold">Active Campaigns</h2>
+                <div className="space-y-8">
+                    <div>
+                        <div className="mb-4 flex items-center gap-3">
+                            <TrendingUp className="h-6 w-6 text-primary" />
+                            <h2 className="text-2xl font-bold">Active Campaigns</h2>
+                        </div>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            {runningProjects.slice(0, 2).map((project, index) => (
+                                <ScrollFadeIn key={project.id} delay={index * 100}>
+                                    <ProjectCard project={project} />
+                                </ScrollFadeIn>
+                            ))}
+                        </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        {runningProjects.slice(0, 2).map((project, index) => (
-                            <ScrollFadeIn key={project.id} delay={index * 100}>
-                                <ProjectCard project={project} />
-                            </ScrollFadeIn>
-                        ))}
-                    </div>
-                </div>
-                 <div>
-                    <div className="mb-4 flex items-center gap-3">
-                        <CheckCircle className="h-6 w-6 text-green-600" />
-                        <h2 className="text-2xl font-bold">Successfully Funded</h2>
-                    </div>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        {finishedProjects.slice(0, 2).map((project, index) => (
-                            <ScrollFadeIn key={project.id} delay={index * 100}>
-                                <ProjectCard project={project} />
-                            </ScrollFadeIn>
-                        ))}
+                     <div>
+                        <div className="mb-4 flex items-center gap-3">
+                            <CheckCircle className="h-6 w-6 text-green-600" />
+                            <h2 className="text-2xl font-bold">Successfully Funded</h2>
+                        </div>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            {finishedProjects.slice(0, 2).map((project, index) => (
+                                <ScrollFadeIn key={project.id} delay={index * 100}>
+                                    <ProjectCard project={project} />
+                                </ScrollFadeIn>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -288,6 +291,28 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                 </Card>
             </ScrollFadeIn>
         </div>
+
+        <ScrollFadeIn>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Expense Breakdown</CardTitle>
+                    <CardDescription>
+                    How funds are being allocated across categories.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center">
+                    <ExpenseChart data={spendingBreakdown} />
+                    <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
+                    {spendingBreakdown.map((entry, index) => (
+                        <div key={entry.name} className="flex items-center gap-2 rounded-full border bg-muted px-3 py-1">
+                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(var(--chart-${index + 1}))` }} />
+                        <span className="font-medium">{entry.name}</span>
+                        </div>
+                    ))}
+                    </div>
+                </CardContent>
+            </Card>
+        </ScrollFadeIn>
     </div>
     </>
   );
