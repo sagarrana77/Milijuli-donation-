@@ -261,28 +261,28 @@ export default async function DashboardPage() {
                         </div>
                         <Button asChild variant="outline">
                             <Link href="/careers">
-                                View All Openings <ArrowRight className="ml-2 h-4 w-4" />
+                                View All <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                         </Button>
                         </div>
-                        <div className="grid grid-cols-1 gap-6">
+                        <div className="space-y-4">
                         {featuredJobs.map((job, index) => (
                             <ScrollFadeIn key={job.id} delay={index * 100}>
-                            <Card className="flex flex-col">
-                                <CardHeader>
-                                <CardTitle>{job.title}</CardTitle>
-                                <CardDescription>{job.location}</CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex-grow">
-                                <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
-                                    {job.type}
-                                </Badge>
-                                </CardContent>
-                                <CardFooter>
-                                <Button asChild variant="default" className="w-full">
+                            <Card>
+                                <CardContent className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div>
+                                    <h3 className="font-semibold">{job.title}</h3>
+                                    <div className="text-sm text-muted-foreground flex items-center gap-4">
+                                        <span>{job.location}</span>
+                                        <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'}>
+                                            {job.type}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                <Button asChild variant="secondary" size="sm" className="w-full md:w-auto">
                                     <Link href="/careers">Learn More</Link>
                                 </Button>
-                                </CardFooter>
+                                </CardContent>
                             </Card>
                             </ScrollFadeIn>
                         ))}
@@ -322,3 +322,5 @@ export default async function DashboardPage() {
     </div>
   );
 }
+
+    
