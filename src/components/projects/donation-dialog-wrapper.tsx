@@ -85,8 +85,10 @@ export function DonationDialogWrapper({
             const newAmount = Math.floor(Math.random() * 150) + 20;
             const donor = users.find(u => u.id === 'user-anonymous')!;
             
+            if (!donor) return;
+
             const newDonationUpdate: Update = {
-              id: `update-donation-${Date.now()}`,
+              id: `rt-donation-${Date.now()}`,
               title: `New Anonymous Donation!`,
               description: `${donor.name} generously donated Rs.${newAmount.toLocaleString()}.`,
               date: new Date().toISOString(),
