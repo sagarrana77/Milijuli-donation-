@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -51,9 +50,10 @@ import {
   Trash2,
   AlertTriangle,
   DollarSign,
+  ArrowLeftRight,
 } from 'lucide-react';
-import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund, allDonations, getImageUrl } from '@/lib/data';
-import type { PhysicalDonation, Project, User, Donation } from '@/lib/data';
+import { projects, dashboardStats, miscExpenses, salaries, equipment, socialLinks, physicalDonations, paymentGateways, platformSettings, users, operationalCostsFund, allDonations, getImageUrl, fundTransfers, currentUser } from '@/lib/data';
+import type { PhysicalDonation, Project, User, Donation, FundTransfer } from '@/lib/data';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -86,6 +86,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 
 const ITEMS_PER_PAGE = 5;
 const MONETARY_DONATIONS_PER_PAGE = 10;
+const TRANSFERS_PER_PAGE = 10;
 
 export default function AdminDashboardPage() {
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
@@ -120,6 +121,7 @@ export default function AdminDashboardPage() {
   const [inKindDonationPage, setInKindDonationPage] = useState(1);
   const [monetaryDonationPage, setMonetaryDonationPage] = useState(1);
   const [userPage, setUserPage] = useState(1);
+  const [transferPage, setTransferPage] = useState(1);
 
   const paginatedProjects = projects.slice(
     (projectPage - 1) * ITEMS_PER_PAGE,
@@ -146,6 +148,13 @@ export default function AdminDashboardPage() {
     userPage * ITEMS_PER_PAGE
   );
   const totalUserPages = Math.ceil(nonAdminUsers.length / ITEMS_PER_PAGE);
+
+  const sortedTransfers = fundTransfers.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const paginatedTransfers = sortedTransfers.slice(
+    (transferPage - 1) * TRANSFERS_PER_PAGE,
+    transferPage * TRANSFERS_PER_PAGE
+  );
+  const totalTransferPages = Math.ceil(fundTransfers.length / TRANSFERS_PER_PAGE);
 
 
   const handleAddSalary = () => {
@@ -382,6 +391,17 @@ export default function AdminDashboardPage() {
         };
         toProject.updates.unshift(toUpdate);
     }
+
+    const newTransfer: FundTransfer = {
+        id: `transfer-${Date.now()}`,
+        date: new Date().toISOString(),
+        amount: data.amount,
+        from: data.from,
+        to: data.to,
+        reason: data.reason,
+        adminId: currentUser?.id || 'unknown-admin',
+      };
+      fundTransfers.unshift(newTransfer);
 
     toast({
         title: 'Funds Transferred',
@@ -723,10 +743,11 @@ export default function AdminDashboardPage() {
       
       <Tabs defaultValue="projects">
         <TooltipProvider>
-            <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 lg:grid-cols-7">
+            <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 lg:grid-cols-8">
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="projects"><List className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Projects</span></TabsTrigger></TooltipTrigger><TooltipContent>Projects</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="donations"><DollarSign className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Monetary Donations</span></TabsTrigger></TooltipTrigger><TooltipContent>Monetary Donations</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="in-kind"><HandCoins className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">In-Kind</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind Donations</TooltipContent></Tooltip>
+                <Tooltip><TooltipTrigger asChild><TabsTrigger value="transfers"><ArrowLeftRight className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Transfers</span></TabsTrigger></TooltipTrigger><TooltipContent>Fund Transfers</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="operational-costs"><Briefcase className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Operational Costs</span></TabsTrigger></TooltipTrigger><TooltipContent>Operational Costs</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="user-management"><Users className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Users</span></TabsTrigger></TooltipTrigger><TooltipContent>User Management</TooltipContent></Tooltip>
                 <Tooltip><TooltipTrigger asChild><TabsTrigger value="ai-tools"><Wand2 className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">AI Tools</span></TabsTrigger></TooltipTrigger><TooltipContent>AI Tools</TooltipContent></Tooltip>
@@ -998,6 +1019,54 @@ export default function AdminDashboardPage() {
                          </TabsContent>
                     </Tabs>
                 </CardContent>
+            </Card>
+        </TabsContent>
+        <TabsContent value="transfers" className="mt-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Fund Transfer Log</CardTitle>
+                    <CardDescription>
+                        A complete record of all internal fund transfers.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>From</TableHead>
+                                    <TableHead>To</TableHead>
+                                    <TableHead className="text-right">Amount (NPR)</TableHead>
+                                    <TableHead>Reason</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {paginatedTransfers.map(transfer => (
+                                    <TableRow key={transfer.id}>
+                                        <TableCell>{format(new Date(transfer.date), 'PPp')}</TableCell>
+                                        <TableCell>{transfer.from}</TableCell>
+                                        <TableCell>{transfer.to}</TableCell>
+                                        <TableCell className="text-right font-semibold">Rs.{transfer.amount.toLocaleString()}</TableCell>
+                                        <TableCell className="max-w-xs truncate" title={transfer.reason}>{transfer.reason}</TableCell>
+                                    </TableRow>
+                                ))}
+                                {paginatedTransfers.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="text-center text-muted-foreground">
+                                            No fund transfers have been recorded yet.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </CardContent>
+                {totalTransferPages > 1 && (
+                    <CardFooter>
+                        <Pagination currentPage={transferPage} totalPages={totalTransferPages} onPageChange={setTransferPage} />
+                    </CardFooter>
+                )}
             </Card>
         </TabsContent>
         <TabsContent value="operational-costs" className="mt-6">

@@ -1,5 +1,3 @@
-
-
 import {
   PlaceHolderImages,
   salaries,
@@ -20,6 +18,7 @@ import {
   users,
   currentUser,
   getImageUrl,
+  fundTransfers,
 } from './mock-data';
 
 export type {
@@ -36,6 +35,7 @@ export type {
   TeamMember,
   JobOpening,
   FAQ,
+  FundTransfer,
 } from './mock-data';
 
 export {
@@ -57,4 +57,5 @@ export {
   users,
   currentUser,
   getImageUrl,
+  fundTransfers,
 };

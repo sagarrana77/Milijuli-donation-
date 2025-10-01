@@ -1,4 +1,3 @@
-
 import { PlaceHolderImages } from './placeholder-images';
 
 export function getImageUrl(id: string) {
@@ -692,6 +691,18 @@ export let platformSettings = {
   showOperationalCostsTarget: false, // Default to false as requested
   aiSummaryEnabled: true,
 };
+
+export type FundTransfer = {
+    id: string;
+    date: string;
+    amount: number;
+    from: string;
+    to: string;
+    reason: string;
+    adminId: string; // To track which admin initiated the transfer
+};
+
+export let fundTransfers: FundTransfer[] = [];
 
 export let users: User[] = [
     { id: 'admin-user', uid: 'admin-user', name: 'Admin User', email: 'admin@example.com', avatarUrl: getImageUrl('avatar-alex-johnson'), profileUrl: '/profile/admin-user', bio: 'Application administrator.', hasPaymentMethod: true, isAdmin: true, canCreateCampaigns: true, friends: [], aiCredits: 9999, isProMember: true, isOnline: true },
