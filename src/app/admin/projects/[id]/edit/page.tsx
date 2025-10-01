@@ -87,6 +87,15 @@ const updateSchema = z.object({
   transferDetails: z.object({ amount: z.number(), fromProject: z.string().optional(), toProject: z.string().optional() }).optional(),
 });
 
+const expenseSchema = z.object({
+  id: z.string(),
+  item: z.string().min(1, "Item name is required."),
+  amount: z.coerce.number().positive(),
+  date: z.date(),
+  receiptUrl: z.string().url("A valid receipt URL is required."),
+  receiptHint: z.string().min(1, "Receipt hint is required."),
+});
+
 const projectSchema = z.object({
   name: z.string().min(5, 'Project name must be at least 5 characters.'),
   organization: z.string().min(3, 'Organization name is required.'),
@@ -98,6 +107,7 @@ const projectSchema = z.object({
   verified: z.boolean(),
   wishlist: z.array(wishlistItemSchema),
   updates: z.array(updateSchema),
+  expenses: z.array(expenseSchema),
   metaDescription: z.string().optional(),
   keywords: z.array(z.string()).optional(),
 });
@@ -129,7 +139,8 @@ export default function EditProjectPage() {
     defaultValues: project ? {
       ...project,
       wishlist: project.wishlist?.map(item => ({...item, allowInKind: item.allowInKind || false})) || [],
-      updates: project.updates?.map(update => ({...update, date: new Date(update.date), pinned: update.pinned || false})) || [],
+      updates: project.updates?.map(update => ({...update, date: new Date(update.date)})) || [],
+      expenses: project.expenses?.map(expense => ({...expense, date: new Date(expense.date)})) || [],
       metaDescription: project.metaDescription || '',
       keywords: project.keywords || [],
     } : undefined,
@@ -144,6 +155,11 @@ export default function EditProjectPage() {
     control: form.control,
     name: "updates",
   });
+  
+  const { fields: expenseFields, append: appendExpense, remove: removeExpense } = useFieldArray({
+    control: form.control,
+    name: "expenses",
+  });
 
   function onSubmit(data: ProjectFormData) {
     const projectIndex = projects.findIndex(p => p.id === projectId);
@@ -151,7 +167,8 @@ export default function EditProjectPage() {
         const updatedProjectData = {
           ...projects[projectIndex],
           ...data,
-          updates: data.updates.map(u => ({ ...u, date: (u.date as Date).toISOString() }))
+          updates: data.updates.map(u => ({ ...u, date: (u.date as Date).toISOString() })),
+          expenses: data.expenses.map(e => ({ ...e, date: (e.date as Date).toISOString() })),
         };
         projects[projectIndex] = updatedProjectData as Project;
     }
@@ -240,10 +257,11 @@ export default function EditProjectPage() {
 
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <Tabs defaultValue="updates">
-                <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="details">Project Details</TabsTrigger>
+            <Tabs defaultValue="details">
+                <TabsList className="grid w-full grid-cols-5">
+                    <TabsTrigger value="details">Details</TabsTrigger>
                     <TabsTrigger value="updates">Updates</TabsTrigger>
+                    <TabsTrigger value="spendings">Spendings</TabsTrigger>
                     <TabsTrigger value="discussion">Discussion</TabsTrigger>
                     <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                 </TabsList>
@@ -455,6 +473,94 @@ export default function EditProjectPage() {
                                     </FormItem>
                                 )}
                                 />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="spendings" className="mt-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Project Spendings</CardTitle>
+                            <CardDescription>Log and manage expenses for this project.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {expenseFields.map((item, index) => (
+                                <div key={item.id} className="space-y-4 rounded-md border p-4 relative">
+                                    <FormField
+                                        control={form.control}
+                                        name={`expenses.${index}.item`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Item/Service</FormLabel>
+                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name={`expenses.${index}.amount`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Amount (NPR)</FormLabel>
+                                                    <FormControl><Input type="number" {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`expenses.${index}.date`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Date</FormLabel>
+                                                    <FormControl>
+                                                        <Input 
+                                                            type="date" 
+                                                            value={format(new Date(field.value), 'yyyy-MM-dd')}
+                                                            onChange={(e) => field.onChange(new Date(e.target.value))}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <FormField
+                                        control={form.control}
+                                        name={`expenses.${index}.receiptUrl`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Receipt Image URL</FormLabel>
+                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name={`expenses.${index}.receiptHint`}
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Receipt Image Hint</FormLabel>
+                                                <FormControl><Input {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <Button size="sm" variant="destructive" onClick={() => removeExpense(index)} className="absolute top-2 right-2">
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => appendExpense({ id: `exp-${Date.now()}`, item: '', amount: 0, date: new Date(), receiptUrl: '', receiptHint: '' })}
+                            >
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add Expense
+                            </Button>
                         </CardContent>
                     </Card>
                 </TabsContent>

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Image from 'next/image';
@@ -20,7 +21,7 @@ import { PaymentGateways } from '@/components/projects/payment-gateways';
 import { CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { usePhotoDialog } from '@/context/image-dialog-provider';
 import { InKindDonationsTab } from './in-kind-donations-tab';
-import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins, GalleryHorizontal, MessageSquare, History } from 'lucide-react';
+import { ArrowRight, Gift, ShoppingCart, Wand2, Loader2, HandCoins, GalleryHorizontal, MessageSquare, History, Receipt } from 'lucide-react';
 import { useState } from 'react';
 import { summarizeProject, SummarizeProjectOutput } from '@/ai/flows/summarize-project';
 import { useToast } from '@/hooks/use-toast';
@@ -122,12 +123,13 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
             <ScrollFadeIn asChild delay={200}>
             <TooltipProvider>
             <Tabs defaultValue="updates" className="mt-8 px-6 pb-6">
-                <TabsList className="grid w-full grid-cols-6">
+                <TabsList className="grid w-full grid-cols-7">
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="updates"><History className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Updates</span></TabsTrigger></TooltipTrigger><TooltipContent>Updates</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="spendings"><Receipt className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Spendings</span></TabsTrigger></TooltipTrigger><TooltipContent>Spendings</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="wishlist"><ShoppingCart className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Wishlist</span></TabsTrigger></TooltipTrigger><TooltipContent>Wishlist</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="album"><GalleryHorizontal className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Album</span></TabsTrigger></TooltipTrigger><TooltipContent>Album</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="donors"><HandCoins className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Donors</span></TabsTrigger></TooltipTrigger><TooltipContent>Donors</TooltipContent></Tooltip>
-                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="in-kind"><Gift className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">In-Kind</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="in-kind"><Gift className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">In-Kind</span></TabsTrigger></TooltipTrigger><TooltipContent>In-Kind Donations</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="discussion"><MessageSquare className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Discussion</span></TabsTrigger></TooltipTrigger><TooltipContent>Discussion</TooltipContent></Tooltip>
                 </TabsList>
                 <TabsContent value="updates" className="mt-4">
@@ -248,6 +250,44 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
                                 />
                             </CardFooter>
                         )}
+                    </Card>
+                </TabsContent>
+                <TabsContent value="spendings" className="mt-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Project Spendings</CardTitle>
+                            <CardDescription>A transparent log of how funds for this project have been used.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <table className="w-full">
+                                <thead className="text-left">
+                                    <tr className="border-b">
+                                        <th className="p-2">Item/Service</th>
+                                        <th className="p-2">Date</th>
+                                        <th className="p-2 text-right">Amount</th>
+                                        <th className="p-2 text-center">Receipt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {project.expenses && project.expenses.length > 0 ? (
+                                        project.expenses.map(expense => (
+                                            <tr key={expense.id} className="border-b">
+                                                <td className="p-2 font-medium">{expense.item}</td>
+                                                <td className="p-2 text-muted-foreground">{isClient ? format(new Date(expense.date), 'PPP') : <Skeleton className="h-4 w-24" />}</td>
+                                                <td className="p-2 text-right font-semibold">Rs.{expense.amount.toLocaleString()}</td>
+                                                <td className="p-2 text-center">
+                                                    <Button variant="outline" size="sm" onClick={() => openPhoto({ imageUrl: expense.receiptUrl, title: `Receipt for ${expense.item}`, project })}>View</Button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={4} className="p-8 text-center text-muted-foreground">No expenses have been logged for this project yet.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </CardContent>
                     </Card>
                 </TabsContent>
                 <TabsContent value="wishlist" className="mt-4">

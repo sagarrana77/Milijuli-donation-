@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { PlusCircle, Trash2, Save, CreditCard, Wand2, Loader2, Copy, Sparkles } from 'lucide-react';
+import { PlusCircle, Trash2, Save, CreditCard, Wand2, Loader2, Copy, Sparkles, Receipt } from 'lucide-react';
 import Link from 'next/link';
 import { projects, type Project, currentUser, paymentGateways as defaultGateways } from '@/lib/data';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -36,6 +36,7 @@ import { generateSeoSuggestions } from '@/ai/flows/generate-seo-suggestions';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { usePricingDialog } from '@/context/pricing-dialog-provider';
+import { format } from 'date-fns';
 
 const wishlistItemSchema = z.object({
   id: z.string(),
@@ -54,8 +55,17 @@ const updateSchema = z.object({
   title: z.string().min(1, "Title is required."),
   description: z.string().min(1, "Description is required."),
   date: z.date(),
-  imageUrl: z.string().url("Image URL is required."),
-  imageHint: z.string().min(1, "Image hint is required."),
+  imageUrl: z.string().url("Image URL is required.").optional().or(z.literal('')),
+  imageHint: z.string().min(1, "Image hint is required.").optional(),
+});
+
+const expenseSchema = z.object({
+    id: z.string(),
+    item: z.string().min(1, "Item name is required."),
+    amount: z.coerce.number().positive("Amount must be a positive number."),
+    date: z.date(),
+    receiptUrl: z.string().url("A valid receipt URL is required."),
+    receiptHint: z.string().min(1, "A receipt hint is required."),
 });
 
 const gatewaySchema = z.object({
@@ -76,6 +86,7 @@ const projectSchema = z.object({
   verified: z.boolean(),
   wishlist: z.array(wishlistItemSchema),
   updates: z.array(updateSchema),
+  expenses: z.array(expenseSchema).optional(),
   gateways: z.array(gatewaySchema).optional(),
   metaDescription: z.string().optional(),
   keywords: z.array(z.string()).optional(),
@@ -131,6 +142,7 @@ export default function EditUserCampaignPage() {
       verified: project.verified, // Ensure verified is part of the form
       wishlist: project.wishlist.map(item => ({...item, allowInKind: item.allowInKind || false})),
       updates: project.updates.map(update => ({...update, date: new Date(update.date)})),
+      expenses: project.expenses?.map(e => ({...e, date: new Date(e.date)})) || [],
       gateways: project.gateways && project.gateways.length > 0 ? project.gateways : defaultGateways.map(g => ({...g, enabled: false, qrValue: '', generatedQr: ''})),
       metaDescription: project.metaDescription || '',
       keywords: project.keywords || [],
@@ -146,6 +158,11 @@ export default function EditUserCampaignPage() {
     control: form.control,
     name: "updates",
   });
+
+  const { fields: expenseFields, append: appendExpense, remove: removeExpense } = useFieldArray({
+    control: form.control,
+    name: "expenses",
+  });
   
   const { fields: gatewayFields } = useFieldArray({
     control: form.control,
@@ -156,7 +173,13 @@ export default function EditUserCampaignPage() {
   function onSubmit(data: ProjectFormData) {
     const projectIndex = projects.findIndex(p => p.id === projectId);
     if (projectIndex !== -1) {
-        projects[projectIndex] = { ...projects[projectIndex], ...data };
+        const updatedProject = { 
+            ...projects[projectIndex], 
+            ...data,
+            updates: data.updates.map(u => ({...u, date: u.date.toISOString()})),
+            expenses: data.expenses?.map(e => ({...e, date: e.date.toISOString()}))
+        };
+        projects[projectIndex] = updatedProject as Project;
     }
     
     toast({
@@ -166,6 +189,27 @@ export default function EditUserCampaignPage() {
     router.push('/my-campaigns');
   }
 
+  const handleAddExpense = () => {
+    const newExpense = {
+        id: `exp-${Date.now()}`,
+        item: "New Expense",
+        amount: 0,
+        date: new Date(),
+        receiptUrl: '',
+        receiptHint: '',
+    };
+    appendExpense(newExpense);
+
+    // Also create a public update
+    appendUpdate({
+        id: `update-${Date.now()}`,
+        title: `Funds Utilized: ${newExpense.item}`,
+        description: `An amount of Rs. ${newExpense.amount} was spent on "${newExpense.item}". The receipt is available for verification.`,
+        date: newExpense.date,
+        isExpense: true,
+    } as any);
+  };
+  
   const handleGenerateQr = (index: number) => {
     const gateways = form.getValues('gateways');
     if(gateways) {
@@ -239,10 +283,11 @@ export default function EditUserCampaignPage() {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Tabs defaultValue="details">
-                <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="details">Campaign Details</TabsTrigger>
-                    <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-5">
+                    <TabsTrigger value="details">Details</TabsTrigger>
                     <TabsTrigger value="updates">Updates</TabsTrigger>
+                    <TabsTrigger value="spendings">Spendings</TabsTrigger>
+                    <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
                     <TabsTrigger value="gateways">Payments</TabsTrigger>
                 </TabsList>
                 <TabsContent value="details" className="space-y-8 mt-6">
@@ -465,6 +510,98 @@ export default function EditUserCampaignPage() {
                     )}
                 </TabsContent>
 
+                <TabsContent value="spendings" className="mt-6">
+                    <Card>
+                        <CardHeader>
+                        <CardTitle>Log Your Spendings</CardTitle>
+                        <CardDescription>
+                            Keep your donors informed by logging how you use the funds. Each entry will create a public update.
+                        </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                        {expenseFields.map((item, index) => (
+                            <div key={item.id} className="space-y-4 rounded-md border p-4 relative">
+                            <FormField
+                                control={form.control}
+                                name={`expenses.${index}.item`}
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Item/Service Purchased</FormLabel>
+                                    <FormControl><Input placeholder="e.g., Textbooks for 50 students" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <FormField
+                                control={form.control}
+                                name={`expenses.${index}.amount`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Amount (NPR)</FormLabel>
+                                    <FormControl><Input type="number" {...field} /></FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                <FormField
+                                control={form.control}
+                                name={`expenses.${index}.date`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Date of Purchase</FormLabel>
+                                    <FormControl>
+                                        <Input 
+                                            type="date" 
+                                            value={format(field.value, 'yyyy-MM-dd')}
+                                            onChange={(e) => field.onChange(new Date(e.target.value))}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                            </div>
+                            <FormField
+                                control={form.control}
+                                name={`expenses.${index}.receiptUrl`}
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Receipt Image URL</FormLabel>
+                                    <FormControl><Input placeholder="https://your-image-host.com/receipt.jpg" {...field} /></FormControl>
+                                    <FormDescription>Upload your receipt to an image host (like imgur.com) and paste the URL here.</FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name={`expenses.${index}.receiptHint`}
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Receipt AI Hint</FormLabel>
+                                    <FormControl><Input placeholder="e.g., store receipt" {...field} /></FormControl>
+                                    <FormDescription>A few words describing the image for AI.</FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                            <Button size="sm" variant="destructive" onClick={() => removeExpense(index)} className="absolute top-2 right-2">
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                            </div>
+                        ))}
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleAddExpense}
+                        >
+                            <PlusCircle className="mr-2 h-4 w-4" /> Add New Spending
+                        </Button>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
                 <TabsContent value="wishlist" className="mt-6">
                     <Card>
                         <CardHeader>
@@ -583,7 +720,7 @@ export default function EditUserCampaignPage() {
                             <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => appendWishlistItem({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false })}
+                                onClick={() => appendWishlistItem({ id: `wish-${Date.now()}`, name: '', description: '', costPerItem: 0, quantityNeeded: 1, quantityDonated: 0, imageUrl: '', allowInKind: false, imageHint: '' })}
                             >
                                 <PlusCircle className="mr-2 h-4 w-4" /> Add Wishlist Item
                             </Button>
