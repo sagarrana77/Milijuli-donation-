@@ -29,6 +29,7 @@ import { useDonationContext } from './donation-dialog-wrapper';
 import { allDonations, users } from '@/lib/data';
 import { useNotifications } from '@/context/notification-provider';
 import { currentUser } from '@/lib/data';
+import { useToast } from '@/hooks/use-toast';
 
 interface DonationDialogProps {
   isOpen: boolean;
@@ -76,6 +77,7 @@ export function DonationDialog({
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [currency, setCurrency] = useState<'NPR' | 'USD' | 'EUR'>('NPR');
   const { addNotification } = useNotifications();
+  const { toast } = useToast();
   
   const context = useDonationContext();
 
@@ -130,12 +132,23 @@ export function DonationDialog({
     // Trigger onDonate callback from context (which might do optimistic UI updates)
     onDonate(nprAmount, isAnonymous, paymentMethod);
     
+    // Show a toast to the donor
+    toast({
+      title: 'Thank You for Your Donation!',
+      description: `Your pledge of Rs.${nprAmount.toLocaleString()} is now pending confirmation.`,
+    });
+    
     // Add a "pending" notification for the user
     addNotification({
         title: 'Donation Pending',
         description: `Your donation of Rs.${nprAmount.toLocaleString()} to "${projectName}" is being processed.`,
         href: `/projects/${context?.project.id}`,
     });
+    
+    // In a real app, you would also send a notification to the admin.
+    // For this demo, we'll simulate it with a console log.
+    console.log(`ADMIN NOTIFICATION: New pending donation of Rs.${nprAmount.toLocaleString()} from ${donor.name} for ${projectName}.`);
+
 
     onOpenChange(false); // Close dialog
     
