@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -51,9 +52,6 @@ export default function ProjectsPage() {
         </div>
         
         <div className="flex flex-wrap items-center justify-center gap-2">
-            <Button variant={'default'} onClick={() => router.push(`/projects`)}>
-                All
-            </Button>
             {allCategories.map(cat => (
                  <Button key={cat} variant={'outline'} onClick={() => router.push(`/projects/category/${cat}`)}>
                     {cat}
