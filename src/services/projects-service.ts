@@ -30,6 +30,7 @@ export async function getProjects(): Promise<Project[]> {
         raisedAmount: 4250000,
         donors: 1245,
         verified: true,
+        showExpenses: true,
         ownerId: 'milijuli-sewa-admin',
         updates: [
           {
@@ -117,6 +118,7 @@ export async function getProjects(): Promise<Project[]> {
         raisedAmount: 3600000,
         donors: 850,
         verified: true,
+        showExpenses: true,
         ownerId: 'milijuli-sewa-admin',
         updates: [
           { id: 'update-cw-1', title: 'First Well Complete!', description: 'The first of ten wells has been successfully installed in the village of Ramgiri. The community now has access to clean, safe drinking water for the first time.', date: '2023-11-20T10:00:00Z', comments: [] }
@@ -144,6 +146,7 @@ export async function getProjects(): Promise<Project[]> {
         raisedAmount: 2100000,
         donors: 620,
         verified: true,
+        showExpenses: true,
         ownerId: 'milijuli-sewa-admin',
         updates: [],
         expenses: [],
@@ -166,6 +169,7 @@ export async function getProjects(): Promise<Project[]> {
         raisedAmount: 1850000,
         donors: 350,
         verified: true,
+        showExpenses: true,
         ownerId: 'milijuli-sewa-admin',
         updates: [],
         expenses: [],
@@ -186,6 +190,7 @@ export async function getProjects(): Promise<Project[]> {
         raisedAmount: 25000,
         donors: 15,
         verified: false,
+        showExpenses: true,
         ownerId: 'user-raj-patel',
         updates: [
           { id: 'update-art-1', title: 'First Workshop a Success!', description: 'We held our first art workshop last weekend, and it was a huge success! Over 30 children attended and created some amazing artwork. Thank you to everyone who has supported us so far!', date: '2023-11-25T10:00:00Z', imageUrl: getImageUrl('update-art-class'), imageHint: 'child painting', comments: [] }

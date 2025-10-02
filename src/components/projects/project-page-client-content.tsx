@@ -126,7 +126,9 @@ export function ProjectPageClientContent({ project }: ProjectPageClientContentPr
             <Tabs defaultValue="updates" className="mt-8 px-6 pb-6">
                 <TabsList className="grid w-full grid-cols-7">
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="updates"><History className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Updates</span></TabsTrigger></TooltipTrigger><TooltipContent>Updates</TooltipContent></Tooltip>
-                    <Tooltip><TooltipTrigger asChild><TabsTrigger value="spendings"><Receipt className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Spendings</span></TabsTrigger></TooltipTrigger><TooltipContent>Spendings</TooltipContent></Tooltip>
+                    {project.showExpenses && (
+                        <Tooltip><TooltipTrigger asChild><TabsTrigger value="spendings"><Receipt className="h-4 w-4 md:mr-2" /><span className="hidden md:inline">Spendings</span></TabsTrigger></TooltipTrigger><TooltipContent>Spendings</TooltipContent></Tooltip>
+                    )}
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="wishlist"><ShoppingCart className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Wishlist</span></TabsTrigger></TooltipTrigger><TooltipContent>Wishlist</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="album"><GalleryHorizontal className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Album</span></TabsTrigger></TooltipTrigger><TooltipContent>Album</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild><TabsTrigger value="donors"><HandCoins className="h-4 w-4 md:mr-2"/><span className="hidden md:inline">Donors</span></TabsTrigger></TooltipTrigger><TooltipContent>Donors</TooltipContent></Tooltip>

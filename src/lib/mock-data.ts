@@ -84,6 +84,7 @@ export type Project = {
   raisedAmount: number;
   donors: number;
   verified: boolean;
+  showExpenses: boolean;
   ownerId?: string; // New field to link project to a user
   updates: Update[];
   expenses: {

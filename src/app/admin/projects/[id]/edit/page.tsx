@@ -105,6 +105,7 @@ const projectSchema = z.object({
   imageHint: z.string().min(2, 'Image hint is required.'),
   targetAmount: z.coerce.number().positive('Target amount must be a positive number.'),
   verified: z.boolean(),
+  showExpenses: z.boolean(),
   wishlist: z.array(wishlistItemSchema),
   updates: z.array(updateSchema),
   expenses: z.array(expenseSchema),
@@ -143,6 +144,7 @@ export default function EditProjectPage() {
       expenses: project.expenses?.map(expense => ({...expense, date: new Date(expense.date)})) || [],
       metaDescription: project.metaDescription || '',
       keywords: project.keywords || [],
+      showExpenses: project.showExpenses ?? true,
     } : undefined,
   });
 
@@ -450,9 +452,9 @@ export default function EditProjectPage() {
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>Verification Status</CardTitle>
+                            <CardTitle>Project Settings</CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="verified"
@@ -462,6 +464,26 @@ export default function EditProjectPage() {
                                         <FormLabel>Verified Transparent Project</FormLabel>
                                         <FormDescription>
                                         Enable this if the project meets all transparency requirements.
+                                        </FormDescription>
+                                    </div>
+                                    <FormControl>
+                                        <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    </FormItem>
+                                )}
+                                />
+                            <FormField
+                                control={form.control}
+                                name="showExpenses"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                    <div className="space-y-0.5">
+                                        <FormLabel>Show Project Spendings</FormLabel>
+                                        <FormDescription>
+                                        Make the "Spendings" tab visible on the public project page.
                                         </FormDescription>
                                     </div>
                                     <FormControl>
