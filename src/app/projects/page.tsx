@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { ProjectCard } from '@/components/projects/project-card';
 import { getProjects } from '@/services/projects-service';
 import type { Project } from '@/lib/data';
@@ -10,13 +11,16 @@ import { CategoryStatsCard } from '@/components/categories/category-stats-card';
 import { allDonations } from '@/lib/data';
 import { CategoryLiveFeed } from '@/components/categories/category-live-feed';
 import { HeartHandshake } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const ITEMS_PER_PAGE = 8;
+const allCategories = ['Education', 'Health', 'Relief', 'Community'];
 
 export default function ProjectsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function loadProjects() {
@@ -44,6 +48,17 @@ export default function ProjectsPage() {
             <p className="mt-2 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
                 Explore all the verified transparent projects on our platform. Your contribution can make a world of difference.
             </p>
+        </div>
+        
+        <div className="flex flex-wrap items-center justify-center gap-2">
+            <Button variant={'default'} onClick={() => router.push(`/projects`)}>
+                All
+            </Button>
+            {allCategories.map(cat => (
+                 <Button key={cat} variant={'outline'} onClick={() => router.push(`/projects/category/${cat}`)}>
+                    {cat}
+                </Button>
+            ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
