@@ -2,14 +2,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, notFound } from 'next/navigation';
+import { useParams, notFound, useRouter } from 'next/navigation';
 import { ProjectCard } from '@/components/projects/project-card';
 import { getProjects } from '@/services/projects-service';
-import type { Project } from '@/lib/data';
+import type { Project, Donation } from '@/lib/data';
 import { Pagination } from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
 import { HeartHandshake, BookOpen, Ambulance, ShieldAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CategoryStatsCard } from '@/components/categories/category-stats-card';
+import { CategoryLiveFeed } from '@/components/categories/category-live-feed';
+import { allDonations } from '@/lib/data';
+import { Button } from '@/components/ui/button';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -40,8 +44,12 @@ const categoryInfo: Record<string, { icon: React.ElementType, title: string, des
     },
 };
 
+const allCategories = Object.keys(categoryInfo);
+
+
 export default function ProjectCategoryPage() {
   const params = useParams();
+  const router = useRouter();
   const categoryName = decodeURIComponent(params.categoryName as string);
   
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,38 +89,56 @@ export default function ProjectCategoryPage() {
             </p>
         </div>
 
-        {loading ? (
-             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {[...Array(8)].map((_, i) => (
-                    <div key={i} className="space-y-2">
-                        <Skeleton className="h-48 w-full" />
-                        <Skeleton className="h-6 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-10 w-full" />
+        <div className="flex flex-wrap items-center justify-center gap-2">
+            {allCategories.map(cat => (
+                 <Button key={cat} variant={cat === categoryName ? 'default' : 'outline'} onClick={() => router.push(`/projects/category/${cat}`)}>
+                    {cat}
+                </Button>
+            ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 order-2 lg:order-1">
+                {loading ? (
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        {[...Array(8)].map((_, i) => (
+                            <div key={i} className="space-y-2">
+                                <Skeleton className="h-48 w-full" />
+                                <Skeleton className="h-6 w-3/4" />
+                                <Skeleton className="h-4 w-1/2" />
+                                <Skeleton className="h-10 w-full" />
+                            </div>
+                        ))}
                     </div>
-                ))}
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            {paginatedProjects.map((project) => (
+                                <ProjectCard key={project.id} project={project} />
+                            ))}
+                        </div>
+                        {totalPages > 1 && (
+                            <div className="mt-8">
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
+                        )}
+                        {paginatedProjects.length === 0 && (
+                            <div className="text-center py-16 text-muted-foreground border rounded-lg bg-card">
+                                <p>There are currently no active campaigns in the "{categoryName}" category.</p>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
-        ) : (
-            <>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {paginatedProjects.map((project) => (
-                        <ProjectCard key={project.id} project={project} />
-                    ))}
-                </div>
-                 {totalPages > 1 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                    />
-                )}
-                {paginatedProjects.length === 0 && (
-                    <div className="text-center py-16 text-muted-foreground">
-                        <p>There are currently no active campaigns in the "{categoryName}" category.</p>
-                    </div>
-                )}
-            </>
-        )}
+            <aside className="lg:col-span-1 space-y-8 order-1 lg:order-2 lg:sticky top-24 self-start">
+                <CategoryStatsCard projects={projects} allDonations={allDonations} />
+                <CategoryLiveFeed projects={projects} />
+            </aside>
+        </div>
     </div>
   );
 }
