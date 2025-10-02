@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -21,7 +22,7 @@ import {
   UserPlus,
   ArrowRight
 } from 'lucide-react';
-import { operationalCostsFund as initialOperationalCostsFund, salaries, equipment, miscExpenses, platformSettings, allDonations as initialAllDonations, jobOpenings } from '@/lib/data';
+import { operationalCostsFund as initialOperationalCostsFund, salaries, equipment, miscExpenses, platformSettings, allDonations as initialAllDonations, jobOpenings, physicalDonations, users } from '@/lib/data';
 import type { Project, Donation } from '@/lib/data';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip';
@@ -224,7 +225,7 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
     <div className="space-y-8">
         <ScrollFadeIn asChild>
             <section className="space-y-8">
-                 <div className="grid grid-cols-1 gap-8">
+                <div className="grid grid-cols-1 gap-8">
                     <div>
                         <div className="mb-4 flex items-center gap-3">
                             <TrendingUp className="h-6 w-6 text-primary" />
@@ -238,7 +239,13 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                             ))}
                         </div>
                     </div>
-                     <div>
+                </div>
+            </section>
+        </ScrollFadeIn>
+         <ScrollFadeIn asChild>
+            <section className="space-y-8">
+                <div className="grid grid-cols-1 gap-8">
+                    <div>
                         <div className="mb-4 flex items-center gap-3">
                             <CheckCircle className="h-6 w-6 text-green-600" />
                             <h2 className="text-2xl font-bold">Successfully Funded</h2>
@@ -255,13 +262,14 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
             </section>
         </ScrollFadeIn>
 
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <section className='space-y-8'>
                 <ScrollFadeIn asChild>
-                    <HallOfFameDonors donations={allDonations} />
+                   <HallOfFameDonors donations={allDonations} />
                 </ScrollFadeIn>
-                 <ScrollFadeIn>
-                    <InKindDonationsSlider allProjects={allProjects} />
+                <ScrollFadeIn>
+                    <InKindDonationsSlider allProjects={allProjects} physicalDonations={physicalDonations} users={users} />
                 </ScrollFadeIn>
             </section>
             <div className="space-y-8">

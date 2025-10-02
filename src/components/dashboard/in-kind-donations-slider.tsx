@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import {
@@ -14,37 +15,19 @@ import { Button } from '../ui/button';
 import { ArrowRight, Gift } from 'lucide-react';
 import { InKindDonationsSliderClient } from './in-kind-donations-slider-client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { getInKindDonations, getUsers } from '@/services/donations-service';
 
 interface InKindDonationsSliderProps {
     allProjects: Project[];
+    physicalDonations: PhysicalDonation[];
+    users: User[];
 }
 
-export function InKindDonationsSlider({ allProjects }: InKindDonationsSliderProps) {
-    const [physicalDonations, setPhysicalDonations] = useState<PhysicalDonation[]>([]);
-    const [users, setUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState(true);
-    
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const [pd, u] = await Promise.all([getInKindDonations(), getUsers()]);
-                setPhysicalDonations(pd);
-                setUsers(u);
-            } catch (error) {
-                console.error("Failed to fetch data for In-Kind Donations Slider:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchData();
-    }, []);
+export function InKindDonationsSlider({ allProjects, physicalDonations, users }: InKindDonationsSliderProps) {
   
   const featuredDonations = physicalDonations.filter(d => d.status === 'Completed' && d.featured);
 
-  if (loading || featuredDonations.length === 0) {
-    return null; // Don't show the slider if there are no featured items or still loading
+  if (featuredDonations.length === 0) {
+    return null; // Don't show the slider if there are no featured items
   }
 
   return (
