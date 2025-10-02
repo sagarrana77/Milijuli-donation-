@@ -57,7 +57,18 @@ import { ViewMode } from '@/hooks/use-mobile';
 
 const menuItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard, className: 'text-sky-500' },
-  { href: '/projects', label: 'All Projects', icon: HeartHandshake, className: 'text-red-500' },
+  { 
+    href: '/projects', 
+    label: 'All Projects', 
+    icon: HeartHandshake, 
+    className: 'text-red-500',
+    subItems: [
+        { href: '/projects/category/Education', label: 'Education' },
+        { href: '/projects/category/Health', label: 'Health' },
+        { href: '/projects/category/Relief', label: 'Relief' },
+        { href: '/projects/category/Community', label: 'Community' },
+    ]
+  },
   { href: '/friends', label: 'Friends', icon: Users, className: 'text-blue-500' },
   { href: '/operational-costs', label: 'Operational Costs', icon: Briefcase, className: 'text-amber-600' },
   { href: '/hall-of-fame', label: 'Hall of Fame', icon: Award, className: 'text-amber-500' },
@@ -78,6 +89,7 @@ export function MainSidebar() {
   const pathname = usePathname();
   const { setOpenMobile, viewMode, setViewMode } = useSidebar();
   const [isAdminOpen, setIsAdminOpen] = useState(pathname.startsWith('/admin'));
+  const [isProjectsOpen, setIsProjectsOpen] = useState(pathname.startsWith('/projects'));
   const { openDialog } = usePricingDialog();
   const { user } = useAuth();
 
@@ -145,20 +157,54 @@ export function MainSidebar() {
           <SidebarMenuItem className="my-2">
             <hr className="border-sidebar-border"/>
           </SidebarMenuItem>
-          {menuItems.map(({ href, label, icon: Icon, className }) => (
-            <SidebarMenuItem key={href}>
-            <SidebarMenuButton
-                asChild
-                isActive={isActive(href)}
-                tooltip={{ children: label, side: 'right' }}
-            >
-                <Link href={href} onClick={handleLinkClick}>
-                <Icon className={className} />
-                <span>{label}</span>
-                </Link>
-            </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {menuItems.map(({ href, label, icon: Icon, className, subItems }) => {
+            if (subItems) {
+                return (
+                     <Collapsible key={href} open={isProjectsOpen} onOpenChange={setIsProjectsOpen} asChild>
+                        <SidebarMenuItem>
+                            <CollapsibleTrigger asChild>
+                                 <SidebarMenuButton
+                                    className="w-full"
+                                    isActive={isActive(href)}
+                                    tooltip={{ children: label, side: 'right' }}
+                                >
+                                    <Icon className={className} />
+                                    <span>{label}</span>
+                                    <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform ui-open:rotate-180" />
+                                </SidebarMenuButton>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent asChild>
+                                <SidebarMenuSub>
+                                    {subItems.map((subItem) => (
+                                        <SidebarMenuSubItem key={subItem.href}>
+                                            <SidebarMenuSubButton asChild isActive={pathname === subItem.href}>
+                                                <Link href={subItem.href} onClick={handleLinkClick}>
+                                                    <span>{subItem.label}</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    ))}
+                                </SidebarMenuSub>
+                            </CollapsibleContent>
+                        </SidebarMenuItem>
+                     </Collapsible>
+                )
+            }
+            return (
+                <SidebarMenuItem key={href}>
+                <SidebarMenuButton
+                    asChild
+                    isActive={isActive(href)}
+                    tooltip={{ children: label, side: 'right' }}
+                >
+                    <Link href={href} onClick={handleLinkClick}>
+                    <Icon className={className} />
+                    <span>{label}</span>
+                    </Link>
+                </SidebarMenuButton>
+                </SidebarMenuItem>
+            )
+          })}
            <SidebarMenuItem>
               <SidebarMenuButton
                   onClick={() => openDialog()}

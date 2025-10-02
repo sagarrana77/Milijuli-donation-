@@ -9,6 +9,15 @@ import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wra
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { ProjectPageClientContent, ProjectPageClientAside } from '@/components/projects/project-page-client-content';
 import { RelatedCampaigns } from '@/components/projects/related-campaigns';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
+const categoryColors: Record<string, string> = {
+    Education: "bg-blue-100 text-blue-800 border-blue-200",
+    Health: "bg-green-100 text-green-800 border-green-200",
+    Relief: "bg-red-100 text-red-800 border-red-200",
+    Community: "bg-purple-100 text-purple-800 border-purple-200",
+};
 
 
 export default async function ProjectDetailPage({
@@ -34,9 +43,14 @@ export default async function ProjectDetailPage({
           <ScrollFadeIn>
             <header className="mb-8">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
-                    <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-                    {project.name}
-                    </h1>
+                    <div className="flex flex-wrap items-center gap-4">
+                        <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+                        {project.name}
+                        </h1>
+                         <Badge className={cn("text-base", categoryColors[project.category] || "bg-muted text-muted-foreground")}>
+                            {project.category}
+                        </Badge>
+                    </div>
                     {project.verified && (
                         <div className="flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-sm text-green-600">
                             <TransparencySealIcon className="h-5 w-5 rounded-full animate-subtle-glow" />
