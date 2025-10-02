@@ -15,6 +15,12 @@ export function useDeviceView(defaultViewMode: ViewMode = 'auto') {
 
   React.useEffect(() => {
     setIsClient(true);
+    const handleResize = () => {
+      // Force a re-render to re-evaluate breakpoints
+      setViewMode(prev => prev);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const isTablet = React.useMemo(() => {
@@ -25,14 +31,12 @@ export function useDeviceView(defaultViewMode: ViewMode = 'auto') {
   }, [viewMode, isClient]);
 
   const isMobile = React.useMemo(() => {
-    if (!isClient) return false;
+    if (!isClient) return true; // Default to mobile behavior on SSR
     if (viewMode === 'mobile') return true;
     if (viewMode === 'desktop') return false;
-    // In auto mode, include tablet widths in the mobile-like behavior (drawer menu)
     if (viewMode === 'auto') {
       return window.innerWidth < TABLET_BREAKPOINT;
     }
-    // If viewMode is 'tablet', it should not be considered mobile here.
     return false;
   }, [viewMode, isClient]);
 
