@@ -38,8 +38,9 @@ export function useDeviceView(defaultViewMode: ViewMode = 'auto') {
     if (viewMode === 'mobile') return true;
     if (viewMode === 'desktop') return false;
     if (viewMode === 'auto') {
-      // Use windowWidth from state for consistent rendering
-      return windowWidth < TABLET_BREAKPOINT;
+      // Check for touch capability as well for more reliable mobile detection
+      const hasTouchEvent = 'ontouchstart' in window;
+      return windowWidth < TABLET_BREAKPOINT && hasTouchEvent;
     }
     return false;
   }, [viewMode, isClient, windowWidth]);
