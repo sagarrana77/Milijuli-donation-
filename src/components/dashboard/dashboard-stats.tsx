@@ -22,8 +22,8 @@ import {
   UserPlus,
   ArrowRight
 } from 'lucide-react';
-import { operationalCostsFund as initialOperationalCostsFund, salaries, equipment, miscExpenses, platformSettings, allDonations as initialAllDonations, jobOpenings, physicalDonations, users } from '@/lib/data';
-import type { Project, Donation } from '@/lib/data';
+import { operationalCostsFund as initialOperationalCostsFund, salaries, equipment, miscExpenses, platformSettings, allDonations as initialAllDonations, jobOpenings, physicalDonations as initialPhysicalDonations, users as initialUsers } from '@/lib/data';
+import type { Project, Donation, PhysicalDonation, User } from '@/lib/data';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip';
 import Link from 'next/link';
@@ -38,9 +38,11 @@ import { InKindDonationsSlider } from './in-kind-donations-slider';
 
 interface DashboardStatsProps {
     allProjects: Project[];
+    physicalDonations: PhysicalDonation[];
+    users: User[];
 }
 
-export function DashboardStats({ allProjects }: DashboardStatsProps) {
+export function DashboardStats({ allProjects, physicalDonations, users }: DashboardStatsProps) {
   const [stats, setStats] = useState({
     totalFunds: 0,
     monthlyIncrease: 2012300,
@@ -268,7 +270,7 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                 <ScrollFadeIn asChild>
                    <HallOfFameDonors donations={allDonations} />
                 </ScrollFadeIn>
-                <ScrollFadeIn>
+                <ScrollFadeIn asChild>
                     <InKindDonationsSlider allProjects={allProjects} physicalDonations={physicalDonations} users={users} />
                 </ScrollFadeIn>
             </section>
@@ -309,7 +311,7 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                 </ScrollFadeIn>
             </div>
         </div>
-         <ScrollFadeIn>
+        <ScrollFadeIn>
             <Card>
                 <CardHeader>
                     <CardTitle>Expense Breakdown</CardTitle>
