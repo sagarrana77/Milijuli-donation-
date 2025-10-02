@@ -6,6 +6,10 @@ import { getProjects } from '@/services/projects-service';
 import type { Project } from '@/lib/data';
 import { Pagination } from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CategoryStatsCard } from '@/components/categories/category-stats-card';
+import { allDonations } from '@/lib/data';
+import { CategoryLiveFeed } from '@/components/categories/category-live-feed';
+import { HeartHandshake } from 'lucide-react';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -32,35 +36,58 @@ export default function ProjectsPage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  if (loading) {
-    return (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {[...Array(8)].map((_, i) => (
-                <div key={i} className="space-y-2">
-                    <Skeleton className="h-48 w-full" />
-                    <Skeleton className="h-6 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                    <Skeleton className="h-10 w-full" />
-                </div>
-            ))}
-        </div>
-    )
-  }
-
   return (
     <div className="space-y-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {paginatedProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-            ))}
+       <div className="text-center">
+            <HeartHandshake className="mx-auto h-12 w-12 text-primary" />
+            <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">All Campaigns</h1>
+            <p className="mt-2 text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
+                Explore all the verified transparent projects on our platform. Your contribution can make a world of difference.
+            </p>
         </div>
-         {totalPages > 1 && (
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-            />
-        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 lg:order-1">
+                {loading ? (
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        {[...Array(8)].map((_, i) => (
+                            <div key={i} className="space-y-2">
+                                <Skeleton className="h-48 w-full" />
+                                <Skeleton className="h-6 w-3/4" />
+                                <Skeleton className="h-4 w-1/2" />
+                                <Skeleton className="h-10 w-full" />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            {paginatedProjects.map((project) => (
+                                <ProjectCard key={project.id} project={project} />
+                            ))}
+                        </div>
+                        {totalPages > 1 && (
+                            <div className="mt-8">
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={setCurrentPage}
+                                />
+                            </div>
+                        )}
+                        {paginatedProjects.length === 0 && (
+                            <div className="text-center py-16 text-muted-foreground border rounded-lg bg-card">
+                                <p>There are currently no active campaigns.</p>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+            <aside className="lg:col-span-1 lg:order-2 space-y-8 lg:sticky top-24 self-start">
+                <CategoryStatsCard projects={approvedProjects} allDonations={allDonations} />
+                <CategoryLiveFeed projects={approvedProjects} />
+            </aside>
+        </div>
     </div>
   );
 }
