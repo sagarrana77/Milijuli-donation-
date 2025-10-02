@@ -15,7 +15,6 @@ import {
   useSidebar,
   SidebarMenuSub,
   SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarTrigger,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
@@ -63,6 +62,7 @@ const menuItems = [
     icon: HeartHandshake, 
     className: 'text-red-500',
     subItems: [
+        { href: '/projects', label: 'All Projects' },
         { href: '/projects/category/Education', label: 'Education' },
         { href: '/projects/category/Health', label: 'Health' },
         { href: '/projects/category/Relief', label: 'Relief' },
