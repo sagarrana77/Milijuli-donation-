@@ -72,6 +72,8 @@ export default function ProjectCategoryPage() {
   if (!info && !loading) {
       notFound();
   }
+  
+  const otherCategories = allCategories.filter(cat => cat !== categoryName);
 
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const paginatedProjects = projects.slice(
@@ -93,8 +95,8 @@ export default function ProjectCategoryPage() {
             <Button variant={'outline'} onClick={() => router.push(`/projects`)}>
                 All
             </Button>
-            {allCategories.map(cat => (
-                 <Button key={cat} variant={cat === categoryName ? 'default' : 'outline'} onClick={() => router.push(`/projects/category/${cat}`)}>
+            {otherCategories.map(cat => (
+                 <Button key={cat} variant={'outline'} onClick={() => router.push(`/projects/category/${cat}`)}>
                     {cat}
                 </Button>
             ))}
