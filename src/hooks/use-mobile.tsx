@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import * as React from "react"
@@ -12,13 +11,16 @@ export type ViewMode = "auto" | "desktop" | "tablet" | "mobile";
 export function useDeviceView(defaultViewMode: ViewMode = 'auto') {
   const [viewMode, setViewMode] = React.useState<ViewMode>(defaultViewMode);
   const [isClient, setIsClient] = React.useState(false);
+  const [windowWidth, setWindowWidth] = React.useState(0);
 
   React.useEffect(() => {
     setIsClient(true);
+    
     const handleResize = () => {
-      // Force a re-render to re-evaluate breakpoints
-      setViewMode(prev => prev);
+      setWindowWidth(window.innerWidth);
     }
+    
+    handleResize(); // Set initial width
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -27,18 +29,20 @@ export function useDeviceView(defaultViewMode: ViewMode = 'auto') {
     if (!isClient) return false;
     if (viewMode === 'tablet') return true;
     if (viewMode === 'desktop' || viewMode === 'mobile') return false;
-    return window.innerWidth < TABLET_BREAKPOINT && window.innerWidth >= MOBILE_BREAKPOINT;
-  }, [viewMode, isClient]);
+    // Use windowWidth from state for consistent rendering
+    return windowWidth < TABLET_BREAKPOINT && windowWidth >= MOBILE_BREAKPOINT;
+  }, [viewMode, isClient, windowWidth]);
 
   const isMobile = React.useMemo(() => {
     if (!isClient) return true; // Default to mobile behavior on SSR
     if (viewMode === 'mobile') return true;
     if (viewMode === 'desktop') return false;
     if (viewMode === 'auto') {
-      return window.innerWidth < TABLET_BREAKPOINT;
+      // Use windowWidth from state for consistent rendering
+      return windowWidth < TABLET_BREAKPOINT;
     }
     return false;
-  }, [viewMode, isClient]);
+  }, [viewMode, isClient, windowWidth]);
 
   return { isMobile, isTablet, viewMode, setViewMode, isClient };
 }
