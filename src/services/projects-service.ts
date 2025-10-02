@@ -1,4 +1,5 @@
 
+
 /**
  * @fileOverview A service for fetching project data from Firestore.
  */
@@ -99,7 +100,8 @@ export async function getProjects(): Promise<Project[]> {
           { id: 'wish-2', name: 'Whiteboards', description: 'Large whiteboards for teaching', quantityNeeded: 10, quantityDonated: 2, costPerItem: 5000, allowInKind: true, imageHint: 'whiteboard classroom' },
           { id: 'wish-3', name: 'School Backpacks', description: 'Sturdy backpacks for students', quantityNeeded: 500, quantityDonated: 150, costPerItem: 800, allowInKind: true, imageHint: 'school backpack' },
         ],
-        createdAt: '2023-09-01T12:00:00Z'
+        createdAt: '2023-09-01T12:00:00Z',
+        category: 'Education'
       },
       {
         id: 'clean-water-initiative',
@@ -125,7 +127,8 @@ export async function getProjects(): Promise<Project[]> {
           { id: 'wish-cw-1', name: 'Water Filters', description: 'High-quality ceramic water filters for households.', quantityNeeded: 200, quantityDonated: 5, costPerItem: 1500, allowInKind: true, imageHint: 'water filter' },
           { id: 'wish-cw-2', name: 'Hand Pump Spare Parts', description: 'A kit of spare parts for well maintenance.', quantityNeeded: 10, quantityDonated: 1, costPerItem: 10000, allowInKind: false, imageHint: 'metal parts' },
         ],
-        createdAt: '2023-08-15T12:00:00Z'
+        createdAt: '2023-08-15T12:00:00Z',
+        category: 'Health'
       },
       {
         id: 'community-health-posts',
@@ -146,7 +149,8 @@ export async function getProjects(): Promise<Project[]> {
         expenses: [],
         discussion: [],
         wishlist: [],
-        createdAt: '2023-09-10T12:00:00Z'
+        createdAt: '2023-09-10T12:00:00Z',
+        category: 'Health'
       },
       {
         id: 'disaster-relief-fund',
@@ -167,7 +171,8 @@ export async function getProjects(): Promise<Project[]> {
         expenses: [],
         discussion: [],
         wishlist: [],
-        createdAt: '2023-07-01T12:00:00Z'
+        createdAt: '2023-07-01T12:00:00Z',
+        category: 'Relief'
       },
       {
         id: 'art-for-all',
@@ -193,7 +198,8 @@ export async function getProjects(): Promise<Project[]> {
             { id: 'wish-art-1', name: 'Watercolor Paint Sets', description: 'Sets of non-toxic watercolor paints for kids.', quantityNeeded: 50, quantityDonated: 5, costPerItem: 500, imageUrl: getImageUrl('wishlist-paints'), imageHint: 'watercolor paints', allowInKind: true },
             { id: 'wish-art-2', name: 'Drawing Canvases (8x10)', description: 'Small canvases for painting projects.', quantityNeeded: 100, quantityDonated: 10, costPerItem: 150, imageUrl: getImageUrl('wishlist-canvas'), imageHint: 'art canvas', allowInKind: true },
         ],
-        createdAt: '2023-11-01T12:00:00Z'
+        createdAt: '2023-11-01T12:00:00Z',
+        category: 'Community'
       }
     ];
 

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getProject } from '@/services/projects-service';
+import { getProject, getProjects } from '@/services/projects-service';
 import type { Project } from '@/lib/data';
 import {
   Card,
@@ -8,6 +8,7 @@ import { TransparencySealIcon } from '@/components/icons/transparency-seal';
 import { DonationDialogWrapper } from '@/components/projects/donation-dialog-wrapper';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { ProjectPageClientContent, ProjectPageClientAside } from '@/components/projects/project-page-client-content';
+import { RelatedCampaigns } from '@/components/projects/related-campaigns';
 
 
 export default async function ProjectDetailPage({
@@ -16,13 +17,19 @@ export default async function ProjectDetailPage({
   params: { id: string };
 }) {
   const project = await getProject(params.id);
+  const allProjects = await getProjects();
 
   if (!project) {
     notFound();
   }
 
+  const relatedProjects = allProjects.filter(p => p.id !== project.id && p.category === project.category);
+  const otherProjects = allProjects.filter(p => p.id !== project.id && p.category !== project.category);
+  const projectsForCarousel = [...relatedProjects, ...otherProjects];
+
+
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl space-y-12">
       <DonationDialogWrapper project={project}>
           <ScrollFadeIn>
             <header className="mb-8">
@@ -51,6 +58,8 @@ export default async function ProjectDetailPage({
             <ProjectPageClientAside project={project} />
           </div>
       </DonationDialogWrapper>
+      
+      <RelatedCampaigns projects={projectsForCarousel} />
     </div>
   );
 }

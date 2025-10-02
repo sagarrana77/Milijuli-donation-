@@ -31,9 +31,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { ProjectCard } from '../projects/project-card';
 import { HallOfFameDonors } from '../projects/hall-of-fame-donors';
 import { Badge } from '../ui/badge';
-import { ExpenseChart } from './expense-chart';
 import { AllUpdatesFeed } from './all-updates-feed';
-import { InKindDonationsSlider } from './in-kind-donations-slider';
 
 
 interface DashboardStatsProps {
@@ -55,12 +53,6 @@ export function DashboardStats({ allProjects, physicalDonations, users }: Dashbo
   });
   const [operationalFund, setOperationalFund] = useState(initialOperationalCostsFund);
   const [allDonations, setAllDonations] = useState<Donation[]>(initialAllDonations);
-  const [spendingBreakdown, setSpendingBreakdown] = useState([
-    { name: 'Education', value: 0, key: 'education' },
-    { name: 'Health', value: 0, key: 'health' },
-    { name: 'Relief', value: 0, key: 'relief' },
-    { name: 'Operational', value: 0, key: 'operational' },
-  ]);
   
   useEffect(() => {
     const calculateStats = () => {
@@ -85,14 +77,6 @@ export function DashboardStats({ allProjects, physicalDonations, users }: Dashbo
         const reliefExpenses = allProjects
             .filter(p => p.id === 'disaster-relief-fund')
             .reduce((sum, p) => sum + (p.expenses?.reduce((acc, exp) => acc + exp.amount, 0) || 0), 0);
-
-        const newSpendingBreakdown = [
-            { name: 'Education', value: educationExpenses, key: 'education' },
-            { name: 'Health', value: healthExpenses, key: 'health' },
-            { name: 'Relief', value: reliefExpenses, key: 'relief' },
-            { name: 'Operational', value: currentOperationalExpenses, key: 'operational' },
-        ];
-        setSpendingBreakdown(newSpendingBreakdown);
 
         const totalProjectExpenses = educationExpenses + healthExpenses + reliefExpenses;
         const totalSpending = totalProjectExpenses + currentOperationalExpenses;
@@ -271,15 +255,10 @@ export function DashboardStats({ allProjects, physicalDonations, users }: Dashbo
                    <HallOfFameDonors donations={allDonations} />
                 </ScrollFadeIn>
                 <ScrollFadeIn asChild>
-                    <InKindDonationsSlider allProjects={allProjects} physicalDonations={physicalDonations} users={users} />
-                </ScrollFadeIn>
-            </section>
-            <div className="space-y-8">
-                <ScrollFadeIn>
-                    <Card>
+                    <Card className="bg-blue-500/5 border-blue-500/10">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <UserPlus className="h-6 w-6 text-purple-500" />
+                            <CardTitle className="flex items-center gap-2 text-blue-600">
+                                <UserPlus className="h-6 w-6" />
                                 We're Hiring!
                             </CardTitle>
                             <CardDescription>
@@ -306,32 +285,13 @@ export function DashboardStats({ allProjects, physicalDonations, users }: Dashbo
                         </CardFooter>
                     </Card>
                 </ScrollFadeIn>
+            </section>
+            <div className="space-y-8">
                 <ScrollFadeIn>
                    <AllUpdatesFeed allProjects={allProjects} />
                 </ScrollFadeIn>
             </div>
         </div>
-        <ScrollFadeIn>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Expense Breakdown</CardTitle>
-                    <CardDescription>
-                    How funds are being allocated across categories.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center">
-                    <ExpenseChart data={spendingBreakdown} />
-                    <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm">
-                    {spendingBreakdown.map((entry, index) => (
-                        <div key={entry.name} className="flex items-center gap-2 rounded-full border bg-muted px-3 py-1">
-                        <span className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(var(--chart-${index + 1}))` }} />
-                        <span className="font-medium">{entry.name}</span>
-                        </div>
-                    ))}
-                    </div>
-                </CardContent>
-            </Card>
-        </ScrollFadeIn>
     </div>
     </>
   );
