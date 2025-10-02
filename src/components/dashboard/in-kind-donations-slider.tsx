@@ -24,10 +24,10 @@ interface InKindDonationsSliderProps {
 
 export function InKindDonationsSlider({ allProjects, physicalDonations, users }: InKindDonationsSliderProps) {
   
-  const featuredDonations = physicalDonations.filter(d => d.status === 'Completed' && d.featured);
+  const completedDonations = physicalDonations.filter(d => d.status === 'Completed');
 
-  if (featuredDonations.length === 0) {
-    return null; // Don't show the slider if there are no featured items
+  if (completedDonations.length === 0) {
+    return null; // Don't show the slider if there are no completed items
   }
 
   return (
@@ -40,7 +40,7 @@ export function InKindDonationsSlider({ allProjects, physicalDonations, users }:
         <CardDescription>A showcase of tangible support from our generous community.</CardDescription>
       </CardHeader>
       <CardContent>
-        <InKindDonationsSliderClient completedDonations={featuredDonations} allProjects={allProjects} users={users} />
+        <InKindDonationsSliderClient completedDonations={completedDonations} allProjects={allProjects} users={users} />
       </CardContent>
        <CardFooter>
             <Button asChild variant="outline" className="w-full">

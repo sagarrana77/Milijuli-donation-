@@ -452,18 +452,6 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleFeatureToggle = (donationId: string, featured: boolean) => {
-    const donation = physicalDonations.find(d => d.id === donationId);
-    if (donation) {
-      donation.featured = featured;
-      setForceRender(c => c + 1);
-       toast({
-        title: 'Feature Status Updated!',
-        description: `Donation has been ${featured ? 'featured' : 'unfeatured'}.`,
-      });
-    }
-  }
-
   const handleUserQrToggle = (enabled: boolean) => {
     platformSettings.userQrPaymentsEnabled = enabled;
     setForceRender(c => c + 1);
@@ -905,7 +893,6 @@ export default function AdminDashboardPage() {
                                             <TableHead>Item</TableHead>
                                             <TableHead>Project</TableHead>
                                             <TableHead>Status</TableHead>
-                                            <TableHead>Featured</TableHead>
                                             <TableHead><span className="sr-only">Actions</span></TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -926,14 +913,6 @@ export default function AdminDashboardPage() {
                                                     }>
                                                         {donation.status}
                                                     </Badge>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Switch
-                                                        checked={donation.featured}
-                                                        onCheckedChange={(checked) => handleFeatureToggle(donation.id, checked)}
-                                                        disabled={donation.status !== 'Completed'}
-                                                        aria-label="Feature on homepage"
-                                                    />
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <DropdownMenu>
