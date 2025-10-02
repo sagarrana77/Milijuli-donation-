@@ -3,8 +3,11 @@ import { getProjects } from '@/services/projects-service';
 import { ScrollFadeIn } from '@/components/ui/scroll-fade-in';
 import { InKindDonationsSlider } from '@/components/dashboard/in-kind-donations-slider';
 import { CampaignHeroSlider } from '@/components/dashboard/campaign-hero-slider';
-import { AllUpdatesFeed } from '@/components/dashboard/all-updates-feed';
 import { DashboardStats } from '@/components/dashboard/dashboard-stats';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ExpenseChart } from '@/components/dashboard/expense-chart';
+import { useState, useEffect } from 'react';
+
 
 export default async function DashboardPage() {
     const projects = await getProjects();
@@ -16,13 +19,9 @@ export default async function DashboardPage() {
         </ScrollFadeIn>
 
         <DashboardStats allProjects={projects} />
-
-        <ScrollFadeIn>
-            <InKindDonationsSlider allProjects={projects} />
-        </ScrollFadeIn>
         
         <ScrollFadeIn>
-            <AllUpdatesFeed allProjects={projects} />
+            <InKindDonationsSlider allProjects={projects} />
         </ScrollFadeIn>
       
     </div>

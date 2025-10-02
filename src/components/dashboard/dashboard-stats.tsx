@@ -31,6 +31,7 @@ import { ProjectCard } from '../projects/project-card';
 import { HallOfFameDonors } from '../projects/hall-of-fame-donors';
 import { Badge } from '../ui/badge';
 import { ExpenseChart } from './expense-chart';
+import { AllUpdatesFeed } from './all-updates-feed';
 
 
 interface DashboardStatsProps {
@@ -259,37 +260,42 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                     <HallOfFameDonors donations={allDonations} />
                 </section>
             </ScrollFadeIn>
-            <ScrollFadeIn>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <UserPlus className="h-6 w-6 text-purple-500" />
-                            We're Hiring!
-                        </CardTitle>
-                        <CardDescription>
-                            Join our mission to build a transparent world.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-4">
-                            {featuredJobs.map(job => (
-                                <li key={job.id} className="p-3 rounded-md border bg-background/50 hover:bg-muted/50 md:flex md:items-center md:justify-between">
-                                    <div>
-                                        <p className="font-semibold">{job.title}</p>
-                                        <p className="text-sm text-muted-foreground">{job.location}</p>
-                                    </div>
-                                    <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'} className="mt-2 md:mt-0">{job.type}</Badge>
-                                </li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                    <CardFooter>
-                        <Button asChild variant="outline" className="w-full">
-                            <Link href="/careers">View All Openings <ArrowRight className="ml-2 h-4 w-4" /></Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </ScrollFadeIn>
+            <div className="space-y-8">
+                <ScrollFadeIn>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <UserPlus className="h-6 w-6 text-purple-500" />
+                                We're Hiring!
+                            </CardTitle>
+                            <CardDescription>
+                                Join our mission to build a transparent world.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ul className="space-y-4">
+                                {featuredJobs.map(job => (
+                                    <li key={job.id} className="p-3 rounded-md border bg-background/50 hover:bg-muted/50 md:flex md:items-center md:justify-between">
+                                        <div>
+                                            <p className="font-semibold">{job.title}</p>
+                                            <p className="text-sm text-muted-foreground">{job.location}</p>
+                                        </div>
+                                        <Badge variant={job.type === 'Volunteer' ? 'secondary' : 'default'} className="mt-2 md:mt-0">{job.type}</Badge>
+                                    </li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                        <CardFooter>
+                            <Button asChild variant="outline" className="w-full">
+                                <Link href="/careers">View All Openings <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </ScrollFadeIn>
+                <ScrollFadeIn>
+                   <AllUpdatesFeed allProjects={allProjects} />
+                </ScrollFadeIn>
+            </div>
         </div>
         <ScrollFadeIn>
             <Card>
