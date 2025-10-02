@@ -32,6 +32,7 @@ import { HallOfFameDonors } from '../projects/hall-of-fame-donors';
 import { Badge } from '../ui/badge';
 import { ExpenseChart } from './expense-chart';
 import { AllUpdatesFeed } from './all-updates-feed';
+import { InKindDonationsSlider } from './in-kind-donations-slider';
 
 
 interface DashboardStatsProps {
@@ -223,7 +224,7 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
     <div className="space-y-8">
         <ScrollFadeIn asChild>
             <section className="space-y-8">
-                <div className="grid grid-cols-1 gap-8">
+                 <div className="grid grid-cols-1 gap-8">
                     <div>
                         <div className="mb-4 flex items-center gap-3">
                             <TrendingUp className="h-6 w-6 text-primary" />
@@ -255,11 +256,14 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
         </ScrollFadeIn>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <ScrollFadeIn asChild>
-                <section>
+            <section className='space-y-8'>
+                <ScrollFadeIn asChild>
                     <HallOfFameDonors donations={allDonations} />
-                </section>
-            </ScrollFadeIn>
+                </ScrollFadeIn>
+                 <ScrollFadeIn>
+                    <InKindDonationsSlider allProjects={allProjects} />
+                </ScrollFadeIn>
+            </section>
             <div className="space-y-8">
                 <ScrollFadeIn>
                     <Card>
@@ -297,7 +301,7 @@ export function DashboardStats({ allProjects }: DashboardStatsProps) {
                 </ScrollFadeIn>
             </div>
         </div>
-        <ScrollFadeIn>
+         <ScrollFadeIn>
             <Card>
                 <CardHeader>
                     <CardTitle>Expense Breakdown</CardTitle>
